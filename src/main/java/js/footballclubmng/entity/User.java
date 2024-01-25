@@ -17,8 +17,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
     String account;
-    Integer password;
-    String create_time ;
+    String password;
+    String create_time;
     Integer role_id;
     String gmail;
 
