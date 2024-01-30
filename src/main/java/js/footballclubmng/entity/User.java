@@ -2,27 +2,31 @@ package js.footballclubmng.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.FieldDefaults;
 
 
-@Data
+@Entity
+@Table(name = "user")
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 
-@FieldDefaults(level = AccessLevel.PRIVATE)
-@Entity(name = "users")
-public class User {
+public class User  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
-    String account;
-    String password;
-    String create_time;
-    Integer role_id;
-    String gmail;
-
-    @OneToOne
+    @Column(name = "user_id")
+    private int userId;
+    private String username;
+    private String password;
+    private long createTime;
+    @Column(name = "role_id")
+    private int roleId;
+    @ManyToOne
     @JoinColumn(name = "role_id", insertable = false, updatable = false)
     private Role role;
+    @OneToOne
+    @JoinColumn(name = "user_detail_id")
+    private UserDetail userDetail;
+
 }

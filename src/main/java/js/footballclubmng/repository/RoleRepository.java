@@ -4,9 +4,10 @@ import js.footballclubmng.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface RoleRepository extends JpaRepository<Role, Long> {
+import java.util.List;
 
-    Role getRoleByUserAccount(String name);
+@Repository
+public interface RoleRepository extends JpaRepository<Role, Integer> {
+
 
 }

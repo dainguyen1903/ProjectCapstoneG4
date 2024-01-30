@@ -2,18 +2,23 @@ package js.footballclubmng.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.FieldDefaults;
 
-@Data
+import java.io.Serializable;
+
+@Entity
+@Table(name = "role")
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+public class Role implements Serializable {
 
-@FieldDefaults(level = AccessLevel.PRIVATE)
-@Entity(name = "roles")
-public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
-    String name;
+    @Column(name = "role_id")
+    private int roleId;
+
+    @Column(name = "role_name")
+    private String roleName;
 }
