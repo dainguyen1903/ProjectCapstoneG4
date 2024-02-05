@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
+import java.util.Set;
 
 @Entity
 @Table(name = "role")
@@ -22,5 +23,8 @@ public class Role implements Serializable {
 
     @Column(name = "role_name")
     private String roleName;
+
+    @OneToMany(mappedBy = "role")
+    private Set<User> users;
 }
 
