@@ -5,13 +5,18 @@ import './App.css'
 import { DatePicker } from 'antd';
 import HeaderPage from './component/layout/header';
 import LayOutPage from './component/layout';
+import Login from './page/login/login';
+import Register from './page/register/register';
+import RouterConfig from './component/router/routerConfig';
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <>
-       <LayOutPage/>
+       <RouterConfig/>
+       {/* <Login /> */}
+       {/* <Register /> */}
     </>
   )
 }
