@@ -32,8 +32,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    @Autowired RoleRepository roleRepository;
-
     @GetMapping("/login")
     public String loginPage() {
         return "login";
@@ -46,11 +44,7 @@ public class UserController {
         return new ResponseEntity<ResponseModel>(r, HttpStatus.OK) ;
     }
 
-    @GetMapping("/getrole")
-    public List<Role> getRole(){
-        List<Role> l = roleRepository.findAll();
-        return l;
-    }
+
 
 }
 

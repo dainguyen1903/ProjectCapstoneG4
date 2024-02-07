@@ -3,6 +3,7 @@ package js.footballclubmng.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -32,18 +33,23 @@ public class User  {
     @Column(name = "image_url")
     private String image;
     @Column(name = "create_time")
-    private Date createTime;
+    private LocalDateTime createTime;
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
+    private boolean active;
+    private String otp;
+    @Column(name = "otp_generate_time")
+    private LocalDateTime otpGenerateTime;
 
-    public User(String firstName, String lastName, String email, String password, Date createTime, Role role) {
+    public User(String firstName, String lastName, String email, String password, LocalDateTime createTime, boolean active, String otp, LocalDateTime otpGenerateTime) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.createTime = createTime;
-        this.role = role;
+        this.otp = otp;
+        this.otpGenerateTime = otpGenerateTime;
     }
 }
 
