@@ -41,10 +41,22 @@ public class UserController {
     public ResponseEntity<ResponseModel> register(@RequestBody UserRegisterDto userRegisterDto){
         String result = userService.addUser(userRegisterDto);
         ResponseModel r = new ResponseModel("true", result, null);
-        return new ResponseEntity<ResponseModel>(r, HttpStatus.OK) ;
+        return new ResponseEntity<ResponseModel>(r, HttpStatus.OK);
     }
 
+    @PutMapping("/verify-otp")
+    public ResponseEntity<ResponseModel> verifyEmail(@RequestParam String email, @RequestParam String otp){
+        String result = userService.verifyEmail(email,otp);
+        ResponseModel r = new ResponseModel("true", result, null);
+        return new ResponseEntity<ResponseModel>(r,HttpStatus.OK);
+    }
 
+    @PutMapping("/generrate-otp")
+    public ResponseEntity<ResponseModel> generateOtp(@RequestParam String email){
+        String result = userService.generateOtp(email);
+        ResponseModel r = new ResponseModel("true", result, null);
+        return new ResponseEntity<ResponseModel>(r,HttpStatus.OK);
+    }
 
 }
 
