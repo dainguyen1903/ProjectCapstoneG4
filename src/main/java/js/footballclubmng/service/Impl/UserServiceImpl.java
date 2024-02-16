@@ -13,9 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
-import java.time.LocalDate;
-import java.sql.Date;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -62,11 +61,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String verifyEmail(String email, String otp){
-        User user = userRepository.findByEmail(email);
+         User user = userRepository.findByEmail(email);
         if (user==null){
             return "không tìm thấy email!" + email;
         }
-        if (user.getOtp().equals(otp) && Duration.between(user.getOtpGenerateTime(),LocalDateTime.now()).getSeconds() <= 60){
+//        if (user.getOtp().equals(otp) && Duration.between(user.getOtpGenerateTime(),
+//                LocalDateTime.now()).getSeconds() < (1*60))
+        if (user.getOtp().equals(otp) && ChronoUnit.MINUTES.between(user.getOtpGenerateTime(), LocalDateTime.now())<2)
+        {
             user.setActive(true);
             userRepository.save(user);
             return "OTP đã được xác minh, bạn có thể đăng nhập ngay bây giờ.";
@@ -88,6 +90,6 @@ public class UserServiceImpl implements UserService {
         }
         user.setOtp(otp);
         userRepository.save(user);
-        return "Mã OTP mới đã được gửi tới email của bạn, vui lòng xác minh OTP trong vòng 1 phút.";
+        return "Mã OTP mới đã được gửi tới email của bạn, vui lòng xác minh OTP trong vòng 120 giây";
     }
 }
