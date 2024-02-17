@@ -10,6 +10,7 @@ import AddUserForm from "../../page/manage-user/add";
 import ManagePlayer from "../../page/player/player";
 import AddPlayerForm from "../../page/player/add";
 import AddNewsForm from "../../page/post/add";
+import ResetPass from "../../page/resetpassword";
 
 const RouterConfig = () => {
   return (
@@ -29,10 +30,12 @@ const RouterConfig = () => {
           <Route path="/news/add" element={<AddNewsForm />} />
           <Route path="/news/edit/:id" element={<AddNewsForm />} />
           <Route path="/news/detail/:id" element={<PostMange />} />
+          <Route path="/news/detail/:id" element={<PostMange />} />
           <Route path="/home" element={<Home />} />
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/password/reset" element={<ResetPass />} />
       </Routes>
     </>
   );

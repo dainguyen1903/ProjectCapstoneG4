@@ -15,7 +15,7 @@ const Register = () => {
           </p>
           <input placeholder="Email" className="Input" />
           <input placeholder="Password" type="password" className="Input" />
-          <p className="Anchor">Forgot password?</p>
+         
           <button
             style={{
               width: "100%",

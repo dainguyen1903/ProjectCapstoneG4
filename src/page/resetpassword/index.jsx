@@ -1,7 +1,7 @@
 import { Card, Input, Row, Button, Form, Col } from "antd";
 import { Link, useNavigate } from "react-router-dom";
-import "./login.css";
-const Login = () => {
+import "./../login/login.css";
+const ResetPass = () => {
     const navgate = useNavigate()
   return (
     <div className="Container">
@@ -13,11 +13,10 @@ const Login = () => {
             }}
             className="Title"
           >
-            Sign in
+            Reset Password
           </p>
           <input placeholder="Email" className="Input" />
-          <input placeholder="Password" type="password" className="Input" />
-          <Link to="/password/reset" className="Anchor">Forgot password?</Link>
+          
           <button
           onClick={()=> navgate("/manageuser")}
             style={{
@@ -25,7 +24,7 @@ const Login = () => {
             }}
             className="Button"
           >
-            Sign In
+            Confirm
           </button>
         </div>
       </div>
@@ -46,4 +45,4 @@ const Login = () => {
     </div>
   );
 };
-export default Login;
+export default ResetPass;
