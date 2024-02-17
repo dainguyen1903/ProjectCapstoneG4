@@ -1,10 +1,17 @@
 import React, { useState } from "react";
-import { Table, Input, Button, Space, Modal, Form } from "antd";
+import { Table, Input, Button, Space, Modal, Form, Row, Col } from "antd";
 import FormItem from "antd/es/form/FormItem";
-import { UserOutlined,ProductOutlined  ,EditOutlined ,DeleteOutlined } from '@ant-design/icons';
+import {
+  UserOutlined,
+  ProductOutlined,
+  EditOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
+import { useNavigate } from "react-router";
 
 const ManageUser = () => {
   const [searchText, setSearchText] = useState("");
+  const navigate = useNavigate();
   const [users, setUsers] = useState([
     { id: 1, name: "Nguyễn Văn A", email: "nguyen.van.a@example.com" },
     { id: 2, name: "Trần Thị B", email: "tran.thi.b@example.com" },
@@ -45,7 +52,10 @@ const ManageUser = () => {
 
   // Function to handle delete
   const handleDelete = (userId) => {
-    // Perform delete logic here
+    Modal.confirm({
+      title: "Xác nhận",
+      content: "Xóa người dùng",
+    });
   };
 
   // Table columns
@@ -66,9 +76,19 @@ const ManageUser = () => {
       render: (text, record) => (
         <Space size="middle">
           <Space size="middle">
-        <Button><EditOutlined style={{ fontSize: '16px' }} onClick={() => handleEdit(record.id)} /></Button>
-        <Button><DeleteOutlined style={{ fontSize: '16px' }} onClick={() => handleDelete(record.id)} /></Button>
-      </Space>
+            <Button>
+              <EditOutlined
+                style={{ fontSize: "16px" }}
+                onClick={() => navigate("/user/edit/" + record.id)}
+              />
+            </Button>
+            <Button>
+              <DeleteOutlined
+                style={{ fontSize: "16px" }}
+                onClick={() => handleDelete(record.id)}
+              />
+            </Button>
+          </Space>
         </Space>
       ),
     },
@@ -88,11 +108,23 @@ const ManageUser = () => {
             </span>
           }
         >
-          <Input
-            style={{
-              width: 500,
-            }}
-          />
+          <Row gutter={[8, 8]}>
+            <Col span={8}>
+              <Input />
+            </Col>
+            <Col
+              style={{
+                marginLeft: 20,
+              }}
+            >
+              <Button type="primary">Tìm kiếm</Button>
+            </Col>
+            <Col>
+              <Button onClick={() => navigate("/user/add")}>
+                Thêm người dùng
+              </Button>
+            </Col>
+          </Row>
         </Form.Item>
       </Form>
       <Table
