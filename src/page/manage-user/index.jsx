@@ -39,6 +39,7 @@ const ManageUser = () => {
 
   // Function to handle search
   const handleSearch = (value) => {
+    alert(value.name)
    setUsers(data.filter(i => i.name.toUpperCase().includes(value.name.toUpperCase())))
     
   };

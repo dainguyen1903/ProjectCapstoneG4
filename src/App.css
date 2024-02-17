@@ -26,3 +26,33 @@ p,h1,h2,h3{
     margin: 0;
     padding: 0;
 }
+.ant-form-item {
+   margin: 0 !important;
+   padding: 0 !important;
+  }
+  .ant-form{
+    margin-bottom: 20px !important;
+  }
+  .ant-select-selector{
+    background-color: #eee !important;
+    border: none !important;
+  }
+  .Input {
+    background-color: #eee;
+    border: none;
+    padding: 12px 15px;
+    margin: 8px 0;
+    width: 100%;
+}
+.Button {
+    border-radius: 20px;
+    border: 1px solid #ff4b2b;
+    background-color: #ff4b2b;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 12px 45px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: transform 80ms ease-in;
+}

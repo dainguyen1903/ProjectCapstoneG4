@@ -33,16 +33,16 @@ const AddPlayerForm = () => {
         layout="vertical"
       >
         <Form.Item
-          label="Tên cầu thủ"
+         
           name="name"
           rules={[
             { required: true, message: "Vui lòng nhập tên cầu thủ!" },
           ]}
         >
-          <Input />
+          <Input className="Input"  placeholder="Tên cầu thủ" />
         </Form.Item>
         <Form.Item
-          label="Ngày sinh"
+          
           name="date_of_birth"
           rules={[
             {
@@ -51,64 +51,64 @@ const AddPlayerForm = () => {
             },
           ]}
         >
-          <DatePicker />
+          <DatePicker placeholder="Ngày sinh" className="Input" />
         </Form.Item>
         <Form.Item
-          label="Chiều cao (cm)"
+        
           name="height"
           rules={[
             { required: true, message: "Vui lòng nhập chiều cao!" },
           ]}
         >
-          <Input type="number" />
+          <Input   placeholder="Chiều cao (cm)" type="number" className="Input" />
         </Form.Item>
         <Form.Item
-          label="Cân nặng (kg)"
+        
           name="weight"
           rules={[
             { required: true, message: "Vui lòng nhập cân nặng!" },
           ]}
         >
-          <Input type="number" />
+          <Input placeholder="Cân nặng (kg)" type="number" className="Input" />
         </Form.Item>
         <Form.Item
-          label="Quốc tịch"
+          
           name="nationality"
           rules={[
             { required: true, message: "Vui lòng nhập quốc tịch" },
           ]}
         >
-          <Input />
+          <Input placeholder="Quốc tịch" className="Input" />
         </Form.Item>
         <Form.Item
-          label="Vị trí"
+          
           name="position"
           rules={[
             { required: true, message: "Vui lòng nhập vị trí!" },
           ]}
         >
-          <Input />
+          <Input placeholder="Vị trí" className="Input" />
         </Form.Item>
-        <Form.Item label="Tiểu sử" name="bio">
-          <Input.TextArea />
+        <Form.Item  name="bio">
+          <Input.TextArea placeholder="Tiểu sử" className="Input"/>
         </Form.Item>
         <Form.Item
-          label="Ngày gia nhập"
+         
           name="join_date"
           rules={[
             { required: true, message: "Vui lòng nhập ngày gia nhập!" },
           ]}
         >
-          <DatePicker />
+          <DatePicker  placeholder="Ngày gia nhập" className="Input" />
         </Form.Item>
 
-        <Form.Item label="Ảnh" name="image_url">
-          <Input type="file" />
+        <Form.Item  name="image_url">
+          <Input placeholder="Ảnh" type="file" className="Input" />
         </Form.Item>
         <Form.Item>
-          <Button htmlType="submit" type="primary">
+          <button className="Button" htmlType="submit" type="primary">
             {id ? "Cập nhật" : "Tạo mới"}
-          </Button>
+          </button>
         </Form.Item>
       </Form>
     </div>

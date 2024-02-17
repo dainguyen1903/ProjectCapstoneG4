@@ -33,27 +33,27 @@ const AddNewsForm = () => {
         layout="vertical"
       >
         <Form.Item
-          label="Tên tiêu đề"
+        
           name="title"
           rules={[
             { required: true, message: "Vui lòng nhập tên tiêu đề bài viết!" },
           ]}
         >
-          <Input />
+          <Input placeholder="Tên tiêu đề" className="Input" />
         </Form.Item>
 
         <Form.Item
           rules={[{ required: true, message: "Vui lòng nhập mô tả bài viết!" }]}
-          label="Mô tả"
+          
           name="description"
         >
-          <Input.TextArea />
+          <Input.TextArea placeholder="Mô tả" className="Input" />
         </Form.Item>
 
         <Form.Item>
-          <Button htmlType="submit" type="primary">
+          <button className="Button" htmlType="submit" type="primary">
             {id ? "Cập nhật" : "Tạo mới"}
-          </Button>
+          </button>
         </Form.Item>
       </Form>
     </div>
