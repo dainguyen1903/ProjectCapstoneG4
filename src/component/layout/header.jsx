@@ -10,6 +10,10 @@ const HeaderPage = () => {
     <div className="header">
       <Row justify={"end"} style={{marginRight:20}}>
         <Col>
+        <Link to="/changepassword">
+       <Button style={{marginRight:10}} type="primary" shape="round">
+            Change Password
+        </Button></Link>
        <Link to="/login">
        <Button style={{marginRight:10}} type="primary" shape="round" icon={<UserOutlined />}>
             Login

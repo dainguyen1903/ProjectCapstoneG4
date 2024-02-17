@@ -11,6 +11,7 @@ import ManagePlayer from "../../page/player/player";
 import AddPlayerForm from "../../page/player/add";
 import AddNewsForm from "../../page/post/add";
 import ResetPass from "../../page/resetpassword";
+import ChangePassword from "../../page/changepass";
 
 const RouterConfig = () => {
   return (
@@ -32,6 +33,7 @@ const RouterConfig = () => {
           <Route path="/news/detail/:id" element={<PostMange />} />
           <Route path="/news/detail/:id" element={<PostMange />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/changepassword" element={<ChangePassword />} />
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
