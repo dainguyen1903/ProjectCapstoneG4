@@ -65,13 +65,15 @@ public class UserServiceImpl implements UserService {
         if (user==null){
             return "không tìm thấy email!" + email;
         }
-//        if (user.getOtp().equals(otp) && Duration.between(user.getOtpGenerateTime(),
-//                LocalDateTime.now()).getSeconds() < (1*60))
-        if (user.getOtp().equals(otp) && ChronoUnit.MINUTES.between(user.getOtpGenerateTime(), LocalDateTime.now())<2)
-        {
-            user.setActive(true);
-            userRepository.save(user);
-            return "OTP đã được xác minh, bạn có thể đăng nhập ngay bây giờ.";
+
+        if (user.getOtp().equals(otp)){
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime u = user.getOtpGenerateTime();
+            if(Duration.between(u,now).getSeconds()<60){
+                user.setActive(true);
+                userRepository.save(user);
+                return "OTP đã được xác minh, bạn có thể đăng nhập ngay bây giờ.";
+            }
         }
         return "Vui lòng tạo lại otp và thử lại.";
     }

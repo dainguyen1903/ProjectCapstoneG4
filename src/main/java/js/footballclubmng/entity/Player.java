@@ -3,7 +3,7 @@ package js.footballclubmng.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "player")
@@ -15,7 +15,7 @@ public class Player {
     private int playerId;
     private String name;
     @Column(name = "date_of_birth")
-    private Date dateOfBirth;
+    private LocalDateTime dateOfBirth;
     private int height;
     private int weight;
     @Column(name = "image_url")
@@ -24,5 +24,5 @@ public class Player {
     private String position;
     private String bio;
     @Column(name = "join_date")
-    private Date joinDate;
+    private LocalDateTime joinDate;
 }

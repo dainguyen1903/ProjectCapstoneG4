@@ -1,5 +1,6 @@
 package js.footballclubmng.controller;
 
+import js.footballclubmng.dto.PlayerDto;
 import js.footballclubmng.dto.ResponseModel;
 import js.footballclubmng.entity.Player;
 import js.footballclubmng.service.PlayerService;
@@ -29,7 +30,7 @@ public class PlayerController {
 
     @GetMapping("/list-player")
     public ResponseEntity<ResponseModel> listPlayer(){
-        List<Player> playerList = playerService.getAllPlayer();
+        List<PlayerDto> playerList = playerService.getAllPlayer();
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseModel("true","",playerList));
     }
 }

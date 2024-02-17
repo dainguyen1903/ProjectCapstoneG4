@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.List;
 
 
 @Entity
@@ -28,7 +28,7 @@ public class User  {
     private String password;
     private String address;
     @Column(name = "date_of_birth")
-    private Date dateOfBirth;
+    private LocalDateTime dateOfBirth;
     private String gender;
     @Column(name = "image_url")
     private String image;
@@ -41,6 +41,10 @@ public class User  {
     private String otp;
     @Column(name = "otp_generate_time")
     private LocalDateTime otpGenerateTime;
+
+    @OneToMany(mappedBy = "user")
+    private List<NewsComment> newsComments;
+
 
     public User(String firstName, String lastName, String email, String password, LocalDateTime createTime, boolean active, String otp, LocalDateTime otpGenerateTime) {
         this.firstName = firstName;
