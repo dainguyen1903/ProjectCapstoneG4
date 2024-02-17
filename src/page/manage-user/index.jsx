@@ -8,39 +8,39 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router";
-
+const data = [
+  { id: 1, name: "Nguyễn Văn A", email: "nguyen.van.a@example.com" },
+  { id: 2, name: "Trần Thị B", email: "tran.thi.b@example.com" },
+  { id: 3, name: "Lê Văn C", email: "le.van.c@example.com" },
+  { id: 4, name: "Phạm Thị D", email: "pham.thi.d@example.com" },
+  { id: 5, name: "Hoàng Văn E", email: "hoang.van.e@example.com" },
+  { id: 6, name: "Huỳnh Thị F", email: "huynh.thi.f@example.com" },
+  { id: 7, name: "Phan Văn G", email: "phan.van.g@example.com" },
+  { id: 8, name: "Vũ Thị H", email: "vu.thi.h@example.com" },
+  { id: 9, name: "Đặng Văn I", email: "dang.van.i@example.com" },
+  { id: 10, name: "Bùi Thị K", email: "bui.thi.k@example.com" },
+  { id: 11, name: "Đỗ Văn L", email: "do.van.l@example.com" },
+  { id: 12, name: "Hồ Thị M", email: "ho.thi.m@example.com" },
+  { id: 13, name: "Ngô Văn N", email: "ngo.van.n@example.com" },
+  { id: 14, name: "Dương Thị O", email: "duong.thi.o@example.com" },
+  { id: 15, name: "Lý Văn P", email: "ly.van.p@example.com" },
+  { id: 16, name: "Chu Thị Q", email: "chu.thi.q@example.com" },
+  { id: 17, name: "Võ Văn R", email: "vo.van.r@example.com" },
+  { id: 18, name: "Kim Thị S", email: "kim.thi.s@example.com" },
+  { id: 19, name: "Trịnh Văn T", email: "trinh.van.t@example.com" },
+  { id: 20, name: "Hoàng Thị U", email: "hoang.thi.u@example.com" },
+]
 const ManageUser = () => {
   const [searchText, setSearchText] = useState("");
   const navigate = useNavigate();
-  const [users, setUsers] = useState([
-    { id: 1, name: "Nguyễn Văn A", email: "nguyen.van.a@example.com" },
-    { id: 2, name: "Trần Thị B", email: "tran.thi.b@example.com" },
-    { id: 3, name: "Lê Văn C", email: "le.van.c@example.com" },
-    { id: 4, name: "Phạm Thị D", email: "pham.thi.d@example.com" },
-    { id: 5, name: "Hoàng Văn E", email: "hoang.van.e@example.com" },
-    { id: 6, name: "Huỳnh Thị F", email: "huynh.thi.f@example.com" },
-    { id: 7, name: "Phan Văn G", email: "phan.van.g@example.com" },
-    { id: 8, name: "Vũ Thị H", email: "vu.thi.h@example.com" },
-    { id: 9, name: "Đặng Văn I", email: "dang.van.i@example.com" },
-    { id: 10, name: "Bùi Thị K", email: "bui.thi.k@example.com" },
-    { id: 11, name: "Đỗ Văn L", email: "do.van.l@example.com" },
-    { id: 12, name: "Hồ Thị M", email: "ho.thi.m@example.com" },
-    { id: 13, name: "Ngô Văn N", email: "ngo.van.n@example.com" },
-    { id: 14, name: "Dương Thị O", email: "duong.thi.o@example.com" },
-    { id: 15, name: "Lý Văn P", email: "ly.van.p@example.com" },
-    { id: 16, name: "Chu Thị Q", email: "chu.thi.q@example.com" },
-    { id: 17, name: "Võ Văn R", email: "vo.van.r@example.com" },
-    { id: 18, name: "Kim Thị S", email: "kim.thi.s@example.com" },
-    { id: 19, name: "Trịnh Văn T", email: "trinh.van.t@example.com" },
-    { id: 20, name: "Hoàng Thị U", email: "hoang.thi.u@example.com" },
-  ]);
+  const [users, setUsers] = useState(data);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   // Function to handle search
   const handleSearch = (value) => {
-    setSearchText(value);
-    // Perform search logic here and update 'users' state accordingly
+   setUsers(data.filter(i => i.name.toUpperCase().includes(value.name.toUpperCase())))
+    
   };
 
   // Function to handle edit
@@ -61,7 +61,7 @@ const ManageUser = () => {
   // Table columns
   const columns = [
     {
-      title: "Họ",
+      title: "Họ tên",
       dataIndex: "name",
       key: "name",
     },
@@ -96,8 +96,9 @@ const ManageUser = () => {
 
   return (
     <div>
-      <Form layout="vertical">
+      <Form onFinish={handleSearch} layout="vertical">
         <Form.Item
+           name={"name"}
           label={
             <span
               style={{
@@ -117,7 +118,7 @@ const ManageUser = () => {
                 marginLeft: 20,
               }}
             >
-              <Button type="primary">Tìm kiếm</Button>
+              <Button htmlType="submit" type="primary">Tìm kiếm</Button>
             </Col>
             <Col>
               <Button onClick={() => navigate("/user/add")}>

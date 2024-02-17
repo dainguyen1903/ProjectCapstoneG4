@@ -8,11 +8,7 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router";
-
-const ManagePlayer = () => {
-  const [searchText, setSearchText] = useState("");
-  const navigate = useNavigate();
-  const [users, setUsers] = useState([
+const data = [
     {
       id: 1,
       name: "Nguyễn Văn A",
@@ -62,14 +58,17 @@ const ManagePlayer = () => {
       nationality: "Viet Nam",
       position: "Tiền đạo",
     },
-  ]);
+  ]
+const ManagePlayer = () => {
+  const [searchText, setSearchText] = useState("");
+  const navigate = useNavigate();
+  const [users, setUsers] = useState(data);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   // Function to handle search
   const handleSearch = (value) => {
-    setSearchText(value);
-    // Perform search logic here and update 'users' state accordingly
+    setUsers(data.filter(i => i.name.toUpperCase().includes(value.name.toUpperCase())))
   };
 
   // Function to handle edit
@@ -128,8 +127,9 @@ const ManagePlayer = () => {
 
   return (
     <div>
-      <Form layout="vertical">
+      <Form onFinish={handleSearch} layout="vertical">
         <Form.Item
+        name={"name"}
           label={
             <span
               style={{
@@ -149,7 +149,7 @@ const ManagePlayer = () => {
                 marginLeft: 20,
               }}
             >
-              <Button type="primary">Tìm kiếm</Button>
+              <Button htmlType="submit" type="primary">Tìm kiếm</Button>
             </Col>
             <Col>
               <Button onClick={() => navigate("/player/add")}>

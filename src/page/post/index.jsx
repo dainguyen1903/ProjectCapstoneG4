@@ -8,22 +8,22 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router";
-
+const data = [
+  { id: 1, title: "Bài đăng 1", content: "Nội dung bài đăng 1" },
+  { id: 2, title: "Bài đăng 2", content: "Nội dung bài đăng 2" },
+  // Thêm dữ liệu giả mạo khác nếu cần
+]
 const PostManage = () => {
   const navigate = useNavigate()
   const [searchText, setSearchText] = useState("");
-  const [posts, setPosts] = useState([
-    { id: 1, title: "Bài đăng 1", content: "Nội dung bài đăng 1" },
-    { id: 2, title: "Bài đăng 2", content: "Nội dung bài đăng 2" },
-    // Thêm dữ liệu giả mạo khác nếu cần
-  ]);
+  const [posts, setPosts] = useState(data);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   // Function to handle search
   const handleSearch = (value) => {
-    setSearchText(value);
-    // Perform search logic here and update 'users' state accordingly
+    setPosts(data.filter(i => i.title.toUpperCase().includes(value.title.toUpperCase())))
+
   };
 
   // Function to handle edit
@@ -75,8 +75,9 @@ const PostManage = () => {
 
   return (
     <div>
-      <Form layout="vertical">
+      <Form onFinish={handleSearch} layout="vertical">
         <Form.Item
+        name={"title"}
           label={
             <span
               style={{
@@ -96,7 +97,7 @@ const PostManage = () => {
                 marginLeft: 20,
               }}
             >
-              <Button type="primary">Tìm kiếm</Button>
+              <Button htmlType="submit" type="primary">Tìm kiếm</Button>
             </Col>
             <Col>
               <Button onClick={() => navigate("/news/add")}>
