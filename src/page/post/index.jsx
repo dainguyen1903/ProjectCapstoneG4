@@ -97,10 +97,10 @@ const PostManage = () => {
                 marginLeft: 20,
               }}
             >
-              <Button htmlType="submit" type="primary">Tìm kiếm</Button>
+              <Button className="Button-no-paading" htmlType="submit" shape="round">Tìm kiếm</Button>
             </Col>
             <Col>
-              <Button onClick={() => navigate("/news/add")}>
+              <Button shape="round" onClick={() => navigate("/news/add")}>
                 Thêm bài viết
               </Button>
             </Col>

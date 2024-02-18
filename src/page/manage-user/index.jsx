@@ -39,7 +39,6 @@ const ManageUser = () => {
 
   // Function to handle search
   const handleSearch = (value) => {
-    alert(value.name)
    setUsers(data.filter(i => i.name.toUpperCase().includes(value.name.toUpperCase())))
     
   };
@@ -119,10 +118,10 @@ const ManageUser = () => {
                 marginLeft: 20,
               }}
             >
-              <Button htmlType="submit" type="primary">Tìm kiếm</Button>
+              <Button className="Button-no-paading" shape="round" htmlType="submit" type="primary">Tìm kiếm</Button>
             </Col>
             <Col>
-              <Button onClick={() => navigate("/user/add")}>
+              <Button shape="round" onClick={() => navigate("/user/add")}>
                 Thêm người dùng
               </Button>
             </Col>

@@ -12,6 +12,7 @@ import AddPlayerForm from "../../page/player/add";
 import AddNewsForm from "../../page/post/add";
 import ResetPass from "../../page/resetpassword";
 import ChangePassword from "../../page/changepass";
+import DetailPlayer from "../../page/player/detail";
 
 const RouterConfig = () => {
   return (
@@ -25,7 +26,7 @@ const RouterConfig = () => {
           <Route path="/player/list" element={<ManagePlayer />} />
           <Route path="/player/add" element={<AddPlayerForm />} />
           <Route path="/player/edit/:id" element={<AddPlayerForm />} />
-          <Route path="/player/detail/:id" element={<ManageUser />} />
+          <Route path="/player/detail/:id" element={<DetailPlayer />} />
           <Route path="/manageproduct" element={<Products />} />
           <Route path="/news/list" element={<PostMange />} />
           <Route path="/news/add" element={<AddNewsForm />} />

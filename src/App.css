@@ -56,3 +56,11 @@ p,h1,h2,h3{
     text-transform: uppercase;
     transition: transform 80ms ease-in;
 }
+.Button-no-paading{
+    border: 1px solid #ff4b2b;
+    background-color: #ff4b2b;
+    color: white;
+}
+.Shadow{
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}

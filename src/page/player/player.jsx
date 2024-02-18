@@ -8,6 +8,7 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router";
+import {Link} from "react-router-dom";
 const data = [
     {
       id: 1,
@@ -92,6 +93,7 @@ const ManagePlayer = () => {
       title: "Họ tên",
       dataIndex: "name",
       key: "name",
+      render:(value,row) => <Link to={`/player/detail/`+row.id}>{value}</Link>
     },
     {
       title: "Quốc tịch",
@@ -149,10 +151,10 @@ const ManagePlayer = () => {
                 marginLeft: 20,
               }}
             >
-              <Button htmlType="submit" type="primary">Tìm kiếm</Button>
+              <Button  className="Button-no-paading" htmlType="submit" shape="round">Tìm kiếm</Button>
             </Col>
             <Col>
-              <Button onClick={() => navigate("/player/add")}>
+              <Button shape="round" onClick={() => navigate("/player/add")}>
                 Thêm cầu thủ
               </Button>
             </Col>
