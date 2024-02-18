@@ -9,29 +9,68 @@ import Sidebar from "./components/Sidebar/Sidebar";
 import Footer from "./components/Footer/Footer";
 import store from "./store/store";
 import {Provider} from "react-redux";
+import Login from "./pages/Login/Login";
 
+import Profile from "./pages/UpdateProfiles/Profile";
 function App() {
   return (
     <div className="App">
       <Provider store = {store}>
         <BrowserRouter>
-          <Header />
-          <Sidebar />
+       
+           <Routes>
+          {/* Home page route */}
+          <Route path="/" element={<>
+            <Header />
+            <Sidebar />
+            <Home />
+            <Footer />
+          </>} />
 
-          <Routes>
-            {/* home page route */}
-            <Route path = "/" element = {<Home />} />
-            {/* single product route */}
-            <Route path = "/product/:id" element = {<ProductSingle />} />
-            {/* category wise product listing route */}
-            <Route path = "/category/:category" element = {<CategoryProduct />} />
-            {/* cart */}
-            <Route path = "/cart" element = {<Cart />} />
-            {/* searched products */}
-            <Route path = "/search/:searchTerm" element = {<Search />} />
-          </Routes>
+          {/* Single product route */}
+          <Route path="/product/:id" element={<>
+            <Header />
+            <Sidebar />
+            <ProductSingle />
+            <Footer />
+          </>} />
 
-          <Footer />
+          {/* Category wise product listing route */}
+          <Route path="/category/:category" element={<>
+            <Header />
+            <Sidebar />
+            <CategoryProduct />
+            <Footer />
+          </>} />
+
+          {/* Cart */}
+          <Route path="/cart" element={<>
+            <Header />
+            <Sidebar />
+            <Cart />
+            <Footer />
+          </>} />
+
+          {/* Searched products */}
+          <Route path="/search/:searchTerm" element={<>
+            <Header />
+            <Sidebar />
+            <Search />
+            <Footer />
+          </>} />
+
+
+          <Route path="/profile" element={<>
+            <Header />
+            <Sidebar />
+            <Profile />
+            <Footer />
+          </>} />
+
+          {/* Login route */}
+          <Route path="/login" element={<Login />} />
+
+        </Routes>
         </BrowserRouter>
       </Provider>
     </div>
