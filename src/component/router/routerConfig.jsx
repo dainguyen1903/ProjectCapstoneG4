@@ -13,6 +13,7 @@ import AddNewsForm from "../../page/post/add";
 import ResetPass from "../../page/resetpassword";
 import ChangePassword from "../../page/changepass";
 import DetailPlayer from "../../page/player/detail";
+import DetailNews from "../../page/post/detail";
 
 const RouterConfig = () => {
   return (
@@ -31,8 +32,7 @@ const RouterConfig = () => {
           <Route path="/news/list" element={<PostMange />} />
           <Route path="/news/add" element={<AddNewsForm />} />
           <Route path="/news/edit/:id" element={<AddNewsForm />} />
-          <Route path="/news/detail/:id" element={<PostMange />} />
-          <Route path="/news/detail/:id" element={<PostMange />} />
+          <Route path="/news/detail/:id" element={<DetailNews />} />
           <Route path="/home" element={<Home />} />
           <Route path="/changepassword" element={<ChangePassword />} />
         </Route>

@@ -8,6 +8,7 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
 const data = [
   { id: 1, title: "Bài đăng 1", content: "Nội dung bài đăng 1" },
   { id: 2, title: "Bài đăng 2", content: "Nội dung bài đăng 2" },
@@ -46,6 +47,8 @@ const PostManage = () => {
       title: "Tiêu đề",
       dataIndex: "title",
       key: "title",
+      render:(value,row) => <Link to={`/news/detail/`+row.id}>{value}</Link>
+     
     },
 
     {
