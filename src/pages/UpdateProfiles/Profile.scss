@@ -1,7 +1,11 @@
 .panel {
-  box-shadow: none;
+ padding: 10px;
+  color: red;
+  margin: auto;
+  justify-content: center;
 
 }
+
 .panel-heading {
   border-bottom: 0;
 }
@@ -14,6 +18,7 @@
 }
 .panel-body *:first-child {
   margin-top: 0;
+  margin-left: 20%;
 }
 .panel-footer {
   border-top: 0;
@@ -64,4 +69,16 @@ form label {
   margin: 0px auto;
   margin-top: 196px;
   border: 4px solid #f3f3f3;
+}
+
+.search-btn{
+  background-color: orange;
+  width: 100px;
+  height: 32px;
+  margin-bottom: 20px;
+}
+ input,textarea{
+  width: 60%;
+  padding: 10px;
+  margin-bottom: 10px;
 }
