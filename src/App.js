@@ -9,6 +9,7 @@ import Sidebar from "./components/Sidebar/Sidebar";
 import Footer from "./components/Footer/Footer";
 import store from "./store/store";
 import {Provider} from "react-redux";
+import Blog from "./pages/Blog/Blog";
 import Login from "./pages/Login/Login";
 
 import Profile from "./pages/UpdateProfiles/Profile";
@@ -67,6 +68,12 @@ function App() {
             <Footer />
           </>} />
 
+          <Route path="/blog" element={<>
+            <Header />
+            <Sidebar />
+            <Blog/>
+            <Footer />
+          </>} />
           {/* Login route */}
           <Route path="/login" element={<Login />} />
 
