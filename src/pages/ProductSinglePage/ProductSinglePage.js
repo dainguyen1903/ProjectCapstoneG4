@@ -1,3 +1,4 @@
+"use client"
 import React, {useEffect, useState} from 'react';
 import "./ProductSinglePage.scss";
 import {useParams} from "react-router-dom";
@@ -8,6 +9,7 @@ import Loader from "../../components/Loader/Loader";
 import {formatPrice} from "../../utils/helpers";
 import { addToCart, getCartMessageStatus, setCartMessageOff, setCartMessageOn } from '../../store/cartSlice';
 import CartMessage from "../../components/CartMessage/CartMessage";
+import { FacebookProvider, CustomChat } from 'react-facebook';
 
 const ProductSinglePage = () => {
   const {id} = useParams();
@@ -60,6 +62,9 @@ const ProductSinglePage = () => {
 
   return (
     <main className='py-5 bg-whitesmoke'>
+          <FacebookProvider appId="959380638706569" chatSupport>
+        <CustomChat pageId="100573959787776" minimized={false}/>
+      </FacebookProvider>  
       <div className='product-single'>
         <div className='container'>
           <div className='product-single-content bg-white grid'>

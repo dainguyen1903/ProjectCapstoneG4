@@ -12,6 +12,14 @@ import {Provider} from "react-redux";
 import Blog from "./pages/Blog/Blog";
 import Login from "./pages/Login/Login";
 
+import LoginAuth from './pages/components/Login';
+
+import ChatRoom from './pages/components/ChatRoom';
+import AuthProvider from './pages/Context/AuthProvider';
+import AppProvider from './pages/Context/AppProvider';
+import AddRoomModal from './pages/components/Modals/AddRoomModal';
+import InviteMemberModal from './pages/components/Modals/InviteMemberModal';
+
 import Profile from "./pages/UpdateProfiles/Profile";
 function App() {
   return (
@@ -80,6 +88,18 @@ function App() {
         </Routes>
         </BrowserRouter>
       </Provider>
+      <BrowserRouter>
+      <AuthProvider>
+        <AppProvider>
+          <Routes>
+          <Route path="/auth" element={<LoginAuth/>} />
+            <Route path="/chat" element={<ChatRoom/>} />
+          </Routes>
+          <AddRoomModal />
+          <InviteMemberModal />
+        </AppProvider>
+      </AuthProvider>
+    </BrowserRouter>
     </div>
   );
 }

@@ -17,7 +17,7 @@ const Profile = () => {
         <h4 class="panel-title">User info</h4>
         </div>
         <div class="panel-body">
-          <div class="form-group">
+          <div class="fom-group">
             <label class="col-sm-2 control-label">Location</label>
             <div class="col-sm-10">
               <select class="form-control">
