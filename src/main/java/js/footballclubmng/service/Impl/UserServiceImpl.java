@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -82,7 +83,7 @@ public class UserServiceImpl implements UserService {
     public String generateOtp(String email){
         User user = userRepository.findByEmail(email);
         if (user==null){
-            return "không tìm thấy email!" + email;
+            return "không tìm thấy email: " + email;
         }
         String otp =otpUtil.generateOtp();
         try {
@@ -94,4 +95,33 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         return "Mã OTP mới đã được gửi tới email của bạn, vui lòng xác minh OTP trong vòng 120 giây";
     }
+
+    public String resetPassword(String email){
+        User user = userRepository.findByEmail(email);
+        if (user==null){
+            return "email của bạn không đúng!";
+        }
+        String token = UUID.randomUUID().toString().replace("-", "").substring(0, 30);
+        user.setResetPasswordToken(token);
+        userRepository.save(user);
+        String link = "http://localhost:8090/reset?token=" + token;
+        emailUtil.sendReSetPasswordEmail(email,link);
+        return "Link đặt lại mật khẩu đã được gửi đến email của bạn.";
+    }
+
+    public User getToken(String resetPasswordToken ){
+        return userRepository.findByResetPasswordToken(resetPasswordToken);
+    }
+
+    public String updatePassword(User user, String newPassword){
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setResetPasswordToken(null);
+        userRepository.save(user);
+        return "Đổi mật khẩu thành công.";
+    }
+
+
+
+
+
 }

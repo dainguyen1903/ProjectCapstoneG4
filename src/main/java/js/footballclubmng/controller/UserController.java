@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpSession;
 import js.footballclubmng.dto.ResponseModel;
 import js.footballclubmng.dto.UserRegisterDto;
 import js.footballclubmng.entity.Role;
+import js.footballclubmng.entity.User;
 import js.footballclubmng.repository.RoleRepository;
 import js.footballclubmng.repository.UserRepository;
 import js.footballclubmng.service.UserService;
@@ -57,6 +58,25 @@ public class UserController {
         ResponseModel r = new ResponseModel("true", result, null);
         return new ResponseEntity<ResponseModel>(r,HttpStatus.OK);
     }
+
+    @PutMapping("/reset-password")
+    public ResponseEntity<ResponseModel> resetPassword(@RequestParam String email){
+        String result = userService.resetPassword(email);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseModel("true",result, null));
+    }
+
+    @GetMapping("/reset")
+    public String showResetPasswordForm(@RequestParam String token){
+        User user = userService.getToken(token);
+        if (user == null){
+            return "Đường link này đã hết hiệu lực.";
+        }
+        return "";
+    }
+
+
+
 
 }
 

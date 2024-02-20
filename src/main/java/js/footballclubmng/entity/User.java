@@ -41,10 +41,10 @@ public class User  {
     private String otp;
     @Column(name = "otp_generate_time")
     private LocalDateTime otpGenerateTime;
-
+    @Column(name = "reset_password_token")
+    private String resetPasswordToken;
     @OneToMany(mappedBy = "user")
     private List<NewsComment> newsComments;
-
 
     public User(String firstName, String lastName, String email, String password, LocalDateTime createTime, boolean active, String otp, LocalDateTime otpGenerateTime) {
         this.firstName = firstName;
