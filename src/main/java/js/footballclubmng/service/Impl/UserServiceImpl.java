@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
         try {
             emailUtil.sendOtpEmail(userRegisterDto.getEmail(), otp);
         } catch (Exception e) {
-            throw new RuntimeException("Không thể gửi otp vui lòng thử lại!");
+            throw new RuntimeException("Không thể gửi OTP vui lòng thử lại!");
         }
         User account = new User();
         account.setFirstName(userRegisterDto.getFirstName());
@@ -57,11 +57,11 @@ public class UserServiceImpl implements UserService {
         account.setOtp(otp);
         account.setOtpGenerateTime(LocalDateTime.now());
         userRepository.save(account);
-        return "Đăng ký thành công!";
+        return "Đăng ký thành công. Mã OTP đã được gửi đến Email của bạn, vui lòng xác minh OTP trong vòng 60 giây";
     }
 
     @Override
-    public String verifyEmail(String email, String otp){
+    public String verifyOtp(String email, String otp){
          User user = userRepository.findByEmail(email);
         if (user==null){
             return "không tìm thấy email!" + email;
@@ -73,10 +73,10 @@ public class UserServiceImpl implements UserService {
             if(Duration.between(u,now).getSeconds()<60){
                 user.setActive(true);
                 userRepository.save(user);
-                return "OTP đã được xác minh, bạn có thể đăng nhập ngay bây giờ.";
+                return "Xác minh OTP thành công";
             }
         }
-        return "Vui lòng tạo lại otp và thử lại.";
+        return "Vui lòng tạo lại OTP và thử lại.";
     }
 
 
@@ -89,36 +89,59 @@ public class UserServiceImpl implements UserService {
         try {
             emailUtil.sendOtpEmail(email, otp);
         } catch (Exception e) {
-            throw new RuntimeException("Không thể gửi otp vui lòng thử lại!");
+            throw new RuntimeException("Không thể gửi OTP vui lòng thử lại!");
         }
         user.setOtp(otp);
         userRepository.save(user);
-        return "Mã OTP mới đã được gửi tới email của bạn, vui lòng xác minh OTP trong vòng 120 giây";
+        return "Mã OTP mới đã được gửi tới Email của bạn, vui lòng xác minh OTP trong vòng 60 giây";
     }
+
+//    public String resetPassword(String email){
+//        User user = userRepository.findByEmail(email);
+//        if (user==null){
+//            return "email của bạn không đúng!";
+//        }
+//        String token = UUID.randomUUID().toString().replace("-", "").substring(0, 30);
+//        user.setResetPasswordToken(token);
+//        userRepository.save(user);
+//        String link = "http://localhost:8090/user/reset?token=" + token;
+//        emailUtil.sendReSetPasswordEmail(email,link);
+//        return "Link đặt lại mật khẩu đã được gửi đến email của bạn.";
+//    }
+
+//    public User getToken(String resetPasswordToken ){
+//        return userRepository.findByResetPasswordToken(resetPasswordToken);
+//    }
 
     public String resetPassword(String email){
         User user = userRepository.findByEmail(email);
         if (user==null){
-            return "email của bạn không đúng!";
+            return "không tìm thấy email: " + email;
         }
-        String token = UUID.randomUUID().toString().replace("-", "").substring(0, 30);
-        user.setResetPasswordToken(token);
+        String otp = otpUtil.generateOtp();
+        try {
+            emailUtil.sendOtpEmail(email, otp);
+        } catch (Exception e) {
+            throw new RuntimeException("Không thể gửi otp vui lòng thử lại!");
+        }
+        user.setOtp(otp);
+        user.setOtpGenerateTime(LocalDateTime.now());
         userRepository.save(user);
-        String link = "http://localhost:8090/reset?token=" + token;
-        emailUtil.sendReSetPasswordEmail(email,link);
-        return "Link đặt lại mật khẩu đã được gửi đến email của bạn.";
+        return "Mã OTP mới đã được gửi tới email của bạn, vui lòng xác minh OTP trong vòng 60 giây";
     }
 
-    public User getToken(String resetPasswordToken ){
-        return userRepository.findByResetPasswordToken(resetPasswordToken);
-    }
-
-    public String updatePassword(User user, String newPassword){
+    public String updatePassword(String email, String newPassword){
+        User user = userRepository.findByEmail(email);
+        if (user==null){
+            return "không tìm thấy email: " + email;
+        }
         user.setPassword(passwordEncoder.encode(newPassword));
-        user.setResetPasswordToken(null);
         userRepository.save(user);
-        return "Đổi mật khẩu thành công.";
+        return "Đổi mật khẩu thành công";
     }
+
+
+
 
 
 

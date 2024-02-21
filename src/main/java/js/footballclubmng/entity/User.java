@@ -41,8 +41,6 @@ public class User  {
     private String otp;
     @Column(name = "otp_generate_time")
     private LocalDateTime otpGenerateTime;
-    @Column(name = "reset_password_token")
-    private String resetPasswordToken;
     @OneToMany(mappedBy = "user")
     private List<NewsComment> newsComments;
 

@@ -47,7 +47,7 @@ public class UserController {
 
     @PutMapping("/verify-otp")
     public ResponseEntity<ResponseModel> verifyEmail(@RequestParam String email, @RequestParam String otp){
-        String result = userService.verifyEmail(email,otp);
+        String result = userService.verifyOtp(email,otp);
         ResponseModel r = new ResponseModel("true", result, null);
         return new ResponseEntity<ResponseModel>(r,HttpStatus.OK);
     }
@@ -66,14 +66,15 @@ public class UserController {
                 new ResponseModel("true",result, null));
     }
 
-    @GetMapping("/reset")
-    public String showResetPasswordForm(@RequestParam String token){
-        User user = userService.getToken(token);
-        if (user == null){
-            return "Đường link này đã hết hiệu lực.";
-        }
-        return "";
+    @PutMapping("/upadate-password")
+    public ResponseEntity<ResponseModel> updatePassword(@RequestParam String email, @RequestParam String newPassword){
+        String result = userService.updatePassword(email,newPassword);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new js.footballclubmng.dto.ResponseModel("true",result, null));
     }
+
+
+
 
 
 
