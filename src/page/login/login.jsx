@@ -1,8 +1,29 @@
 import { Card, Input, Row, Button, Form, Col } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import "./login.css";
+import { useState } from "react";
+import useUserStore from "../../zustand/userStore";
+import useAuthStore from "../../zustand/authStore";
 const Login = () => {
     const navgate = useNavigate()
+    const [email,setEmail] = useState("");
+    const [password,setPassword] = useState("");
+    const [err,setErr] = useState(false);
+    const users = useUserStore(state => state.users)
+    const login = useAuthStore(state => state.login)
+    const handleLogin = () => {
+      const currentUser = users.find(i => i.email === email && i.password === password);
+      if(!currentUser){
+        setErr(true);
+      }
+      else{
+        setErr(false);
+         setTimeout(() => {
+          login(currentUser);
+         navgate("/")
+         }, 1000);
+      }
+    }
   return (
     <div className="Container">
       <div className="SignInContainer">
@@ -13,19 +34,21 @@ const Login = () => {
             }}
             className="Title"
           >
-            Sign in
+            Đăng nhập
           </p>
-          <input placeholder="Email" className="Input" />
-          <input placeholder="Password" type="password" className="Input" />
-          <Link to="/password/reset" className="Anchor">Forgot password?</Link>
+          <input value={email} onChange={(e) =>setEmail( e.target.value)} placeholder="Email" className="Input" />
+          <input value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Mật khẩu" type="password" className="Input" />
+          {err && <span  style={{color:"red",textAlign:"start"}}>Sai email hoặc mật khẩu</span>}
+
+          <Link to="/password/reset" className="Anchor">Quên mật khẩu?</Link>
           <button
-          onClick={()=> navgate("/manageuser")}
+          onClick={() => handleLogin()}
             style={{
               width: "100%",
             }}
             className="Button"
           >
-            Sign In
+           Đăng nhập
           </button>
         </div>
       </div>
@@ -35,10 +58,10 @@ const Login = () => {
             <h2 className="Title">Hello, Friend!</h2>
             <p className="Paragraph">
               {" "}
-              Enter Your personal details and start journey with us
+              Nhập thông tin cá nhân của bạn và bắt đầu hành trình với chúng tôi
             </p>
             <p className="Paragraph">
-              <button onClick={() => navgate("/register")} className="Button GhostButton">Sigin Up</button>
+              <button onClick={() => navgate("/register")} className="Button GhostButton">Đăng kí</button>
             </p>
           </div>
         </div>

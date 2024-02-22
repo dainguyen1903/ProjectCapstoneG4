@@ -14,12 +14,14 @@ import ResetPass from "../../page/resetpassword";
 import ChangePassword from "../../page/changepass";
 import DetailPlayer from "../../page/player/detail";
 import DetailNews from "../../page/post/detail";
+import useAuthStore from "../../zustand/authStore";
 
 const RouterConfig = () => {
+  const isLogin = useAuthStore(state => state.isAuthenticated)
   return (
     <>
       <Routes>
-      <Route path="/" element={<Navigate to="/home" />} />
+      <Route path="/" element={<Navigate to={isLogin ? "/home":"/login"}  />} />
         <Route path="/" element={<LayOutPage />}>
           <Route path="/manageuser" element={<ManageUser />} />
           <Route path="/user/add" element={<AddUserForm />} />
