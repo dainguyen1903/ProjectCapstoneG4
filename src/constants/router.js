@@ -20,6 +20,7 @@ import ResetPass from "../page/resetpassword";
 import Products from "../page/products";
 import AddUserForm from "../page/manage-user/add";
 import { ROLE } from "./role";
+import ViewProfile from "../page/profile/view";
 export const router = [
   {
     show: true,
@@ -147,5 +148,17 @@ export const router = [
     component: ResetPass,
     path: "/password/reset",
     key: "/password/reset",
+  },
+  {
+    show: false,
+    component: ViewProfile,
+    path: "/profile",
+    key: "/profile",
+  },
+  {
+    show: false,
+    component: AddUserForm,
+    path: "/profile/edit",
+    key: "/profile",
   },
 ];

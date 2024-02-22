@@ -59,6 +59,7 @@ const ManageUser = () => {
       },
     });
   };
+  console.log(users)
   // Table columns
   const columns = [
     {

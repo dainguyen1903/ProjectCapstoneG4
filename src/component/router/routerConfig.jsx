@@ -32,7 +32,6 @@ const RouterConfig = () => {
   }
   else{
     setrousWithLayout([])
-
   }
  }
   },[user,isLogin])
@@ -50,7 +49,7 @@ console.log(routesWithLayout)
         {!isLogin && <Route path="/login" element={<Login />} />}
         {isLogin && <Route path="/register" element={<Register />} />}
         <Route path="/password/reset" element={<ResetPass />} />
-        <Route path="*"element={<Navigate to={isLogin ? "/home":"/login"}  />}  />
+        {/* <Route path="*"element={<Navigate to={isLogin ? "/home":"/login"}  />}  /> */}
 
       </Routes>
     </>

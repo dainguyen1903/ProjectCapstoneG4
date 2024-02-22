@@ -10,7 +10,12 @@ const HeaderPage = () => {
   const user = useAuthStore(state => state.user)
   const logout = useAuthStore(state => state.logout)
   const navigate = useNavigate()
-  const content = <di>
+  const content = <div>
+    <Link  to="/profile">
+       <div className="flex-center" style={{marginRight:10,color:"black",fontWeight:"bold"}}  shape="round">
+            Thông tin cá nhân
+        </div></Link>
+        <hr/>
      <Link  to="/changepassword">
        <div className="flex-center" style={{marginRight:10,color:"black",fontWeight:"bold"}}  shape="round">
             Thay đổi mật khẩu
@@ -20,7 +25,7 @@ const HeaderPage = () => {
           logout()
           navigate("/")
         }} className="flex-center" style={{marginRight:10,color:"black",cursor:"pointer",fontWeight:"bold"}}>Đăng xuất</div>
-  </di>
+  </div>
   return (
     user ? <div className="header">
     <Row justify={"end"} style={{marginRight:20}}>

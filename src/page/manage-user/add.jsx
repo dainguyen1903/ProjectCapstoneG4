@@ -1,15 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Form, Input, Button, DatePicker, Select, Modal } from "antd";
 import { FileImageOutlined } from "@ant-design/icons";
-import { useParams } from "react-router";
+import { useLocation, useParams } from "react-router";
 import "./../login/login.css";
 import useUserStore from "../../zustand/userStore";
 import moment from "moment"
 import LoadingFull from "../../component/loading/loadingFull";
+import useAuthStore from "../../zustand/authStore";
 const { Option } = Select;
 
 const AddUserForm = () => {
   const [form] = Form.useForm();
+  const location = useLocation()
+  const isEditProfile = location.pathname.includes("profile")
   const { id } = useParams();
   const [url, setUrl] = useState(null);
   const [imageName, setImageName] = useState("");
@@ -18,13 +21,15 @@ const AddUserForm = () => {
   const addUser = useUserStore((state) => state.adduser);
   const [loading,setLoading] = useState(false)
   const users = useUserStore((state) => state.users);
-  const detail = users.find(i => i.id == id) || {}
+  const user = useAuthStore(state => state.user)
+  let detail = isEditProfile ? user : (users.find(i => i.id == id) || {})
+
   console.log(detail)
   // Confirm save
   const confirmSave = (value) => {
     Modal.confirm({
       title: "Xác nhận",
-      content: !id ? "Thêm người dùng" : "Cập nhật người dùng",
+      content: isEditProfile ? "Chỉnh sửa thông tin cá nhân" :!id ? "Thêm người dùng" : "Cập nhật người dùng",
       onOk: () => {
         const dataPosst = JSON.parse(JSON.stringify(value));
         const birdday = dataPosst.date_of_birth;
@@ -33,16 +38,16 @@ const AddUserForm = () => {
         dataPosst.image_url = url;
 
         setTimeout(() => {
-          if (id) {
-            updateUsers(id, dataPosst);
+          if (id || isEditProfile) {
+            updateUsers(id || user.id, dataPosst,isEditProfile);
           } else {
             addUser(dataPosst);
           }
           Modal.success({
             title: "Thành công",
-            content: !id ? "Thêm thành công" : "Cập nhật thành công",
+            content: (!id &&!isEditProfile) ? "Thêm thành công" : "Cập nhật thành công",
           });
-          if (!id) {
+          if (!id && !isEditProfile) {
             form.resetFields();
           }
         }, 1000);
@@ -56,7 +61,7 @@ const AddUserForm = () => {
     setUrl(tempUrl);
   };
   useEffect(() => {
-    if (id) {
+    if (id || isEditProfile) {
       setLoading(true);
       new Promise((resolve) => {
         const dataDetail = JSON.parse(JSON.stringify(detail))
@@ -78,7 +83,7 @@ const AddUserForm = () => {
   return (
     <div>
       <h2 style={{ marginBottom: 10 }}>
-        {!id ? "Thêm người dùng" : "Cập nhật người dùng"}
+        {isEditProfile ? "Chỉnh sửa thông tin cá nhân" :!id ? "Thêm người dùng" : "Cập nhật người dùng"}
       </h2>
       <Form
         form={form}
@@ -92,12 +97,12 @@ const AddUserForm = () => {
         >
           <Input placeholder="Email" className="Input" />
         </Form.Item>
-        <Form.Item
+      {!isEditProfile &&   <Form.Item
           name="password"
           rules={[{ required: true, message: "Vui lòng nhập password!" }]}
         >
           <Input.Password placeholder="Password" className="Input" />
-        </Form.Item>
+        </Form.Item>}
         <Form.Item
           name="first_name"
           rules={[{ required: true, message: "Vui lòng nhập họ và tên đệm!" }]}
@@ -151,7 +156,7 @@ const AddUserForm = () => {
             className="Input"
           />
         </Form.Item>
-        <Form.Item
+        {!isEditProfile && <Form.Item
           name="role_id"
           rules={[{ required: true, message: "Vui lòng chọn quyền!" }]}
         >
@@ -160,7 +165,7 @@ const AddUserForm = () => {
             <Option value="2">Staff</Option>
             <Option value="3">Markter </Option>
           </Select>
-        </Form.Item>
+        </Form.Item>}
         <Form.Item>
           <button
             style={{
@@ -170,7 +175,7 @@ const AddUserForm = () => {
             htmlType="submit"
             type="primary"
           >
-            {id ? "Cập nhật" : "Tạo mới"}
+            {isEditProfile ? "Cập nhật thông tin cá nhân": id ? "Cập nhật" : "Tạo mới"}
           </button>
         </Form.Item>
       </Form>
