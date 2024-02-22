@@ -70,3 +70,6 @@ h1,h2,h3{
 .d-none{
     display: none;
 }
+.ant-table-wrapper .ant-table-pagination{
+    display: block !important;
+}
