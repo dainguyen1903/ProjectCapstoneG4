@@ -29,7 +29,7 @@ const ManagePlayer = () => {
   const handleSearch = (value) => {
     setUsers(
       players.filter((i) =>
-        i.name.toUpperCase().includes(form.getFieldsValue.name.toUpperCase())
+        i.name.toUpperCase().includes(form.getFieldValue('name').toUpperCase())
       )
     );
   };
@@ -50,7 +50,7 @@ const ManagePlayer = () => {
         removePlayer(userId);
         setUsers(
           players.filter((i) =>
-            i.name.toUpperCase().includes(form.getFieldsValue.name.toUpperCase())
+            i.name.toUpperCase().includes(form.getFieldValue('name').toUpperCase())
           ).filter(i => i.id != userId)
         )
         Modal.success({
@@ -142,8 +142,8 @@ const ManagePlayer = () => {
       </Form>
       <Table
         pagination={{
-          pageSize: 10,
-          total: 20,
+          
+          position:"bottomCenter"
         }}
         columns={columns}
         dataSource={users}

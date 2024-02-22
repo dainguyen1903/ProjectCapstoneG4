@@ -26,7 +26,7 @@ const AddPlayerForm = () => {
     const joinday = dataPosst.join_date
    dataPosst.date_of_birth =  moment(birdday).format('YYYY-MM-DD');
    dataPosst.join_date =  moment(joinday).format('YYYY-MM-DD');
-   dataPosst.image_name = dataPosst.image_url;
+   dataPosst.image_name = imageName;
    dataPosst.image_url = url;
 
     Modal.confirm({
