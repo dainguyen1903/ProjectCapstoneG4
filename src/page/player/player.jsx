@@ -27,9 +27,10 @@ const ManagePlayer = () => {
 
   // Function to handle search
   const handleSearch = (value) => {
+    const txt = form.getFieldValue('name')||""
     setUsers(
       players.filter((i) =>
-        i.name.toUpperCase().includes(form.getFieldValue('name').toUpperCase())
+        i.name.toUpperCase().includes(txt.toUpperCase())
       )
     );
   };
@@ -48,9 +49,10 @@ const ManagePlayer = () => {
       content: "Xóa cầu thủ",
       onOk: () => {
         removePlayer(userId);
+        const txt = form.getFieldValue('name')||""
         setUsers(
           players.filter((i) =>
-            i.name.toUpperCase().includes(form.getFieldValue('name').toUpperCase())
+            i.name.toUpperCase().includes(txt.toUpperCase())
           ).filter(i => i.id != userId)
         )
         Modal.success({

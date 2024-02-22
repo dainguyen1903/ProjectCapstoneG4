@@ -27,7 +27,8 @@ const ManageUser = () => {
     setUsers(
       listusers.filter((i) =>{
         const name = i.first_name + i.last_name
-      return name.toUpperCase().includes(form.getFieldValue('name').toUpperCase())}
+        const txt = form.getFieldValue('name')||""
+      return name.toUpperCase().includes(txt.toUpperCase())}
       )
     );
   };
@@ -49,8 +50,9 @@ const ManageUser = () => {
         setUsers(
           listusers.filter((i) =>{
             const name = i.first_name + i.last_name
-          return name.toUpperCase().includes(form.getFieldValue('name').toUpperCase())}
-          )
+            const txt = form.getFieldValue('name')||""
+          return name.toUpperCase().includes(txt.toUpperCase())}
+          ).filter(i => i.id != userId)
         );
         Modal.success({
           title: "Thành công",
