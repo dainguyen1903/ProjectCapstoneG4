@@ -7,13 +7,13 @@ const Footer = () => {
     <footer className='footer bg-orange'>
       <div className = "container py-4 text-center">
         <div className='flex align-center justify-center text-white fw-3 fs-14'>
-          <Link to = "/" className='text-uppercase'>privacy policy</Link>
+          <Link to = "/" className='text-uppercase'>Chính sách riêng tư</Link>
           <div className='vert-line'></div>
-          <Link to = "/" className='text-uppercase'>term of service</Link>
+          <Link to = "/" className='text-uppercase'>Dịch vụ</Link>
           <div className='vert-line'></div>
-          <Link to = "/" className='text-uppercase'>About SnapUp.</Link>
+          <Link to = "/" className='text-uppercase'>Về website</Link>
         </div>
-        <span className='text-white copyright-text text-manrope fs-14 fw-3'>&copy; 2022 SnapUp. All Rights Reserved.</span>
+
       </div>
     </footer>
   )

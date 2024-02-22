@@ -98,18 +98,8 @@ function App() {
               }
             />
 
-            {/* Searched products */}
-            <Route
-              path="/search/:searchTerm"
-              element={
-                <>
-                  <Header />
-                  <Sidebar />
-                  <Search />
-                  <Footer />
-                </>
-              }
-            />
+          
+            
 
             <Route
               path="/profile"
@@ -158,7 +148,9 @@ function App() {
             />
           </Routes>
         </BrowserRouter>
+
       </Provider>
+
     </div>
   );
 }

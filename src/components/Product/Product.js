@@ -13,7 +13,7 @@ const Product = ({product}) => {
         </div>
         <div className='product-item-info fs-14'>
           <div className='brand'>
-            <span>Brand: </span>
+            <span>Nhãn hàng </span>
             <span className='fw-7'>{product?.brand}</span>
           </div>
           <div className='title py-2'>
