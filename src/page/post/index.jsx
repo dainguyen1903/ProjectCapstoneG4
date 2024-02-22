@@ -9,21 +9,21 @@ import {
 } from "@ant-design/icons";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
-const data = [
-  { id: 1, title: "Bài đăng 1", content: "Nội dung bài đăng 1" },
-  { id: 2, title: "Bài đăng 2", content: "Nội dung bài đăng 2" },
-  // Thêm dữ liệu giả mạo khác nếu cần
-]
+import useNewsStore from "../../zustand/newsStore";
 const PostManage = () => {
+  const news = useNewsStore((state) => state.news);
+  const removeNews = useNewsStore((state) => state.removeNews);
+
   const navigate = useNavigate()
   const [searchText, setSearchText] = useState("");
-  const [posts, setPosts] = useState(data);
+  const [posts, setPosts] = useState(news);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   // Function to handle search
   const handleSearch = (value) => {
-    setPosts(data.filter(i => i.title.toUpperCase().includes(value.title.toUpperCase())))
+    console.log(value)
+    setPosts(news.filter(i => i.title.toUpperCase().includes(value.title.toUpperCase())))
 
   };
 
@@ -35,10 +35,19 @@ const PostManage = () => {
   };
 
   // Function to handle delete
-  const handleDelete = (userId) => {
+  const handleDelete = (id) => {
     Modal.confirm({
       title: "Xác nhận",
       content: "Xóa bài viết",
+      onOk:()=>{
+        removeNews(id);
+        Modal.success({
+          title:"Thành công",
+          content:"Xóa thành công"
+          
+        })
+        setPosts(news.filter(i => i.title.toUpperCase().includes(value.title.toUpperCase())))
+      }
     });
   };
 
