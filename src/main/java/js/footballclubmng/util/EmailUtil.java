@@ -43,8 +43,6 @@ public class EmailUtil {
 //        }
 //    }
 
-
-
 //    public void sendEmail(String email){
 //        SimpleMailMessage simpleMailMessage =new SimpleMailMessage();
 //        simpleMailMessage.setTo(email);

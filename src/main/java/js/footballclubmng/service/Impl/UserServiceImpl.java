@@ -1,5 +1,9 @@
 package js.footballclubmng.service.Impl;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import js.footballclubmng.dto.UserRegisterDto;
 import js.footballclubmng.entity.Role;
 import js.footballclubmng.entity.User;

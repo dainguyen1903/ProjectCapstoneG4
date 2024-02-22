@@ -3,6 +3,11 @@ package js.footballclubmng.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import js.footballclubmng.dto.ResponseModel;
 import js.footballclubmng.dto.UserRegisterDto;
 import js.footballclubmng.entity.Role;
@@ -39,7 +44,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<ResponseModel> register(@RequestBody UserRegisterDto userRegisterDto){
+    public ResponseEntity<ResponseModel> register(@RequestBody @Valid UserRegisterDto userRegisterDto){
         String result = userService.addUser(userRegisterDto);
         ResponseModel r = new ResponseModel("true", result, null);
         return new ResponseEntity<ResponseModel>(r, HttpStatus.OK);
@@ -60,14 +65,14 @@ public class UserController {
     }
 
     @PutMapping("/reset-password")
-    public ResponseEntity<ResponseModel> resetPassword(@RequestParam String email){
+    public ResponseEntity<ResponseModel> resetPassword(@RequestParam @Email(message = "Email không hợp lệ") String email){
         String result = userService.resetPassword(email);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseModel("true",result, null));
     }
 
     @PutMapping("/upadate-password")
-    public ResponseEntity<ResponseModel> updatePassword(@RequestParam String email, @RequestParam String newPassword){
+    public ResponseEntity<ResponseModel> updatePassword(@RequestParam String email,@Min(value = 8, message = "Mật khẩu phải có ít nhất 8 ký tự") @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])\\S+$") @RequestParam String newPassword){
         String result = userService.updatePassword(email,newPassword);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new js.footballclubmng.dto.ResponseModel("true",result, null));
