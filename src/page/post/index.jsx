@@ -137,7 +137,8 @@ const PostManage = () => {
       <Table
         pagination={{
           pageSize: 10,
-          total: 20,
+          total:posts.length,
+          position:["bottomCenter"]
         }}
         columns={columns}
         dataSource={posts}

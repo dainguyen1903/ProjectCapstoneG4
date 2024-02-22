@@ -147,7 +147,9 @@ const ManageUser = () => {
       <Table
         pagination={{
           pageSize: 10,
-          total: 20,
+          total:users.length,
+          position:["bottomCenter"]
+         
         }}
         columns={columns}
         dataSource={users}
