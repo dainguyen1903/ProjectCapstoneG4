@@ -38,7 +38,9 @@ const LayOutPage = () => {
             width: "100%",
             height: "100%",
             position: "relative",
-            overflowY:"auto"
+            overflowY:"auto",
+            padding:"10px",
+            paddingBottom:50
           }}
         >
           <Outlet />

@@ -1,39 +1,36 @@
 import React, { useState } from "react";
-import { Table, Input, Button, Space, Modal, Form } from "antd";
+import { Table, Input, Button, Space, Modal, Form, Row, Col } from "antd";
 import FormItem from "antd/es/form/FormItem";
-import { UserOutlined,ProductOutlined  ,EditOutlined ,DeleteOutlined } from '@ant-design/icons';
+import {
+  UserOutlined,
+  ProductOutlined,
+  EditOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
+import { useNavigate } from "react-router";
+import useuserStore from "../../zustand/userStore";
+import { useForm } from "antd/es/form/Form";
+import useUserStore from "../../zustand/userStore";
+import { ROLE } from "../../constants/role";
 
 const ManageUser = () => {
-  const [searchText, setSearchText] = useState("");
-  const [users, setUsers] = useState([
-    { id: 1, name: "Nguyễn Văn A", email: "nguyen.van.a@example.com" },
-    { id: 2, name: "Trần Thị B", email: "tran.thi.b@example.com" },
-    { id: 3, name: "Lê Văn C", email: "le.van.c@example.com" },
-    { id: 4, name: "Phạm Thị D", email: "pham.thi.d@example.com" },
-    { id: 5, name: "Hoàng Văn E", email: "hoang.van.e@example.com" },
-    { id: 6, name: "Huỳnh Thị F", email: "huynh.thi.f@example.com" },
-    { id: 7, name: "Phan Văn G", email: "phan.van.g@example.com" },
-    { id: 8, name: "Vũ Thị H", email: "vu.thi.h@example.com" },
-    { id: 9, name: "Đặng Văn I", email: "dang.van.i@example.com" },
-    { id: 10, name: "Bùi Thị K", email: "bui.thi.k@example.com" },
-    { id: 11, name: "Đỗ Văn L", email: "do.van.l@example.com" },
-    { id: 12, name: "Hồ Thị M", email: "ho.thi.m@example.com" },
-    { id: 13, name: "Ngô Văn N", email: "ngo.van.n@example.com" },
-    { id: 14, name: "Dương Thị O", email: "duong.thi.o@example.com" },
-    { id: 15, name: "Lý Văn P", email: "ly.van.p@example.com" },
-    { id: 16, name: "Chu Thị Q", email: "chu.thi.q@example.com" },
-    { id: 17, name: "Võ Văn R", email: "vo.van.r@example.com" },
-    { id: 18, name: "Kim Thị S", email: "kim.thi.s@example.com" },
-    { id: 19, name: "Trịnh Văn T", email: "trinh.van.t@example.com" },
-    { id: 20, name: "Hoàng Thị U", email: "hoang.thi.u@example.com" },
-  ]);
+  const [form] = useForm();
+  const listusers = useuserStore((state) => state.users);
+  const navigate = useNavigate();
+  const [users, setUsers] = useState(listusers);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const removeuser = useUserStore((state) => state.removeuser);
 
   // Function to handle search
   const handleSearch = (value) => {
-    setSearchText(value);
-    // Perform search logic here and update 'users' state accordingly
+    setUsers(
+      listusers.filter((i) =>{
+        const name = i.first_name + i.last_name
+        const txt = form.getFieldValue('name')||""
+      return name.toUpperCase().includes(txt.toUpperCase())}
+      )
+    );
   };
 
   // Function to handle edit
@@ -45,15 +42,36 @@ const ManageUser = () => {
 
   // Function to handle delete
   const handleDelete = (userId) => {
-    // Perform delete logic here
+    Modal.confirm({
+      title: "Xác nhận",
+      content: "Xóa người dùng",
+      onOk: () => {
+        removeuser(userId);
+        setUsers(
+          listusers.filter((i) =>{
+            const name = i.first_name + i.last_name
+            const txt = form.getFieldValue('name')||""
+          return name.toUpperCase().includes(txt.toUpperCase())}
+          ).filter(i => i.id != userId)
+        );
+        Modal.success({
+          title: "Thành công",
+          content: "Xóa thành công",
+        });
+      },
+    });
   };
-
+  console.log(users)
   // Table columns
   const columns = [
     {
-      title: "Họ",
+      title: "Họ tên",
       dataIndex: "name",
-      key: "name",
+      render: (_, row) => (
+        <span>
+          {row.first_name} {row.last_name}
+        </span>
+      ),
     },
     {
       title: "Email",
@@ -61,14 +79,25 @@ const ManageUser = () => {
       key: "email",
     },
     {
+      title: "Quyền",
+      dataIndex: "email",
+     render:(_,row) => {
+      return ROLE[row.role_id]
+     }
+    },
+    {
       title: "Action",
       key: "action",
       render: (text, record) => (
         <Space size="middle">
           <Space size="middle">
-        <Button><EditOutlined style={{ fontSize: '16px' }} onClick={() => handleEdit(record.id)} /></Button>
-        <Button><DeleteOutlined style={{ fontSize: '16px' }} onClick={() => handleDelete(record.id)} /></Button>
-      </Space>
+            <Button onClick={() => navigate("/user/edit/" + record.id)}>
+              <EditOutlined style={{ fontSize: "16px" }} />
+            </Button>
+            <Button onClick={() => handleDelete(record.id)}>
+              <DeleteOutlined style={{ fontSize: "16px" }} />
+            </Button>
+          </Space>
         </Space>
       ),
     },
@@ -76,8 +105,9 @@ const ManageUser = () => {
 
   return (
     <div>
-      <Form layout="vertical">
+      <Form form={form} onFinish={handleSearch} layout="vertical">
         <Form.Item
+          name={"name"}
           label={
             <span
               style={{
@@ -88,11 +118,30 @@ const ManageUser = () => {
             </span>
           }
         >
-          <Input
-            style={{
-              width: 500,
-            }}
-          />
+          <Row gutter={[8, 8]}>
+            <Col span={8}>
+              <Input />
+            </Col>
+            <Col
+              style={{
+                marginLeft: 20,
+              }}
+            >
+              <Button
+                className="Button-no-paading"
+                shape="round"
+                htmlType="submit"
+                type="primary"
+              >
+                Tìm kiếm
+              </Button>
+            </Col>
+            <Col>
+              <Button shape="round" onClick={() => navigate("/user/add")}>
+                Thêm người dùng
+              </Button>
+            </Col>
+          </Row>
         </Form.Item>
       </Form>
       <Table

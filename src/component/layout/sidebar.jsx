@@ -1,22 +1,42 @@
-import { Button, Menu } from "antd";
-import { UserOutlined,ProductOutlined  ,EditOutlined  } from '@ant-design/icons';
+import { Button, Divider, Menu } from "antd";
+import { UserOutlined,ProductOutlined  ,EditOutlined ,HomeOutlined,DribbbleOutlined } from '@ant-design/icons';
 import "./layout.css"
-import { useNavigate } from "react-router";
-
+import { useLocation, useNavigate } from "react-router";
+import { useEffect, useState } from "react";
+import { router } from "../../constants/router";
+import useUserStore from "../../zustand/userStore";
+import useAuthStore from "../../zustand/authStore";
 const SideBar = () => {
+  const location = useLocation();
+const [activeKey,setActiveKey] = useState("");
+const user = useAuthStore(state => state.user);
+// console.log(user)
+useEffect(() => {
+const currentRoute = router.find(i => location.pathname.includes(i.key));
+if(currentRoute){
+  setActiveKey(currentRoute.key)
+}
+},[location.pathname])
   const navigate = useNavigate()
   return (
     
-      <Menu defaultSelectedKeys={["1"]} style={{
+      user ? <Menu selectedKeys={[activeKey]} style={{
         height:"100vh",
         background:"#ff416c",
-        boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px"
+        boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+        color:"white",
+        fontWeight:"bold"
       }} >
-        <Menu.Item onClick={() => navigate("manageuser")} key={"1"} icon={<UserOutlined />}>Quản lí user</Menu.Item>
-        <Menu.Item onClick={() => navigate("manageproduct")} key={"2"} icon={<ProductOutlined />}>Quản lí Sản phẩm </Menu.Item>
-        <Menu.Item onClick={() => navigate("managepost")} key={"3"} icon={<EditOutlined />}>Quản lí bài viết </Menu.Item>
+        {router.filter(i => i.show && (!i.role || (i.role && i.role.includes(user.role_id)))).map(item => (
+          <Menu.Item onClick={() => {
+            navigate(item.path)
+            setActiveKey(item.key)
+          }} key={item.key} icon={<item.icon style={{
+            fontSize:20
+          }} />}>{item.menuName}</Menu.Item>
+        ))}
       </Menu>
-    
+    :<></>
   );
 };
 export default SideBar;
