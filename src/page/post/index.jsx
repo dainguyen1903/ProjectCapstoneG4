@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import useNewsStore from "../../zustand/newsStore";
 const PostManage = () => {
   const news = useNewsStore((state) => state.news);
+  
   const removeNews = useNewsStore((state) => state.removeNews);
 
   const navigate = useNavigate()
@@ -22,7 +23,6 @@ const PostManage = () => {
 
   // Function to handle search
   const handleSearch = (value) => {
-    console.log(value)
     setPosts(news.filter(i => i.title.toUpperCase().includes(value.title.toUpperCase())))
 
   };

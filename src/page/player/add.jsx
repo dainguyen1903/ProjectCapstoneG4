@@ -1,25 +1,84 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Form, Input, Button, DatePicker, Select, Modal } from "antd";
 import { FileImageOutlined } from "@ant-design/icons";
+import moment from 'moment';
 import { useParams } from "react-router";
+import usePlayerStore from "../../zustand/playerStore";
+import LoadingFull from "../../component/loading/loadingFull";
 const { Option } = Select;
 
 const AddPlayerForm = () => {
   const [form] = Form.useForm();
   const { id } = useParams();
-  const onFinish = (values) => {
-    console.log("Received values:", values);
-    // Gửi dữ liệu đến backend để xử lý tạo mới người dùng
-  };
-
+  const [url,setUrl] = useState(null)
+  const [imageName,setImageName] = useState("")
+  const updatePlayer = usePlayerStore((state) => state.updatePlayer);
+  const addPlayer = usePlayerStore((state) => state.addPlayer);
+  const players = usePlayerStore((state) => state.players);
+  const detail = players.find(i => i.id == id) || {}
+  const [loading,setLoading] = useState(false)
+  const fileRef = useRef()
   // Confirm save
-  const confirmSave = () => {
+  const confirmSave = (value) => {
+
+    const dataPosst = JSON.parse(JSON.stringify(value))
+    const birdday  = dataPosst.date_of_birth 
+    const joinday = dataPosst.join_date
+   dataPosst.date_of_birth =  moment(birdday).format('YYYY-MM-DD');
+   dataPosst.join_date =  moment(joinday).format('YYYY-MM-DD');
+   dataPosst.image_name = dataPosst.image_url;
+   dataPosst.image_url = url;
+
     Modal.confirm({
       title: "Xác nhận",
       content: !id ? "Thêm cầu thủ" : "Cập nhật cầu thủ",
+      onOk: () => {
+        setTimeout(() => {
+          if (id) {
+            updatePlayer(id,dataPosst);
+          } else {
+            addPlayer(dataPosst);
+          }
+          Modal.success({
+            title: "Thành công",
+            content: !id ? "Thêm thành công" : "Cập nhật thành công",
+          });
+          if (!id) {
+            form.resetFields();
+          }
+        }, 1000);
+      },
     });
+
   };
 
+  const handleChangeFile = (e) => {
+      let file = e.target.files[0];
+      const tempUrl = URL.createObjectURL(file);
+      setImageName(file.name)
+      setUrl(tempUrl)
+  }
+  useEffect(() => {
+    if (id) {
+      setLoading(true);
+      new Promise((resolve) => {
+        const dataDetail = JSON.parse(JSON.stringify(detail))
+        const imgName = detail.image_name
+       setImageName(imgName)
+        dataDetail.join_date = moment(dataDetail.join_date)
+        dataDetail.date_of_birth = moment(dataDetail.date_of_birth)
+        setUrl(dataDetail.image_url);
+        dataDetail.image_url = imgName;
+        delete dataDetail.image_name;
+        setTimeout(() => {
+          form.setFieldsValue(dataDetail);
+          resolve();
+        }, 1000);
+      }).then(() => {
+        setLoading(false);
+      });
+    }
+  }, [id]);
   return (
     <div>
       <h2 style={{ marginBottom: 10 }}>
@@ -103,7 +162,19 @@ const AddPlayerForm = () => {
         </Form.Item>
 
         <Form.Item  name="image_url">
-          <Input placeholder="Ảnh" type="file" className="Input" />
+          <Button onClick={() => fileRef.current.click()} style={{
+            marginBottom:10,
+            marginRight:10
+          }}>Thêm Ảnh</Button>   {imageName && <span>{imageName}</span>}
+          <div className="flex-start" style={{
+            alignItems:"center"
+          }}>
+        
+          </div>
+          <input style={{
+            display:"none"
+          }}  ref={fileRef} onChange={handleChangeFile} placeholder="Ảnh" type="file" className="Input" />
+        
         </Form.Item>
         <Form.Item>
           <button className="Button" htmlType="submit" type="primary">
@@ -111,6 +182,7 @@ const AddPlayerForm = () => {
           </button>
         </Form.Item>
       </Form>
+      <LoadingFull show={loading} />
     </div>
   );
 };

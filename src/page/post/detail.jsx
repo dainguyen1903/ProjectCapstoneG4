@@ -24,7 +24,7 @@ const DetailNews = () => {
     }).then(() => {
       setLoading(false);
     });
-  }, []);
+  }, [id]);
   return (
     <div>
       <h2

@@ -8,68 +8,30 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router";
-import {Link} from "react-router-dom";
-const data = [
-    {
-      id: 1,
-      name: "Nguyễn Văn A",
-      email: "nguyen.van.a@example.com",
-      nationality: "Viet Nam",
-      position: "Tiền đạo",
-    },
-    {
-      id: 1,
-      name: "Nguyễn Văn B",
-      email: "nguyen.van.a@example.com",
-      nationality: "Viet Nam",
-      position: "Tiền vệ",
-    },
-    {
-      id: 1,
-      name: "Nguyễn Văn C",
-      email: "nguyen.van.a@example.com",
-      nationality: "Viet Nam",
-      position: "Thủ môn",
-    },
-    {
-      id: 1,
-      name: "Nguyễn Văn D",
-      email: "nguyen.van.a@example.com",
-      nationality: "Viet Nam",
-      position: "Tiền đạo",
-    },
-    {
-      id: 1,
-      name: "Nguyễn Văn E",
-      email: "nguyen.van.a@example.com",
-      nationality: "Viet Nam",
-      position: "Tiền đạo",
-    },
-    {
-      id: 1,
-      name: "Nguyễn Văn F",
-      email: "nguyen.van.a@example.com",
-      nationality: "Viet Nam",
-      position: "Tiền đạo",
-    },
-    {
-      id: 1,
-      name: "Nguyễn Văn G",
-      email: "nguyen.van.a@example.com",
-      nationality: "Viet Nam",
-      position: "Tiền đạo",
-    },
-  ]
+import { Link } from "react-router-dom";
+import usePlayerStore from "../../zustand/playerStore";
+import { useForm } from "antd/es/form/Form";
+
 const ManagePlayer = () => {
+  const [form] = useForm()
+  const players = usePlayerStore((state) => state.players);
+  console.log(players)
+  const [loading,setLoading] = useState(false)
+  const removePlayer = usePlayerStore((state) => state.removePlayer);
   const [searchText, setSearchText] = useState("");
   const navigate = useNavigate();
-  const [users, setUsers] = useState(data);
+  const [users, setUsers] = useState(players);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+   
 
   // Function to handle search
   const handleSearch = (value) => {
-    setUsers(data.filter(i => i.name.toUpperCase().includes(value.name.toUpperCase())))
+    setUsers(
+      players.filter((i) =>
+        i.name.toUpperCase().includes(form.getFieldsValue.name.toUpperCase())
+      )
+    );
   };
 
   // Function to handle edit
@@ -84,6 +46,18 @@ const ManagePlayer = () => {
     Modal.confirm({
       title: "Xác nhận",
       content: "Xóa cầu thủ",
+      onOk: () => {
+        removePlayer(userId);
+        setUsers(
+          players.filter((i) =>
+            i.name.toUpperCase().includes(form.getFieldsValue.name.toUpperCase())
+          ).filter(i => i.id != userId)
+        )
+        Modal.success({
+          title: "Thành công",
+          content: "Xóa thành công",
+        });
+      },
     });
   };
 
@@ -93,7 +67,9 @@ const ManagePlayer = () => {
       title: "Họ tên",
       dataIndex: "name",
       key: "name",
-      render:(value,row) => <Link to={`/player/detail/`+row.id}>{value}</Link>
+      render: (value, row) => (
+        <Link to={`/player/detail/` + row.id}>{value}</Link>
+      ),
     },
     {
       title: "Quốc tịch",
@@ -109,29 +85,26 @@ const ManagePlayer = () => {
       render: (text, record) => (
         <Space size="middle">
           <Space size="middle">
-            <Button>
+            <Button onClick={() => navigate("/player/edit/" + record.id)}>
               <EditOutlined
                 style={{ fontSize: "16px" }}
-                onClick={() => navigate("/player/edit/" + record.id)}
               />
             </Button>
-            <Button>
-              <DeleteOutlined
-                style={{ fontSize: "16px" }}
-                onClick={() => handleDelete(record.id)}
-              />
+            <Button onClick={() => handleDelete(record.id)}>
+              <DeleteOutlined style={{ fontSize: "16px" }} />
             </Button>
           </Space>
         </Space>
       ),
     },
   ];
+ 
 
   return (
     <div>
-      <Form onFinish={handleSearch} layout="vertical">
+      <Form form={form} onFinish={handleSearch} layout="vertical">
         <Form.Item
-        name={"name"}
+          name={"name"}
           label={
             <span
               style={{
@@ -151,7 +124,13 @@ const ManagePlayer = () => {
                 marginLeft: 20,
               }}
             >
-              <Button  className="Button-no-paading" htmlType="submit" shape="round">Tìm kiếm</Button>
+              <Button
+                className="Button-no-paading"
+                htmlType="submit"
+                shape="round"
+              >
+                Tìm kiếm
+              </Button>
             </Col>
             <Col>
               <Button shape="round" onClick={() => navigate("/player/add")}>
