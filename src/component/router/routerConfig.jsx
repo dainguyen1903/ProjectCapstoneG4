@@ -15,32 +15,43 @@ import ChangePassword from "../../page/changepass";
 import DetailPlayer from "../../page/player/detail";
 import DetailNews from "../../page/post/detail";
 import useAuthStore from "../../zustand/authStore";
+import { useEffect, useState } from "react";
+import useUserStore from "../../zustand/userStore";
+import { router } from "../../constants/router";
 
 const RouterConfig = () => {
   const isLogin = useAuthStore(state => state.isAuthenticated)
+  const user = useAuthStore(state => state.user)
+  const [routesWithLayout,setrousWithLayout] = useState([]);
+  const [normalLayout,setnormalLayout] = useState([]);
+  useEffect(() => {
+ if(user){
+  const listRouteLayout = router.filter(i => ((!i.role ||  i.role.includes(user.role_id)) && i.isProtected!==false ));
+  if(isLogin){
+    setrousWithLayout(listRouteLayout)
+  }
+  else{
+    setrousWithLayout([])
+
+  }
+ }
+  },[user,isLogin])
+console.log(routesWithLayout)
   return (
     <>
       <Routes>
       <Route path="/" element={<Navigate to={isLogin ? "/home":"/login"}  />} />
         <Route path="/" element={<LayOutPage />}>
-          <Route path="/manageuser" element={<ManageUser />} />
-          <Route path="/user/add" element={<AddUserForm />} />
-          <Route path="/user/edit/:id" element={<AddUserForm />} />
-          <Route path="/player/list" element={<ManagePlayer />} />
-          <Route path="/player/add" element={<AddPlayerForm />} />
-          <Route path="/player/edit/:id" element={<AddPlayerForm />} />
-          <Route path="/player/detail/:id" element={<DetailPlayer />} />
-          <Route path="/manageproduct" element={<Products />} />
-          <Route path="/news/list" element={<PostMange />} />
-          <Route path="/news/add" element={<AddNewsForm />} />
-          <Route path="/news/edit/:id" element={<AddNewsForm />} />
-          <Route path="/news/detail/:id" element={<DetailNews />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/changepassword" element={<ChangePassword />} />
+          {routesWithLayout.map(i => (
+             <Route path={i.path} element={<i.component />} />
+          ))}
+          
         </Route>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        {!isLogin && <Route path="/login" element={<Login />} />}
+        {isLogin && <Route path="/register" element={<Register />} />}
         <Route path="/password/reset" element={<ResetPass />} />
+        <Route path="*"element={<Navigate to={isLogin ? "/home":"/login"}  />}  />
+
       </Routes>
     </>
   );

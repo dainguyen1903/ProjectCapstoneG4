@@ -22,27 +22,27 @@ const HeaderPage = () => {
         }} className="flex-center" style={{marginRight:10,color:"black",cursor:"pointer",fontWeight:"bold"}}>Đăng xuất</div>
   </di>
   return (
-    <div className="header">
-      <Row justify={"end"} style={{marginRight:20}}>
-        <Col>
-      
-       {/* <Link to="/login">
-       <Button className="Button-no-paading" style={{marginRight:10}}  shape="round" icon={<UserOutlined />}>
-            Login
-        </Button></Link>
-        </Col>
-        <Col>
-        <Link to={"/register"}>
-        <Button type="default" shape="round" icon={<UserOutlined />}  >Register</Button></Link> */}
-       
-        <Popover content={content}  trigger="hover">
-        <Avatar style={{marginRight:10}} src={user.image_url}>{user.first_name[0].toUpperCase()}</Avatar>
-        {user.first_name +" "+ user.last_name}
-    </Popover>
-        </Col>
-       <Col style={{marginLeft:15}}></Col>
-      </Row>
-    </div>
+    user ? <div className="header">
+    <Row justify={"end"} style={{marginRight:20}}>
+      <Col>
+    
+     {/* <Link to="/login">
+     <Button className="Button-no-paading" style={{marginRight:10}}  shape="round" icon={<UserOutlined />}>
+          Login
+      </Button></Link>
+      </Col>
+      <Col>
+      <Link to={"/register"}>
+      <Button type="default" shape="round" icon={<UserOutlined />}  >Register</Button></Link> */}
+     
+      <Popover content={content}  trigger="hover">
+      <Avatar style={{marginRight:10}} src={user.image_url}>{user.first_name[0].toUpperCase()}</Avatar>
+      {user.first_name +" "+ user.last_name}
+  </Popover>
+      </Col>
+     <Col style={{marginLeft:15}}></Col>
+    </Row>
+  </div>:<></>
   );
 };
 export default HeaderPage;
