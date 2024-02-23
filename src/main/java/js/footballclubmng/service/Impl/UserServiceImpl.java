@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
         Role r = roleRepository.findById(3).orElse(null);
         account.setPassword(passwordEncoder.encode(userRegisterDto.getPassword()));
         account.setCreateTime(LocalDateTime.now());
-        account.setRole(r);
+        account.setRole("user");
         account.setOtp(otp);
         account.setOtpGenerateTime(LocalDateTime.now());
         userRepository.save(account);
@@ -96,6 +96,7 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Không thể gửi OTP vui lòng thử lại!");
         }
         user.setOtp(otp);
+        user.setOtpGenerateTime(LocalDateTime.now());
         userRepository.save(user);
         return "Mã OTP mới đã được gửi tới Email của bạn, vui lòng xác minh OTP trong vòng 60 giây";
     }

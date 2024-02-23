@@ -34,9 +34,8 @@ public class User  {
     private String image;
     @Column(name = "create_time")
     private LocalDateTime createTime;
-    @ManyToOne
-    @JoinColumn(name = "role_id")
-    private Role role;
+    private String role;
+    @Column(name = "is_active")
     private boolean active;
     private String otp;
     @Column(name = "otp_generate_time")

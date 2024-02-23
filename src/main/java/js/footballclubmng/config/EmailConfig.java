@@ -13,8 +13,8 @@ public class EmailConfig {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
-        mailSender.setUsername("toeicmastersystem@gmail.com");
-        mailSender.setPassword("rpse lwke ibel lbpt");
+        mailSender.setUsername("hlhtwebsite@gmail.com");
+        mailSender.setPassword("fkpf lrfy zdpb eaud");
         mailSender.setDefaultEncoding("UTF-8");
 
         Properties props = mailSender.getJavaMailProperties();

@@ -15,15 +15,15 @@ public class News {
     @Column(name = "new_id")
     private int newId;
     private String title;
-    private String descreiption;
+    private String description;
     @Column(name = "date_create")
     private LocalDateTime dateCreate;
+
     @OneToMany(mappedBy = "news")
     private List<Images> imagesList;
 
     @OneToMany(mappedBy = "news")
     private List<NewsComment> newsCommentList;
-
 
 
 }

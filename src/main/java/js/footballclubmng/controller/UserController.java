@@ -72,7 +72,7 @@ public class UserController {
     }
 
     @PutMapping("/upadate-password")
-    public ResponseEntity<ResponseModel> updatePassword(@RequestParam String email,@Min(value = 8, message = "Mật khẩu phải có ít nhất 8 ký tự") @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])\\S+$") @RequestParam String newPassword){
+    public ResponseEntity<ResponseModel> updatePassword(@RequestParam String email,@RequestParam String newPassword){
         String result = userService.updatePassword(email,newPassword);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new js.footballclubmng.dto.ResponseModel("true",result, null));
