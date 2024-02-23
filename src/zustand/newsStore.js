@@ -18,7 +18,6 @@ const useNewsStore = create(persist((set) => ({
     }));
   },
   updateNews: async (id, updatedNews) => {
-    console.log(updatedNews)
     await new Promise((resolve) => setTimeout(resolve, 1000)); 
     set((state) => ({
       news: state.news.map((newsItem) =>
