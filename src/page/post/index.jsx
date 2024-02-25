@@ -68,6 +68,14 @@ const PostManage = () => {
         <Link to={`/news/detail/` + row.id}>{value}</Link>
       ),
     },
+    {
+      title: "Loại bài viết",
+      dataIndex: "typeNewsValue",
+      key: "typeNewsValue",
+      render: (value, row) => (
+        <span>{value}</span>
+      ),
+    },
 
     {
       title: "Hành động",
