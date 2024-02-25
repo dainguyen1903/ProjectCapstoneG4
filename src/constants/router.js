@@ -26,6 +26,8 @@ import ProductCategoryList from "../page/product-category/list";
 import AddProductCategory from "../page/product-category/add";
 import ProductList from "../page/products";
 import AddProduct from "../page/products/add";
+import AddMatchForm from "../page/match/add";
+import ListMatch from "../page/match/list";
 export const router = [
   {
     show: true,
@@ -202,6 +204,29 @@ export const router = [
     path: "/category-product/edit/:id",
     key: "/category-product",
     role: [ROLE.MAKERTER],
-  }
+  },
+  {
+    show: false,
+    component: AddMatchForm,
+    path: "/match/edit/:id",
+    key: "/match",
+    role: [ROLE.MAKERTER],
+  },
+  {
+    show: false,
+    component: AddMatchForm,
+    path: "/match/add",
+    key: "/match",
+    role: [ROLE.MAKERTER],
+  },
+  {
+    show: true,
+    component: ListMatch,
+    icon: DribbbleOutlined,
+    path: "/match/list",
+    menuName: "Lịch thi đấu",
+    key: "/match",
+    role: [ROLE.MAKERTER]
+    },
   
 ];
