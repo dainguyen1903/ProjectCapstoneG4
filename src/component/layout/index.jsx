@@ -35,7 +35,7 @@ const LayOutPage = () => {
       >
         <Card
           style={{
-            width: "calc(100% - 80px)",
+            width: "calc(100% - 120px)",
             height: "100%",
             position: "relative",
             overflowY:"auto",

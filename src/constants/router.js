@@ -24,6 +24,8 @@ import { ROLE } from "./role";
 import ViewProfile from "../page/profile/view";
 import ProductCategoryList from "../page/product-category/list";
 import AddProductCategory from "../page/product-category/add";
+import ProductList from "../page/products";
+import AddProduct from "../page/products/add";
 export const router = [
   {
     show: true,
@@ -119,10 +121,24 @@ export const router = [
   },
   {
     show: true,
-    component: Products,
+    component: ProductList,
     icon: ProductOutlined,
     path: "/product/list",
     menuName: "Quản lí sản phẩm",
+    key: "/product",
+    role: [ROLE.MAKERTER],
+  },
+  {
+    show: false,
+    component: AddProduct,
+    path: "/products/add",
+    key: "/product",
+    role: [ROLE.MAKERTER],
+  },
+  {
+    show: false,
+    component: AddProduct,
+    path: "/products/edit/:id",
     key: "/product",
     role: [ROLE.MAKERTER],
   },
@@ -167,22 +183,25 @@ export const router = [
   {
     show: true,
     component: ProductCategoryList,
-    path: "/product-category/list",
-    key: "/product-category",
+    path: "/category-product/list",
+    key: "/category-product",
     icon:BorderOuterOutlined,
-    menuName:"Danh mục sản phẩm"
+    menuName:"Danh mục sản phẩm",
+    role: [ROLE.MAKERTER],
   },
   {
     show: false,
     component: AddProductCategory,
-    path: "/product-category/add",
-    key: "/product-category",
+    path: "/category-product/add",
+    key: "/category-product",
+    role: [ROLE.MAKERTER],
   },
   {
     show: false,
     component: AddProductCategory,
-    path: "/product-category/edit/:id",
-    key: "/product-category",
+    path: "/category-product/edit/:id",
+    key: "/category-product",
+    role: [ROLE.MAKERTER],
   }
   
 ];
