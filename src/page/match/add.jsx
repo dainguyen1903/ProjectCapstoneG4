@@ -59,7 +59,6 @@ const AddMatchForm = () => {
       });
     }
   }, [id]);
-  alert(form.getFieldValue("matchStatus"))
   return (
     <Form
       form={form}

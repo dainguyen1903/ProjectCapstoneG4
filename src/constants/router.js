@@ -4,7 +4,8 @@ import {
   EditOutlined,
   HomeOutlined,
   DribbbleOutlined,
-  BorderOuterOutlined
+  BorderOuterOutlined,
+  MenuFoldOutlined
 } from "@ant-design/icons";
 import Home from "../page/home/home";
 import ManageUser from "../page/manage-user";
@@ -28,6 +29,8 @@ import ProductList from "../page/products";
 import AddProduct from "../page/products/add";
 import AddMatchForm from "../page/match/add";
 import ListMatch from "../page/match/list";
+import NewsCategoryList from "../page/news-category/list";
+import NewsCategoryAdd from "../page/news-category/add";
 export const router = [
   {
     show: true,
@@ -119,6 +122,29 @@ export const router = [
     component: DetailNews,
     path: "/news/detail/:id",
     key: "/news",
+    role: [ROLE.MAKERTER],
+  },
+  {
+    show: true,
+    component: NewsCategoryList,
+    path: "/category-news/list",
+    key: "/category-news",
+    icon:MenuFoldOutlined,
+    menuName:"Danh mục bài viết",
+    role: [ROLE.MAKERTER],
+  },
+  {
+    show: false,
+    component: NewsCategoryAdd,
+    path: "/category-news/add",
+    key: "/category-news",
+    role: [ROLE.MAKERTER],
+  },
+  {
+    show: false,
+    component: NewsCategoryAdd,
+    path: "/category-news/edit/:id",
+    key: "/category-news",
     role: [ROLE.MAKERTER],
   },
   {

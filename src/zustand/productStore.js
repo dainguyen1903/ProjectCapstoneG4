@@ -29,7 +29,7 @@ const useProductStore = create(
         set((state) => ({
           products: [
             ...state.products,
-            { ...Product, id: Math.random() * 10000000 },
+            { ...Product, id: Math.ceil(Math.random() * 10000000) },
           ],
         }))
     },

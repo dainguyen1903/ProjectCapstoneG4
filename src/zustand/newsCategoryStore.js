@@ -2,46 +2,45 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
 // Khởi tạo store cho danh sách danh mục sản phẩm
-const useCategoryStore = create(
+const useNewsCategoryStore = create(
   persist(
     (set) => ({
-      categories: [
+      newsCategories: [
         {
           id: 1,
-          name: "Quần áo",
+          name: "Báo thể thao",
         },
         {
           id: 2,
-          name: "Giày dép",
+          name: "Báo sức khỏe",
         },
       ],
 
       // Hàm để thêm danh mục sản phẩm mới
-      addCategory: (category) =>
+      addNewsCategory: (category) =>
       {
-        console.log(category)
         set((state) => ({
-          categories: [
-            ...state.categories,
+          newsCategories: [
+            ...state.newsCategories,
             { ...category, id: Math.ceil(Math.random() * 10000000) },
           ],
         }))
     },
 
       // Hàm để cập nhật danh mục sản phẩm
-      updateCategory: (categoryId, updatedCategory) =>
+      updateNewsCategory: (categoryId, updatedNewsCategory) =>
         set((state) => ({
-          categories: state.categories.map((category) =>
+          newsCategories: state.newsCategories.map((category) =>
             category.id == categoryId
-              ? { ...category, ...updatedCategory }
+              ? { ...category, ...updatedNewsCategory }
               : category
           ),
         })),
 
       // Hàm để xóa danh mục sản phẩm
-      deleteCategory: (categoryId) =>
+      deleteNewsCategory: (categoryId) =>
         set((state) => ({
-          categories: state.categories.filter(
+          newsCategories: state.newsCategories.filter(
             (category) => category.id !== categoryId
           ),
         })),
@@ -53,4 +52,4 @@ const useCategoryStore = create(
   )
 );
 
-export default useCategoryStore;
+export default useNewsCategoryStore;
