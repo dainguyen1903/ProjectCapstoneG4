@@ -79,14 +79,7 @@ const Login = () => {
               {" "}
               Nhập thông tin cá nhân của bạn và bắt đầu hành trình với chúng tôi
             </p>
-            <p className="Paragraph">
-              <button
-                onClick={() => navgate("/register")}
-                className="Button GhostButton"
-              >
-                Đăng kí
-              </button>
-            </p>
+         
           </div>
         </div>
       </div>
