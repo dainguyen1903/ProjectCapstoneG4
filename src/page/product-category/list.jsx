@@ -82,7 +82,7 @@ const ProductCategoryList = () => {
       render: (text, record) => (
         <Space size="middle">
           <Space size="middle">
-            <Button onClick={() => navigate("/product-category/edit/" + record.id)}>
+            <Button onClick={() => navigate("/category-product/edit/" + record.id)}>
               <EditOutlined
                 style={{ fontSize: "16px" }}
                 
@@ -133,7 +133,7 @@ const ProductCategoryList = () => {
               </Button>
             </Col>
             <Col>
-              <Button shape="round" onClick={() => navigate("/product-category/add")}>
+              <Button shape="round" onClick={() => navigate("/category-product/add")}>
                 Thêm danh mục sản phẩm
               </Button>
             </Col>
