@@ -35,12 +35,12 @@ const LayOutPage = () => {
       >
         <Card
           style={{
-            width: "100%",
+            width: "calc(100% - 80px)",
             height: "100%",
             position: "relative",
             overflowY:"auto",
             padding:"10px",
-            paddingBottom:50
+            paddingBottom:50,
           }}
         >
           <Outlet />

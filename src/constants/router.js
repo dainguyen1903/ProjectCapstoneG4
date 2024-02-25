@@ -4,6 +4,7 @@ import {
   EditOutlined,
   HomeOutlined,
   DribbbleOutlined,
+  BorderOuterOutlined
 } from "@ant-design/icons";
 import Home from "../page/home/home";
 import ManageUser from "../page/manage-user";
@@ -21,6 +22,8 @@ import Products from "../page/products";
 import AddUserForm from "../page/manage-user/add";
 import { ROLE } from "./role";
 import ViewProfile from "../page/profile/view";
+import ProductCategoryList from "../page/product-category/list";
+import AddProductCategory from "../page/product-category/add";
 export const router = [
   {
     show: true,
@@ -161,4 +164,25 @@ export const router = [
     path: "/profile/edit",
     key: "/profile",
   },
+  {
+    show: true,
+    component: ProductCategoryList,
+    path: "/product-category/list",
+    key: "/product-category",
+    icon:BorderOuterOutlined,
+    menuName:"Danh mục sản phẩm"
+  },
+  {
+    show: false,
+    component: AddProductCategory,
+    path: "/product-category/add",
+    key: "/product-category",
+  },
+  {
+    show: false,
+    component: AddProductCategory,
+    path: "/product-category/edit/:id",
+    key: "/product-category",
+  }
+  
 ];
