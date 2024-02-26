@@ -1,8 +1,6 @@
 package js.footballclubmng.service.Impl;
 
-import js.footballclubmng.dto.NewsDto;
 import js.footballclubmng.dto.PlayerDto;
-import js.footballclubmng.entity.News;
 import js.footballclubmng.entity.Player;
 import js.footballclubmng.repository.PlayerRepository;
 import js.footballclubmng.service.PlayerService;
@@ -19,8 +17,12 @@ public class PlayerServiceImpl implements PlayerService {
     private PlayerRepository playerRepository;
     @Override
     public Optional<Player> getPlayerById(int id){
-        Optional<Player> p = playerRepository.findById(id);
-        return p;
+        try {
+            Optional<Player> p = playerRepository.findById(id);
+            return p;
+        }catch (Exception e){
+            return null;
+        }
     }
     @Override
     public List<PlayerDto> getAllPlayer(){

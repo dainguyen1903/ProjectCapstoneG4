@@ -15,6 +15,8 @@ import js.footballclubmng.entity.User;
 import js.footballclubmng.repository.RoleRepository;
 import js.footballclubmng.repository.UserRepository;
 import js.footballclubmng.service.UserService;
+import js.footballclubmng.util.EmailUtil;
+import js.footballclubmng.util.HelperUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +36,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-    public UserController(UserService  userService) {
+
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
@@ -44,45 +47,94 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<ResponseModel> register(@RequestBody @Valid UserRegisterDto userRegisterDto){
-        String result = userService.addUser(userRegisterDto);
-        ResponseModel r = new ResponseModel("true", result, null);
-        return new ResponseEntity<ResponseModel>(r, HttpStatus.OK);
+    public ResponseEntity<ResponseModel> register(@RequestBody @Valid UserRegisterDto userRegisterDto) {
+        User user = userService.findUserByEmail(userRegisterDto.getEmail());
+        if (user != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseModel("false", "Email đã tồn tại!" , null));
+        }
+        if (!userRegisterDto.getPassword().equals(userRegisterDto.getRepassword())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseModel("false", "Mật khẩu không khớp!" , null));
+        }
+        boolean result = userService.addUser(userRegisterDto);
+        if (result == false){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseModel("false", "Đăng ký thất bại" , null));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseModel("true", "Mã OTP đã được gửi đến Email của bạn, vui lòng xác minh OTP trong vòng 60 giây" , null));
     }
 
     @PutMapping("/verify-otp")
-    public ResponseEntity<ResponseModel> verifyEmail(@RequestParam String email, @RequestParam String otp){
-        String result = userService.verifyOtp(email,otp);
-        ResponseModel r = new ResponseModel("true", result, null);
-        return new ResponseEntity<ResponseModel>(r,HttpStatus.OK);
+    public ResponseEntity<ResponseModel> verifyEmail(@RequestParam String email, @RequestParam String otp) {
+        if (!EmailUtil.patternMatches(email)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseModel("false", "Email không hợp lệ", null));
+        }
+        User user = userService.findUserByEmail(email);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseModel("false", "không tìm thấy email: " + email, null));
+        }
+        boolean result = userService.verifyOtp(email, otp);
+        if (result == false) {
+            ResponseModel r = new ResponseModel("false", "Vui lòng tạo lại OTP và thử lại.", null);
+            return new ResponseEntity<ResponseModel>(r, HttpStatus.BAD_REQUEST);
+        }
+        ResponseModel r = new ResponseModel("true", "Xác minh OTP thành công", null);
+        return new ResponseEntity<ResponseModel>(r, HttpStatus.OK);
     }
 
     @PutMapping("/generrate-otp")
-    public ResponseEntity<ResponseModel> generateOtp(@RequestParam String email){
-        String result = userService.generateOtp(email);
-        ResponseModel r = new ResponseModel("true", result, null);
-        return new ResponseEntity<ResponseModel>(r,HttpStatus.OK);
+    public ResponseEntity<ResponseModel> generateOtp(@RequestParam String email) {
+        if (!EmailUtil.patternMatches(email)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseModel("false", "Email không hợp lệ", null));
+        }
+        User user = userService.findUserByEmail(email);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseModel("false", "không tìm thấy email: " + email, null));
+        }
+        boolean result = userService.generateOtp(email);
+        if (result == false){
+            ResponseModel r = new ResponseModel("false", "Không gửi được OTP", null);
+            return new ResponseEntity<ResponseModel>(r, HttpStatus.BAD_REQUEST);
+        }
+        ResponseModel r = new ResponseModel("true", "Mã OTP mới đã được gửi tới Email của bạn, vui lòng xác minh OTP trong vòng 60 giây", null);
+        return new ResponseEntity<ResponseModel>(r, HttpStatus.OK);
     }
 
     @PutMapping("/reset-password")
-    public ResponseEntity<ResponseModel> resetPassword(@RequestParam @Email(message = "Email không hợp lệ") String email){
-        String result = userService.resetPassword(email);
+    public ResponseEntity<ResponseModel> resetPassword(@RequestParam String email) {
+        if (!EmailUtil.patternMatches(email)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseModel("false", "Email không hợp lệ", null));
+        }
+        User user = userService.findUserByEmail(email);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseModel("false", "không tìm thấy email: " + email, null));
+        }
+        boolean result = userService.resetPassword(email);
+        if (result == false){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseModel("false", "", null));
+
+        }
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseModel("true",result, null));
+                new ResponseModel("true", "Mã OTP mới đã được gửi tới email của bạn, vui lòng xác minh OTP trong vòng 60 giây", null));
     }
 
-    @PutMapping("/upadate-password")
-    public ResponseEntity<ResponseModel> updatePassword(@RequestParam String email,@RequestParam String newPassword){
-        String result = userService.updatePassword(email,newPassword);
+    @PutMapping("/update-password")
+    public ResponseEntity<ResponseModel> updatePassword(@RequestParam String email, @RequestParam String newPassword) {
+        if (!EmailUtil.patternMatches(email)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseModel("false", "Email không hợp lệ", null));
+        }
+        if (!HelperUtil.patternMatches(newPassword)){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseModel("false", "Mật khẩu không hợp lệ", null));
+        }
+        User user = userService.findUserByEmail(email);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseModel("false", "không tìm thấy email: " + email, null));
+        }
+        boolean result = userService.updatePassword(email, newPassword);
+        if (result == false) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new js.footballclubmng.dto.ResponseModel("false", "Cập nhật thất bại", null));
+        }
         return ResponseEntity.status(HttpStatus.OK).body(
-                new js.footballclubmng.dto.ResponseModel("true",result, null));
+                new js.footballclubmng.dto.ResponseModel("true", "Cập nhật thành công", null));
     }
-
-
-
-
-
-
-
 }
 

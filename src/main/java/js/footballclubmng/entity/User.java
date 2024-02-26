@@ -8,7 +8,7 @@ import java.util.List;
 
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -43,12 +43,13 @@ public class User  {
     @OneToMany(mappedBy = "user")
     private List<NewsComment> newsComments;
 
-    public User(String firstName, String lastName, String email, String password, LocalDateTime createTime, boolean active, String otp, LocalDateTime otpGenerateTime) {
+    public User(String firstName, String lastName, String email, String password, LocalDateTime createTime, String role, String otp, LocalDateTime otpGenerateTime) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.createTime = createTime;
+        this.role = role;
         this.otp = otp;
         this.otpGenerateTime = otpGenerateTime;
     }

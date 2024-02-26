@@ -26,14 +26,14 @@ public class NewsController {
     public ResponseEntity<ResponseModel> newsList() {
         List<NewsDto> newsList = newsService.findAllNews();
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseModel("true","", newsList));
+                new ResponseModel("true",null, newsList));
     }
     @GetMapping("/news-detail/{id}")
     public ResponseEntity<ResponseModel> newsDetail(@PathVariable int id) {
-        Optional<News> news = newsService.getNewsById(id);
-        if (news.isPresent()){
+        News news = newsService.getNewsById(id).orElse(null);
+        if (news!=null){
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseModel("true","", news));
+                    new ResponseModel("true",null, news));
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 new ResponseModel("false","không tìm thấy thông tin tin tức", null));

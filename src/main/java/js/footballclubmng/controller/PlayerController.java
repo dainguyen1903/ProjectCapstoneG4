@@ -22,15 +22,17 @@ public class PlayerController {
     PlayerService playerService;
 
     @GetMapping("/player-detail/{id}")
-    public ResponseEntity<ResponseModel> playerDetail(@PathVariable int id){
-        Optional<Player> player = playerService.getPlayerById(id);
-        return player.isPresent()? ResponseEntity.status(HttpStatus.OK).body(new ResponseModel("true","",player))
-                : ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseModel("false","không tìm thấy thông tin cầu thủ",null));
+    public ResponseEntity<ResponseModel> playerDetail(@PathVariable int id) {
+        Player player = playerService.getPlayerById(id).orElse(null);
+        if (player == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseModel("false", "không tìm thấy thông tin cầu thủ", null));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseModel("true", null, player));
     }
 
     @GetMapping("/list-player")
-    public ResponseEntity<ResponseModel> listPlayer(){
+    public ResponseEntity<ResponseModel> listPlayer() {
         List<PlayerDto> playerList = playerService.getAllPlayer();
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseModel("true","",playerList));
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseModel("true", null, playerList));
     }
 }

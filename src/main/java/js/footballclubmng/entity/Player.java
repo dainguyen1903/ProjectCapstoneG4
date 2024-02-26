@@ -25,4 +25,17 @@ public class Player {
     private String bio;
     @Column(name = "join_date")
     private LocalDateTime joinDate;
+
+    public Player(String name, int height, int weight, String nationality, String position) {
+        this.name = name;
+        this.height = height;
+        this.weight = weight;
+        this.nationality = nationality;
+        this.position = position;
+    }
+
+    public Player() {
+
+    }
+
 }

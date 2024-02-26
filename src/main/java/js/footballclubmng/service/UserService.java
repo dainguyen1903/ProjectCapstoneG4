@@ -7,10 +7,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface UserService {
-    public String addUser(UserRegisterDto userRegisterDto);
-    public String verifyOtp(String email, String otp);
-    public String generateOtp(String mail);
-    public String resetPassword(String email);
-    public String updatePassword(String email, String newPassword);
+    public boolean addUser(UserRegisterDto userRegisterDto);
+    public boolean verifyOtp(String email, String otp);
+    public boolean generateOtp(String mail);
+    public boolean resetPassword(String email);
+    public boolean updatePassword(String email, String newPassword);
+    public User findUserByEmail(String email);
 }
 

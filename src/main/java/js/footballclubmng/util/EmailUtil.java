@@ -9,6 +9,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
+import java.util.regex.Pattern;
+
 @Component
 public class EmailUtil {
     @Autowired
@@ -50,6 +52,13 @@ public class EmailUtil {
 //        simpleMailMessage.setText("send mail ");
 //        javaMailSender.send(simpleMailMessage);
 //    }
+    public static boolean patternMatches(String email) {
+        String regexPattern = "^[\\w.+\\-]+@gmail\\.com$";
+        boolean check = Pattern.compile(regexPattern)
+                .matcher(email)
+                .matches();
+        return check;
+    }
 
 
 }
