@@ -1,82 +1,152 @@
 package js.footballclubmng.service.Impl;
 
-
-import js.footballclubmng.entity.CustomUser;
-import js.footballclubmng.entity.Role;
+import js.footballclubmng.dto.UserRegisterDto;
 import js.footballclubmng.entity.User;
-import js.footballclubmng.model.RequestModel.RegisterRequestModel;
 import js.footballclubmng.repository.RoleRepository;
 import js.footballclubmng.repository.UserRepository;
 import js.footballclubmng.service.UserService;
+import js.footballclubmng.util.EmailUtil;
+import js.footballclubmng.util.HelperUtil;
+import js.footballclubmng.util.OtpUtil;
+import org.hibernate.id.uuid.Helper;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
-public class UserServiceImpl implements UserService, UserDetailsService{
+public class UserServiceImpl implements UserService {
+
     @Autowired
     private UserRepository userRepository;
+    @Autowired
     private RoleRepository roleRepository;
-    @Override
-    public User findUserByUsername(String username) {
-        return userRepository.findByUsername(username);
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private OtpUtil otpUtil;
+    @Autowired
+    private EmailUtil emailUtil;
 
+    @Override
+    public boolean addUser(UserRegisterDto userRegisterDto) {
+        try {
+            String otp = otpUtil.generateOtp();
+            try {
+                emailUtil.sendOtpEmail(userRegisterDto.getEmail(), otp);
+            } catch (Exception e) {
+                throw new RuntimeException("Không thể gửi OTP vui lòng thử lại!");
+            }
+            User account = new User();
+            account.setFirstName(userRegisterDto.getFirstName());
+            account.setLastName(userRegisterDto.getLastName());
+            account.setEmail(userRegisterDto.getEmail());
+            account.setPassword(passwordEncoder.encode(userRegisterDto.getPassword()));
+            account.setRole("user");
+            account.setCreateTime(LocalDateTime.now());
+            account.setOtp(otp);
+            account.setOtpGenerateTime(LocalDateTime.now());
+            userRepository.save(account);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean verifyOtp(String email, String otp) {
+        try {
+            User user = userRepository.findByEmail(email);
+            if (user.getOtp().equals(otp)) {
+                LocalDateTime now = LocalDateTime.now();
+                LocalDateTime u = user.getOtpGenerateTime();
+                if (Duration.between(u, now).getSeconds() < 60) {
+                    user.setActive(true);
+                    userRepository.save(user);
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        return false;
     }
 
 
-    @Override
-
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
-        if(user == null) {
-            throw  new UsernameNotFoundException("User" + username + "was not found in the database");
+    public boolean generateOtp(String email) {
+        try {
+            User user = userRepository.findByEmail(email);
+            String otp = otpUtil.generateOtp();
+            try {
+                emailUtil.sendOtpEmail(email, otp);
+            } catch (Exception e) {
+                throw new RuntimeException("Không thể gửi OTP vui lòng thử lại!");
+            }
+            user.setOtp(otp);
+            user.setOtpGenerateTime(LocalDateTime.now());
+            userRepository.save(user);
+            return true;
+        }catch (Exception e){
+            return false;
         }
-        //Get role of user
-        Role roles = user.getRole();
+    }
 
-        // Create GrantedAuthority of Spring for role
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        if(roles != null) {
-                GrantedAuthority authority = new SimpleGrantedAuthority(roles.getRoleName());
-                grantedAuthorities.add(authority);
-        }
-        return new CustomUser(
-                user.getUsername(),
-                user.getPassword(),
-                grantedAuthorities,
-                user.getPassword(),
-                user.getCreateTime());
+//    public String resetPassword(String email){
+//        User user = userRepository.findByEmail(email);
+//        if (user==null){
+//            return "email của bạn không đúng!";
+//        }
+//        String token = UUID.randomUUID().toString().replace("-", "").substring(0, 30);
+//        user.setResetPasswordToken(token);
+//        userRepository.save(user);
+//        String link = "http://localhost:8090/user/reset?token=" + token;
+//        emailUtil.sendReSetPasswordEmail(email,link);
+//        return "Link đặt lại mật khẩu đã được gửi đến email của bạn.";
+//    }
 
-    public String addUser(RegisterRequestModel request) {
-        User user = userRepository.findByAccount(request.getAccount());
-        User gmail = userRepository.findByGmail(request.getGmail());
-        if(user!=null || gmail!=null){
-            return "Account is exist! ";
+//    public User getToken(String resetPasswordToken ){
+//        return userRepository.findByResetPasswordToken(resetPasswordToken);
+//    }
+
+    public boolean resetPassword(String email) {
+        try {
+            User user = userRepository.findByEmail(email);
+            String otp = otpUtil.generateOtp();
+            try {
+                emailUtil.sendOtpEmail(email, otp);
+            } catch (Exception e) {
+                throw new RuntimeException("Không thể gửi otp vui lòng thử lại!");
+            }
+            user.setOtp(otp);
+            user.setOtpGenerateTime(LocalDateTime.now());
+            userRepository.save(user);
+            return true;
+        }catch (Exception e){
+            return false;
         }
-        User account = new User();
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
-        Role role = roleRepository.findById(1).orElse(null);
-        account.setAccount(request.getAccount());
-        account.setPassword(request.getPassword());
-        account.setGmail(request.getGmail());
-      //  account.setRole(role);
-        account.setRole_id(1);
-        account.setCreate_time(dtf.format(now));
-        userRepository.save(account);
-        return "Register successfully!";
 
     }
+
+    public boolean updatePassword(String email, String newPassword) {
+        try {
+            User user = userRepository.findByEmail(email);
+            user.setPassword(passwordEncoder.encode(newPassword));
+            userRepository.save(user);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public User findUserByEmail(String email) {
+        try {
+            User user = userRepository.findByEmail(email);
+            return user;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 }
