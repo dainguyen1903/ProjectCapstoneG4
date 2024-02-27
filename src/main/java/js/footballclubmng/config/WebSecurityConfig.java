@@ -1,65 +1,99 @@
 package js.footballclubmng.config;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.RememberMeServices;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig {
+@EnableGlobalMethodSecurity(
+        securedEnabled = true,
+        jsr250Enabled = true,
+        prePostEnabled = true)
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    UserServiceSecurity userServiceSecurity;
+
+
+    @Autowired
+    AuthenticationEntryPointHandler unauthorizedHandler;
+
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http.csrf().disable();
-
-        http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/css/**", "/images/**", "/js/**", "/webfonts/**", "/WEB-INF/views/**").permitAll()
-                        .requestMatchers("/login", "/logout").permitAll()
-                        .requestMatchers("/manage/**").hasRole("ADMIN")
-                        .anyRequest().authenticated()
-                )
-                .formLogin(formLogin -> formLogin
-                        //.loginProcessingUrl("/j_spring_security_check")   // submit URL login
-                        .loginPage("/login")
-                        .usernameParameter("account")
-                        .passwordParameter("password")
-                        .defaultSuccessUrl("/dashboard")
-                        .failureUrl("/login?error=true")
-                )
-                .logout(logout -> logout
-                        .logoutUrl("/logout")                               // default url
-                        .logoutSuccessUrl("/login?logout")                  // default url
-                        .invalidateHttpSession(true)                        // default: true
-                        .deleteCookies("JSESSIONID")
-                );
-//                .rememberMe((remember) -> remember
-//                        .rememberMeServices(rememberMeServices)
-//                );
-
-
-        return http.build();
+    public AuthenticateFilterJwt jwtAuthenticationFilter() {
+        return new AuthenticateFilterJwt();
     }
 
-//    @Bean
-//    RememberMeServices rememberMeServices(UserDetailsService userDetailsService) {
-//        TokenBasedRememberMeServices.RememberMeTokenAlgorithm encodingAlgorithm = TokenBasedRememberMeServices.RememberMeTokenAlgorithm.SHA256;
-//        TokenBasedRememberMeServices rememberMe = new TokenBasedRememberMeServices("Football", userDetailsService, encodingAlgorithm);
-//        rememberMe.setMatchingAlgorithm(TokenBasedRememberMeServices.RememberMeTokenAlgorithm.SHA256);
-//        return rememberMe;
-//    }
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
 
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth)
+            throws Exception {
+        auth.userDetailsService(userServiceSecurity)
+                .passwordEncoder(passwordEncoder());
+    }
+
+    @Override
+    protected void configure(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity.cors().and().csrf().disable()
+                .authorizeRequests()
+                .antMatchers("/api/user/login").permitAll()
+                .antMatchers("/api/user/sign-up").permitAll()
+                .antMatchers("/api/user/active-through-email").permitAll()
+
+                .anyRequest()
+                .authenticated()
+                .and()
+                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and().sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        httpSecurity.logout().logoutUrl("api/logout").permitAll();
+
+        httpSecurity.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+    }
+
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
 }
