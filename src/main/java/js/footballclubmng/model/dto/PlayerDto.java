@@ -13,6 +13,5 @@ import lombok.Setter;
 public class PlayerDto {
     private Long id;
     private String name;
-    private String image;
     private String position;
 }

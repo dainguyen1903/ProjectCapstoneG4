@@ -34,7 +34,6 @@ public class PlayerServiceImpl implements PlayerService {
         PlayerDto playerDto = new PlayerDto();
         playerDto.setId(player.getId());
         playerDto.setName(player.getName());
-        playerDto.setImage(player.getImageUrl());
         playerDto.setPosition(player.getPosition());
         return playerDto;
     }
