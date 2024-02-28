@@ -1,6 +1,6 @@
 package js.footballclubmng.service;
 
-import js.footballclubmng.dto.NewsDto;
+import js.footballclubmng.model.dto.NewsDto;
 import js.footballclubmng.entity.News;
 
 import java.util.List;

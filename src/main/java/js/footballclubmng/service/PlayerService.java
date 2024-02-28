@@ -1,6 +1,6 @@
 package js.footballclubmng.service;
 
-import js.footballclubmng.dto.PlayerDto;
+import js.footballclubmng.model.dto.PlayerDto;
 import js.footballclubmng.entity.Player;
 
 import java.util.List;

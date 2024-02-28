@@ -1,6 +1,6 @@
-package js.footballclubmng.dto;
+package js.footballclubmng.model.dto;
 
-import jakarta.validation.constraints.NotBlank;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PlayerDto {
-    private int id;
+    private Long id;
     private String name;
     private String image;
     private String position;

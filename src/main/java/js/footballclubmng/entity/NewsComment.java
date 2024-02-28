@@ -1,23 +1,29 @@
 package js.footballclubmng.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-@Entity
-@Table(name = "news_comment")
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Entity(name = "news_comment")
 public class NewsComment {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "new_comment_id")
-    private int commentId;
-    private String comment;
-    @Column(name = "comment_time")
-    private LocalDateTime commentTime;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "comment_content",nullable = false)
+    private String commentContent;
+
+    @Column(name = "comment_time", nullable = false)
+    private Date commentTime;
 
     @ManyToOne
     @JoinColumn(name = "new_id")
@@ -28,4 +34,7 @@ public class NewsComment {
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
+
+
+
 }

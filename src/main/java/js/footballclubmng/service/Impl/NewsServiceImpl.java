@@ -1,6 +1,6 @@
 package js.footballclubmng.service.Impl;
 
-import js.footballclubmng.dto.NewsDto;
+import js.footballclubmng.model.dto.NewsDto;
 import js.footballclubmng.entity.News;
 import js.footballclubmng.repository.NewsRepository;
 import js.footballclubmng.service.NewsService;
@@ -32,7 +32,7 @@ public class NewsServiceImpl implements NewsService {
 
     private NewsDto mapToNewsDto(News news){
         NewsDto newsDto = new NewsDto();
-        newsDto.setId(news.getNewId());
+        newsDto.setId(news.getId());
         newsDto.setTitle(news.getTitle());
         newsDto.setDateCreate(news.getDateCreate());
         return newsDto;
