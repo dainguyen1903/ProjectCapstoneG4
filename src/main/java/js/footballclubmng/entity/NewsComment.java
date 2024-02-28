@@ -5,7 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
+
 
 @Getter
 @Setter
@@ -23,7 +23,7 @@ public class NewsComment {
     private String commentContent;
 
     @Column(name = "comment_time", nullable = false)
-    private Date commentTime;
+    private LocalDateTime commentTime;
 
     @ManyToOne
     @JoinColumn(name = "new_id")
