@@ -13,7 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class NewsDto {
-    private long id;
+    private Long id;
     private String title;
     private LocalDateTime dateCreate;
 }

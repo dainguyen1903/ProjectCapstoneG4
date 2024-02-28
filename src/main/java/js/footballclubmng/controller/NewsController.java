@@ -1,5 +1,7 @@
 package js.footballclubmng.controller;
 
+import js.footballclubmng.model.dto.NewsDto;
+import js.footballclubmng.model.dto.ResponseModel;
 import js.footballclubmng.common.CommonConstant;
 import js.footballclubmng.model.dto.NewsDto;
 import js.footballclubmng.model.response.ResponseApi;
@@ -14,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
+@RequestMapping("/news")
 public class NewsController {
     @Autowired
     NewsService newsService;

@@ -32,7 +32,7 @@ public class NewsServiceImpl implements NewsService {
 
     private NewsDto mapToNewsDto(News news){
         NewsDto newsDto = new NewsDto();
-        newsDto.setId(news.getNewId());
+        newsDto.setId(news.getId());
         newsDto.setTitle(news.getTitle());
         newsDto.setDateCreate(news.getDateCreate());
         return newsDto;

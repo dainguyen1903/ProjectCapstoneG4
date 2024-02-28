@@ -1,49 +1,59 @@
 package js.footballclubmng.controller;
 
-import jakarta.validation.Valid;
 import js.footballclubmng.common.CommonConstant;
-import js.footballclubmng.model.response.ResponseApi;
-import js.footballclubmng.model.dto.UserRegisterDto;
-import js.footballclubmng.entity.User;
+import js.footballclubmng.model.request.LoginRequest;
+import js.footballclubmng.model.response.ResponseAPI;
+import js.footballclubmng.repository.UserRepository;
 import js.footballclubmng.service.UserService;
-import js.footballclubmng.util.EmailUtil;
-import js.footballclubmng.util.HelperUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 @RestController
-public class UserController {
-
+public class UserController extends BaseController{
 
     @Autowired
-    private UserService userService;
+    UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-
-    @GetMapping("/login")
-    public String loginPage() {
-        return "login";
-    }
-
-    @PostMapping(CommonConstant.USER_API.REGISTER)
-    public ResponseEntity<ResponseApi> register(@RequestBody @Valid UserRegisterDto userRegisterDto) {
-        User user = userService.findUserByEmail(userRegisterDto.getEmail());
-        if (user != null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseApi("false", "Email đã tồn tại!" , null));
+    @PostMapping(CommonConstant.USER_API.LOGIN)
+    public ResponseAPI<Object> login(@RequestBody LoginRequest request) {
+        ResponseAPI<Object> result = new ResponseAPI<Object>();
+        if (request.isValid()) {
+            try {
+                result.setStatus(CommonConstant.COMMON_RESPONSE.OK);
+                result.setMessage(CommonConstant.COMMON_MESSAGE.OK);
+                result.setData(userService.handleLogin(request.getEmail(), request.getPassword()));
+            } catch (BadCredentialsException ex) {
+                result.setStatus(CommonConstant.COMMON_RESPONSE.EXCEPTION);
+                result.setMessage(CommonConstant.COMMON_MESSAGE.PASSWORD_INCORRECT);
+            } catch (NullPointerException ex) {
+                result.setStatus(CommonConstant.COMMON_RESPONSE.EXCEPTION);
+                result.setMessage(CommonConstant.COMMON_MESSAGE.INVALID_PARAMETER);
+            } catch (Exception ex) {
+                result.setStatus(CommonConstant.COMMON_RESPONSE.EXCEPTION);
+                result.setMessage(ex.getMessage());
+            }
+            return result;
         }
-        if (!userRegisterDto.getPassword().equals(userRegisterDto.getRepassword())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseApi("false", "Mật khẩu không khớp!" , null));
+        @PostMapping(CommonConstant.USER_API.REGISTER)
+        public ResponseEntity<ResponseApi> register(@RequestBody @Valid UserRegisterDto userRegisterDto) {
+            User user = userService.findUserByEmail(userRegisterDto.getEmail());
+            if (user != null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseApi("false", "Email đã tồn tại!" , null));
+            }
+            if (!userRegisterDto.getPassword().equals(userRegisterDto.getRepassword())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseApi("false", "Mật khẩu không khớp!" , null));
+            }
+            boolean result = userService.addUser(userRegisterDto);
+            if (result == false){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseApi("false", "Đăng ký thất bại" , null));
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseApi("true", "Mã OTP đã được gửi đến Email của bạn, vui lòng xác minh OTP trong vòng 60 giây" , null));
         }
-        boolean result = userService.addUser(userRegisterDto);
-        if (result == false){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseApi("false", "Đăng ký thất bại" , null));
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseApi("true", "Mã OTP đã được gửi đến Email của bạn, vui lòng xác minh OTP trong vòng 60 giây" , null));
-    }
 
     @PutMapping(CommonConstant.USER_API.VERIFY_OTP)
     public ResponseEntity<ResponseApi> verifyEmail(@RequestParam String email, @RequestParam String otp) {
@@ -62,6 +72,7 @@ public class UserController {
         ResponseApi r = new ResponseApi("true", "Xác minh OTP thành công", null);
         return new ResponseEntity<ResponseApi>(r, HttpStatus.OK);
     }
+
 
     @PutMapping(CommonConstant.USER_API.GENERATE_OTP)
     public ResponseEntity<ResponseApi> generateOtp(@RequestParam String email) {
@@ -119,5 +130,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseApi("true", "Cập nhật thành công", null));
     }
+}
+
 }
 

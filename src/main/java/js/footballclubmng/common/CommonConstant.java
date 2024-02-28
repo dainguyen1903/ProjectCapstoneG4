@@ -41,7 +41,10 @@ public class CommonConstant {
         public static String EXIST_USERNAME = "USERNAME_EXIST";
         public static String EXIST_EMAIL = "EMAIL_EXIST";
         public static String EXIST_KEY = "KEY_EXIST";
+
+
         public static String EXIST_TOKEN = "TOKEN_IS_EXIST";
+
         public static String EMPTY = "EMPTY";
         public static String EXCEPTION = "EXCEPTION";
 
@@ -57,6 +60,22 @@ public class CommonConstant {
         public static final String GENERATE_OTP = HEAD_API + USER + "/generrate-otp";
         public static final String RESET_PASSWORD = HEAD_API + USER + "/reset-password";
         public static final String UPDATE_PASSWORD = HEAD_API + USER + "/update-password";
+
+        public static final String LOGIN = HEAD_API + USER + "/login";
+
+        public static final String SIGN_UP = HEAD_API + USER + "/sign-up";
+
+        public static final String UPDATE_USER = HEAD_API + USER + "/update-user";
+
+        public static final String ACTIVE_USER = HEAD_API + USER + "/active-through-email";
+
+        public static final String GET_LIST_USER = HEAD_API + USER + "/list-user";
+
+        public static final String DELETE_USER = HEAD_API + USER + "/delete-user";
+
+        public static final String CHANGE_PASSWORD = HEAD_API + USER + "/change-password";
+
+        public static final String DETAIL_USER = HEAD_API + USER + "/detail-user";
 
 
     }
@@ -77,4 +96,17 @@ public class CommonConstant {
 
 
 
+}
+
+        public static final String PLAYER = "/player";
+
+        public static final String CREATE_PLAYER = HEAD_API + PLAYER + "/create-player";
+        public static final String GET_LIST_PLAYER = HEAD_API + PLAYER + "/list-player";
+        public static final String DETAIL_PLAYER = HEAD_API + PLAYER + "/detail-player";
+
+        public static final String DELETE_PLAYER = HEAD_API + PLAYER + "/delete-player";
+
+        public static final String UPDATE_PLAYER = HEAD_API + PLAYER + "/update-player";
+
+    }
 }

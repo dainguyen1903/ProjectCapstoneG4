@@ -1,29 +1,34 @@
 package js.footballclubmng.entity;
 
-import jakarta.persistence.*;
-import lombok.Data;
+
+import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Date;
 
-@Entity
-@Table(name = "news")
-@Data
+import javax.persistence.*;
+
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Entity(name = "news")
 public class News {
     @Id
+    @Column(name = "news_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "new_id")
-    private long newId;
+    private Long id;
+
+    @Column(name = "title", nullable = false)
     private String title;
+
+    @Column(name = "description", nullable = false)
     private String description;
-    @Column(name = "date_create")
+
+    @Column(name = "date_create", nullable = false)
     private LocalDateTime dateCreate;
-
-    @OneToMany(mappedBy = "news")
-    private List<Images> imagesList;
-
-    @OneToMany(mappedBy = "news")
-    private List<NewsComment> newsCommentList;
 
 
 }

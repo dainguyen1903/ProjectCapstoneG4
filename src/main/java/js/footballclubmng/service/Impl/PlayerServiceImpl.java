@@ -48,7 +48,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     private PlayerDto mapToPlayerDto(Player player){
         PlayerDto playerDto = new PlayerDto();
-        playerDto.setId(player.getPlayerId());
+        playerDto.setId(player.getId());
         playerDto.setName(player.getName());
         playerDto.setNationality(player.getNationality());
         playerDto.setPosition(player.getPosition());
