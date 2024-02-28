@@ -1,8 +1,7 @@
 package js.footballclubmng.service.Impl;
 
-import js.footballclubmng.config.CustomerUserDetails;
-import js.footballclubmng.config.TokenProvider;
-import js.footballclubmng.config.WebSecurityConfig;
+import js.footballclubmng.entity.CustomUser;
+import js.footballclubmng.entity.Role;
 import js.footballclubmng.entity.User;
 import js.footballclubmng.model.request.user.CreateUserRequest;
 import js.footballclubmng.model.request.user.DeleteUserRequest;
