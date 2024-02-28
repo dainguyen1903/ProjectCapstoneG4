@@ -1,16 +1,11 @@
 package js.footballclubmng.service;
 
 import js.footballclubmng.entity.User;
-import js.footballclubmng.model.bean.UserBean;
 import js.footballclubmng.model.request.user.CreateUserRequest;
 import js.footballclubmng.model.request.user.DeleteUserRequest;
 import js.footballclubmng.model.response.LoginResponse;
 import js.footballclubmng.model.response.ResponseAPI;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 
 public interface UserService {

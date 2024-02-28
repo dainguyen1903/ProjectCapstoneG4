@@ -1,4 +1,4 @@
-package js.footballclubmng.dto;
+package js.footballclubmng.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class NewsDto {
-    private int id;
+    private Long id;
     private String title;
     private LocalDateTime dateCreate;
 }

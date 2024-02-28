@@ -3,6 +3,7 @@ package js.footballclubmng.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -11,53 +12,53 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity(name = "user")
+@Entity(name = "users")
 public class User {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id;
+    private Long id;
 
     @Column(name = "email",nullable = false,unique = true)
-    public String email;
+    private String email;
 
     @Column(name = "password",nullable = false)
-    public String password;
+    private String password;
 
-    @Column(name = "role", length = 1,nullable = false)
-    public String authority;
+    @Column(name = "role", length = 20,nullable = false)
+    private String authority;
 
     @Column(name = "first_name")
-    public String firstName;
+    private String firstName;
 
     @Column(name = "last_name")
-    public String lastName;
+    private String lastName;
 
     @Column(name = "address")
-    public String address;
+    private String address;
 
     @Column(name = "date_of_birth")
-    public Date dateOfBirth;
+    private Date dateOfBirth;
 
     @Column(name = "gender", length = 1)
-    public String gender;
+    private String gender;
 
     @Column(name = "image_url")
     private String imageUrl;
 
     @Column(name = "otp_generate_time")
-    public Date otpGenerateTime;
+    private LocalDateTime otpGenerateTime;
 
     @Column(name = "create_time")
-    public Date createTime;
+    private LocalDateTime createTime;
 
     @Column(name = "verification_code")
-    public String verificationCode;
+    private String verificationCode;
 
     @Column(name = "is_active")
-    public Boolean isActive;
+    private Boolean isActive;
 
     @Column(name = "delete_flg")
-    public String deleteFlg;
+    private String deleteFlg;
 
 }

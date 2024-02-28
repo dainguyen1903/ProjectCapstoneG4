@@ -1,25 +1,36 @@
 package js.footballclubmng.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-import lombok.Data;
 
+import lombok.*;
+
+import javax.persistence.*;
 import java.nio.file.Path;
 
-@Entity
-@Table(name = "images")
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Entity(name = "images")
 public class Images {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "image_id")
-    private int imageId;
-    private String name;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "name", nullable = false)
+    private String imageName;
+
+    @Column(name = "path", nullable = false)
     private String path;
-    @Column(name = "image_type")
+
+    @Column(name = "image_type", nullable = false)
     private String imageType;
+
     @ManyToOne
-    @JoinColumn(name = "new_id")
+    @JoinColumn(name = "news_id")
     @JsonIgnore
     private News news;
+
 }

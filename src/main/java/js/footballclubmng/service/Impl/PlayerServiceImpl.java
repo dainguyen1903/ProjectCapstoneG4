@@ -1,6 +1,6 @@
 package js.footballclubmng.service.Impl;
 
-import js.footballclubmng.dto.PlayerDto;
+import js.footballclubmng.model.dto.PlayerDto;
 import js.footballclubmng.entity.Player;
 import js.footballclubmng.repository.PlayerRepository;
 import js.footballclubmng.service.PlayerService;
@@ -32,9 +32,9 @@ public class PlayerServiceImpl implements PlayerService {
 
     private PlayerDto mapToPlayerDto(Player player){
         PlayerDto playerDto = new PlayerDto();
-        playerDto.setId(player.getPlayerId());
+        playerDto.setId(player.getId());
         playerDto.setName(player.getName());
-        playerDto.setImage(player.getImage());
+        playerDto.setImage(player.getImageUrl());
         playerDto.setPosition(player.getPosition());
         return playerDto;
     }

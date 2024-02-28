@@ -40,7 +40,7 @@ public class CustomerUserDetails implements org.springframework.security.core.us
 
         return new CustomerUserDetails(
                 userEntity.getId(),
-                returnFullName(userEntity.firstName, userEntity.lastName),
+                returnFullName(userEntity.getFirstName(), userEntity.getLastName()),
                 userEntity.getPassword(),
                 userEntity.getEmail(),
                 authorities,

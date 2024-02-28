@@ -1,41 +1,52 @@
 package js.footballclubmng.entity;
 
-import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Date;
 
-@Entity
-@Table(name = "player")
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Entity(name = "player")
 public class Player {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "player_id")
-    private int playerId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "name",nullable = false)
     private String name;
+
     @Column(name = "date_of_birth")
-    private LocalDateTime dateOfBirth;
-    private int height;
-    private int weight;
-    @Column(name = "image_url")
-    private String image;
+    private Date dateOfBirth;
+
+    @Column(name = "height")
+    private Integer height;
+
+    @Column(name = "weight")
+    private Integer weight;
+
+    @Column(name = "nationality")
     private String nationality;
+
+    @Column(name = "image_url")
+    private String imageUrl;
+
+    @Column(name = "position")
     private String position;
+
+    @Column(name = "bio")
     private String bio;
+
     @Column(name = "join_date")
     private LocalDateTime joinDate;
 
-    public Player(String name, int height, int weight, String nationality, String position) {
-        this.name = name;
-        this.height = height;
-        this.weight = weight;
-        this.nationality = nationality;
-        this.position = position;
-    }
+    @Column(name = "delete_flg", length = 1)
+    private String deleteFlg;
 
-    public Player() {
-
-    }
 
 }

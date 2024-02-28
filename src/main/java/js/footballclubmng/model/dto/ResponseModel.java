@@ -1,4 +1,4 @@
-package js.footballclubmng.dto;
+package js.footballclubmng.model.dto;
 
 public class ResponseModel {
     private String status;
