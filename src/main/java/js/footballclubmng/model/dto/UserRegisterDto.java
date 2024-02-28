@@ -1,4 +1,4 @@
-package js.footballclubmng.dto;
+package js.footballclubmng.model.dto;
 
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.*;

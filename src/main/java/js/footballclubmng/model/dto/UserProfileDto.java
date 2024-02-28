@@ -1,4 +1,4 @@
-package js.footballclubmng.dto;
+package js.footballclubmng.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

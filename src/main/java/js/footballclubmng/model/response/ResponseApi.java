@@ -1,14 +1,14 @@
-package js.footballclubmng.dto;
+package js.footballclubmng.model.response;
 
-public class ResponseModel {
+public class ResponseApi {
     private String status;
     private String message;
     private Object data;
 
-    public ResponseModel() {
+    public ResponseApi() {
     }
 
-    public ResponseModel(String status, String message, Object data) {
+    public ResponseApi(String status, String message, Object data) {
         this.status = status;
         this.message = message;
         this.data = data;

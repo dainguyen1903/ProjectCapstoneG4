@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "player")
@@ -12,10 +13,10 @@ public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "player_id")
-    private int playerId;
+    private long playerId;
     private String name;
     @Column(name = "date_of_birth")
-    private LocalDateTime dateOfBirth;
+    private Date dateOfBirth;
     private int height;
     private int weight;
     @Column(name = "image_url")
@@ -26,16 +27,6 @@ public class Player {
     @Column(name = "join_date")
     private LocalDateTime joinDate;
 
-    public Player(String name, int height, int weight, String nationality, String position) {
-        this.name = name;
-        this.height = height;
-        this.weight = weight;
-        this.nationality = nationality;
-        this.position = position;
-    }
 
-    public Player() {
-
-    }
 
 }

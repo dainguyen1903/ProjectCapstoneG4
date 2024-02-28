@@ -1,14 +1,12 @@
 package js.footballclubmng.service.Impl;
 
-import js.footballclubmng.dto.UserRegisterDto;
+import js.footballclubmng.model.dto.UserProfileDto;
+import js.footballclubmng.model.dto.UserRegisterDto;
 import js.footballclubmng.entity.User;
-import js.footballclubmng.repository.RoleRepository;
 import js.footballclubmng.repository.UserRepository;
 import js.footballclubmng.service.UserService;
 import js.footballclubmng.util.EmailUtil;
-import js.footballclubmng.util.HelperUtil;
 import js.footballclubmng.util.OtpUtil;
-import org.hibernate.id.uuid.Helper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,8 +19,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private RoleRepository roleRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
@@ -148,5 +144,11 @@ public class UserServiceImpl implements UserService {
             return null;
         }
     }
+
+    @Override
+    public UserProfileDto userprofile() {
+        return null;
+    }
+
 
 }

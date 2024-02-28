@@ -14,7 +14,7 @@ public class NewsComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "new_comment_id")
-    private int commentId;
+    private long commentId;
     private String comment;
     @Column(name = "comment_time")
     private LocalDateTime commentTime;

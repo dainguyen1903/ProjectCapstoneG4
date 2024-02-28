@@ -1,6 +1,6 @@
 package js.footballclubmng.service.Impl;
 
-import js.footballclubmng.dto.NewsDto;
+import js.footballclubmng.model.dto.NewsDto;
 import js.footballclubmng.entity.News;
 import js.footballclubmng.repository.NewsRepository;
 import js.footballclubmng.service.NewsService;
@@ -17,7 +17,7 @@ public class NewsServiceImpl implements NewsService {
     NewsRepository newsRepository;
 
     @Override
-    public Optional<News> getNewsById(int id){
+    public Optional<News> getNewsById(long id){
         Optional<News> news = newsRepository.findById(id);
         return news;
     }

@@ -13,7 +13,7 @@ public class Images {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "image_id")
-    private int imageId;
+    private long imageId;
     private String name;
     private String path;
     @Column(name = "image_type")

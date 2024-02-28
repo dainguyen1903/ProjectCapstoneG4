@@ -1,7 +1,5 @@
 package js.footballclubmng.repository;
 
-import js.footballclubmng.entity.Player;
-import js.footballclubmng.entity.Role;
 import js.footballclubmng.entity.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @DataJpaTest
 public class UserRepositoryTest {
     @Autowired private UserRepository userRepository;
-    @Autowired private RoleRepository roleRepository;
     @Autowired private PlayerRepository playerRepository;
 
     User user;

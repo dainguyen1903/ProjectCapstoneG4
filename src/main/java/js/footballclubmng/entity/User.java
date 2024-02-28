@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 
@@ -19,7 +20,7 @@ public class User  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private int userId;
+    private long userId;
     @Column(name = "first_name")
     private String firstName;
     @Column(name = "last_name")
@@ -28,7 +29,7 @@ public class User  {
     private String password;
     private String address;
     @Column(name = "date_of_birth")
-    private LocalDateTime dateOfBirth;
+    private Date dateOfBirth;
     private String gender;
     @Column(name = "image_url")
     private String image;
