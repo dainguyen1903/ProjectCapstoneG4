@@ -15,7 +15,7 @@ import java.util.Date;
 @Entity(name = "users")
 public class User {
     @Id
-    @Column(name = "id")
+    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -51,6 +51,9 @@ public class User {
 
     @Column(name = "create_time")
     private LocalDateTime createTime;
+
+    @Column(name = "otp")
+    private String otp;
 
     @Column(name = "verification_code")
     private String verificationCode;

@@ -16,7 +16,7 @@ public class PlayerServiceImpl implements PlayerService {
     @Autowired
     private PlayerRepository playerRepository;
     @Override
-    public Optional<Player> getPlayerById(int id){
+    public Optional<Player> getPlayerById(long id){
         try {
             Optional<Player> p = playerRepository.findById(id);
             return p;

@@ -7,6 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface NewsService {
-    Optional<News> getNewsById(long id);
+    News getNewsById(long id);
     public List<NewsDto> findAllNews();
 }

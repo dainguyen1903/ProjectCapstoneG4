@@ -29,6 +29,10 @@ public class CommonConstant {
         public static int NOT_VALID = 422;
 
         public static int PERMISSION_DENIED = 403;
+
+        public static int NOT_FOUND = 404;
+
+        public static int BAD_REQUEST = 400;
     }
 
     public static class COMMON_MESSAGE {
@@ -39,18 +43,28 @@ public class CommonConstant {
         public static String PASSWORD_INCORRECT = "USERNAME_OR_PASSWORD_INCORRECT";
         public static String INVALID_PARAMETER = "INVALID_DATA";
         public static String EXIST_USERNAME = "USERNAME_EXIST";
-        public static String EXIST_EMAIL = "EMAIL_EXIST";
         public static String EXIST_KEY = "KEY_EXIST";
-
-
         public static String EXIST_TOKEN = "TOKEN_IS_EXIST";
-
         public static String EMPTY = "EMPTY";
         public static String EXCEPTION = "EXCEPTION";
-
-
+        public static String EXIST_EMAIL = "Email đã tồn tại";
+        public static String NOT_MATCH_PASSWORD = "Mật khẩu không khớp";
+        public static String REGISTER_SUCCESS = "Đăng ký thành công.";
+        public static String REGISTER_FAIL = "Đăng ký thất bại!";
+        public static String INVALID_EMAIL = "Email không hợp lệ";
+        public static String NOT_FOUND_EMAIL = "Không tìm thấy email: ";
+        public static String VERIFY_SUCCESS = "Xác minh OTP thành công";
+        public static String VERIFY_FAIL = "Xác minh OTP thất bại, vui lòng tạo lại OTP và thử lại";
+        public static String SEND_OTP_SUCCESS = "Mã OTP đã được gửi tới email của bạn, vui lòng xác minh OTP trong vòng 60 giây";
+        public static String SEND_OTP_FAIL = "Không gửi được OTP";
+        public static String RESET_PASSWORD_SUCCESS = "Mã OTP mới đã được gửi tới email của bạn, vui lòng xác minh OTP trong vòng 60 giây";
+        public static String RESET_PASSWORD_FAIL = "Không thể tạo lại mật khẩu";
+        public static String UPDATE_PASSWORD_SUCCESS = "Cập nhật mật khẩu thành công";
+        public static String UPDATE_PASSWORD_FAIL = "Cập nhật mật khẩu thất bại";
+        public static String INVALID_PASSWORD = "Mật khẩu không hợp lệ";
+        public static String NOT_FOUND_PLAYER = "Không tìm thấy cầu thủ";
+        public static String NOT_FOUND_NEWS = "Không tìm thấy tin tức";
     }
-
 
     public static class USER_API {
 
@@ -95,18 +109,8 @@ public class CommonConstant {
     }
 
 
-
 }
 
-        public static final String PLAYER = "/player";
 
-        public static final String CREATE_PLAYER = HEAD_API + PLAYER + "/create-player";
-        public static final String GET_LIST_PLAYER = HEAD_API + PLAYER + "/list-player";
-        public static final String DETAIL_PLAYER = HEAD_API + PLAYER + "/detail-player";
 
-        public static final String DELETE_PLAYER = HEAD_API + PLAYER + "/delete-player";
 
-        public static final String UPDATE_PLAYER = HEAD_API + PLAYER + "/update-player";
-
-    }
-}

@@ -72,8 +72,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/user/sign-up").permitAll()
                 .antMatchers("/api/user/active-through-email").permitAll()
 
-                .anyRequest()
-                .authenticated()
+//                .anyRequest()
+//                .authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);

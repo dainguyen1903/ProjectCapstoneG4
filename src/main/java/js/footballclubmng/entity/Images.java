@@ -1,10 +1,9 @@
 package js.footballclubmng.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-import lombok.Data;
 
 import lombok.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.nio.file.Path;
@@ -19,7 +18,6 @@ public class Images {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "image_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "name", nullable = false)
@@ -32,8 +30,8 @@ public class Images {
     private String imageType;
 
     @ManyToOne
-    @JoinColumn(name = "news_id")
     @JsonIgnore
+    @JoinColumn(name = "news_id")
     private News news;
 
 }

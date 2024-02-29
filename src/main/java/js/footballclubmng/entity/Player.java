@@ -45,9 +45,5 @@ public class Player {
     @Column(name = "join_date")
     private LocalDateTime joinDate;
 
-    @Column(name = "delete_flg", length = 1)
-    private String deleteFlg;
-
-
 
 }

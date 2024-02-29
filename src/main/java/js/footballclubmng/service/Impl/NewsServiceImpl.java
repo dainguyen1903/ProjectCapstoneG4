@@ -6,19 +6,21 @@ import js.footballclubmng.repository.NewsRepository;
 import js.footballclubmng.service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class NewsServiceImpl implements NewsService {
     @Autowired
     NewsRepository newsRepository;
 
     @Override
-    public Optional<News> getNewsById(long id){
-        Optional<News> news = newsRepository.findById(id);
+    public News getNewsById(long id){
+        News news = newsRepository.findById(id).orElse(null);
         return news;
     }
 
