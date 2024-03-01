@@ -30,8 +30,8 @@ public class Images {
     private String imageType;
 
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "news_id")
+    @JsonIgnore
     private News news;
 
 }

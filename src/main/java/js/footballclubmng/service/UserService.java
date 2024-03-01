@@ -1,5 +1,6 @@
 package js.footballclubmng.service;
 
+import js.footballclubmng.config.TokenProvider;
 import js.footballclubmng.entity.User;
 import js.footballclubmng.model.dto.UserProfileDto;
 import js.footballclubmng.model.dto.UserRegisterDto;
@@ -25,7 +26,8 @@ public interface UserService {
     public boolean resetPassword(String email);
     public boolean updatePassword(String email, String newPassword);
     public User findUserByEmail(String email);
-    public UserProfileDto userprofile();
-
+    public UserProfileDto userProfile(String token);
+    public boolean updateProfile(UserProfileDto userProfileDto, String token);
+    public boolean changePassword(String token, String oldPassword, String newPassword);
     public ResponseAPI<Object> detailUser(long id);
 }

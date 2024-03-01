@@ -18,7 +18,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User findByEmailAndVerificationCodeAndDeleteFlg(String email, String code, String deleteFlg);
 
-    @Query(value = "Select u.* from user u Where (u.first_name Like concat('%',:name,'%') or  u.last_name Like concat('%',:name,'%')) and u.delete_flg ='0' ", nativeQuery = true)
+    @Query(value = "Select u.* from users u Where (u.first_name Like concat('%',:name,'%') or  u.last_name Like concat('%',:name,'%')) and u.delete_flg ='0' ", nativeQuery = true)
     List<User> findAllByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseAndDeleteFlg(@Param("name") String name);
     boolean existsByEmail(String email);
 }

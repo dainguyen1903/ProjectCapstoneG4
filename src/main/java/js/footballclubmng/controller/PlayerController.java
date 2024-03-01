@@ -7,6 +7,7 @@ import js.footballclubmng.model.dto.PlayerDto;
 import js.footballclubmng.model.response.ResponseAPI;
 import js.footballclubmng.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -30,6 +31,7 @@ public class PlayerController {
     }
 
     @GetMapping(CommonConstant.PLAYER_API.LIST_PLAYER)
+    @PreAuthorize("hasRole('ROLE_Staff')")
     public ResponseAPI<List<PlayerDto>> listPlayer() {
         List<PlayerDto> playerList = playerService.getAllPlayer();
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK,null,playerList);

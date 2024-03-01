@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 
 @Getter
@@ -64,4 +65,16 @@ public class User {
     @Column(name = "delete_flg")
     private String deleteFlg;
 
+    @OneToMany(mappedBy = "user")
+    private List<NewsComment> newsComments;
+    public User(String firstName, String lastName, String email, String password, LocalDateTime createTime, String role, String otp, LocalDateTime otpGenerateTime) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.createTime = createTime;
+        this.authority = role;
+        this.otp = otp;
+        this.otpGenerateTime = otpGenerateTime;
+    }
 }

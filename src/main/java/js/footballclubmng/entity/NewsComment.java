@@ -25,7 +25,7 @@ public class NewsComment {
     @Column(name = "comment_time", nullable = false)
     private LocalDateTime commentTime;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "news_id")
     @JsonIgnore
     private News news;

@@ -64,6 +64,9 @@ public class CommonConstant {
         public static String INVALID_PASSWORD = "Mật khẩu không hợp lệ";
         public static String NOT_FOUND_PLAYER = "Không tìm thấy cầu thủ";
         public static String NOT_FOUND_NEWS = "Không tìm thấy tin tức";
+        public static String UPDATE_PROFILE_SUCCESS = "Cập nhật thông tin cá nhân thành công";
+        public static String UPDATE_PROFILE_FAIL = "Cập nhật thông tin cá nhân thất bại";
+        public static String EMPTY_TOKEN = "Đăng nhập để thực hiện chức năng này";
     }
 
     public static class USER_API {
@@ -91,7 +94,8 @@ public class CommonConstant {
 
         public static final String DETAIL_USER = HEAD_API + USER + "/detail-user";
 
-
+        public static final String PROFILE_USER = HEAD_API + USER + "/profile-user";
+        public static final String UPDATE_PROFILE = HEAD_API + USER + "/update-profile-user";
     }
 
     public static class PLAYER_API {

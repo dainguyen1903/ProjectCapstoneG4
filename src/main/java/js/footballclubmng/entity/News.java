@@ -41,6 +41,4 @@ public class News {
     @OneToMany(mappedBy = "news")
     private List<NewsComment> newsCommentList;
 
-
-
 }

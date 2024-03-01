@@ -2,6 +2,7 @@ package js.footballclubmng.controller;
 
 import js.footballclubmng.common.CommonConstant;
 import js.footballclubmng.entity.User;
+import js.footballclubmng.model.dto.UserProfileDto;
 import js.footballclubmng.model.dto.UserRegisterDto;
 import js.footballclubmng.model.request.LoginRequest;
 import js.footballclubmng.model.response.ResponseAPI;
@@ -39,9 +40,9 @@ public class UserController extends BaseController {
                 result.setMessage(ex.getMessage());
             }
             return result;
-        }  else {
-        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_VALID, CommonConstant.COMMON_MESSAGE.INVALID_PARAMETER);
-    }
+        } else {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_VALID, CommonConstant.COMMON_MESSAGE.INVALID_PARAMETER);
+        }
 
     }
 
@@ -62,7 +63,7 @@ public class UserController extends BaseController {
     }
 
     @PutMapping(CommonConstant.USER_API.VERIFY_OTP)
-    public ResponseAPI<Object> verifyEmail(@RequestParam String email, @RequestParam String otp) {
+    public ResponseAPI<Object> verifyOtp(@RequestParam String email, @RequestParam String otp) {
         if (!EmailUtil.patternMatches(email)) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.INVALID_EMAIL);
         }
@@ -74,7 +75,7 @@ public class UserController extends BaseController {
         if (result == false) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.VERIFY_FAIL);
         }
-        return  new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.VERIFY_SUCCESS);
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.VERIFY_SUCCESS);
 
     }
 
@@ -131,6 +132,46 @@ public class UserController extends BaseController {
         }
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.UPDATE_PASSWORD_SUCCESS);
     }
+
+    @GetMapping(CommonConstant.USER_API.PROFILE_USER)
+    public ResponseAPI<Object> profileUser(@RequestHeader(name = "Authorization") String token) {
+        if (token == null) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.EMPTY_TOKEN);
+        }
+        UserProfileDto userProfileDto = userService.userProfile(token);
+        if (userProfileDto == null) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.EMPTY);
+        }
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.OK, userProfileDto);
+    }
+
+    @PutMapping(CommonConstant.USER_API.UPDATE_PROFILE)
+    public ResponseAPI<Object> updateProfile(@RequestBody UserProfileDto userProfileDto, @RequestHeader(name = "Authorization") String token) {
+        if (token == null) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.EMPTY_TOKEN);
+        }
+        boolean result = userService.updateProfile(userProfileDto, token);
+        if (result == false) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.UPDATE_PROFILE_FAIL);
+        }
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.UPDATE_PROFILE_SUCCESS);
+    }
+
+    @PutMapping(CommonConstant.USER_API.CHANGE_PASSWORD)
+    public ResponseAPI<Object> changePassword(@RequestParam String oldPassword, @RequestParam String newPassword, @RequestHeader(name = "Authorization") String token) {
+        if (token == null) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.EMPTY_TOKEN);
+        }
+        if (!HelperUtil.patternMatches(newPassword)) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.INVALID_PASSWORD);
+        }
+        boolean result = userService.changePassword(token, oldPassword, newPassword);
+        if (result == false) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.UPDATE_PASSWORD_FAIL);
+        }
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.UPDATE_PASSWORD_SUCCESS);
+    }
+
 }
 
 

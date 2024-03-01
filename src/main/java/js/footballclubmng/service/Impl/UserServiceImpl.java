@@ -158,6 +158,7 @@ public class UserServiceImpl implements UserService {
                 LocalDateTime u = user.getOtpGenerateTime();
                 if (Duration.between(u, now).getSeconds() < 60) {
                     user.setIsActive(true);
+                    user.setDeleteFlg("0");
                     userRepository.save(user);
                     return true;
                 }
@@ -234,8 +235,67 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserProfileDto userprofile() {
+    public UserProfileDto userProfile(String token) {
+        try{
+            String jwtToken = token.substring(7);
+            String email = tokenProvider.getUsernameFromJWT(jwtToken);
+            User user = userRepository.findByEmail(email);
+            if (user != null) {
+                UserProfileDto userProfileDto = new UserProfileDto();
+                userProfileDto.setFirstName(user.getFirstName());
+                userProfileDto.setLastName(user.getLastName());
+                userProfileDto.setEmail(user.getEmail());
+                userProfileDto.setAddress(user.getAddress());
+                userProfileDto.setDateOfBirth(user.getDateOfBirth());
+                userProfileDto.setGender(user.getGender());
+                userProfileDto.setImage(user.getImageUrl());
+                return userProfileDto;
+            }
+        }catch (Exception e){
+            return null;
+        }
         return null;
+    }
+
+    @Override
+    public boolean updateProfile(UserProfileDto userProfileDto, String token) {
+        try{
+            String jwtToken = token.substring(7);
+            String email = tokenProvider.getUsernameFromJWT(jwtToken);
+            User user = userRepository.findByEmail(email);
+            if (user != null) {
+                user.setFirstName(userProfileDto.getFirstName());
+                user.setLastName(userProfileDto.getLastName());
+                user.setAddress(userProfileDto.getAddress());
+                user.setDateOfBirth(userProfileDto.getDateOfBirth());
+                user.setGender(userProfileDto.getGender());
+                user.setImageUrl(userProfileDto.getImage());
+                userRepository.save(user);
+                return true;
+            }
+        }catch (Exception e){
+            return false;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean changePassword(String token, String oldPassword, String newPassword) {
+        try{
+            String jwtToken = token.substring(7);
+            String email = tokenProvider.getUsernameFromJWT(jwtToken);
+            User user = userRepository.findByEmail(email);
+            if (user != null) {
+                if (passwordEncoder.matches(oldPassword, user.getPassword())) {
+                    user.setPassword(passwordEncoder.encode(newPassword));
+                    userRepository.save(user);
+                    return true;
+                }
+            }
+        }catch (Exception e){
+            return false;
+        }
+        return false;
     }
 }
 
