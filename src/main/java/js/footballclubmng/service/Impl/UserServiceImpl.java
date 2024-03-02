@@ -6,6 +6,9 @@ import js.footballclubmng.config.CustomerUserDetails;
 import js.footballclubmng.config.TokenProvider;
 import js.footballclubmng.config.WebSecurityConfig;
 import js.footballclubmng.entity.User;
+import js.footballclubmng.model.dto.UserProfileDto;
+import js.footballclubmng.model.request.UpdatePasswordRequest;
+import js.footballclubmng.model.request.UserRegisterRequest;
 import js.footballclubmng.model.bean.UserBean;
 import js.footballclubmng.model.request.user.CreateUserRequest;
 import js.footballclubmng.model.request.user.DeleteUserRequest;
@@ -13,6 +16,8 @@ import js.footballclubmng.model.response.LoginResponse;
 import js.footballclubmng.model.response.ResponseAPI;
 import js.footballclubmng.repository.UserRepository;
 import js.footballclubmng.service.UserService;
+import js.footballclubmng.util.EmailUtil;
+import js.footballclubmng.util.OtpUtil;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +31,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -54,12 +62,16 @@ public class UserServiceImpl implements UserService {
     @Autowired
     JavaMailSender mailSender;
 
-    @Value("${spring.mail.sender.display-name} ")
-    private String displayNameEmail;
+//    @Value("${spring.mail.sender.display-name} ")
+//    private String displayNameEmail;
+    @Autowired
+    EmailUtil emailUtil;
 
+    @Autowired
+    OtpUtil otpUtil;
 
-    @Value("${spring.mail.username}")
-    private String fromEmail;
+//    @Value("${spring.mail.username}")
+//    private String fromEmail;
 
     @Override
     public User getUserByEmail(String email) {
@@ -197,6 +209,103 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean addUser(UserRegisterRequest userRegisterRequest) {
+        try {
+            String otp = otpUtil.generateOtp();
+            try {
+                emailUtil.sendOtpEmail(userRegisterRequest.getEmail(), otp);
+            } catch (Exception e) {
+                throw new RuntimeException("Không thể gửi OTP vui lòng thử lại!");
+            }
+            User account = new User();
+            account.setFirstName(userRegisterRequest.getFirstName());
+            account.setLastName(userRegisterRequest.getLastName());
+            account.setEmail(userRegisterRequest.getEmail());
+            account.setPassword(passwordEncoder.encode(userRegisterRequest.getPassword()));
+            account.setAuthority("user");
+            account.setIsActive(false);
+            account.setCreateTime(LocalDateTime.now());
+            account.setOtp(otp);
+            account.setOtpGenerateTime(LocalDateTime.now());
+            userRepository.save(account);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean verifyOtp(String email, String otp) {
+        try {
+            User user = userRepository.findByEmail(email);
+            if (user.getOtp().equals(otp)) {
+                LocalDateTime now = LocalDateTime.now();
+                LocalDateTime u = user.getOtpGenerateTime();
+                if (Duration.between(u, now).getSeconds() < 60) {
+                    user.setIsActive(true);
+                    user.setDeleteFlg("0");
+                    userRepository.save(user);
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean generateOtp(String email) {
+        try {
+            User user = userRepository.findByEmail(email);
+            String otp = otpUtil.generateOtp();
+            try {
+                emailUtil.sendOtpEmail(email, otp);
+            } catch (Exception e) {
+                throw new RuntimeException("Không thể gửi OTP vui lòng thử lại!");
+            }
+            user.setOtp(otp);
+            user.setOtpGenerateTime(LocalDateTime.now());
+            userRepository.save(user);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean resetPassword(String email) {
+        try {
+            User user = userRepository.findByEmail(email);
+            String otp = otpUtil.generateOtp();
+            try {
+                emailUtil.sendOtpEmail(email, otp);
+            } catch (Exception e) {
+                throw new RuntimeException("Không thể gửi otp vui lòng thử lại!");
+            }
+            user.setOtp(otp);
+            user.setOtpGenerateTime(LocalDateTime.now());
+            userRepository.save(user);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+
+    @Override
+    public boolean updatePassword(String email, UpdatePasswordRequest updatePasswordRequest) {
+        try {
+            User user = userRepository.findByEmail(email);
+            user.setPassword(passwordEncoder.encode(updatePasswordRequest.getNewPassword()));
+            userRepository.save(user);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
     public ResponseAPI<Object> detailUser(long id) {
         try {
             User detailUser =  userRepository.findByIdAndDeleteFlg(id, "0");
@@ -208,4 +317,93 @@ public class UserServiceImpl implements UserService {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EXCEPTION, CommonConstant.COMMON_MESSAGE.EXCEPTION);
         }
     }
+
+    @Override
+    public User findUserByEmailForRegister(String email) {
+        try {
+            User user = userRepository.findByEmail(email);
+            if (user.getIsActive() && user.getDeleteFlg().equals("0")) {
+                return user;
+            }
+            if (!user.getIsActive()) {
+                userRepository.delete(user);
+                return null;
+            }
+        } catch (Exception e) {
+            return null;
+        }
+        return null;
+    }
+
+    public User findUserByEmail(String email) {
+        try {
+            User user = userRepository.findByEmail(email);
+            return user;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public UserProfileDto userProfile(String token) {
+        try {
+            String jwtToken = token.substring(7);
+            String email = tokenProvider.getUsernameFromJWT(jwtToken);
+            User user = userRepository.findByEmail(email);
+            if (user != null) {
+                UserProfileDto userProfileDto = new UserProfileDto();
+                userProfileDto.setFirstName(user.getFirstName());
+                userProfileDto.setLastName(user.getLastName());
+                userProfileDto.setEmail(user.getEmail());
+                userProfileDto.setAddress(user.getAddress());
+                userProfileDto.setDateOfBirth(user.getDateOfBirth());
+                userProfileDto.setGender(user.getGender());
+                userProfileDto.setImage(user.getImageUrl());
+                return userProfileDto;
+            }
+        } catch (Exception e) {
+            return null;
+        }
+        return null;
+    }
+
+    @Override
+    public boolean updateProfile(UserProfileDto userProfileDto, String token) {
+        try {
+            String jwtToken = token.substring(7);
+            String email = tokenProvider.getUsernameFromJWT(jwtToken);
+            User user = userRepository.findByEmail(email);
+            if (user != null) {
+                user.setFirstName(userProfileDto.getFirstName());
+                user.setLastName(userProfileDto.getLastName());
+                user.setAddress(userProfileDto.getAddress());
+                user.setDateOfBirth(userProfileDto.getDateOfBirth());
+                user.setGender(userProfileDto.getGender());
+                user.setImageUrl(userProfileDto.getImage());
+                userRepository.save(user);
+                return true;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean changePassword(String token, UpdatePasswordRequest updatePasswordRequest) {
+        try {
+            String jwtToken = token.substring(7);
+            String email = tokenProvider.getUsernameFromJWT(jwtToken);
+            User user = userRepository.findByEmail(email);
+            if (user != null) {
+                user.setPassword(passwordEncoder.encode(updatePasswordRequest.getNewPassword()));
+                userRepository.save(user);
+                return true;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        return false;
+    }
 }
+

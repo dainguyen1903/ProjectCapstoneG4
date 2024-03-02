@@ -45,4 +45,5 @@ public class Player {
     @Column(name = "join_date")
     private LocalDateTime joinDate;
 
+
 }

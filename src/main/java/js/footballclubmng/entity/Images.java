@@ -3,6 +3,7 @@ package js.footballclubmng.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.nio.file.Path;
@@ -15,8 +16,8 @@ import java.nio.file.Path;
 @Entity(name = "images")
 public class Images {
     @Id
-    @Column(name = "image_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "image_id")
     private Long id;
 
     @Column(name = "name", nullable = false)
