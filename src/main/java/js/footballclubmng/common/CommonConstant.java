@@ -80,7 +80,7 @@ public class CommonConstant {
 
         public static final String LOGIN = HEAD_API + USER + "/login";
 
-        public static final String SIGN_UP = HEAD_API + USER + "/sign-up";
+        public static final String CREATE_USER = HEAD_API + USER + "/create-user";
 
         public static final String UPDATE_USER = HEAD_API + USER + "/update-user";
 
