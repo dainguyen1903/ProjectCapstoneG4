@@ -1,6 +1,6 @@
 package js.footballclubmng.controller;
 
-import js.footballclubmng.model.dto.NewsDto;
+import js.footballclubmng.model.response.ListNewsResponse;
 import js.footballclubmng.model.response.ResponseAPI;
 import js.footballclubmng.common.CommonConstant;
 
@@ -22,8 +22,8 @@ public class NewsController {
 
     @GetMapping(CommonConstant.NEWS_API.LIST_NEWS)
     @PreAuthorize("hasRole('ROLE_Staff')")
-    public ResponseAPI<List<NewsDto>> newsList() {
-        List<NewsDto> newsList = newsService.findAllNews();
+    public ResponseAPI<List<ListNewsResponse>> newsList() {
+        List<ListNewsResponse> newsList = newsService.findAllNews();
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK,null, newsList);
     }
     @GetMapping(CommonConstant.NEWS_API.DETAIL_NEWS)

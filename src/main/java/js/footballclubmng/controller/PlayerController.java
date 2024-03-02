@@ -3,7 +3,7 @@ package js.footballclubmng.controller;
 import js.footballclubmng.common.CommonConstant;
 
 import js.footballclubmng.entity.Player;
-import js.footballclubmng.model.dto.PlayerDto;
+import js.footballclubmng.model.response.ListPlayerResponse;
 import js.footballclubmng.model.response.ResponseAPI;
 import js.footballclubmng.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +32,8 @@ public class PlayerController {
 
     @GetMapping(CommonConstant.PLAYER_API.LIST_PLAYER)
     @PreAuthorize("hasRole('ROLE_Staff')")
-    public ResponseAPI<List<PlayerDto>> listPlayer() {
-        List<PlayerDto> playerList = playerService.getAllPlayer();
+    public ResponseAPI<List<ListPlayerResponse>> listPlayer() {
+        List<ListPlayerResponse> playerList = playerService.getAllPlayer();
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK,null,playerList);
     }
 }

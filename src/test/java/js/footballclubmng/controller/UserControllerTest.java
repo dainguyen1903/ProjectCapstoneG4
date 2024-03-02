@@ -1,12 +1,10 @@
 package js.footballclubmng.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import js.footballclubmng.entity.User;
-import js.footballclubmng.model.dto.UserRegisterDto;
-import js.footballclubmng.service.Impl.UserServiceImpl;
+import js.footballclubmng.model.request.UserRegisterRequest;
 import js.footballclubmng.service.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +22,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -43,13 +40,13 @@ class UserControllerTest {
     @MockBean
     private UserService userService;
 
-    UserRegisterDto userRegisterDto;
+    UserRegisterRequest userRegisterRequest;
     User user2;
     List<User> userList;
 
     @BeforeEach
     void setUp() {
-        userRegisterDto = new UserRegisterDto("linh","bui", "kimanh130201@gmail.com","Linh123123","Linh123123");
+        userRegisterRequest = new UserRegisterRequest("linh","bui", "kimanh130201@gmail.com","Linh123123","Linh123123");
         user2 = new User("kim","bui", "kimkim130201@gmail.com",
                 "Kim123123", LocalDateTime.now(),"user" ,"321321",LocalDateTime.now());
     }
@@ -63,9 +60,9 @@ class UserControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
         ObjectWriter objectWriter = objectMapper.writer().withDefaultPrettyPrinter();
-        String requestJson = objectWriter.writeValueAsString(userRegisterDto);
+        String requestJson = objectWriter.writeValueAsString(userRegisterRequest);
 
-        when(userService.addUser(userRegisterDto)).thenReturn(true);
+        when(userService.addUser(userRegisterRequest)).thenReturn(true);
         this.mockMvc.perform(post("/api/user/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestJson))

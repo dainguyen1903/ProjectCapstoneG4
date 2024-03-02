@@ -1,6 +1,6 @@
 package js.footballclubmng.service.Impl;
 
-import js.footballclubmng.model.dto.PlayerDto;
+import js.footballclubmng.model.response.ListPlayerResponse;
 import js.footballclubmng.entity.Player;
 import js.footballclubmng.repository.PlayerRepository;
 import js.footballclubmng.service.PlayerService;
@@ -27,7 +27,7 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public List<PlayerDto> getAllPlayer() {
+    public List<ListPlayerResponse> getAllPlayer() {
         List<Player> playerList = playerRepository.findAll();
         return playerList.stream().map((player) -> mapToPlayerDto(player)).collect(Collectors.toList());
     }
@@ -63,13 +63,13 @@ public class PlayerServiceImpl implements PlayerService {
         return false;
     }
 
-    private PlayerDto mapToPlayerDto(Player player) {
-        PlayerDto playerDto = new PlayerDto();
-        playerDto.setId(player.getId());
-        playerDto.setName(player.getName());
-        playerDto.setNationality(player.getNationality());
-        playerDto.setPosition(player.getPosition());
-        return playerDto;
+    private ListPlayerResponse mapToPlayerDto(Player player) {
+        ListPlayerResponse listPlayerResponse = new ListPlayerResponse();
+        listPlayerResponse.setId(player.getId());
+        listPlayerResponse.setName(player.getName());
+        listPlayerResponse.setNationality(player.getNationality());
+        listPlayerResponse.setPosition(player.getPosition());
+        return listPlayerResponse;
     }
 
 

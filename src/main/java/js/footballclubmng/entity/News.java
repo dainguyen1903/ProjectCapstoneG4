@@ -35,10 +35,10 @@ public class News {
     @Column(name = "date_create", nullable = false)
     private LocalDateTime dateCreate;
 
-    @OneToMany(mappedBy = "news")
-    private List<Images> imagesList;
-
-    @OneToMany(mappedBy = "news")
-    private List<NewsComment> newsCommentList;
+//    @OneToMany(mappedBy = "news")
+//    private List<Images> imagesList;
+//
+//    @OneToMany(mappedBy = "news")
+//    private List<NewsComment> newsCommentList;
 
 }

@@ -1,4 +1,4 @@
-package js.footballclubmng.model.dto;
+package js.footballclubmng.model.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PlayerDto {
+public class ListPlayerResponse {
     private Long id;
     private String name;
     private String nationality;

@@ -5,7 +5,8 @@ import js.footballclubmng.config.TokenProvider;
 import js.footballclubmng.config.WebSecurityConfig;
 import js.footballclubmng.entity.User;
 import js.footballclubmng.model.dto.UserProfileDto;
-import js.footballclubmng.model.dto.UserRegisterDto;
+import js.footballclubmng.model.request.UpdatePasswordRequest;
+import js.footballclubmng.model.request.UserRegisterRequest;
 import js.footballclubmng.model.request.user.CreateUserRequest;
 import js.footballclubmng.model.request.user.DeleteUserRequest;
 import js.footballclubmng.model.response.LoginResponse;
@@ -15,7 +16,6 @@ import js.footballclubmng.service.UserService;
 import js.footballclubmng.util.EmailUtil;
 import js.footballclubmng.util.OtpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -125,20 +125,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean addUser(UserRegisterDto userRegisterDto) {
+    public boolean addUser(UserRegisterRequest userRegisterRequest) {
         try {
             String otp = otpUtil.generateOtp();
             try {
-                emailUtil.sendOtpEmail(userRegisterDto.getEmail(), otp);
+                emailUtil.sendOtpEmail(userRegisterRequest.getEmail(), otp);
             } catch (Exception e) {
                 throw new RuntimeException("Không thể gửi OTP vui lòng thử lại!");
             }
             User account = new User();
-            account.setFirstName(userRegisterDto.getFirstName());
-            account.setLastName(userRegisterDto.getLastName());
-            account.setEmail(userRegisterDto.getEmail());
-            account.setPassword(passwordEncoder.encode(userRegisterDto.getPassword()));
+            account.setFirstName(userRegisterRequest.getFirstName());
+            account.setLastName(userRegisterRequest.getLastName());
+            account.setEmail(userRegisterRequest.getEmail());
+            account.setPassword(passwordEncoder.encode(userRegisterRequest.getPassword()));
             account.setAuthority("user");
+            account.setIsActive(false);
             account.setCreateTime(LocalDateTime.now());
             account.setOtp(otp);
             account.setOtpGenerateTime(LocalDateTime.now());
@@ -183,7 +184,7 @@ public class UserServiceImpl implements UserService {
             user.setOtpGenerateTime(LocalDateTime.now());
             userRepository.save(user);
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }
@@ -202,17 +203,17 @@ public class UserServiceImpl implements UserService {
             user.setOtpGenerateTime(LocalDateTime.now());
             userRepository.save(user);
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }
 
 
     @Override
-    public boolean updatePassword(String email, String newPassword) {
+    public boolean updatePassword(String email, UpdatePasswordRequest updatePasswordRequest) {
         try {
             User user = userRepository.findByEmail(email);
-            user.setPassword(passwordEncoder.encode(newPassword));
+            user.setPassword(passwordEncoder.encode(updatePasswordRequest.getNewPassword()));
             userRepository.save(user);
             return true;
         } catch (Exception e) {
@@ -222,6 +223,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseAPI<Object> detailUser(long id) {
+        return null;
+    }
+
+    @Override
+    public User findUserByEmailForRegister(String email) {
+        try {
+            User user = userRepository.findByEmail(email);
+            if (user.getIsActive() && user.getDeleteFlg().equals("0")) {
+                return user;
+            }
+            if (!user.getIsActive()) {
+                userRepository.delete(user);
+                return null;
+            }
+        } catch (Exception e) {
+            return null;
+        }
         return null;
     }
 
@@ -236,7 +254,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserProfileDto userProfile(String token) {
-        try{
+        try {
             String jwtToken = token.substring(7);
             String email = tokenProvider.getUsernameFromJWT(jwtToken);
             User user = userRepository.findByEmail(email);
@@ -251,7 +269,7 @@ public class UserServiceImpl implements UserService {
                 userProfileDto.setImage(user.getImageUrl());
                 return userProfileDto;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
         return null;
@@ -259,7 +277,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean updateProfile(UserProfileDto userProfileDto, String token) {
-        try{
+        try {
             String jwtToken = token.substring(7);
             String email = tokenProvider.getUsernameFromJWT(jwtToken);
             User user = userRepository.findByEmail(email);
@@ -273,26 +291,24 @@ public class UserServiceImpl implements UserService {
                 userRepository.save(user);
                 return true;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
         return false;
     }
 
     @Override
-    public boolean changePassword(String token, String oldPassword, String newPassword) {
-        try{
+    public boolean changePassword(String token, UpdatePasswordRequest updatePasswordRequest) {
+        try {
             String jwtToken = token.substring(7);
             String email = tokenProvider.getUsernameFromJWT(jwtToken);
             User user = userRepository.findByEmail(email);
             if (user != null) {
-                if (passwordEncoder.matches(oldPassword, user.getPassword())) {
-                    user.setPassword(passwordEncoder.encode(newPassword));
-                    userRepository.save(user);
-                    return true;
-                }
+                user.setPassword(passwordEncoder.encode(updatePasswordRequest.getNewPassword()));
+                userRepository.save(user);
+                return true;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
         return false;

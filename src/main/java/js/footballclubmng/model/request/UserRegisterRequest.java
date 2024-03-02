@@ -1,4 +1,4 @@
-package js.footballclubmng.model.dto;
+package js.footballclubmng.model.request;
 
 
 import lombok.AllArgsConstructor;
@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRegisterDto {
+public class UserRegisterRequest {
     @NotBlank(message = "Tên không được để trống.")
     private String firstName;
     @NotBlank(message = "Họ không được để trống.")
