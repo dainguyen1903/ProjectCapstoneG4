@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PlayerService {
-    public Optional<Player> getPlayerById(long id);
+    public Player getPlayerById(long id);
     public List<ListPlayerResponse> getAllPlayer();
     public boolean createPlayer(Player player);
-    public boolean updatePlayer(long id);
+    public boolean updatePlayer(long id, Player player);
     public boolean deletePlayer(long id);
 }

@@ -67,6 +67,12 @@ public class CommonConstant {
         public static String UPDATE_PROFILE_SUCCESS = "Cập nhật thông tin cá nhân thành công";
         public static String UPDATE_PROFILE_FAIL = "Cập nhật thông tin cá nhân thất bại";
         public static String EMPTY_TOKEN = "Đăng nhập để thực hiện chức năng này";
+        public static String CREATE_PLAYER_SUCCESS = "Tạo cầu thủ thành công";
+        public static String CREATE_PLAYER_FAIL = "Tạo cầu thủ thất bại";
+        public static final String UPDATE_PLAYER_SUCCESS = "Cập nhật cầu thủ thành công" ;
+        public static final String UPDATE_PLAYER_FAIL = "Cập nhật cầu thủ thất bại";
+        public static final String DELETE_PLAYER_SUCCESS = "Xóa cầu thủ thành công";
+        public static final String DELETE_PLAYER_FAIL = "Xóa cầu thủ thất bại";
     }
 
     public static class USER_API {
@@ -102,7 +108,9 @@ public class CommonConstant {
         public static final String PLAYER = "/player";
         public static final String LIST_PLAYER = HEAD_API + PLAYER + "/list-player";
         public static final String DETAIL_PLAYER = HEAD_API + PLAYER + "/detail-player/{id}";
-
+        public static final String CREATE_PLAYER = HEAD_API + PLAYER + "/create-player";
+        public static final String UPDATE_PLAYER = HEAD_API + PLAYER + "/update-player/{id}";
+        public static final String DELETE_PLAYER = HEAD_API + PLAYER + "/delete-player/{id}";
     }
 
     public static class NEWS_API {

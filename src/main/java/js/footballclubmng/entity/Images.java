@@ -29,7 +29,7 @@ public class Images {
     @Column(name = "image_type", nullable = false)
     private String imageType;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "news_id")
     @JsonIgnore
     private News news;

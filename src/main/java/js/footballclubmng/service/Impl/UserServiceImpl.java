@@ -64,6 +64,7 @@ public class UserServiceImpl implements UserService {
 
 //    @Value("${spring.mail.sender.display-name} ")
 //    private String displayNameEmail;
+
     @Autowired
     EmailUtil emailUtil;
 
@@ -222,7 +223,7 @@ public class UserServiceImpl implements UserService {
             account.setLastName(userRegisterRequest.getLastName());
             account.setEmail(userRegisterRequest.getEmail());
             account.setPassword(passwordEncoder.encode(userRegisterRequest.getPassword()));
-            account.setAuthority("user");
+            account.setAuthority("User");
             account.setIsActive(false);
             account.setCreateTime(LocalDateTime.now());
             account.setOtp(otp);
