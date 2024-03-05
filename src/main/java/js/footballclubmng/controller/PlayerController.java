@@ -37,7 +37,7 @@ public class PlayerController {
 
     @PostMapping(CommonConstant.PLAYER_API.CREATE_PLAYER)
     @PreAuthorize("hasRole('ROLE_Staff')")
-    public ResponseAPI<Player> createPlayer(@RequestBody Player player) {
+    public ResponseAPI<Object> createPlayer(@RequestBody Player player) {
         boolean check = playerService.createPlayer(player);
         if (!check) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.CREATE_PLAYER_FAIL);
@@ -47,7 +47,7 @@ public class PlayerController {
 
     @PutMapping(CommonConstant.PLAYER_API.UPDATE_PLAYER)
     @PreAuthorize("hasRole('ROLE_Staff')")
-    public ResponseAPI<Player> updatePlayer(@PathVariable int id, @RequestBody Player player) {
+    public ResponseAPI<Object> updatePlayer(@PathVariable int id, @RequestBody Player player) {
         Player p = playerService.getPlayerById(id);
         if (p == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.NOT_FOUND_PLAYER);
@@ -61,7 +61,7 @@ public class PlayerController {
 
     @DeleteMapping(CommonConstant.PLAYER_API.DELETE_PLAYER)
     @PreAuthorize("hasRole('ROLE_Staff')")
-    public ResponseAPI<Player> deletePlayer(@PathVariable int id) {
+    public ResponseAPI<Object> deletePlayer(@PathVariable int id) {
         Player p = playerService.getPlayerById(id);
         if (p == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.NOT_FOUND_PLAYER);
