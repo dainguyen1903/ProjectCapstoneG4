@@ -120,6 +120,13 @@ public class CommonConstant {
 
     }
 
+    public static class CATEGORY_API {
+        public static final String CATEGORY = "/category";
+        public static final String LIST_CATEGORY = HEAD_API + CATEGORY + "/list-category";
+
+
+    }
+
 
 }
 

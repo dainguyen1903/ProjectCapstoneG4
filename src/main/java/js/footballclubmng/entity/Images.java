@@ -3,10 +3,8 @@ package js.footballclubmng.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.*;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
-import java.nio.file.Path;
 
 @Getter
 @Setter
