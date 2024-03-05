@@ -34,6 +34,16 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public boolean updateCategory(long id, Category category) {
+        try {
+            Category category1 = categoryRepository.findById(id).orElse(null);
+            if (category1 != null) {
+                category1.setName(category.getName());
+                categoryRepository.save(category1);
+                return true;
+            }
+        } catch (Exception e) {
+            return false;
+        }
         return false;
     }
 

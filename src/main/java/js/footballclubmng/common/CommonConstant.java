@@ -75,6 +75,9 @@ public class CommonConstant {
         public static final String DELETE_PLAYER_FAIL = "Xóa cầu thủ thất bại";
         public static final String CREATE_CATEGORY_FAIL = "Thêm danh mục thất bại";
         public static final String CREATE_CATEGORY_SUCCESS = "Thêm danh mục thành công";
+        public static final String UPDATE_CATEGORY_FAIL = "Cập nhật danh mục thất bại";
+        public static final String UPDATE_CATEGORY_SUCCESS = "Cập nhật danh mục thành công";
+
 
     }
 
@@ -127,6 +130,7 @@ public class CommonConstant {
         public static final String CATEGORY = "/category";
         public static final String LIST_CATEGORY = HEAD_API + CATEGORY + "/list-category";
         public static final String CREATE_CATEGORY = HEAD_API + CATEGORY + "/create-category";
+        public static final String UPDATE_CATEGORY = HEAD_API + CATEGORY + "/update-category/{id}";
     }
 
 

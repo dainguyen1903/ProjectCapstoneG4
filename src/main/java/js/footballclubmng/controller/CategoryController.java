@@ -5,10 +5,7 @@ import js.footballclubmng.entity.Category;
 import js.footballclubmng.model.response.ResponseAPI;
 import js.footballclubmng.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -31,6 +28,15 @@ public class CategoryController {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.CREATE_CATEGORY_FAIL);
         }
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.CREATE_CATEGORY_SUCCESS);
+    }
+
+    @PutMapping(CommonConstant.CATEGORY_API.UPDATE_CATEGORY)
+    public ResponseAPI<Object> updatePlayer(@PathVariable int id, @RequestBody @Valid Category category) {
+        boolean check = categoryService.updateCategory(id, category);
+        if (!check) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.UPDATE_CATEGORY_FAIL);
+        }
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.UPDATE_CATEGORY_SUCCESS);
     }
 
 }
