@@ -87,6 +87,12 @@ public class PlayerServiceImpl implements PlayerService {
         }
     }
 
+    @Override
+    public List<Player> searchPlayer(String search) {
+        return playerRepository.searchPlayer(search);
+    }
+
+
     private ListPlayerResponse mapToPlayerDto(Player player) {
         ListPlayerResponse listPlayerResponse = new ListPlayerResponse();
         listPlayerResponse.setId(player.getId());

@@ -73,5 +73,13 @@ public class PlayerController {
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.DELETE_PLAYER_SUCCESS);
     }
 
+    @GetMapping(CommonConstant.PLAYER_API.SEARCH_PLAYER)
+    public ResponseAPI<List<Player>> searchPlayer(@RequestParam("query") String search) {
+        List<Player> playerList = playerService.searchPlayer(search);
+        if(playerList.isEmpty()) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.NOT_FOUND_PLAYER);
+        }
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, playerList);
+    }
 
 }
