@@ -138,6 +138,10 @@ img{
 }
 .blog-img{
     position: relative;
+    img{
+        width: "100%";
+        height: auto;
+    }
 }
 .blog-img span{
     position: absolute;

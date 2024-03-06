@@ -27,6 +27,7 @@ import AddRoomModal from "./pages/components/Modals/AddRoomModal";
 import InviteMemberModal from "./pages/components/Modals/InviteMemberModal";
 
 import Profile from "./pages/UpdateProfiles/Profile";
+import HomePage2 from "./pages/HomePage/Hompage2";
 function App() {
   return (
     <div className="App">
@@ -53,7 +54,7 @@ function App() {
                 <>
                   <Header />
                   <Sidebar />
-                  <Home />
+                  <HomePage2 />
                   <Footer />
                 </>
               }
