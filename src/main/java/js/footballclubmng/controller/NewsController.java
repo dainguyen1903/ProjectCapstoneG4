@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class NewsController {
         List<ListNewsResponse> newsList = newsService.findAllNews();
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK,null, newsList);
     }
+
     @GetMapping(CommonConstant.NEWS_API.DETAIL_NEWS)
     public ResponseAPI<News> newsDetail(@PathVariable int id) {
         News news = newsService.getNewsById(id);
@@ -35,5 +37,13 @@ public class NewsController {
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY,CommonConstant.COMMON_MESSAGE.NOT_FOUND_NEWS);
     }
 
+    @GetMapping(CommonConstant.NEWS_API.SEARCH_NEWS)
+    public ResponseAPI<List<News>> searchNews(@RequestParam String search) {
+        List<News> newsList = newsService.searchNews(search);
+        if(newsList.isEmpty()){
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY,CommonConstant.COMMON_MESSAGE.NOT_FOUND_NEWS);
+        }
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK,null, newsList);
+    }
 
 }

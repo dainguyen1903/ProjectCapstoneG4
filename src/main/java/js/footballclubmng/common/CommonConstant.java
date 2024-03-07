@@ -124,7 +124,7 @@ public class CommonConstant {
         public static final String NEWS = "/news";
         public static final String LIST_NEWS = HEAD_API + NEWS + "/list-news";
         public static final String DETAIL_NEWS = HEAD_API + NEWS + "/news-detail/{id}";
-
+        public static final String SEARCH_NEWS = HEAD_API + NEWS + "/search-news";
     }
 
     public static class CATEGORY_API {

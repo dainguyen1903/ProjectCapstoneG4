@@ -31,6 +31,12 @@ public class NewsServiceImpl implements NewsService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<News> searchNews(String search) {
+         List<News> newsList = newsRepository.searchNews(search);
+        return newsList;
+    }
+
     private ListNewsResponse mapToNewsDto(News news){
         ListNewsResponse listNewsResponse = new ListNewsResponse();
         listNewsResponse.setId(news.getId());

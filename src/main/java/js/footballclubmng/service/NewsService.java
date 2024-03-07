@@ -8,4 +8,5 @@ import java.util.List;
 public interface NewsService {
     News getNewsById(long id);
     public List<ListNewsResponse> findAllNews();
+    public List<News> searchNews(String search);
 }

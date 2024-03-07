@@ -10,15 +10,14 @@ import java.util.List;
 
 @Repository
 public interface PlayerRepository extends JpaRepository<Player,Long> {
-    Player findByPosition(String position);
-    @Query(value = "SELECT * FROM player p WHERE " +
-            "LOWER(p.name) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
-            "LOWER(p.nationality) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+    @Query(value = "select * from player p where " +
+            "lower(p.name) like lower(concat('%', :query, '%')) or " +
+            "lower(p.nationality) like lower(concat('%', :query, '%')) or " +
 //            "p.date_of_birth = :query OR " +
-            "p.height = :query OR " +
-            "p.weight = :query OR " +
-            "p.number_player = :query OR " +
-            "LOWER(p.position) LIKE LOWER(CONCAT('%', :query, '%'))", nativeQuery = true)
+            "p.height = :query or " +
+            "p.weight = :query or " +
+            "p.number_player = :query or " +
+            "lower(p.position) like lower(concat('%', :query, '%'))", nativeQuery = true)
     List<Player> searchPlayer(String query);
 
 }
