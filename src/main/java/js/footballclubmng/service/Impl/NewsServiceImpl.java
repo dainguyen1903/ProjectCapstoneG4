@@ -1,13 +1,17 @@
 package js.footballclubmng.service.Impl;
 
+import js.footballclubmng.entity.NewsType;
+import js.footballclubmng.model.request.CreateNewsRequest;
 import js.footballclubmng.model.response.ListNewsResponse;
 import js.footballclubmng.entity.News;
 import js.footballclubmng.repository.NewsRepository;
+import js.footballclubmng.repository.NewsTypeRepository;
 import js.footballclubmng.service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,6 +20,8 @@ import java.util.stream.Collectors;
 public class NewsServiceImpl implements NewsService {
     @Autowired
     NewsRepository newsRepository;
+    @Autowired
+    NewsTypeRepository newsTypeRepository;
 
     @Override
     public News getNewsById(long id){
@@ -37,6 +43,25 @@ public class NewsServiceImpl implements NewsService {
         return newsList;
     }
 
+    @Override
+    public boolean createNews(CreateNewsRequest createNewsRequest) {
+        try {
+            NewsType newsType = newsTypeRepository.findByName(createNewsRequest.getNewsType());
+            News news = new News();
+            news.setTitle(createNewsRequest.getTitle());
+            news.setDescription(createNewsRequest.getDescription());
+            news.setDateCreate(LocalDateTime.now());
+            news.setNewsType(newsType);
+            newsRepository.save(news);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+
+    }
+
+
+
     private ListNewsResponse mapToNewsDto(News news){
         ListNewsResponse listNewsResponse = new ListNewsResponse();
         listNewsResponse.setId(news.getId());
@@ -44,5 +69,6 @@ public class NewsServiceImpl implements NewsService {
         listNewsResponse.setDateCreate(news.getDateCreate());
         return listNewsResponse;
     }
+
 
 }

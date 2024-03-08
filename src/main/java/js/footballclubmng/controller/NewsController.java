@@ -1,5 +1,6 @@
 package js.footballclubmng.controller;
 
+import js.footballclubmng.model.request.CreateNewsRequest;
 import js.footballclubmng.model.response.ListNewsResponse;
 import js.footballclubmng.model.response.ResponseAPI;
 import js.footballclubmng.common.CommonConstant;
@@ -8,11 +9,9 @@ import js.footballclubmng.entity.News;
 import js.footballclubmng.service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -46,4 +45,12 @@ public class NewsController {
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK,null, newsList);
     }
 
+    @PostMapping(CommonConstant.NEWS_API.CREATE_NEWS)
+    @PreAuthorize("hasRole('ROLE_Staff')")
+    public ResponseAPI<String> createNews(@RequestBody @Valid CreateNewsRequest createNewsRequest) {
+        if(!newsService.createNews(createNewsRequest)){
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST,CommonConstant.COMMON_MESSAGE.CREATE_NEWS_FAIL);
+        }
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK,CommonConstant.COMMON_MESSAGE.CREATE_NEWS_SUCCESS);
+    }
 }

@@ -37,6 +37,11 @@ public class News {
 
     @OneToMany(mappedBy = "news",fetch = FetchType.EAGER)
     private List<Images> imagesList;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "news_type_id")
+    @JsonIgnore
+    private NewsType newsType;
 //
 //    @OneToMany(mappedBy = "news")
 //    private List<NewsComment> newsCommentList;
