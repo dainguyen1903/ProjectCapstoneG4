@@ -81,6 +81,8 @@ public class CommonConstant {
         public static final String CREATE_NEWS_SUCCESS = "Tạo tin tức thành công";
         public static final String UPDATE_NEWS_FAIL = "Cập nhật tin tức thất bại";
         public static final String UPDATE_NEWS_SUCCESS = "Cập nhật tin tức thành công";
+        public static final String DELETE_NEWS_FAIL = "Xóa tin tức thất bại";
+        public static final String DELETE_NEWS_SUCCESS = "Xóa tin tức thành công";
 
     }
 
@@ -130,6 +132,7 @@ public class CommonConstant {
         public static final String SEARCH_NEWS = HEAD_API + NEWS + "/search-news";
         public static final String CREATE_NEWS = HEAD_API + NEWS + "/create-news";
         public static final String UPDATE_NEWS = HEAD_API + NEWS + "/update-news/{id}";
+        public static final String DELETE_NEWS = HEAD_API + NEWS + "/delete-news/{id}";
     }
 
     public static class CATEGORY_API {

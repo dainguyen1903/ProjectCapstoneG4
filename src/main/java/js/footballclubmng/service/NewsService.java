@@ -12,4 +12,5 @@ public interface NewsService {
     public List<News> searchNews(String search);
     public boolean createNews(CreateNewsRequest createNewsRequest);
     public boolean updateNews(long id, CreateNewsRequest createNewsRequest);
+    public boolean deleteNews(long id);
 }

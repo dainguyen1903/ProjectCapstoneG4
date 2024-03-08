@@ -78,6 +78,16 @@ public class NewsServiceImpl implements NewsService {
         return false;
     }
 
+    @Override
+    public boolean deleteNews(long id) {
+        try {
+            newsRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 
     private ListNewsResponse mapToNewsDto(News news) {
         ListNewsResponse listNewsResponse = new ListNewsResponse();

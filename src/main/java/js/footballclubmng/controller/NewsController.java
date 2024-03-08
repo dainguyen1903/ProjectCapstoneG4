@@ -57,9 +57,26 @@ public class NewsController {
     @PutMapping(CommonConstant.NEWS_API.UPDATE_NEWS)
     @PreAuthorize("hasRole('ROLE_Staff')")
     public ResponseAPI<String> updateNews(@PathVariable int id, @RequestBody @Valid CreateNewsRequest createNewsRequest) {
+        News news = newsService.getNewsById(id);
+        if(news==null){
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY,CommonConstant.COMMON_MESSAGE.NOT_FOUND_NEWS);
+        }
         if(!newsService.updateNews(id, createNewsRequest)){
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST,CommonConstant.COMMON_MESSAGE.UPDATE_NEWS_FAIL);
         }
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK,CommonConstant.COMMON_MESSAGE.UPDATE_NEWS_SUCCESS);
+    }
+
+    @DeleteMapping(CommonConstant.NEWS_API.DELETE_NEWS)
+    @PreAuthorize("hasRole('ROLE_Staff')")
+    public ResponseAPI<String> deleteNews(@PathVariable int id) {
+        News news = newsService.getNewsById(id);
+        if(news==null){
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY,CommonConstant.COMMON_MESSAGE.NOT_FOUND_NEWS);
+        }
+        if(!newsService.deleteNews(id)){
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST,CommonConstant.COMMON_MESSAGE.DELETE_NEWS_FAIL);
+        }
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK,CommonConstant.COMMON_MESSAGE.DELETE_NEWS_SUCCESS);
     }
 }
