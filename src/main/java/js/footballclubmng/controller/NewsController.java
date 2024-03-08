@@ -53,4 +53,13 @@ public class NewsController {
         }
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK,CommonConstant.COMMON_MESSAGE.CREATE_NEWS_SUCCESS);
     }
+
+    @PutMapping(CommonConstant.NEWS_API.UPDATE_NEWS)
+    @PreAuthorize("hasRole('ROLE_Staff')")
+    public ResponseAPI<String> updateNews(@PathVariable int id, @RequestBody @Valid CreateNewsRequest createNewsRequest) {
+        if(!newsService.updateNews(id, createNewsRequest)){
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST,CommonConstant.COMMON_MESSAGE.UPDATE_NEWS_FAIL);
+        }
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK,CommonConstant.COMMON_MESSAGE.UPDATE_NEWS_SUCCESS);
+    }
 }
