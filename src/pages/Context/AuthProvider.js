@@ -28,7 +28,7 @@ export default function AuthProvider({ children }) {
       // reset user info
       setUser({});
       setIsLoading(false);
-      history('/auth');
+      // history('/auth');
     });
 
     // clean function

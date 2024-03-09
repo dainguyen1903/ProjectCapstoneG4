@@ -1,8 +1,9 @@
+@import "./../../App.scss";
 .nextMatch {
   background-color: white;
   text-align: center;
   padding: 20px;
-  border-top: 3px solid #f94e30;
+  border-top: 3px solid $clr-orange;
   .wrap-club {
     display: flex;
     justify-content: space-around;
@@ -36,7 +37,7 @@
     }
     .buy {
       padding: 10px;
-      background-color: #f94e30;
+      background-color: $clr-orange;
       color: white;
       width: 100px;
     }
@@ -93,7 +94,7 @@
       margin-left: 30px;
       font-size: 30px;
       font-weight: bold;
-      color: rgb(233, 122, 25);
+      color: $clr-orange;
     }
     .txtStadium {
       margin-left: 30px;
