@@ -32,29 +32,18 @@ const DetailNews = () => {
           fontSize: 20,
         }}
       >
-        Bài viết chi tết
+      
       </h2>
-      <p>
-        <span
-          style={{
-            fontWeight: "bold",
-            fontSize: 18,
-          }}
-        >
-          {" "}
-          Tiêu đề :
-        </span>{" "}
-        {title}
-      </p>
+      <h1>{title}</h1>
       <p
         style={{
           fontWeight: "bold",
           fontSize: 18,
         }}
       >
-        Mô tả :{" "}
+       
+        <div dangerouslySetInnerHTML={{ __html:description  }} />
       </p>
-      <p>{description}</p>
       <LoadingFull show={loading} />
     </div>
   );

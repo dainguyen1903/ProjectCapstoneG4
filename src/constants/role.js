@@ -1,8 +1,8 @@
 export const ROLE = {
     ADMIN:"1",
-    STAFF:"2",
-    MAKERTER:"3",
+    OPERATOR:"2",// staff
+    SALE:"3",// MAKERTER
     "1":"ADMIN",
-    "2":"STAFF",
-    "3":"MAKERTER",
+    "2":"OPERATOR",
+    "3":"SALE",
 }

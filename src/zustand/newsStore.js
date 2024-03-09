@@ -1,9 +1,9 @@
 import {create} from 'zustand';
-
+import { persist, createJSONStorage } from 'zustand/middleware'
 // Giả lập ID tự tăng cho mỗi tin tức mới
 let newsIdCounter = 1;
 
-const useNewsStore = create((set) => ({
+const useNewsStore = create(persist((set) => ({
   news: [
     {   
         id:0,
@@ -18,7 +18,6 @@ const useNewsStore = create((set) => ({
     }));
   },
   updateNews: async (id, updatedNews) => {
-    console.log(updatedNews)
     await new Promise((resolve) => setTimeout(resolve, 1000)); 
     set((state) => ({
       news: state.news.map((newsItem) =>
@@ -38,6 +37,9 @@ const useNewsStore = create((set) => ({
       news: state.news.find((newsItem) => newsItem.id === id),
     }));
   },
+}),{
+  name: 'news-storage', 
+  storage: createJSONStorage(() => sessionStorage),
 }));
 
 export default useNewsStore;

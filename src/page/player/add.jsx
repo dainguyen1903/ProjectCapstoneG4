@@ -53,10 +53,13 @@ const AddPlayerForm = () => {
   };
 
   const handleChangeFile = (e) => {
-      let file = e.target.files[0];
-      const tempUrl = URL.createObjectURL(file);
-      setImageName(file.name)
-      setUrl(tempUrl)
+    let file = e.target.files[0];
+    let reader = new FileReader();
+    reader.onloadend = function() {
+      setImageName(file.name);
+      setUrl(reader.result);
+    }
+    reader.readAsDataURL(file);
   }
   useEffect(() => {
     if (id) {

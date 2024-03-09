@@ -11,22 +11,23 @@ import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import useNewsStore from "../../zustand/newsStore";
 import { useForm } from "antd/es/form/Form";
-const PostManage = () => {
-  const news = useNewsStore((state) => state.news);
+import useCategoryStore from "../../zustand/productCategoryStore";
+const ProductCategoryList = () => {
+  const categories = useCategoryStore(state => state.categories);
   const [form] = useForm();
-  const removeNews = useNewsStore((state) => state.removeNews);
+  const deleteCategory = useCategoryStore((state) => state.deleteCategory);
 
   const navigate = useNavigate();
   const [searchText, setSearchText] = useState("");
-  const [posts, setPosts] = useState(news);
+  const [posts, setPosts] = useState(categories);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   // Function to handle search
   const handleSearch = (value) => {
     setPosts(
-      news.filter((i) =>
-        i.title.toUpperCase().includes(value.title.toUpperCase())
+        categories.filter((i) =>
+        i.name.toUpperCase().includes(value.name.toUpperCase())
       )
     );
   };
@@ -42,17 +43,17 @@ const PostManage = () => {
   const handleDelete = (id) => {
     Modal.confirm({
       title: "Xác nhận",
-      content: "Xóa bài viết",
+      content: "Xóa danh mục sản phẩm",
       onOk: () => {
-        removeNews(id);
+        deleteCategory(id);
         Modal.success({
           title: "Thành công",
           content: "Xóa thành công",
         });
-        const txt = form.getFieldValue("title") || "";
+        const txt = form.getFieldValue("name") || "";
         setPosts(
-          news
-            .filter((i) => i.title.toUpperCase().includes(txt.toUpperCase()))
+          categories
+            .filter((i) => i.name.toUpperCase().includes(txt.toUpperCase()))
             .filter((i) => i.id != id)
         );
       },
@@ -61,21 +62,18 @@ const PostManage = () => {
 
   const columns = [
     {
-      title: "Tiêu đề",
-      dataIndex: "title",
+      title: "Id",
+      dataIndex: "id",
       key: "title",
-      render: (value, row) => (
-        <Link to={`/news/detail/` + row.id}>{value}</Link>
-      ),
+     
     },
     {
-      title: "Loại bài viết",
-      dataIndex: "typeNewsValue",
-      key: "typeNewsValue",
-      render: (value, row) => (
-        <span>{value}</span>
-      ),
-    },
+        title: "Tên danh mục sản phẩm",
+        dataIndex: "name",
+        key: "title",
+        align:"center"
+       
+      },
 
     {
       title: "Hành động",
@@ -84,7 +82,7 @@ const PostManage = () => {
       render: (text, record) => (
         <Space size="middle">
           <Space size="middle">
-            <Button onClick={() => navigate("/news/edit/" + record.id)}>
+            <Button onClick={() => navigate("/category-product/edit/" + record.id)}>
               <EditOutlined
                 style={{ fontSize: "16px" }}
                 
@@ -106,14 +104,14 @@ const PostManage = () => {
     <div>
       <Form form={form} onFinish={handleSearch} layout="vertical">
         <Form.Item
-          name={"title"}
+          name={"name"}
           label={
             <span
               style={{
                 fontWeight: "bold",
               }}
             >
-              Tiêu đề
+              Tên danh mục sản phẩm
             </span>
           }
         >
@@ -135,8 +133,8 @@ const PostManage = () => {
               </Button>
             </Col>
             <Col>
-              <Button shape="round" onClick={() => navigate("/news/add")}>
-                Thêm bài viết
+              <Button shape="round" onClick={() => navigate("/category-product/add")}>
+                Thêm danh mục sản phẩm
               </Button>
             </Col>
           </Row>
@@ -173,4 +171,4 @@ const PostManage = () => {
     </div>
   );
 };
-export default PostManage;
+export default ProductCategoryList;
