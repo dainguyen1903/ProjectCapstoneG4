@@ -28,6 +28,7 @@ import InviteMemberModal from "./pages/components/Modals/InviteMemberModal";
 
 import Profile from "./pages/UpdateProfiles/Profile";
 import HomePage2 from "./pages/HomePage/Hompage2";
+import HomePage from "./pages/HomePage/HomePage";
 function App() {
   return (
     <div className="App">
@@ -59,7 +60,17 @@ function App() {
                 </>
               }
             />
-
+            <Route
+              path="/shop"
+              element={
+                <>
+                  <Header />
+                  <Sidebar />
+                  <HomePage />
+                  <Footer />
+                </>
+              }
+            />
             {/* Single product route */}
             <Route
               path="/product/:id"
@@ -99,9 +110,6 @@ function App() {
               }
             />
 
-          
-            
-
             <Route
               path="/profile"
               element={
@@ -132,26 +140,24 @@ function App() {
               path="/chatapp"
               element={
                 <>
-                <LoginAuth>
-                  <AuthProvider>
-                    <AppProvider>
-                      <Routes>
-                        <Route path="/auth" element={<LoginAuth />} />
-                        <Route path="/chat" element={<ChatRoom />} />
-                      </Routes>
-                      <AddRoomModal />
-                      <InviteMemberModal />
-                    </AppProvider>
-                  </AuthProvider>
+                  <LoginAuth>
+                    <AuthProvider>
+                      <AppProvider>
+                        <Routes>
+                          <Route path="/auth" element={<LoginAuth />} />
+                          <Route path="/chat" element={<ChatRoom />} />
+                        </Routes>
+                        <AddRoomModal />
+                        <InviteMemberModal />
+                      </AppProvider>
+                    </AuthProvider>
                   </LoginAuth>
                 </>
               }
             />
           </Routes>
         </BrowserRouter>
-
       </Provider>
-
     </div>
   );
 }

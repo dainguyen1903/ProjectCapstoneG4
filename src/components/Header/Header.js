@@ -48,6 +48,14 @@ const Header = () => {
                     <span className='top-link-itm-txt'>Bài viết</span>
                   </Link>
                 </li>
+                <li>
+                  <Link to = "/shop" className='top-link-itm'>
+                    <span className='top-link-itm-ico mx-2'>
+                    <i className="fa-solid fa-blog"></i>
+                    </span>
+                    <span className='top-link-itm-txt'>Cửa hàng</span>
+                  </Link>
+                </li>
                 <li className='vert-line'></li>
                 <li>
                   <Link to = "/login">

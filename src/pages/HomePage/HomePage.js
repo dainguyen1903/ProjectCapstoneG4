@@ -7,6 +7,7 @@ import ProductList from "../../components/ProductList/ProductList";
 import { fetchAsyncProducts, getAllProducts, getAllProductsStatus } from '../../store/productSlice';
 import Loader from "../../components/Loader/Loader";
 import { STATUS } from '../../utils/status';
+import { sliderImgs } from '../../utils/images';
 
 const HomePage = () => {
   const dispatch = useDispatch();
@@ -40,7 +41,7 @@ const HomePage = () => {
   return (
     <main>
       <div className='slider-wrapper'>
-        <HeaderSlider />
+        <HeaderSlider images={sliderImgs} />
       </div>
       <div className='main-content bg-whitesmoke'>
         <div className='container'>
