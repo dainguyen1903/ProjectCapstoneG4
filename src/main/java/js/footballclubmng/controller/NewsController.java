@@ -21,7 +21,7 @@ public class NewsController {
 
 
     @GetMapping(CommonConstant.NEWS_API.LIST_NEWS)
-    @PreAuthorize("hasRole('ROLE_Staff')")
+    @PreAuthorize("hasRole('ROLE_Operator')")
     public ResponseAPI<List<ListNewsResponse>> newsList() {
         List<ListNewsResponse> newsList = newsService.findAllNews();
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK,null, newsList);
@@ -46,7 +46,7 @@ public class NewsController {
     }
 
     @PostMapping(CommonConstant.NEWS_API.CREATE_NEWS)
-    @PreAuthorize("hasRole('ROLE_Staff')")
+    @PreAuthorize("hasRole('ROLE_Operator')")
     public ResponseAPI<String> createNews(@RequestBody @Valid CreateNewsRequest createNewsRequest) {
         if(!newsService.createNews(createNewsRequest)){
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST,CommonConstant.COMMON_MESSAGE.CREATE_NEWS_FAIL);
@@ -55,7 +55,7 @@ public class NewsController {
     }
 
     @PutMapping(CommonConstant.NEWS_API.UPDATE_NEWS)
-    @PreAuthorize("hasRole('ROLE_Staff')")
+    @PreAuthorize("hasRole('ROLE_Operator')")
     public ResponseAPI<String> updateNews(@PathVariable int id, @RequestBody @Valid CreateNewsRequest createNewsRequest) {
         News news = newsService.getNewsById(id);
         if(news==null){
@@ -68,7 +68,7 @@ public class NewsController {
     }
 
     @DeleteMapping(CommonConstant.NEWS_API.DELETE_NEWS)
-    @PreAuthorize("hasRole('ROLE_Staff')")
+    @PreAuthorize("hasRole('ROLE_Operator')")
     public ResponseAPI<String> deleteNews(@PathVariable int id) {
         News news = newsService.getNewsById(id);
         if(news==null){
