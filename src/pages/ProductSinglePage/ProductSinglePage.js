@@ -10,7 +10,6 @@ import {formatPrice} from "../../utils/helpers";
 import { addToCart, getCartMessageStatus, setCartMessageOff, setCartMessageOn } from '../../store/cartSlice';
 import CartMessage from "../../components/CartMessage/CartMessage";
 import { FacebookProvider, CustomChat } from 'react-facebook';
-
 const ProductSinglePage = () => {
   const {id} = useParams();
   const dispatch = useDispatch();
@@ -178,6 +177,7 @@ const ProductSinglePage = () => {
       </div>
 
       {cartMessageStatus && <CartMessage />}
+      
     </main>
   )
 }
