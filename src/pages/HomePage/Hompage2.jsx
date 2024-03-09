@@ -137,7 +137,15 @@ const HomePage2 = () => {
                       "https://tse2.mm.bing.net/th?id=OIP.fuBQOCBSAG_ClI1eI9eNfwHaGK&pid=Api&P=0&h=220"
                     }
                   />
-                 
+                  <LastResult
+                    nameClub1={"Chelsea"}
+                    nameClub2={"Real Madrid"}
+                    time={"20:00"}
+                    date={"Wed 02 Mar"}
+                    tournamentName={"Champions League"}
+                    num1={10}
+                    num2={0}
+                  />
                 </Col>
               </Row>
               <div className="morepost">
