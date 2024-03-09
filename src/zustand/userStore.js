@@ -21,8 +21,8 @@ const useUserStore = create( persist((set,get) => ({
           image_name: "Ảnh chụp màn hình 2024-02-15 103151.png"
       },
       {
-          email: "thanh@gmail.com",
-          password: "654321",
+          email: "admin@gmail.com",
+          password: "123456",
           first_name: "Hoàng 1",
           last_name: "Thành",
           address: "Ha tinh",
@@ -34,10 +34,10 @@ const useUserStore = create( persist((set,get) => ({
           id: 7973090.902045569
       },
       {
-          email: "staff@gmail.com",
-          password: "654321",
-          first_name: "staff",
-          last_name: "staff",
+          email: "operator@gmail.com",
+          password: "123456",
+          first_name: "OPERATOR",
+          last_name: "OPERATOR",
           address: "Ha tinh",
           date_of_birth: "2024-02-27",
           gender: "female",
@@ -47,10 +47,10 @@ const useUserStore = create( persist((set,get) => ({
           id: 4825657.262252014
       },
       {
-          email: "marker@gmail.com",
+          email: "sale@gmail.com",
           password: "123456",
-          first_name: "marjer",
-          last_name: "marker",
+          first_name: "sale",
+          last_name: "sale",
           address: "Ha tinh",
           date_of_birth: "2024-02-27",
           gender: "male",
