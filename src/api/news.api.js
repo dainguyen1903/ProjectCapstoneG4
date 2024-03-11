@@ -1,6 +1,6 @@
 import api from ".";
 const baseURLNews ="api/news/"
-export const playerApi = {
+export const newsApi = {
     getListNews:() => {
         return api.get(baseURLNews + "list-news")
     },
@@ -17,7 +17,7 @@ export const playerApi = {
         return api.delete(baseURLNews + `delete-news/${id}`)
     },
     searchNews:(params) => {
-        return api.post(baseURLNews + "search-news",{
+        return api.get(baseURLNews + "search-news",{
             params
         })
    

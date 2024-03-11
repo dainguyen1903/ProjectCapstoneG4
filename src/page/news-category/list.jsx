@@ -1,17 +1,11 @@
-import React, { useState } from "react";
-import { Table, Input, Button, Space, Modal, Form, Row, Col } from "antd";
-import FormItem from "antd/es/form/FormItem";
 import {
-  UserOutlined,
-  ProductOutlined,
-  EditOutlined,
   DeleteOutlined,
+  EditOutlined
 } from "@ant-design/icons";
-import { useNavigate } from "react-router";
-import { Link } from "react-router-dom";
-import useNewsStore from "../../zustand/newsStore";
+import { Button, Col, Form, Input, Modal, Row, Space, Table } from "antd";
 import { useForm } from "antd/es/form/Form";
-import useCategoryStore from "../../zustand/productCategoryStore";
+import React, { useState } from "react";
+import { useNavigate } from "react-router";
 import useNewsCategoryStore from "../../zustand/newsCategoryStore";
 const NewsCategoryList = () => {
   const newsCategories = useNewsCategoryStore(state => state.newsCategories);
@@ -20,7 +14,6 @@ const NewsCategoryList = () => {
 
   const navigate = useNavigate();
   const [posts, setPosts] = useState(newsCategories);
-  const [selectedUserId, setSelectedUserId] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   // Function to handle search

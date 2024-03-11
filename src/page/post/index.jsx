@@ -1,60 +1,50 @@
-import React, { useState } from "react";
-import { Table, Input, Button, Space, Modal, Form, Row, Col } from "antd";
-import FormItem from "antd/es/form/FormItem";
-import {
-  UserOutlined,
-  ProductOutlined,
-  EditOutlined,
-  DeleteOutlined,
-} from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { Button, Col, Form, Input, Modal, Row, Space, Table } from "antd";
+import { useForm } from "antd/es/form/Form";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import useNewsStore from "../../zustand/newsStore";
-import { useForm } from "antd/es/form/Form";
+import { newsApi } from "../../api/news.api";
 const PostManage = () => {
   const news = useNewsStore((state) => state.news);
   const [form] = useForm();
   const removeNews = useNewsStore((state) => state.removeNews);
 
   const navigate = useNavigate();
-  const [searchText, setSearchText] = useState("");
-  const [posts, setPosts] = useState(news);
+  const [posts, setPosts] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   // Function to handle search
-  const handleSearch = (value) => {
-    setPosts(
-      news.filter((i) =>
-        i.title.toUpperCase().includes(value.title.toUpperCase())
-      )
-    );
+  const handleSearch = async (value) => {
+    const title = form.getFieldValue("title") || "";
+    const res = await newsApi.searchNews({
+      search: title,
+    });
+    if (res.data.status === 200) {
+      setPosts(res.data.data);
+    }
   };
 
-  // Function to handle edit
-  const handleEdit = (userId) => {
-    setSelectedUserId(userId);
-    setIsModalVisible(true);
-    // Fetch user details based on userId and populate form fields
-  };
+  useEffect(() => {
+  handleSearch()
+  },[])
 
   // Function to handle delete
   const handleDelete = (id) => {
     Modal.confirm({
       title: "Xác nhận",
       content: "Xóa bài viết",
-      onOk: () => {
-        removeNews(id);
-        Modal.success({
-          title: "Thành công",
-          content: "Xóa thành công",
-        });
-        const txt = form.getFieldValue("title") || "";
-        setPosts(
-          news
-            .filter((i) => i.title.toUpperCase().includes(txt.toUpperCase()))
-            .filter((i) => i.id != id)
-        );
+      onOk: async () => {
+        const res = await newsApi.deleteNews(id);
+        if (res.data.status === 200) {
+          Modal.success({
+            title: "Thành công",
+            content: "Xóa thành công",
+          });
+          handleSearch()
+        }
       },
     });
   };
@@ -72,9 +62,7 @@ const PostManage = () => {
       title: "Loại bài viết",
       dataIndex: "typeNewsValue",
       key: "typeNewsValue",
-      render: (value, row) => (
-        <span>{value}</span>
-      ),
+      render: (value, row) => <span>{value}</span>,
     },
 
     {
@@ -85,16 +73,10 @@ const PostManage = () => {
         <Space size="middle">
           <Space size="middle">
             <Button onClick={() => navigate("/news/edit/" + record.id)}>
-              <EditOutlined
-                style={{ fontSize: "16px" }}
-                
-              />
+              <EditOutlined style={{ fontSize: "16px" }} />
             </Button>
             <Button onClick={() => handleDelete(record.id)}>
-              <DeleteOutlined
-                style={{ fontSize: "16px" }}
-                
-              />
+              <DeleteOutlined style={{ fontSize: "16px" }} />
             </Button>
           </Space>
         </Space>
@@ -145,8 +127,8 @@ const PostManage = () => {
       <Table
         pagination={{
           pageSize: 10,
-          total:posts.length,
-          position:["bottomCenter"]
+          total: posts.length,
+          position: ["bottomCenter"],
         }}
         columns={columns}
         dataSource={posts}

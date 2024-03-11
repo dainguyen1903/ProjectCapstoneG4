@@ -1,62 +1,82 @@
 import React, { useEffect, useState } from "react";
 import { Form, Input, Button, DatePicker, Select, Modal } from "antd";
 import { FileImageOutlined } from "@ant-design/icons";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import useNewsStore from "../../zustand/newsStore";
 import LoadingFull from "../../component/loading/loadingFull";
 const { Option } = Select;
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import useNewsCategoryStore from "../../zustand/newsCategoryStore";
+import { newsApi } from "../../api/news.api";
 const AddNewsForm = () => {
   const [form] = Form.useForm();
   const { id } = useParams();
   const addNews = useNewsStore((state) => state.addNews);
   const news = useNewsStore((state) => state.news);
-  const newsDetail = news.find((newsItem) => newsItem.id == id);
   const updateNews = useNewsStore((state) => state.updateNews);
   const [loading, setLoading] = useState(false);
   const [value, setValue] = useState("");
-  const newsCategories = useNewsCategoryStore(state => state.newsCategories)
+  const [listTypeNews, setListTypeNews] = useState([]);
+  const navigate = useNavigate();
   // Confirm save
   const confirmSave = ({ title, typeNews }) => {
-    const typeNewsValue = newsCategories.find(i => i.id ==typeNews )?.name
-    
+   const dataPost = {
+    title,
+    newsType :typeNews ,
+    description:value
+   }
     Modal.confirm({
       title: "Xác nhận",
       content: !id ? "Thêm bài viết" : "Cập nhật bài viết",
-      onOk: () => {
-        setTimeout(() => {
-          if (id) {
-            updateNews(id, { title, description: value ,typeNews,typeNewsValue});
-          } else {
-            addNews({ title, description: value ,typeNews,typeNewsValue});
-          }
+      onOk: async() => {
+        const res = !id ? await newsApi.createrNews(dataPost) : await newsApi.updateNews(id,dataPost)
+        if(res.data.status === 200){
           Modal.success({
             title: "Thành công",
             content: !id ? "Thêm thành công" : "Cập nhật thành công",
           });
-          if (!id) {
-            form.resetFields();
-          }
-        }, 1000);
+          navigate(-1);
+        }
+        
       },
     });
   };
+
+  // get detailNews
+  const getDetailNews = async () => {
+    setLoading(true);
+    const res = await newsApi.getDetailNews(id);
+    if (res.data.status === 200) {
+      const newsDetail = res.data.data;
+      setValue(newsDetail.description)
+      form.setFieldsValue(newsDetail);
+    }
+    setLoading(false);
+  };
   useEffect(() => {
     if (id) {
-      setLoading(true);
-      new Promise((resolve) => {
-        setTimeout(() => {
-          form.setFieldsValue(newsDetail);
-          setValue(newsDetail.description)
-          resolve();
-        }, 1000);
-      }).then(() => {
-        setLoading(false);
-      });
+      getDetailNews();
     }
   }, [id]);
+
+  // getListTypeNews
+  const getListTypeNews = async () => {
+    setListTypeNews([
+      {
+        id: 1,
+        name: "product",
+      },
+      {
+        id: 2,
+        name: "football",
+      },
+    ]);
+  };
+
+  useEffect(() => {
+    getListTypeNews();
+  }, []);
   return (
     <div>
       <h2 style={{ marginBottom: 10 }}>
@@ -77,21 +97,17 @@ const AddNewsForm = () => {
                 fontWeight: "bold",
               }}
             >
-             Loại bài viết
+              Loại bài viết
             </span>
           }
           name="typeNews"
-          rules={[
-            { required: true, message: "Vui lòng chọn loại bài viết!" },
-          ]}
+          rules={[{ required: true, message: "Vui lòng chọn loại bài viết!" }]}
         >
-         <Select placeholder={"Loại bài viết"} className="Select">
-          {newsCategories.map(i => (
-            <Option value={i.id}>
-              {i.name}
-            </Option>
-          ))}
-         </Select>
+          <Select placeholder={"Loại bài viết"} className="Select">
+            {listTypeNews.map((i) => (
+              <Option value={i.id}>{i.name}</Option>
+            ))}
+          </Select>
         </Form.Item>
         <Form.Item
           label={

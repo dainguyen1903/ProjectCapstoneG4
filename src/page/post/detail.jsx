@@ -4,6 +4,7 @@ import { FileImageOutlined } from "@ant-design/icons";
 import { useParams } from "react-router";
 import useNewsStore from "../../zustand/newsStore";
 import LoadingFull from "../../component/loading/loadingFull";
+import { newsApi } from "../../api/news.api";
 const { Option } = Select;
 
 const DetailNews = () => {
@@ -13,18 +14,23 @@ const DetailNews = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
-  useEffect(() => {
+  // get detailNews
+  const getDetailNews = async () => {
     setLoading(true);
-    new Promise((resolve) => {
-      setTimeout(() => {
-        setTitle(newsDetail.title);
-        setDescription(newsDetail.description);
-        resolve();
-      }, 1000);
-    }).then(() => {
-      setLoading(false);
-    });
+    const res = await newsApi.getDetailNews(id);
+    if (res.data.status === 200) {
+      const newsDetail = res.data.data;
+      setDescription(newsDetail.description)
+     setTitle(newsDetail.title)
+    }
+    setLoading(false);
+  };
+  useEffect(() => {
+    if (id) {
+      getDetailNews();
+    }
   }, [id]);
+ 
   return (
     <div>
       <h2
