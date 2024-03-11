@@ -3,3 +3,6 @@ const MATCH_STATUS = {
     "1":"Đang diễn ra",
     "2":"Đã kết thúc"
 }
+const LOCAL_STORAGE_KEY = {
+    token:"token-footbal"
+}
