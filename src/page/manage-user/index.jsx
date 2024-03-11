@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Table, Input, Button, Space, Modal, Form, Row, Col } from "antd";
 import FormItem from "antd/es/form/FormItem";
 import {
@@ -12,32 +12,24 @@ import useuserStore from "../../zustand/userStore";
 import { useForm } from "antd/es/form/Form";
 import useUserStore from "../../zustand/userStore";
 import { ROLE } from "../../constants/role";
+import { userApi } from "../../api/user.api";
 
 const ManageUser = () => {
   const [form] = useForm();
   const listusers = useuserStore((state) => state.users);
   const navigate = useNavigate();
-  const [users, setUsers] = useState(listusers);
+  const [users, setUsers] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const removeuser = useUserStore((state) => state.removeuser);
 
   // Function to handle search
-  const handleSearch = (value) => {
+  const handleSearch = async({name}) => {
+    const res = await userApi.getListuser({name :name|| ""});
+    console.log(res.data.data)
     setUsers(
-      listusers.filter((i) =>{
-        const name = i.first_name + i.last_name
-        const txt = form.getFieldValue('name')||""
-      return name.toUpperCase().includes(txt.toUpperCase())}
-      )
+      res.data.data
     );
-  };
-
-  // Function to handle edit
-  const handleEdit = (userId) => {
-    setSelectedUserId(userId);
-    setIsModalVisible(true);
-    // Fetch user details based on userId and populate form fields
   };
 
   // Function to handle delete
@@ -45,15 +37,11 @@ const ManageUser = () => {
     Modal.confirm({
       title: "Xác nhận",
       content: "Xóa người dùng",
-      onOk: () => {
-        removeuser(userId);
-        setUsers(
-          listusers.filter((i) =>{
-            const name = i.first_name + i.last_name
-            const txt = form.getFieldValue('name')||""
-          return name.toUpperCase().includes(txt.toUpperCase())}
-          ).filter(i => i.id != userId)
-        );
+      onOk: async() => {
+        await userApi.deleteUser({
+          id:userId
+        })
+        handleSearch({name:form.getFieldValue("name")})
         Modal.success({
           title: "Thành công",
           content: "Xóa thành công",
@@ -61,7 +49,6 @@ const ManageUser = () => {
       },
     });
   };
-  console.log(users)
   // Table columns
   const columns = [
     {
@@ -69,7 +56,7 @@ const ManageUser = () => {
       dataIndex: "name",
       render: (_, row) => (
         <span>
-          {row.first_name} {row.last_name}
+         {row.fullname}
         </span>
       ),
     },
@@ -82,7 +69,7 @@ const ManageUser = () => {
       title: "Quyền",
       dataIndex: "email",
      render:(_,row) => {
-      return ROLE[row.role_id]
+      return row.authority
      }
     },
     {
@@ -102,7 +89,10 @@ const ManageUser = () => {
       ),
     },
   ];
+useEffect(() => {
 
+handleSearch({name:""})
+},[])
   return (
     <div>
       <Form form={form} onFinish={handleSearch} layout="vertical">

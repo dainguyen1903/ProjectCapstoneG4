@@ -24,7 +24,7 @@ const AddUserForm = () => {
   const users = useUserStore((state) => state.users);
   const user = useAuthStore((state) => state.user);
   const setUser = useAuthStore((state) => state.setUser);
-
+  const [file,setFile] = useState(null);
   let detail = isEditProfile ? user : users.find((i) => i.id == id) || {};
 
   // Confirm save
@@ -44,7 +44,6 @@ const AddUserForm = () => {
           : null;
         dataPosst.image_name = imageName;
         dataPosst.image = url;
-        console.log(dataPosst);
         if (isEditProfile) {
           await userApi.udpateProfileUser(dataPosst);
           setUser({
@@ -53,9 +52,33 @@ const AddUserForm = () => {
             fullname: dataPosst.firstName + "" + dataPosst.lastName,
           });
         } else if (id) {
-          updateUsers(id || user.id, dataPosst, isEditProfile);
+          console.log(dataPosst)
+          delete dataPosst.image
+          dataPosst.authority  = dataPosst.role
+          delete dataPosst.role;
+          delete dataPosst.image_name
+          const formData = new FormData()
+          for (let key in dataPosst) {
+            if (dataPosst.hasOwnProperty(key)) {
+              formData.append(key, dataPosst[key]);
+            }
+          }
+          formData.append("file",file)
+          
+         await userApi.updateUser(formData)
         } else {
-          addUser(dataPosst);
+          delete dataPosst.image
+          dataPosst.authority  = dataPosst.role
+          delete dataPosst.role;
+          delete dataPosst.image_name
+          const formData = new FormData()
+          for (let key in dataPosst) {
+            if (dataPosst.hasOwnProperty(key)) {
+              formData.append(key, dataPosst[key]);
+            }
+          }
+          formData.append("file",file)
+          await userApi.createrUser(formData)
         }
         Modal.success({
           title: "Thành công",
@@ -70,6 +93,7 @@ const AddUserForm = () => {
   };
   const handleChangeFile = (e) => {
     let file = e.target.files[0];
+    setFile(file)
     let reader = new FileReader();
     reader.onloadend = function () {
       setImageName(file.name);
@@ -82,14 +106,23 @@ const AddUserForm = () => {
   const getDetail = async () => {
     setLoading(true);
     if (id || isEditProfile) {
-      const res = isEditProfile ? await userApi.getProfileUser() : null;
+      const res = isEditProfile ? await userApi.getProfileUser() : await userApi.detailUser({
+        id
+      });
+      
       const dataDetail = res.data.data;
+      if(id){
+        const nameArr = dataDetail.fullname.split(" ");
+        dataDetail.firstName = nameArr[0];
+        dataDetail.lastName = nameArr[1];
+      }
       const imgName = detail.image_name;
       setImageName(imgName);
       dataDetail.dateOfBirth = dataDetail.dateOfBirth
         ? moment(detail.dateOfBirth)
         : null;
-      setUrl(dataDetail.image);
+        dataDetail.role = dataDetail.authority
+      setUrl(isEditProfile ? dataDetail.image :dataDetail.imageUrl );
       dataDetail.image = imgName;
       delete dataDetail.image_name;
       console.log(dataDetail);
@@ -121,7 +154,7 @@ const AddUserForm = () => {
         >
           <Input placeholder="Email" className="Input" />
         </Form.Item>
-        {!isEditProfile && (
+        {!isEditProfile && !id && (
           <Form.Item
             name="password"
             rules={[{ required: true, message: "Vui lòng nhập password!" }]}

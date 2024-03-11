@@ -8,10 +8,18 @@ export const userApi = {
         return api.get(baseURLUser + "list-user",{params})
     },
     createrUser:(data) => {
-        return api.post(baseURLUser + "create-user",data)
+        return api.post(baseURLUser + "create-user",data,{
+            headers:{
+                "Content-Type":"multipart/form-data"
+            }
+        })
     },
     updateUser:(data) => {
-        return api.put(baseURLUser + "update-user",data)
+        return api.post(baseURLUser + "update-user",data,{
+            headers:{
+                "Content-Type":"multipart/form-data"
+            }
+        })
     },
     deleteUser:(data) => {
         return api.post(baseURLUser + "delete-user",data)
