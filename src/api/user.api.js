@@ -17,7 +17,7 @@ export const userApi = {
         return api.post(baseURLUser + "delete-user",data)
     },
     changePassword:(data) => {
-        return api.post(baseURLUser + "change-password",data)
+        return api.put(baseURLUser + "change-password",data)
     },
     detailUser:(params) => {
         return api.get(baseURLUser + "detail-user",{
