@@ -1,64 +1,45 @@
-import React, { useState } from "react";
-import { Table, Input, Button, Space, Modal, Form, Row, Col } from "antd";
-import FormItem from "antd/es/form/FormItem";
-import {
-  UserOutlined,
-  ProductOutlined,
-  EditOutlined,
-  DeleteOutlined,
-} from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { Button, Col, Form, Input, Modal, Row, Space, Table } from "antd";
+import { useForm } from "antd/es/form/Form";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import usePlayerStore from "../../zustand/playerStore";
-import { useForm } from "antd/es/form/Form";
+import { playerApi } from "../../api/player.api";
 
 const ManagePlayer = () => {
-  const [form] = useForm()
+  const [form] = useForm();
   const players = usePlayerStore((state) => state.players);
-  console.log(players)
-  const [loading,setLoading] = useState(false)
   const removePlayer = usePlayerStore((state) => state.removePlayer);
-  const [searchText, setSearchText] = useState("");
   const navigate = useNavigate();
-  const [users, setUsers] = useState(players);
-  const [selectedUserId, setSelectedUserId] = useState(null);
+  const [users, setUsers] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-   
 
   // Function to handle search
-  const handleSearch = (value) => {
-    const txt = form.getFieldValue('name')||""
-    setUsers(
-      players.filter((i) =>
-        i.name.toUpperCase().includes(txt.toUpperCase())
-      )
-    );
+  const handleSearch = async () => {
+    const txt = form.getFieldValue("name") || "";
+    const res = await playerApi.searchPlayer({ query: txt });
+    setUsers(res.data.data);
   };
 
-  // Function to handle edit
-  const handleEdit = (userId) => {
-    setSelectedUserId(userId);
-    setIsModalVisible(true);
-    // Fetch user details based on userId and populate form fields
-  };
+  useEffect(() => {
+    handleSearch();
+  }, []);
 
   // Function to handle delete
-  const handleDelete = (userId) => {
+  const handleDelete = async (userId) => {
     Modal.confirm({
       title: "Xác nhận",
       content: "Xóa cầu thủ",
-      onOk: () => {
-        removePlayer(userId);
-        const txt = form.getFieldValue('name')||""
-        setUsers(
-          players.filter((i) =>
-            i.name.toUpperCase().includes(txt.toUpperCase())
-          ).filter(i => i.id != userId)
-        )
-        Modal.success({
-          title: "Thành công",
-          content: "Xóa thành công",
-        });
+      onOk: async () => {
+        const res = await playerApi.deletePlayer(userId);
+        if (res.data.status === 200) {
+          Modal.success({
+            title: "Thành công",
+            content: "Xóa thành công",
+          });
+          handleSearch()
+        }
       },
     });
   };
@@ -88,9 +69,7 @@ const ManagePlayer = () => {
         <Space size="middle">
           <Space size="middle">
             <Button onClick={() => navigate("/player/edit/" + record.id)}>
-              <EditOutlined
-                style={{ fontSize: "16px" }}
-              />
+              <EditOutlined style={{ fontSize: "16px" }} />
             </Button>
             <Button onClick={() => handleDelete(record.id)}>
               <DeleteOutlined style={{ fontSize: "16px" }} />
@@ -100,7 +79,6 @@ const ManagePlayer = () => {
       ),
     },
   ];
- 
 
   return (
     <div>
@@ -144,10 +122,9 @@ const ManagePlayer = () => {
       </Form>
       <Table
         pagination={{
-          
-          position:"bottomCenter",
-          pageSize:10,
-          total:players.length
+          position: "bottomCenter",
+          pageSize: 10,
+          total: players.length,
         }}
         columns={columns}
         dataSource={users}

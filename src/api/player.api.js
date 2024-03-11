@@ -17,7 +17,7 @@ export const playerApi = {
         return api.delete(baseURLPlayer + `delete-player/${id}`)
     },
     searchPlayer:(params) => {
-        return api.post(baseURLPlayer + "search-player",{
+        return api.get(baseURLPlayer + "search-player",{
             params
         })
    

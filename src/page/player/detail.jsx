@@ -10,7 +10,7 @@ const DetailPlayer = () => {
   const [loading,setLoading] = useState(false)
   const players = usePlayerStore((state) => state.players);
   const detail = players.find(i => i.id == id) || {}
-console.log(detail)
+
 
   useEffect(() => {
     setLoading(true);
