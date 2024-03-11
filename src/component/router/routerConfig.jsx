@@ -26,7 +26,7 @@ const RouterConfig = () => {
   const [normalLayout,setnormalLayout] = useState([]);
   useEffect(() => {
  if(user){
-  const listRouteLayout = router.filter(i => ((!i.role ||  i.role.includes(user.role_id)) && i.isProtected!==false ));
+  const listRouteLayout = router.filter(i => ((!i.role ||  i.role.includes(user.authority)) && i.isProtected!==false ));
   if(isLogin){
     setrousWithLayout(listRouteLayout)
   }

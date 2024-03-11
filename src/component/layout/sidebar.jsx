@@ -10,7 +10,7 @@ const SideBar = () => {
   const location = useLocation();
 const [activeKey,setActiveKey] = useState("");
 const user = useAuthStore(state => state.user);
-// console.log(user)
+console.log(user.role)
 useEffect(() => {
 const currentRoute = router.find(i => location.pathname.includes(i.key));
 if(currentRoute){
@@ -27,7 +27,7 @@ if(currentRoute){
         color:"white",
         fontWeight:"bold"
       }} >
-        {router.filter(i => i.show && (!i.role || (i.role && i.role.includes(user.role_id)))).map(item => (
+        {router.filter(i => i.show && (!i.role || (i.role && i.role.includes(user.authority)))).map(item => (
           <Menu.Item onClick={() => {
             navigate(item.path)
             setActiveKey(item.key)

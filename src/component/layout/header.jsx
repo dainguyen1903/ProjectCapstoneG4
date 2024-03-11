@@ -8,6 +8,7 @@ import useAuthStore from "../../zustand/authStore";
 
 const HeaderPage = () => {
   const user = useAuthStore(state => state.user)
+  console.log(user)
   const logout = useAuthStore(state => state.logout)
   const navigate = useNavigate()
   const content = <div>
@@ -30,19 +31,10 @@ const HeaderPage = () => {
     user ? <div className="header">
     <Row justify={"end"} style={{marginRight:20}}>
       <Col>
-    
-     {/* <Link to="/login">
-     <Button className="Button-no-paading" style={{marginRight:10}}  shape="round" icon={<UserOutlined />}>
-          Login
-      </Button></Link>
-      </Col>
-      <Col>
-      <Link to={"/register"}>
-      <Button type="default" shape="round" icon={<UserOutlined />}  >Register</Button></Link> */}
      
       <Popover content={content}  trigger="hover">
-      <Avatar style={{marginRight:10}} src={user.image_url}>{user.first_name[0].toUpperCase()}</Avatar>
-      {user.first_name +" "+ user.last_name}
+      <Avatar style={{marginRight:10}} src={user.image}>{user.fullname.toUpperCase()}</Avatar>
+      {user.fullname}
   </Popover>
       </Col>
      <Col style={{marginLeft:15}}></Col>

@@ -4,6 +4,8 @@ import "./login.css";
 import { useState } from "react";
 import useUserStore from "../../zustand/userStore";
 import useAuthStore from "../../zustand/authStore";
+import { userApi } from "../../api/user.api";
+import { LOCAL_STORAGE_KEY } from "../../constants/common";
 const Login = () => {
   const navgate = useNavigate();
   const [email, setEmail] = useState("");
@@ -11,20 +13,22 @@ const Login = () => {
   const [err, setErr] = useState(false);
   const users = useUserStore((state) => state.users);
   const login = useAuthStore((state) => state.login);
-  const handleLogin = () => {
+  const handleLogin = async() => {
+try {
+  const resLogin = await userApi.login({
+    email,password
+  })
+  const data = resLogin.data.data;
+  localStorage.setItem(LOCAL_STORAGE_KEY.token,data.accessToken);
+  const resDetailuser  = await userApi.detailUser({
+    id:data.userId
+  })
+  login(resDetailuser.data.data)
+  navgate("/")
+} catch (error) {
+  setErr(true)
+}
     
-    const currentUser = users.find(
-      (i) => i.email == email && i.password == password
-    );
-    if (!currentUser) {
-      setErr(true);
-    } else {
-      setErr(false);
-      setTimeout(() => {
-        login(currentUser);
-        navgate("/");
-      }, 1000);
-    }
   };
   return (
     <div className="Container">

@@ -4,90 +4,110 @@ import { FileImageOutlined } from "@ant-design/icons";
 import { useLocation, useParams } from "react-router";
 import "./../login/login.css";
 import useUserStore from "../../zustand/userStore";
-import moment from "moment"
+import moment from "moment";
 import LoadingFull from "../../component/loading/loadingFull";
 import useAuthStore from "../../zustand/authStore";
+import { userApi } from "../../api/user.api";
 const { Option } = Select;
 
 const AddUserForm = () => {
   const [form] = Form.useForm();
-  const location = useLocation()
-  const isEditProfile = location.pathname.includes("profile")
+  const location = useLocation();
+  const isEditProfile = location.pathname.includes("profile");
   const { id } = useParams();
   const [url, setUrl] = useState(null);
   const [imageName, setImageName] = useState("");
   const fileRef = useRef();
   const updateUsers = useUserStore((state) => state.updateuser);
   const addUser = useUserStore((state) => state.adduser);
-  const [loading,setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const users = useUserStore((state) => state.users);
-  const user = useAuthStore(state => state.user)
-  let detail = isEditProfile ? user : (users.find(i => i.id == id) || {})
+  const user = useAuthStore((state) => state.user);
+  const setUser = useAuthStore((state) => state.setUser);
 
-  console.log(detail)
+  let detail = isEditProfile ? user : users.find((i) => i.id == id) || {};
+
   // Confirm save
   const confirmSave = (value) => {
     Modal.confirm({
       title: "Xác nhận",
-      content: isEditProfile ? "Chỉnh sửa thông tin cá nhân" :!id ? "Thêm người dùng" : "Cập nhật người dùng",
-      onOk: () => {
+      content: isEditProfile
+        ? "Chỉnh sửa thông tin cá nhân"
+        : !id
+        ? "Thêm người dùng"
+        : "Cập nhật người dùng",
+      onOk: async () => {
         const dataPosst = JSON.parse(JSON.stringify(value));
-        const birdday = dataPosst.date_of_birth;
-        dataPosst.date_of_birth =  moment(birdday).format('YYYY-MM-DD');
+        const birdday = dataPosst.dateOfBirth;
+        dataPosst.dateOfBirth = birdday
+          ? moment(birdday).format("YYYY-MM-DD")
+          : null;
         dataPosst.image_name = imageName;
-        dataPosst.image_url = url;
-
-        setTimeout(() => {
-          if (id || isEditProfile) {
-            updateUsers(id || user.id, dataPosst,isEditProfile);
-          } else {
-            addUser(dataPosst);
-          }
-          Modal.success({
-            title: "Thành công",
-            content: (!id &&!isEditProfile) ? "Thêm thành công" : "Cập nhật thành công",
+        dataPosst.image = url;
+        console.log(dataPosst);
+        if (isEditProfile) {
+          await userApi.udpateProfileUser(dataPosst);
+          setUser({
+            ...user,
+            ...dataPosst,
+            fullname: dataPosst.firstName + "" + dataPosst.lastName,
           });
-          if (!id && !isEditProfile) {
-            form.resetFields();
-          }
-        }, 1000);
+        } else if (id) {
+          updateUsers(id || user.id, dataPosst, isEditProfile);
+        } else {
+          addUser(dataPosst);
+        }
+        Modal.success({
+          title: "Thành công",
+          content:
+            !id && !isEditProfile ? "Thêm thành công" : "Cập nhật thành công",
+        });
+        if (!id && !isEditProfile) {
+          form.resetFields();
+        }
       },
     });
   };
   const handleChangeFile = (e) => {
     let file = e.target.files[0];
     let reader = new FileReader();
-    reader.onloadend = function() {
+    reader.onloadend = function () {
       setImageName(file.name);
       setUrl(reader.result);
-    }
+    };
     reader.readAsDataURL(file);
-    
+  };
+
+  // getDetail
+  const getDetail = async () => {
+    setLoading(true);
+    if (id || isEditProfile) {
+      const res = isEditProfile ? await userApi.getProfileUser() : null;
+      const dataDetail = res.data.data;
+      const imgName = detail.image_name;
+      setImageName(imgName);
+      dataDetail.dateOfBirth = dataDetail.dateOfBirth
+        ? moment(detail.dateOfBirth)
+        : null;
+      setUrl(dataDetail.image);
+      dataDetail.image = imgName;
+      delete dataDetail.image_name;
+      console.log(dataDetail);
+      form.setFieldsValue(dataDetail);
+    }
+    setLoading(false);
   };
   useEffect(() => {
-    if (id || isEditProfile) {
-      setLoading(true);
-      new Promise((resolve) => {
-        const dataDetail = JSON.parse(JSON.stringify(detail))
-        const imgName = detail.image_name
-       setImageName(imgName)
-        dataDetail.date_of_birth = moment(dataDetail.date_of_birth)
-        setUrl(dataDetail.image_url);
-        dataDetail.image_url = imgName;
-        delete dataDetail.image_name;
-        setTimeout(() => {
-          form.setFieldsValue(dataDetail);
-          resolve();
-        }, 1000);
-      }).then(() => {
-        setLoading(false);
-      });
-    }
+    getDetail();
   }, [id]);
   return (
     <div>
       <h2 style={{ marginBottom: 10 }}>
-        {isEditProfile ? "Chỉnh sửa thông tin cá nhân" :!id ? "Thêm người dùng" : "Cập nhật người dùng"}
+        {isEditProfile
+          ? "Chỉnh sửa thông tin cá nhân"
+          : !id
+          ? "Thêm người dùng"
+          : "Cập nhật người dùng"}
       </h2>
       <Form
         form={form}
@@ -101,20 +121,22 @@ const AddUserForm = () => {
         >
           <Input placeholder="Email" className="Input" />
         </Form.Item>
-      {!isEditProfile &&   <Form.Item
-          name="password"
-          rules={[{ required: true, message: "Vui lòng nhập password!" }]}
-        >
-          <Input.Password placeholder="Password" className="Input" />
-        </Form.Item>}
+        {!isEditProfile && (
+          <Form.Item
+            name="password"
+            rules={[{ required: true, message: "Vui lòng nhập password!" }]}
+          >
+            <Input.Password placeholder="Password" className="Input" />
+          </Form.Item>
+        )}
         <Form.Item
-          name="first_name"
+          name="firstName"
           rules={[{ required: true, message: "Vui lòng nhập họ và tên đệm!" }]}
         >
           <Input placeholder="Họ và tên đệm" className="Input" />
         </Form.Item>
         <Form.Item
-          name="last_name"
+          name="lastName"
           rules={[{ required: true, message: "Vui lòng nhập tên!" }]}
         >
           <Input placeholder="Tên" className="Input" />
@@ -122,16 +144,16 @@ const AddUserForm = () => {
         <Form.Item name="address">
           <Input placeholder="Địa chỉ" className="Input" />
         </Form.Item>
-        <Form.Item name="date_of_birth">
+        <Form.Item name="dateOfBirth">
           <DatePicker placeholder="Ngày sinh" className="Input" />
         </Form.Item>
         <Form.Item name="gender">
           <Select placeholder="Giới tính" className="Select">
-            <Option value="male">Nam</Option>
-            <Option value="female">Nữ</Option>
+            <Option value="M">Nam</Option>
+            <Option value="F">Nữ</Option>
           </Select>
         </Form.Item>
-        <Form.Item name="image_url">
+        <Form.Item name="image">
           <Button
             onClick={() => fileRef.current.click()}
             style={{
@@ -143,6 +165,9 @@ const AddUserForm = () => {
             Thêm Ảnh
           </Button>{" "}
           {imageName && <span>{imageName}</span>}
+          <div>
+          {url && <img style={{width:70,height:70,objectFit:"contain"}} src={url} />}
+          </div>
           <div
             className="flex-start"
             style={{
@@ -160,16 +185,18 @@ const AddUserForm = () => {
             className="Input"
           />
         </Form.Item>
-        {!isEditProfile && <Form.Item
-          name="role_id"
-          rules={[{ required: true, message: "Vui lòng chọn quyền!" }]}
-        >
-          <Select placeholder="Quyền" className="Select">
-            <Option value="1">Admin</Option>
-            <Option value="2">Staff</Option>
-            <Option value="3">Markter </Option>
-          </Select>
-        </Form.Item>}
+        {!isEditProfile && (
+          <Form.Item
+            name="role"
+            rules={[{ required: true, message: "Vui lòng chọn quyền!" }]}
+          >
+            <Select placeholder="Quyền" className="Select">
+              <Option value="Admin">Admin</Option>
+              <Option value="Operator">Operator</Option>
+              <Option value="Sale">Sale </Option>
+            </Select>
+          </Form.Item>
+        )}
         <Form.Item>
           <button
             style={{
@@ -179,11 +206,15 @@ const AddUserForm = () => {
             htmlType="submit"
             type="primary"
           >
-            {isEditProfile ? "Cập nhật thông tin cá nhân": id ? "Cập nhật" : "Tạo mới"}
+            {isEditProfile
+              ? "Cập nhật thông tin cá nhân"
+              : id
+              ? "Cập nhật"
+              : "Tạo mới"}
           </button>
         </Form.Item>
       </Form>
-      <LoadingFull show={loading} />
+      {/* <LoadingFull show={loading} /> */}
     </div>
   );
 };
