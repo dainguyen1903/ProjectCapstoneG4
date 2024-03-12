@@ -165,6 +165,16 @@ public class NewsServiceImpl implements NewsService {
         }
     }
 
+    @Override
+    public List<NewsType> searchNewsType(String search) {
+        try {
+            List<NewsType> newsTypeList = newsTypeRepository.findByNameContaining(search);
+            return newsTypeList;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 
     private ListNewsResponse mapToNewsDto(News news) {
         ListNewsResponse listNewsResponse = new ListNewsResponse();

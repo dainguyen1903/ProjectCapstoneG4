@@ -134,5 +134,13 @@ public class NewsController {
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK,null, newsList);
     }
 
+    @GetMapping(CommonConstant.NEWS_API.SEARCH_NEWS_TYPE)
+    public ResponseAPI<List<NewsType>> searchNewsType(@RequestParam String search) {
+        List<NewsType> newsTypeList = newsService.searchNewsType(search);
+        if(newsTypeList.isEmpty()){
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY,CommonConstant.COMMON_MESSAGE.NOT_FOUND_NEWS_TYPE);
+        }
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK,null, newsTypeList);
+    }
 
 }

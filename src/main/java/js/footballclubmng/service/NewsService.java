@@ -34,4 +34,6 @@ public interface NewsService {
     public List<News> findTop4News();
 
     NewsType getNewsTypeByName(String name);
+
+    List<NewsType> searchNewsType(String search);
 }
