@@ -50,7 +50,8 @@ public class NewsController {
     @PostMapping(CommonConstant.NEWS_API.CREATE_NEWS)
     @PreAuthorize("hasRole('ROLE_Operator')")
     public ResponseAPI<String> createNews(@RequestBody @Valid CreateNewsRequest createNewsRequest) {
-        if(!newsService.createNews(createNewsRequest)){
+        boolean check = newsService.createNews(createNewsRequest);
+        if(!check){
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST,CommonConstant.COMMON_MESSAGE.CREATE_NEWS_FAIL);
         }
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK,CommonConstant.COMMON_MESSAGE.CREATE_NEWS_SUCCESS);
@@ -63,7 +64,8 @@ public class NewsController {
         if(news==null){
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY,CommonConstant.COMMON_MESSAGE.NOT_FOUND_NEWS);
         }
-        if(!newsService.updateNews(id, createNewsRequest)){
+        boolean check = newsService.updateNews(id, createNewsRequest);
+        if(!check){
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST,CommonConstant.COMMON_MESSAGE.UPDATE_NEWS_FAIL);
         }
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK,CommonConstant.COMMON_MESSAGE.UPDATE_NEWS_SUCCESS);
@@ -76,7 +78,8 @@ public class NewsController {
         if(news==null){
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY,CommonConstant.COMMON_MESSAGE.NOT_FOUND_NEWS);
         }
-        if(!newsService.deleteNews(id)){
+        boolean check = newsService.deleteNews(id);
+        if(!check){
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST,CommonConstant.COMMON_MESSAGE.DELETE_NEWS_FAIL);
         }
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK,CommonConstant.COMMON_MESSAGE.DELETE_NEWS_SUCCESS);
@@ -97,5 +100,17 @@ public class NewsController {
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY,CommonConstant.COMMON_MESSAGE.NOT_FOUND_NEWS_TYPE);
     }
 
-
+    @PostMapping(CommonConstant.NEWS_API.CREATE_NEWS_TYPE)
+    @PreAuthorize("hasRole('ROLE_Operator')")
+    public ResponseAPI<String> createNewsType(@RequestBody @Valid NewsType newsType) {
+        NewsType newsTypeCheck = newsService.getNewsTypeByName(newsType.getName());
+        if(newsTypeCheck!=null){
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST,CommonConstant.COMMON_MESSAGE.EXIST_NEWS_TYPE);
+        }
+        boolean check =  newsService.createNewsType(newsType);
+        if(!check){
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST,CommonConstant.COMMON_MESSAGE.CREATE_NEWS_TYPE_FAIL);
+        }
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK,CommonConstant.COMMON_MESSAGE.CREATE_NEWS_TYPE_SUCCESS);
+    }
 }

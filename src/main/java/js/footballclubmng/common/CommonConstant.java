@@ -85,7 +85,9 @@ public class CommonConstant {
         public static final String DELETE_NEWS_SUCCESS = "Xóa tin tức thành công";
         public static final String NOT_FOUND_CATEGORY = "Không tìm thấy danh mục";
         public static final String NOT_FOUND_NEWS_TYPE = "Không tìm thấy loại tin tức";
-
+        public static final String EXIST_NEWS_TYPE = "Loại tin tức đã tồn tại";
+        public static final String CREATE_NEWS_TYPE_FAIL = "Tạo loại tin tức thất bại";
+        public static final String CREATE_NEWS_TYPE_SUCCESS = "Tạo loại tin tức thành công";
     }
 
     public static class USER_API {
@@ -137,6 +139,7 @@ public class CommonConstant {
         public static final String DELETE_NEWS = HEAD_API + NEWS + "/delete-news/{id}";
         public static final String LIST_NEWS_TYPE = HEAD_API + NEWS + "/list-news-type";
         public static final String DETAIL_NEWS_TYPE = HEAD_API + NEWS + "/detail-news-type/{id}";
+        public static final String CREATE_NEWS_TYPE = HEAD_API + NEWS + "/create-news-type";
     }
 
     public static class CATEGORY_API {

@@ -113,7 +113,15 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public boolean createNewsType(NewsType newsType) {
-        return false;
+        try {
+            NewsType newsType1 = new NewsType();
+            newsType1.setName(newsType.getName());
+            newsType1.setDescription(newsType.getDescription());
+            newsTypeRepository.save(newsType1);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
@@ -129,6 +137,16 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public List<News> findTop4News() {
         return null;
+    }
+
+    @Override
+    public NewsType getNewsTypeByName(String name) {
+        try {
+            NewsType newsType = newsTypeRepository.findByName(name);
+            return newsType;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
 
