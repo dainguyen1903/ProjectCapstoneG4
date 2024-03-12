@@ -83,6 +83,8 @@ public class CommonConstant {
         public static final String UPDATE_NEWS_SUCCESS = "Cập nhật tin tức thành công";
         public static final String DELETE_NEWS_FAIL = "Xóa tin tức thất bại";
         public static final String DELETE_NEWS_SUCCESS = "Xóa tin tức thành công";
+        public static final String NOT_FOUND_CATEGORY = "Không tìm thấy danh mục";
+
 
     }
 
@@ -140,6 +142,7 @@ public class CommonConstant {
         public static final String LIST_CATEGORY = HEAD_API + CATEGORY + "/list-category";
         public static final String CREATE_CATEGORY = HEAD_API + CATEGORY + "/create-category";
         public static final String UPDATE_CATEGORY = HEAD_API + CATEGORY + "/update-category/{id}";
+        public static final String SEARCH_CATEGORY = HEAD_API + CATEGORY + "/search-category";
     }
 
 

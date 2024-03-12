@@ -46,7 +46,7 @@ public class Player {
     @Column(name = "join_date")
     private Date joinDate;
 
-    @Column(name = "number_player")
+    @Column(name = "player_number")
     private Integer numberPlayer;
 
 }

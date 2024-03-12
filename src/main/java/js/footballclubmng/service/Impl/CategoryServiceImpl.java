@@ -47,8 +47,15 @@ public class CategoryServiceImpl implements CategoryService {
         return false;
     }
 
+
+
     @Override
-    public boolean deleteCategory(long id) {
-        return false;
+    public List<Category> searchCategory(String search) {
+        try {
+            List<Category> list = categoryRepository.findCategoryByNameContaining(search);
+            return list;
+        }catch (Exception e){
+            return null;
+        }
     }
 }
