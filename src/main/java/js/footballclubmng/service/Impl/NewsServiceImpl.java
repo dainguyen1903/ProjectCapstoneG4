@@ -147,7 +147,12 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<News> findTop4News() {
-        return null;
+        try {
+            List<News> newsList = newsRepository.findTop4ByOrderByDateCreateDesc();
+            return newsList;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override

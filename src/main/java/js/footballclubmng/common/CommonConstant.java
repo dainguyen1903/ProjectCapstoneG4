@@ -144,6 +144,7 @@ public class CommonConstant {
         public static final String DETAIL_NEWS_TYPE = HEAD_API + NEWS + "/detail-news-type/{id}";
         public static final String CREATE_NEWS_TYPE = HEAD_API + NEWS + "/create-news-type";
         public static final String UPDATE_NEWS_TYPE = HEAD_API + NEWS + "/update-news-type/{id}";
+        public static final String LIST_TOP4_NEWS = HEAD_API + NEWS + "/list-top4-news";
     }
 
     public static class CATEGORY_API {

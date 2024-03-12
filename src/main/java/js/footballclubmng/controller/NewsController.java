@@ -128,4 +128,11 @@ public class NewsController {
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK,CommonConstant.COMMON_MESSAGE.UPDATE_NEWS_TYPE_SUCCESS);
     }
 
+    @GetMapping(CommonConstant.NEWS_API.LIST_TOP4_NEWS)
+    public ResponseAPI<List<News>> listTop4News() {
+        List<News> newsList = newsService.findTop4News();
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK,null, newsList);
+    }
+
+
 }
