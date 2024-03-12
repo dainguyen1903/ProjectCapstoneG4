@@ -1,7 +1,9 @@
 package js.footballclubmng.controller;
 
+import js.footballclubmng.entity.NewsType;
 import js.footballclubmng.model.request.CreateNewsRequest;
 import js.footballclubmng.model.response.ListNewsResponse;
+import js.footballclubmng.model.response.ListNewsTypeResponse;
 import js.footballclubmng.model.response.ResponseAPI;
 import js.footballclubmng.common.CommonConstant;
 
@@ -78,5 +80,11 @@ public class NewsController {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST,CommonConstant.COMMON_MESSAGE.DELETE_NEWS_FAIL);
         }
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK,CommonConstant.COMMON_MESSAGE.DELETE_NEWS_SUCCESS);
+    }
+
+    @GetMapping(CommonConstant.NEWS_API.LIST_NEWS_TYPE)
+    public ResponseAPI<List<ListNewsTypeResponse>> newsTypeList() {
+        List<ListNewsTypeResponse> newsTypeList = newsService.findAllNewsType();
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK,null, newsTypeList);
     }
 }

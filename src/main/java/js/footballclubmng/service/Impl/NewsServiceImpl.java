@@ -4,6 +4,7 @@ import js.footballclubmng.entity.NewsType;
 import js.footballclubmng.model.request.CreateNewsRequest;
 import js.footballclubmng.model.response.ListNewsResponse;
 import js.footballclubmng.entity.News;
+import js.footballclubmng.model.response.ListNewsTypeResponse;
 import js.footballclubmng.repository.NewsRepository;
 import js.footballclubmng.repository.NewsTypeRepository;
 import js.footballclubmng.service.NewsService;
@@ -88,6 +89,43 @@ public class NewsServiceImpl implements NewsService {
         }
     }
 
+    @Override
+    public List<ListNewsTypeResponse> findAllNewsType() {
+        try {
+            List<NewsType> newsTypeList = newsTypeRepository.findAll();
+            return newsTypeList.stream()
+                    .map((newsType) -> mapToNewsTypeDto(newsType))
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public NewsType getNewsTypeById(long id) {
+        return null;
+    }
+
+    @Override
+    public boolean createNewsType(NewsType newsType) {
+        return false;
+    }
+
+    @Override
+    public boolean updateNewsType(long id, NewsType newsType) {
+        return false;
+    }
+
+    @Override
+    public boolean deleteNewsType(long id) {
+        return false;
+    }
+
+    @Override
+    public List<News> findTop4News() {
+        return null;
+    }
+
 
     private ListNewsResponse mapToNewsDto(News news) {
         ListNewsResponse listNewsResponse = new ListNewsResponse();
@@ -95,6 +133,13 @@ public class NewsServiceImpl implements NewsService {
         listNewsResponse.setTitle(news.getTitle());
         listNewsResponse.setDateCreate(news.getDateCreate());
         return listNewsResponse;
+    }
+
+    private ListNewsTypeResponse mapToNewsTypeDto(NewsType newsType) {
+        ListNewsTypeResponse listNewsTypeResponse = new ListNewsTypeResponse();
+        listNewsTypeResponse.setId(newsType.getId());
+        listNewsTypeResponse.setName(newsType.getName());
+        return listNewsTypeResponse;
     }
 
 

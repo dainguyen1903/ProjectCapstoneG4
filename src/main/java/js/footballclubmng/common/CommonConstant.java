@@ -135,6 +135,7 @@ public class CommonConstant {
         public static final String CREATE_NEWS = HEAD_API + NEWS + "/create-news";
         public static final String UPDATE_NEWS = HEAD_API + NEWS + "/update-news/{id}";
         public static final String DELETE_NEWS = HEAD_API + NEWS + "/delete-news/{id}";
+        public static final String LIST_NEWS_TYPE = HEAD_API + NEWS + "/list-news-type";
     }
 
     public static class CATEGORY_API {

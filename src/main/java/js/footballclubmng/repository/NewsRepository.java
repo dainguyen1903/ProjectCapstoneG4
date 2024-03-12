@@ -15,4 +15,6 @@ public interface NewsRepository extends JpaRepository<News,Long> {
             "lower(n.description) like lower(concat('%', :query, '%')) or " +
             "lower(nt.name) like lower(concat('%', :query, '%'))", nativeQuery = true)
     List<News> searchNews(String query);
+
+    List<News> findTop4ByOrderByDateCreateDesc();
 }
