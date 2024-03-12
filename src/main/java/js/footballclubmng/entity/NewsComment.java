@@ -2,10 +2,10 @@ package js.footballclubmng.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-
 
 @Getter
 @Setter
@@ -26,7 +26,7 @@ public class NewsComment {
     private LocalDateTime commentTime;
 
     @ManyToOne
-    @JoinColumn(name = "new_id")
+    @JoinColumn(name = "news_id")
     @JsonIgnore
     private News news;
 

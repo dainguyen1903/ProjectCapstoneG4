@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
-import java.nio.file.Path;
 
 @Getter
 @Setter
@@ -15,8 +14,8 @@ import java.nio.file.Path;
 @Entity(name = "images")
 public class Images {
     @Id
-    @Column(name = "image_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "image_id")
     private Long id;
 
     @Column(name = "name", nullable = false)
@@ -28,7 +27,7 @@ public class Images {
     @Column(name = "image_type", nullable = false)
     private String imageType;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "news_id")
     @JsonIgnore
     private News news;

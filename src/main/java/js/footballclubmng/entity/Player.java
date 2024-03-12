@@ -3,6 +3,7 @@ package js.footballclubmng.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -43,6 +44,9 @@ public class Player {
     private String bio;
 
     @Column(name = "join_date")
-    private LocalDateTime joinDate;
+    private Date joinDate;
+
+    @Column(name = "number_player")
+    private Integer numberPlayer;
 
 }

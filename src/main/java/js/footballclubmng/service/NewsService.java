@@ -1,12 +1,16 @@
 package js.footballclubmng.service;
 
-import js.footballclubmng.model.dto.NewsDto;
+import js.footballclubmng.model.request.CreateNewsRequest;
+import js.footballclubmng.model.response.ListNewsResponse;
 import js.footballclubmng.entity.News;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface NewsService {
-    Optional<News> getNewsById(int id);
-    public List<NewsDto> findAllNews();
+    News getNewsById(long id);
+    public List<ListNewsResponse> findAllNews();
+    public List<News> searchNews(String search);
+    public boolean createNews(CreateNewsRequest createNewsRequest);
+    public boolean updateNews(long id, CreateNewsRequest createNewsRequest);
+    public boolean deleteNews(long id);
 }

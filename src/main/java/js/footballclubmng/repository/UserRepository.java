@@ -12,6 +12,8 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByEmailAndIsActiveAndDeleteFlg(String email, Boolean isActive, String deleteFlg);
 
+    User findByEmail(String email);
+
     User findByIdAndDeleteFlg(long id, String deleteFlg);
 
     User findByEmailAndVerificationCodeAndDeleteFlg(String email, String code, String deleteFlg);
