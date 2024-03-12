@@ -5,6 +5,7 @@ const useAuthStore = create(
     (set) => ({
       isAuthenticated: false,
       user: null,
+      emailReset:null,
       login: (userData) => {
         set({ isAuthenticated: true, user: userData });
       },
@@ -13,6 +14,9 @@ const useAuthStore = create(
       },
       setUser: (userData) => {
         set({ user: userData });
+      },
+      setEmailReset: (email) => {
+        set({ emailReset: email });
       },
     }),
     {

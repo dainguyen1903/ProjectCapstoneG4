@@ -10,7 +10,7 @@ import AddUserForm from "../../page/manage-user/add";
 import ManagePlayer from "../../page/player/player";
 import AddPlayerForm from "../../page/player/add";
 import AddNewsForm from "../../page/post/add";
-import ResetPass from "../../page/resetpassword";
+import ResetPass from "../../page/resetpassword/resetSendOtp";
 import ChangePassword from "../../page/changepass";
 import DetailPlayer from "../../page/player/detail";
 import DetailNews from "../../page/post/detail";
@@ -18,6 +18,9 @@ import useAuthStore from "../../zustand/authStore";
 import { useEffect, useState } from "react";
 import useUserStore from "../../zustand/userStore";
 import { router } from "../../constants/router";
+import ConfirmOTP from "../../page/resetpassword/confirmOtp";
+import ResetPassword from "../../page/resetpassword/resetPass";
+import ResetSendOTP from "../../page/resetpassword/resetSendOtp";
 
 const RouterConfig = () => {
   const isLogin = useAuthStore(state => state.isAuthenticated)
@@ -47,9 +50,11 @@ console.log(routesWithLayout)
           
         </Route>
         {!isLogin && <Route path="/login" element={<Login />} />}
-        {isLogin && <Route path="/register" element={<Register />} />}
-        <Route path="/password/reset" element={<ResetPass />} />
-        {/* <Route path="*"element={<Navigate to={isLogin ? "/home":"/login"}  />}  /> */}
+        {!isLogin && <Route path="/register" element={<Register />} />}
+        {!isLogin && <Route path="/reset-send-otp" element={<ResetSendOTP />} />}
+        {!isLogin && <Route path="/otp" element={<ConfirmOTP />} />}
+        {!isLogin && <Route path="/reset-pass" element={<ResetPassword />} />}
+       {/* <Route path="*"element={<Navigate to={isLogin ? "/home":"/login"}  />}  /> */}
 
       </Routes>
     </>

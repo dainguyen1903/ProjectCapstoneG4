@@ -1,36 +1,52 @@
-import { Card, Input, Row, Button, Form, Col, Modal } from "antd";
+import { Card, Input, Row, Button, Form, Col, Modal, Spin } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import "./../login/login.css";
 import { useState } from "react";
 import useAuthStore from "../../zustand/authStore";
 import useUserStore from "../../zustand/userStore";
 import { userApi } from "../../api/user.api";
-const ChangePassword = () => {
+const ResetPassword = () => {
   const navgate = useNavigate();
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
-  const [loading,setLoading] = useState(false);
   const [err, setErr] = useState("");
+  const emailReset = useAuthStore((state) => state.emailReset);
+  const setEmailReset = useAuthStore(state => state.setEmailReset)
+  const [loading, setLoading] = useState(false);
   const handleChangePass = async () => {
     if (!newPassword) {
       setErr("Vui lòng nhập mật khẩu");
     } else if (newPassword !== confirmNewPassword) {
       setErr("Xác nhận mật khẩu không khớp");
     } else {
-      setLoading(true);
-      const res = await userApi.changePassword({
-        newPassword,
-        reNewPassword: confirmNewPassword,
-      });
-      if (res.data.status === 200) {
-        Modal.success({
-          title: "Thành công",
-          content: "Cập nhật mật khẩu thành công",
-        });
-      } else {
-        setErr(res.data.message)
-      }
-      setLoading(false)
+     try {
+        const data = {
+            newPassword: newPassword,
+            reNewPassword: confirmNewPassword,
+          };
+          setLoading(true);
+          const res = await userApi.resetPassword(data, {
+            email: emailReset,
+          });
+          if (res.data.status === 200) {
+            setEmailReset(null);
+            setErr(null);
+            Modal.success({
+              title: "Thành công",
+              content: "Reset mật khẩu thành công",
+              onOk:() => {
+                navgate("/login");
+              }
+            });
+           
+          } else {
+            setErr(res.data.message || "Đã có lỗi xảy ra");
+          }
+          setLoading(false);
+     } catch (error) {
+        setErr("Đã có lỗi xảy ra")
+        setLoading(false)
+     }
     }
   };
   return (
@@ -43,7 +59,7 @@ const ChangePassword = () => {
             }}
             className="Title"
           >
-            Thay đổi mật khẩu
+            Reset mật khẩu
           </p>
           <input
             value={newPassword}
@@ -61,12 +77,15 @@ const ChangePassword = () => {
           />
           {err && <span style={{ color: "red", marginBottom: 5 }}>{err}</span>}
           <button
-            onClick={handleChangePass}
+            disabled={loading}
+            onClick={() => handleChangePass()}
             style={{
               width: "100%",
+              background: loading && "gray",
             }}
             className="Button"
           >
+            {loading && <Spin style={{ marginRight: 5 }} />}
             Xác nhận
           </button>
         </div>
@@ -74,7 +93,7 @@ const ChangePassword = () => {
       <div className="OverlayContainer">
         <div className="Overlay">
           <div className="RightOverlayPanel">
-            <h2 className="Title">Thay đổi mật khẩu</h2>
+            <h2 className="Title">Reset mật khẩu</h2>
 
             <p className="Paragraph"></p>
           </div>
@@ -83,4 +102,4 @@ const ChangePassword = () => {
     </div>
   );
 };
-export default ChangePassword;
+export default ResetPassword;

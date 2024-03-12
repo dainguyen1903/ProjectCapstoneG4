@@ -18,7 +18,7 @@ import DetailNews from "../page/post/detail";
 import ChangePassword from "../page/changepass";
 import Login from "../page/login/login";
 import Register from "../page/register/register";
-import ResetPass from "../page/resetpassword";
+import ResetPass from "../page/resetpassword/resetSendOtp";
 import Products from "../page/products";
 import AddUserForm from "../page/manage-user/add";
 import { ROLE } from "./role";
@@ -185,16 +185,17 @@ export const router = [
   },
   {
     show: false,
-    component: Register,
-    path: "/register",
-    key: "/register",
+    component: ResetPass,
+    path: "/reset",
+    key: "/reset",
     isProtected: false,
   },
   {
     show: false,
-    component: ResetPass,
-    path: "/password/reset",
-    key: "/password/reset",
+    component: Register,
+    path: "/register",
+    key: "/register",
+    isProtected: false,
   },
   {
     show: false,

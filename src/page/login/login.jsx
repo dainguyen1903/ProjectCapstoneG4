@@ -61,7 +61,7 @@ try {
             </span>
           )}
 
-          <Link to="/password/reset" className="Anchor">
+          <Link to="/reset-send-otp" className="Anchor">
             Quên mật khẩu?
           </Link>
           <button
