@@ -1,61 +1,45 @@
-import React, { useState } from "react";
-import { Table, Input, Button, Space, Modal, Form, Row, Col } from "antd";
-import FormItem from "antd/es/form/FormItem";
-import {
-  UserOutlined,
-  ProductOutlined,
-  EditOutlined,
-  DeleteOutlined,
-} from "@ant-design/icons";
-import { useNavigate } from "react-router";
-import { Link } from "react-router-dom";
-import useNewsStore from "../../zustand/newsStore";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { Button, Col, Form, Input, Modal, Row, Space, Table } from "antd";
 import { useForm } from "antd/es/form/Form";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import useCategoryStore from "../../zustand/productCategoryStore";
+import { categoryApi } from "../../api/category.api";
 const ProductCategoryList = () => {
-  const categories = useCategoryStore(state => state.categories);
   const [form] = useForm();
   const deleteCategory = useCategoryStore((state) => state.deleteCategory);
 
   const navigate = useNavigate();
   const [searchText, setSearchText] = useState("");
-  const [posts, setPosts] = useState(categories);
-  const [selectedUserId, setSelectedUserId] = useState(null);
+  const [categories, setCategoryList] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   // Function to handle search
-  const handleSearch = (value) => {
-    setPosts(
-        categories.filter((i) =>
-        i.name.toUpperCase().includes(value.name.toUpperCase())
-      )
-    );
+  const handleSearch = async (value) => {
+    const name = form.getFieldValue("name") || "";
+    const res = await categoryApi.getListCategory({});
+    if (res.data.status === 200) {
+      setCategoryList(res.data.data);
+    }
   };
-
-  // Function to handle edit
-  const handleEdit = (userId) => {
-    setSelectedUserId(userId);
-    setIsModalVisible(true);
-    // Fetch user details based on userId and populate form fields
-  };
+  useEffect(() => {
+    handleSearch();
+  }, []);
 
   // Function to handle delete
   const handleDelete = (id) => {
     Modal.confirm({
       title: "Xác nhận",
       content: "Xóa danh mục sản phẩm",
-      onOk: () => {
-        deleteCategory(id);
-        Modal.success({
-          title: "Thành công",
-          content: "Xóa thành công",
-        });
-        const txt = form.getFieldValue("name") || "";
-        setPosts(
-          categories
-            .filter((i) => i.name.toUpperCase().includes(txt.toUpperCase()))
-            .filter((i) => i.id != id)
-        );
+      onOk: async () => {
+        const res = await categoryApi.deleteCategory(id);
+        if (res.data.status === 200) {
+          Modal.success({
+            title: "Thành công",
+            content: "Xóa thành công",
+          });
+          handleSearch();
+        }
       },
     });
   };
@@ -65,15 +49,13 @@ const ProductCategoryList = () => {
       title: "Id",
       dataIndex: "id",
       key: "title",
-     
     },
     {
-        title: "Tên danh mục sản phẩm",
-        dataIndex: "name",
-        key: "title",
-        align:"center"
-       
-      },
+      title: "Tên danh mục sản phẩm",
+      dataIndex: "name",
+      key: "title",
+      align: "center",
+    },
 
     {
       title: "Hành động",
@@ -82,17 +64,13 @@ const ProductCategoryList = () => {
       render: (text, record) => (
         <Space size="middle">
           <Space size="middle">
-            <Button onClick={() => navigate("/category-product/edit/" + record.id)}>
-              <EditOutlined
-                style={{ fontSize: "16px" }}
-                
-              />
+            <Button
+              onClick={() => navigate("/category-product/edit/" + record.id)}
+            >
+              <EditOutlined style={{ fontSize: "16px" }} />
             </Button>
             <Button onClick={() => handleDelete(record.id)}>
-              <DeleteOutlined
-                style={{ fontSize: "16px" }}
-                
-              />
+              <DeleteOutlined style={{ fontSize: "16px" }} />
             </Button>
           </Space>
         </Space>
@@ -133,7 +111,10 @@ const ProductCategoryList = () => {
               </Button>
             </Col>
             <Col>
-              <Button shape="round" onClick={() => navigate("/category-product/add")}>
+              <Button
+                shape="round"
+                onClick={() => navigate("/category-product/add")}
+              >
                 Thêm danh mục sản phẩm
               </Button>
             </Col>
@@ -143,11 +124,11 @@ const ProductCategoryList = () => {
       <Table
         pagination={{
           pageSize: 10,
-          total:posts.length,
-          position:["bottomCenter"]
+          total: categories.length,
+          position: ["bottomCenter"],
         }}
         columns={columns}
-        dataSource={posts}
+        dataSource={categories}
       />
       <Modal
         title="Edit Post"
