@@ -27,6 +27,7 @@ public class NewsType {
     @NotBlank(message = "Không được để trống.")
     @Column(name = "description")
     private String description;
+
     @OneToMany(mappedBy = "newsType",fetch = FetchType.EAGER)
     private List<News> newsList;
 }

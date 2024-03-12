@@ -126,7 +126,18 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public boolean updateNewsType(long id, NewsType newsType) {
-        return false;
+        try {
+            NewsType newsType1 = newsTypeRepository.findById(id).orElse(null);
+            if (newsType1 != null) {
+                newsType1.setName(newsType.getName());
+                newsType1.setDescription(newsType.getDescription());
+                newsTypeRepository.save(newsType1);
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override

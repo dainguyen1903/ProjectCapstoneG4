@@ -113,4 +113,19 @@ public class NewsController {
         }
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK,CommonConstant.COMMON_MESSAGE.CREATE_NEWS_TYPE_SUCCESS);
     }
+
+    @PutMapping(CommonConstant.NEWS_API.UPDATE_NEWS_TYPE)
+    @PreAuthorize("hasRole('ROLE_Operator')")
+    public ResponseAPI<String> updateNewsType(@PathVariable int id, @RequestBody @Valid NewsType newsType) {
+        NewsType newsTypeCheck = newsService.getNewsTypeById(id);
+        if(newsTypeCheck==null){
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY,CommonConstant.COMMON_MESSAGE.NOT_FOUND_NEWS_TYPE);
+        }
+        boolean check = newsService.updateNewsType(id, newsType);
+        if(!check){
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST,CommonConstant.COMMON_MESSAGE.UPDATE_NEWS_TYPE_FAIL);
+        }
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK,CommonConstant.COMMON_MESSAGE.UPDATE_NEWS_TYPE_SUCCESS);
+    }
+
 }
