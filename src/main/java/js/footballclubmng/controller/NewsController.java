@@ -87,4 +87,15 @@ public class NewsController {
         List<ListNewsTypeResponse> newsTypeList = newsService.findAllNewsType();
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK,null, newsTypeList);
     }
+
+    @GetMapping(CommonConstant.NEWS_API.DETAIL_NEWS_TYPE)
+    public ResponseAPI<NewsType> newsTypeDetail(@PathVariable int id) {
+        NewsType newsType = newsService.getNewsTypeById(id);
+        if (newsType!=null){
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK,null, newsType);
+        }
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY,CommonConstant.COMMON_MESSAGE.NOT_FOUND_NEWS_TYPE);
+    }
+
+
 }

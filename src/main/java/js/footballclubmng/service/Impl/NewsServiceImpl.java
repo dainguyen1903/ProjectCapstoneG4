@@ -103,7 +103,12 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public NewsType getNewsTypeById(long id) {
-        return null;
+        try {
+            NewsType newsType = newsTypeRepository.findById(id).orElse(null);
+            return newsType;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
