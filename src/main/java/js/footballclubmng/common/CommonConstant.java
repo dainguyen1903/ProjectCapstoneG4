@@ -43,7 +43,6 @@ public class CommonConstant {
         public static String PASSWORD_INCORRECT = "Tài khoản hoặc mật khẩu không chính xác";
         public static String INVALID_PARAMETER = "Tài khoảng hoặc mật khẩu không được trống";
         public static String EXIST_USERNAME = "USERNAME_EXIST";
-        public static String EXIST_EMAIL = "EMAIL_EXIST";
         public static String EXIST_KEY = "KEY_EXIST";
 
         public static String EXIST_TOKEN = "TOKEN_IS_EXIST";
@@ -115,6 +114,9 @@ public class CommonConstant {
 
         public static final String DETAIL_USER = HEAD_API + USER + "/detail-user";
 
+        public static final String PROFILE_USER = HEAD_API + USER + "/profile-user";
+        public static final String UPDATE_PROFILE = HEAD_API + USER + "/update-profile-user";
+
 
     }
 
@@ -143,6 +145,12 @@ public class CommonConstant {
         public static final String LIST_CATEGORY = HEAD_API + CATEGORY + "/list-category";
         public static final String CREATE_CATEGORY = HEAD_API + CATEGORY + "/create-category";
         public static final String UPDATE_CATEGORY = HEAD_API + CATEGORY + "/update-category/{id}";
+    }
+
+    public static class PRODUCT_API {
+        public static final String PRODUCT = "/product";
+
+        public static final String LIST_PRODUCT = HEAD_API + PRODUCT + "/list-product";
     }
 
 
