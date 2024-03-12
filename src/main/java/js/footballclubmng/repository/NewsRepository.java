@@ -9,8 +9,10 @@ import java.util.List;
 
 @Repository
 public interface NewsRepository extends JpaRepository<News,Long> {
-    @Query(value = "select * from news n where " +
+    @Query(value = "select * from news n " +
+            "join news_type nt on n.news_type_id = nt.news_type_id where " +
             "lower(n.title) like lower(concat('%', :query, '%')) or " +
-            "lower(n.description) like lower(concat('%', :query, '%'))", nativeQuery = true)
+            "lower(n.description) like lower(concat('%', :query, '%')) or " +
+            "lower(nt.name) like lower(concat('%', :query, '%'))", nativeQuery = true)
     List<News> searchNews(String query);
 }
