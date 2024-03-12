@@ -88,6 +88,8 @@ public class CommonConstant {
         public static final String EXIST_NEWS_TYPE = "Loại tin tức đã tồn tại";
         public static final String CREATE_NEWS_TYPE_FAIL = "Tạo loại tin tức thất bại";
         public static final String CREATE_NEWS_TYPE_SUCCESS = "Tạo loại tin tức thành công";
+        public static final String CATEGORY_EXIST = "Danh mục đã tồn tại";
+
     }
 
     public static class USER_API {

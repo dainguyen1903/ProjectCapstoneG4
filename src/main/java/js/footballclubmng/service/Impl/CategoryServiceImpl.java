@@ -58,4 +58,14 @@ public class CategoryServiceImpl implements CategoryService {
             return null;
         }
     }
+
+    @Override
+    public Category getCategoryByName(String name) {
+        try {
+            Category category = categoryRepository.findCategoryByName(name);
+            return category;
+        }catch (Exception e){
+            return null;
+        }
+    }
 }

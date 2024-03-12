@@ -27,6 +27,10 @@ public class CategoryController {
     @PostMapping(CommonConstant.CATEGORY_API.CREATE_CATEGORY)
     @PreAuthorize("hasRole('ROLE_Sale')")
     public ResponseAPI<Object> createPlayer(@RequestBody @Valid Category category) {
+        Category category1 = categoryService.getCategoryByName(category.getName());
+        if (category1 != null) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.CATEGORY_EXIST);
+        }
         boolean check = categoryService.createCategory(category);
         if (!check) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.CREATE_CATEGORY_FAIL);
