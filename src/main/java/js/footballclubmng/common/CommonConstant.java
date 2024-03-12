@@ -36,12 +36,11 @@ public class CommonConstant {
         public static String OK = "OK";
         public static String USER_NOT_LOGIN = "USER_NOT_LOGIN";
         public static String USER_NOT_LOGIN_OR_QUALIFIED = "USER NOT QUALIFIED TO STAMP";
-        public static String PASSWORD_INCORRECT = "USERNAME_OR_PASSWORD_INCORRECT";
-        public static String INVALID_PARAMETER = "INVALID_DATA";
+        public static String PASSWORD_INCORRECT = "Tài khoản hoặc mật khẩu không chính xác";
+        public static String INVALID_PARAMETER = "Tài khoảng hoặc mật khẩu không được trống";
         public static String EXIST_USERNAME = "USERNAME_EXIST";
         public static String EXIST_EMAIL = "EMAIL_EXIST";
         public static String EXIST_KEY = "KEY_EXIST";
-
 
         public static String EXIST_TOKEN = "TOKEN_IS_EXIST";
 

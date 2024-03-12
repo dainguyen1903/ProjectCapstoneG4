@@ -41,7 +41,8 @@ public class UserController extends BaseController{
             } catch (NullPointerException ex) {
                 result.setStatus(CommonConstant.COMMON_RESPONSE.EXCEPTION);
                 result.setMessage(CommonConstant.COMMON_MESSAGE.INVALID_PARAMETER);
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 result.setStatus(CommonConstant.COMMON_RESPONSE.EXCEPTION);
                 result.setMessage(ex.getMessage());
             }
@@ -60,7 +61,7 @@ public class UserController extends BaseController{
     @PostMapping(value = CommonConstant.USER_API.CREATE_USER,
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     @PreAuthorize("hasRole('ROLE_Admin')")
-    public ResponseAPI<Object> signup(HttpServletRequest requestHttp, @RequestPart("request") CreateUserRequest request, @RequestPart(value = "file", required = false) MultipartFile file) {
+    public ResponseAPI<Object> createUser(HttpServletRequest requestHttp, @RequestPart("request") CreateUserRequest request, @RequestPart(value = "file", required = false) MultipartFile file) {
         if (request.isValid()) {
             return userService.createUser(request, file, getSiteURL(requestHttp));
         }
@@ -101,6 +102,8 @@ public class UserController extends BaseController{
         }
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_VALID, CommonConstant.COMMON_MESSAGE.INVALID_PARAMETER);
     }
+
+
 
 
 }

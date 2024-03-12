@@ -17,7 +17,7 @@ public class UserServiceSecurity implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) {
-        User userEntity = userRepository.findByEmailAndDeleteFlg(email, "0");
+        User userEntity = userRepository.findByEmailAndIsActiveAndDeleteFlg(email, true, "0" );
         if(userEntity == null) {
             throw new UsernameNotFoundException(email);
         }
