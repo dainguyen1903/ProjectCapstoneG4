@@ -1,54 +1,62 @@
 import React, { useEffect, useState } from "react";
 import { Form, Input, Button, DatePicker, Select, Modal } from "antd";
 import { FileImageOutlined } from "@ant-design/icons";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import useNewsStore from "../../zustand/newsStore";
 import LoadingFull from "../../component/loading/loadingFull";
 import useNewsCategoryStore from "../../zustand/newsCategoryStore";
+import { newsApi } from "../../api/news.api";
+import { showMessErr } from "../../ultis/helper";
 const { Option } = Select;
 
 const NewsCategoryAdd = () => {
   const [form] = Form.useForm();
   const { id } = useParams();
-  const categories = useNewsCategoryStore((state) => state.newsCategories);
-  const addCategory = useNewsCategoryStore((state) => state.addNewsCategory);
-  const updateCategory = useNewsCategoryStore((state) => state.updateNewsCategory);
-  const categoryDetail = categories.find((newsItem) => newsItem.id == id);
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   // Confirm save
   const confirmSave = ({ name }) => {
     Modal.confirm({
       title: "Xác nhận",
       content: !id ? "Thêm danh mục bài viết" : "Cập nhật danh mục bài viết",
-      onOk: () => {
-        setTimeout(() => {
-          if (id) {
-            updateCategory(id, { name });
-          } else {
-            addCategory({ name });
-          }
+      onOk: async () => {
+        const dataPost = {
+          name,
+          description: "description",
+        };
+        const res = !id
+          ? await newsApi.createrNewsType(dataPost)
+          : await newsApi.updateNewsType(id, dataPost);
+        if (res.data.status === 200) {
           Modal.success({
             title: "Thành công",
             content: !id ? "Thêm thành công" : "Cập nhật thành công",
+            onOk:() => {
+              navigate(-1);
+            }
           });
-          if (!id) {
-            form.resetFields();
-          }
-        }, 1000);
+         
+        }
+        else{
+          showMessErr(res.data)
+        }
       },
     });
   };
+
+  const getDetail = async () => {
+    setLoading(true);
+    const res = await newsApi.getDetailNewsType(id);
+    if (res.data.status === 200) {
+      form.setFieldsValue(res.data.data);
+    } else {
+      showMessErr(res.data);
+    }
+    setLoading(false);
+  };
   useEffect(() => {
     if (id) {
-      setLoading(true);
-      new Promise((resolve) => {
-        setTimeout(() => {
-          form.setFieldsValue(categoryDetail);
-          resolve();
-        }, 1000);
-      }).then(() => {
-        setLoading(false);
-      });
+      getDetail();
     }
   }, [id]);
   return (
@@ -72,7 +80,6 @@ const NewsCategoryAdd = () => {
           <Input placeholder="Tên danh mục bài viết" className="Input" />
         </Form.Item>
 
-      
         <Form.Item>
           <button className="Button" htmlType="submit" type="primary">
             {id ? "Cập nhật" : "Tạo mới"}

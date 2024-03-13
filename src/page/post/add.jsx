@@ -21,24 +21,25 @@ const AddNewsForm = () => {
   const navigate = useNavigate();
   // Confirm save
   const confirmSave = ({ title, typeNews }) => {
-   const dataPost = {
-    title,
-    newsType :typeNews ,
-    description:value
-   }
+    const dataPost = {
+      title,
+      newsType: typeNews,
+      description: value,
+    };
     Modal.confirm({
       title: "Xác nhận",
       content: !id ? "Thêm bài viết" : "Cập nhật bài viết",
-      onOk: async() => {
-        const res = !id ? await newsApi.createrNews(dataPost) : await newsApi.updateNews(id,dataPost)
-        if(res.data.status === 200){
+      onOk: async () => {
+        const res = !id
+          ? await newsApi.createrNews(dataPost)
+          : await newsApi.updateNews(id, dataPost);
+        if (res.data.status === 200) {
           Modal.success({
             title: "Thành công",
             content: !id ? "Thêm thành công" : "Cập nhật thành công",
           });
           navigate(-1);
         }
-        
       },
     });
   };
@@ -49,34 +50,31 @@ const AddNewsForm = () => {
     const res = await newsApi.getDetailNews(id);
     if (res.data.status === 200) {
       const newsDetail = res.data.data;
-      setValue(newsDetail.description)
+      setValue(newsDetail.description);
       form.setFieldsValue(newsDetail);
     }
     setLoading(false);
   };
+
+  const getListNewType = async () => {
+    const res = await newsApi.searchNewsType({ search: "" });
+    if (res.data.status === 200) {
+      const listOptionType = res.data.data.map((i) => ({
+        id: i.id,
+        name: i.name,
+      }));
+      setListTypeNews(listOptionType);
+    }
+  };
+  useEffect(() => {
+    getListNewType();
+  }, []);
   useEffect(() => {
     if (id) {
       getDetailNews();
     }
   }, [id]);
 
-  // getListTypeNews
-  const getListTypeNews = async () => {
-    setListTypeNews([
-      {
-        id: 1,
-        name: "product",
-      },
-      {
-        id: 2,
-        name: "football",
-      },
-    ]);
-  };
-
-  useEffect(() => {
-    getListTypeNews();
-  }, []);
   return (
     <div>
       <h2 style={{ marginBottom: 10 }}>

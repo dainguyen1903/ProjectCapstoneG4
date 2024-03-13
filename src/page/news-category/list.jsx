@@ -1,65 +1,71 @@
-import {
-  DeleteOutlined,
-  EditOutlined
-} from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Button, Col, Form, Input, Modal, Row, Space, Table } from "antd";
 import { useForm } from "antd/es/form/Form";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import useNewsCategoryStore from "../../zustand/newsCategoryStore";
+import { newsApi } from "../../api/news.api";
+import { showMessErr } from "../../ultis/helper";
 const NewsCategoryList = () => {
-  const newsCategories = useNewsCategoryStore(state => state.newsCategories);
+  const newsCategories = useNewsCategoryStore((state) => state.newsCategories);
   const [form] = useForm();
-  const deleteCategory = useNewsCategoryStore((state) => state.deleteNewsCategory);
+  const deleteCategory = useNewsCategoryStore(
+    (state) => state.deleteNewsCategory
+  );
 
   const navigate = useNavigate();
-  const [posts, setPosts] = useState(newsCategories);
+  const [posts, setPosts] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   // Function to handle search
-  const handleSearch = (value) => {
-    setPosts(
-        newsCategories.filter((i) =>
-        i.name.toUpperCase().includes(value.name.toUpperCase())
-      )
-    );
+  const handleSearch = async () => {
+    const name = form.getFieldValue("name") || "";
+    const res = await newsApi.searchNewsType({ search:name });
+    if (res.data.status === 200) {
+      setPosts(res.data.data);
+    }
+    else{
+      showMessErr(res.data)
+    }
   };
 
   // Function to handle delete
   const handleDelete = (id) => {
+  
     Modal.confirm({
       title: "Xác nhận",
       content: "Xóa danh mục bài viết",
-      onOk: () => {
-        deleteCategory(id);
+      onOk: async() => {
+       const res = await newsApi.deleteNews(id);
+       if(res.data.status === 200){
         Modal.success({
           title: "Thành công",
           content: "Xóa thành công",
         });
-        const txt = form.getFieldValue("name") || "";
-        setPosts(
-          newsCategories
-            .filter((i) => i.name.toUpperCase().includes(txt.toUpperCase()))
-            .filter((i) => i.id != id)
-        );
+        handleSearch();
+       }
+       else{
+        showMessErr(res.data)
+       }
       },
     });
+   
   };
-
+useEffect(() => {
+handleSearch()
+},[])
   const columns = [
     {
       title: "Id",
       dataIndex: "id",
       key: "title",
-     
     },
     {
-        title: "Tên danh mục bài viết",
-        dataIndex: "name",
-        key: "title",
-        align:"center"
-       
-      },
+      title: "Tên danh mục bài viết",
+      dataIndex: "name",
+      key: "title",
+      align: "center",
+    },
 
     {
       title: "Hành động",
@@ -68,17 +74,13 @@ const NewsCategoryList = () => {
       render: (text, record) => (
         <Space size="middle">
           <Space size="middle">
-            <Button onClick={() => navigate("/category-news/edit/" + record.id)}>
-              <EditOutlined
-                style={{ fontSize: "16px" }}
-                
-              />
+            <Button
+              onClick={() => navigate("/category-news/edit/" + record.id)}
+            >
+              <EditOutlined style={{ fontSize: "16px" }} />
             </Button>
             <Button onClick={() => handleDelete(record.id)}>
-              <DeleteOutlined
-                style={{ fontSize: "16px" }}
-                
-              />
+              <DeleteOutlined style={{ fontSize: "16px" }} />
             </Button>
           </Space>
         </Space>
@@ -119,7 +121,10 @@ const NewsCategoryList = () => {
               </Button>
             </Col>
             <Col>
-              <Button shape="round" onClick={() => navigate("/category-news/add")}>
+              <Button
+                shape="round"
+                onClick={() => navigate("/category-news/add")}
+              >
                 Thêm danh mục bài viết
               </Button>
             </Col>
@@ -129,8 +134,8 @@ const NewsCategoryList = () => {
       <Table
         pagination={{
           pageSize: 10,
-          total:posts.length,
-          position:["bottomCenter"]
+          total: posts.length,
+          position: ["bottomCenter"],
         }}
         columns={columns}
         dataSource={posts}
