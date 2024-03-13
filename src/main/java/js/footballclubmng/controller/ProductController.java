@@ -1,14 +1,17 @@
 package js.footballclubmng.controller;
 
 import js.footballclubmng.common.CommonConstant;
+import js.footballclubmng.entity.Player;
 import js.footballclubmng.entity.Product;
+import js.footballclubmng.model.request.CreateNewsRequest;
+import js.footballclubmng.model.request.CreateProductRequest;
 import js.footballclubmng.model.response.ResponseAPI;
 import js.footballclubmng.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -23,5 +26,45 @@ public class ProductController {
         List<Product> list = productService.getAllProduct();
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, list);
     }
+
+    @PostMapping(CommonConstant.PRODUCT_API.CREATE_PRODUCT)
+    @PreAuthorize("hasRole('ROLE_Sale')")
+    public ResponseAPI<Object> createProduct(@RequestBody CreateProductRequest createProductRequest) {
+        boolean check = productService.createProduct(createProductRequest);
+        if(!check) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.CREATE_PRODUCT_FAIL);
+        }
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.CREATE_PRODUCT_SUCCESS);
+    }
+
+    @PutMapping(CommonConstant.PRODUCT_API.UPDATE_PRODUCT)
+
+    public ResponseAPI<Object> updateProduct(@PathVariable int id, @RequestBody @Valid CreateProductRequest createProductRequest) {
+        Product product = productService.getProductById(id);
+        if(product==null) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.NOT_FOUND_PRODUCT);
+        }
+        boolean check = productService.updateProduct(id, createProductRequest);
+        if(!check) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST,CommonConstant.COMMON_MESSAGE.UPDATE_PRODUCT_FAIL);
+        }
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK,CommonConstant.COMMON_MESSAGE.UPDATE_PRODUCT_SUCCESS);
+
+    }
+
+    @DeleteMapping(CommonConstant.PRODUCT_API.DELETE_PRODUCT)
+    @PreAuthorize("hasRole('ROLE_Sale')")
+    public ResponseAPI<Object> deletePlayer(@PathVariable int id) {
+        Product productEntity = productService.getProductById(id);
+        if (productEntity == null) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.NOT_FOUND_PRODUCT);
+        }
+        boolean check = productService.deleteProduct(id);
+        if (!check) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.DELETE_PRODUCT_FAIL);
+        }
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.DELETE_PRODUCT_SUCCESS);
+    }
+
 
 }

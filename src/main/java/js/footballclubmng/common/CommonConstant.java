@@ -79,6 +79,18 @@ public class CommonConstant {
         public static final String CREATE_CATEGORY_SUCCESS = "Thêm danh mục thành công";
         public static final String UPDATE_CATEGORY_FAIL = "Cập nhật danh mục thất bại";
         public static final String UPDATE_CATEGORY_SUCCESS = "Cập nhật danh mục thành công";
+
+        //Message product
+        public static final String CREATE_PRODUCT_SUCCESS = "Thêm sản phẩm thành công";
+        public static final String CREATE_PRODUCT_FAIL = "Thêm sản phẩm thất bại";
+        public static String NOT_FOUND_PRODUCT = "Không tìm thấy sản phẩm";
+        public static final String UPDATE_PRODUCT_SUCCESS = "Cập nhật sản phẩm thành công";
+        public static final String UPDATE_PRODUCT_FAIL = "Cập nhật sản phẩm thất bại";
+        public static final String DELETE_PRODUCT_SUCCESS = "Xóa sản phẩm thành công";
+        public static final String DELETE_PRODUCT_FAIL = "Xóa sản phẩm thất bại";
+
+
+
         public static final String CREATE_NEWS_FAIL = "Tạo tin tức thất bại";
         public static final String CREATE_NEWS_SUCCESS = "Tạo tin tức thành công";
         public static final String UPDATE_NEWS_FAIL = "Cập nhật tin tức thất bại";
@@ -151,6 +163,14 @@ public class CommonConstant {
         public static final String PRODUCT = "/product";
 
         public static final String LIST_PRODUCT = HEAD_API + PRODUCT + "/list-product";
+
+        public static final String CREATE_PRODUCT = HEAD_API + PRODUCT + "/create-product";
+
+        public static final String UPDATE_PRODUCT = HEAD_API + PRODUCT + "/update-product/{id}";
+
+        public static final String DELETE_PRODUCT = HEAD_API + PRODUCT + "/delete-product/{id}";
+
+        public static final String DETAILS_PRODUCT = HEAD_API + PRODUCT + "/details-product";
     }
 
 
