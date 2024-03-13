@@ -1,3 +1,3 @@
 export const LOCAL_STORAGE_KEY = {
-    token:"football-token"
+    token:"football-token1"
 }
