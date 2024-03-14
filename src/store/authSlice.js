@@ -8,6 +8,7 @@ const initialState = {
   currentUser: null,
   isLogin: false,
   error: null,
+  emailReset:null,
 };
 
 const authSlice = createSlice({
@@ -26,6 +27,9 @@ const authSlice = createSlice({
         localStorage.removeItem(LOCAL_STORAGE_KEY.token);
         localStorage.removeItem(LOCAL_STORAGE_KEY.user);
         localStorage.removeItem(LOCAL_STORAGE_KEY.userId)
+    },
+    setEmailReset:(state,{payload}) => {
+      state.emailReset = payload;
     }
   },
   extraReducers: (builder) => {},
@@ -74,6 +78,7 @@ export const getDetailUserAction = createAsyncThunk(
 
 export const getCurrentUser = (state) => state.auth.currentUser;
 export const isLogin = (state) => state.auth.isLogin;
+export const emailReset = state => state.auth.emailReset;
 
 export default authSlice.reducer;
-export const { setCurrentUser ,setLogin,logout} = authSlice.actions;
+export const { setCurrentUser ,setLogin,logout,setEmailReset} = authSlice.actions;

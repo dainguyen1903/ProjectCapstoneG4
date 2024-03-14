@@ -35,4 +35,7 @@ export const userApi = {
       params,
     });
   },
+  register: (data) => {
+    return api.post(baseURLUser + "register",data);
+  },
 };

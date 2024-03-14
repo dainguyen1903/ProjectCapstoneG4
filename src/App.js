@@ -35,18 +35,19 @@ import { useEffect } from "react";
 import { logout, setCurrentUser, setLogin } from "./store/authSlice";
 import { LOCAL_STORAGE_KEY } from "./constants/common";
 import RouterWithoutLogin from "./router/routerWithOutLogin";
+import ResetSendOTP from "./pages/ResetPass/ResetSendOtp";
+import ConfirmOTP from "./pages/ResetPass/ConfirmOtp";
+import ResetPassword from "./pages/ResetPass/ResetPass";
 function App() {
-const dispatch = useDispatch();
+  const dispatch = useDispatch();
   useEffect(() => {
     const user = localStorage.getItem(LOCAL_STORAGE_KEY.user);
-    if(user){
+    if (user) {
       const userObj = JSON.parse(user);
-      dispatch(setCurrentUser(userObj))
-      dispatch(setLogin())
+      dispatch(setCurrentUser(userObj));
+      dispatch(setLogin());
     }
-   
-
-  },[])
+  }, []);
   return (
     <div className="App">
       <BrowserRouter>
@@ -62,95 +63,126 @@ const dispatch = useDispatch();
         </AuthProvider>
       </BrowserRouter>
 
-        <BrowserRouter>
-          <Routes>
-            {/* Home page route */}
-            <Route path="/" element={<LayOut />}>
-              <Route path="/" element={<HomePage2 />} />
-              <Route
-                path="/shop"
-                element={
-                  <>
-                    <HomePage />
-                  </>
-                }
-              />
-              {/* Single product route */}
-              <Route
-                path="/product/:id"
-                element={
-                  <>
-                    <ProductSingle />
-                  </>
-                }
-              />
-
-              {/* Category wise product listing route */}
-              <Route
-                path="/category/:category"
-                element={
-                  <>
-                    <CategoryProduct />
-                  </>
-                }
-              />
-
-              {/* Cart */}
-              <Route
-                path="/cart"
-                element={
-                  <PrivateRouter>
-                    <Cart />
-                  </PrivateRouter>
-                }
-              />
-
-              <Route
-                path="/profile"
-                element={
-                  <>
-                    <PrivateRouter>
-                      <Profile />
-                    </PrivateRouter>
-                  </>
-                }
-              />
-
-              <Route
-                path="/blog"
-                element={
-                  <>
-                    <Blog />
-                  </>
-                }
-              />
-            </Route>
-            {/* Login route */}
-            <Route path="/login" element={<RouterWithoutLogin>
-              <Login />
-            </RouterWithoutLogin>} />
-
+      <BrowserRouter>
+        <Routes>
+          {/* Home page route */}
+          <Route path="/" element={<LayOut />}>
+            <Route path="/" element={<HomePage2 />} />
             <Route
-              path="/chatapp"
+              path="/shop"
               element={
                 <>
-                  <LoginAuth>
-                    <AuthProvider>
-                      <AppProvider>
-                        <Routes>
-                          <Route path="/auth" element={<LoginAuth />} />
-                          <Route path="/chat" element={<ChatRoom />} />
-                        </Routes>
-                        <AddRoomModal />
-                        <InviteMemberModal />
-                      </AppProvider>
-                    </AuthProvider>
-                  </LoginAuth>
+                  <HomePage />
                 </>
               }
             />
-          </Routes>
-        </BrowserRouter>
+            {/* Single product route */}
+            <Route
+              path="/product/:id"
+              element={
+                <>
+                  <ProductSingle />
+                </>
+              }
+            />
+
+            {/* Category wise product listing route */}
+            <Route
+              path="/category/:category"
+              element={
+                <>
+                  <CategoryProduct />
+                </>
+              }
+            />
+
+            {/* Cart */}
+            <Route
+              path="/cart"
+              element={
+                <PrivateRouter>
+                  <Cart />
+                </PrivateRouter>
+              }
+            />
+
+            <Route
+              path="/profile"
+              element={
+                <>
+                  <PrivateRouter>
+                    <Profile />
+                  </PrivateRouter>
+                </>
+              }
+            />
+
+            <Route
+              path="/blog"
+              element={
+                <>
+                  <Blog />
+                </>
+              }
+            />
+          </Route>
+          {/* Login route */}
+          <Route
+            path="/login"
+            element={
+              <RouterWithoutLogin>
+                <Login />
+              </RouterWithoutLogin>
+            }
+          />
+          <Route
+            path="/send-otp"
+            element={
+              <RouterWithoutLogin>
+                <ResetSendOTP />
+              </RouterWithoutLogin>
+            }
+          />
+
+          <Route
+            path="/otp"
+            element={
+              <RouterWithoutLogin>
+                <ConfirmOTP />
+              </RouterWithoutLogin>
+            }
+          />
+
+          <Route
+            path="/reset-pass"
+            element={
+              <RouterWithoutLogin>
+                <ResetPassword />
+              </RouterWithoutLogin>
+            }
+          />
+
+          <Route
+            path="/chatapp"
+            element={
+              <>
+                <LoginAuth>
+                  <AuthProvider>
+                    <AppProvider>
+                      <Routes>
+                        <Route path="/auth" element={<LoginAuth />} />
+                        <Route path="/chat" element={<ChatRoom />} />
+                      </Routes>
+                      <AddRoomModal />
+                      <InviteMemberModal />
+                    </AppProvider>
+                  </AuthProvider>
+                </LoginAuth>
+              </>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
