@@ -39,6 +39,7 @@ import ResetSendOTP from "./pages/ResetPass/ResetSendOtp";
 import ConfirmOTP from "./pages/ResetPass/ConfirmOtp";
 import ResetPassword from "./pages/ResetPass/ResetPass";
 import BlogDetail from "./pages/Blog/BlogDetail";
+import CheckOutPage from "./pages/CheckOut/CheckOut";
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -106,6 +107,16 @@ function App() {
                 </PrivateRouter>
               }
             />
+            {/* Cart */}
+            <Route
+              path="/checkout"
+              element={
+                <PrivateRouter>
+                  <CheckOutPage />
+                </PrivateRouter>
+              }
+            />
+
 
             <Route
               path="/profile"

@@ -2,14 +2,18 @@ import React from 'react';
 import "./CartPage.scss";
 import { useSelector, useDispatch } from 'react-redux';
 import { shopping_cart } from '../../utils/images';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { formatPrice } from '../../utils/helpers';
-import { getAllCarts, removeFromCart, toggleCartQty, clearCart, getCartTotal } from '../../store/cartSlice';
+import { getAllCarts, removeFromCart, toggleCartQty, clearCart, getCartTotal, setCartOrder } from '../../store/cartSlice';
+import { Checkbox } from 'antd';
+import e from 'cors';
 
 const CartPage = () => {
   const dispatch = useDispatch();
   const carts = useSelector(getAllCarts);
+  const disabledCheckout = carts.filter(i=>i.isOrder).length === 0;
   const { itemsCount, totalAmount} = useSelector((state) => state.cart);
+  const navigate = useNavigate();
 
   if(carts.length === 0){
     return (
@@ -22,13 +26,21 @@ const CartPage = () => {
       </div>
     )
   }
-
+const changeSlectOrder = (cart) =>e =>{
+dispatch(setCartOrder({
+  id:cart.id,
+  isOrder:e.target.checked
+}))
+}
   return (
     <div className='cart bg-whitesmoke'>
       <div className='container'>
         <div className='cart-ctable'>
           <div className='cart-chead bg-white'>
             <div className='cart-ctr fw-6 font-manrope fs-15'>
+            <div className='cart-cth'>
+                <span className='cart-ctxt'></span>
+              </div>
               <div className='cart-cth'>
                 <span className='cart-ctxt'>S.N.</span>
               </div>
@@ -55,6 +67,9 @@ const CartPage = () => {
               carts.map((cart, idx) => {
                 return (
                   <div className='cart-ctr py-4' key = {cart?.id}>
+                      <div className='cart-ctd'>
+                      <Checkbox onChange={changeSlectOrder(cart)}  />
+                    </div>
                     <div className='cart-ctd'>
                       <span className='cart-ctxt'>{idx + 1}</span>
                     </div>
@@ -107,7 +122,12 @@ const CartPage = () => {
                 <span className='text-orange fs-22 mx-2 fw-6'>{formatPrice(totalAmount)}</span>
               </div>
 
-              <button type = "button" className='checkout-btn text-white bg-orange fs-16'>Check Out</button>
+              <button
+              onClick={() => navigate("/checkout")}
+               style={{
+                background:disabledCheckout && "gray",
+                cursor:disabledCheckout && "default"
+              }} disabled={disabledCheckout} type = "button" className='checkout-btn text-white bg-orange fs-16'>Check Out</button>
             </div>
           </div>
         </div>
