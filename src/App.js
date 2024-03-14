@@ -38,6 +38,7 @@ import RouterWithoutLogin from "./router/routerWithOutLogin";
 import ResetSendOTP from "./pages/ResetPass/ResetSendOtp";
 import ConfirmOTP from "./pages/ResetPass/ConfirmOtp";
 import ResetPassword from "./pages/ResetPass/ResetPass";
+import BlogDetail from "./pages/Blog/BlogDetail";
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -122,6 +123,14 @@ function App() {
               element={
                 <>
                   <Blog />
+                </>
+              }
+            />
+             <Route
+              path="/blog/:id"
+              element={
+                <>
+                  <BlogDetail />
                 </>
               }
             />

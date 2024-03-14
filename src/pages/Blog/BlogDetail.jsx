@@ -1,98 +1,46 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
 import "./Blog.scss";
-
-const Blog = () => {
-    return(
-       <div class="container bootstrap snippets bootdeys">
-    <section class = "blog" id = "blog">
-      <div class = "container">
-        <div class = "title">
-          <h2>Latest Blog</h2>
-          <p>recent blogs about art & design</p>
-        </div>
-        <div class = "blog-content">
-          <div class = "blog-item">
-            <div class = "blog-img">
-              <img src = "https://thinkzone.vn/uploads/2022_01/blogging-1641375905.jpg" alt = ""/>
-              <span><i class = "far fa-heart"></i></span>
-            </div>
-            <div class = "blog-text">
-              <span>20 January, 2020</span>
-              <h2>Lorem ipsum, dolor sit amet consectetur adipisicing</h2>
-              <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Omnis libero quas ipsum laudantium nihil! Quaerat.</p>
-              <a href = "#">Read More</a>
-            </div>
-          </div>
-
-          <div class = "blog-item">
-            <div class = "blog-img">
-              <img src = "https://cdn.ttgtmedia.com/rms/onlineimages/what_is_a_blog_used_for-f_mobile.png" alt = ""/>
-              <span><i class = "far fa-heart"></i></span>
-            </div>
-            <div class = "blog-text">
-              <span>20 January, 2020</span>
-              <h2>Lorem ipsum, dolor sit amet consectetur adipisicing</h2>
-              <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Omnis libero quas ipsum laudantium nihil! Quaerat.</p>
-              <a href = "#">Read More</a>
-            </div>
-          </div>
-
-          <div class = "blog-item">
-            <div class = "blog-img">
-              <img src = "https://cdn.ttgtmedia.com/rms/onlineimages/what_is_a_blog_used_for-f_mobile.png" alt = ""/>
-              <span><i class = "far fa-heart"></i></span>
-            </div>
-            <div class = "blog-text">
-              <span>20 January, 2020</span>
-              <h2>Lorem ipsum, dolor sit amet consectetur adipisicing</h2>
-              <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Omnis libero quas ipsum laudantium nihil! Quaerat.</p>
-              <a href = "#">Read More</a>
-            </div>
-          </div>
-
-          <div class = "blog-item">
-            <div class = "blog-img">
-              <img src ="https://images04.nicepage.com/feature/583347/blog-category.jpg" alt = ""/>
-              <span><i class = "far fa-heart"></i></span>
-            </div>
-            <div class = "blog-text">
-              <span>20 January, 2020</span>
-              <h2>Lorem ipsum, dolor sit amet consectetur adipisicing</h2>
-              <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Omnis libero quas ipsum laudantium nihil! Quaerat.</p>
-              <a href = "#">Read More</a>
-            </div>
-          </div>
-          <div class = "blog-item">
-            <div class = "blog-img">
-              <img src = "https://images04.nicepage.com/feature/583347/blog-category.jpg" alt = ""/>
-              <span><i class = "far fa-heart"></i></span>
-            </div>
-            <div class = "blog-text">
-              <span>20 January, 2020</span>
-              <h2>Lorem ipsum, dolor sit amet consectetur adipisicing</h2>
-              <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Omnis libero quas ipsum laudantium nihil! Quaerat.</p>
-              <a href = "#">Read More</a>
-            </div>
-          </div>
+import { useParams } from "react-router-dom";
+import { newsApi } from "../../api/news.api";
+import moment from "moment";
+import CommentCpn from "../../components/Comment/Comment";
+const BlogDetail = () => {
+    const [comments, setComments] = useState([]);
+  const { id } = useParams();
+  const [detail, setDetail] = useState({});
+  const getDetailNews = async () => {
+    const res =await newsApi.getDetailNews(id);
+    if (res.data.status === 200) {
+      setDetail(res.data.data);
+    }
+  };
+  useEffect(() => {
+    getDetailNews();
+  }, []);
+  
+  return (
+    <div class="container bootstrap snippets bootdeys" style={{
+        minHeight:"80vh",
+        marginTop:20
+    }}>
+      <section style={{
+        
+      }} >
+      <h1 style={{
+        fontSize:40,
+        
+      }}>{detail.title}</h1>
+      <p style={{
+        color:"gray",
+        fontSize:14,
+        marginTop:-10
+      }}>{detail.dateCreate && moment(detail.dateCreate).format("DD MMMM, YYYY")}</p>
+      <p>{detail.description}</p>
+      <CommentCpn comments={comments} setComments={setComments} />
+      </section>
       
-          <div class = "blog-item">
-            <div class = "blog-img">
-              <img src = "https://createblog.ca/wp-content/uploads/2018/08/Starting-a-blog.png" alt = ""/>
-              <span><i class = "far fa-heart"></i></span>
-            </div>
-            <div class = "blog-text">
-              <span>20 January, 2020</span>
-              <h2>Lorem ipsum, dolor sit amet consectetur adipisicing</h2>
-              <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Omnis libero quas ipsum laudantium nihil! Quaerat.</p>
-              <a href = "#">Read More</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-         
-     </div>
-  )
-}
+    </div>
+  );
+};
 
-export default BlogDetail
+export default BlogDetail;

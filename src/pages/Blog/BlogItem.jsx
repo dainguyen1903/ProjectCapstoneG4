@@ -1,7 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import "./Blog.scss"
 const BlogItem  = ({
-    img="https://thinkzone.vn/uploads/2022_01/blogging-1641375905.jpg",date,title,description,
+    img="https://thinkzone.vn/uploads/2022_01/blogging-1641375905.jpg",date,title,description,id
 }) => {
+  const navigate = useNavigate();
     return (
         <div class = "blog-item">
         <div class = "blog-img">
@@ -14,7 +16,10 @@ const BlogItem  = ({
             fontWeight:"bold"
           }}>{title}</h2>
           <p>{description}</p>
-          <a >Xem thêm</a>
+          <a onClick={(e) => {
+            e.preventDefault();
+            navigate("/blog/"+id)
+          }} className="point" >Xem thêm</a>
         </div>
       </div>
     )

@@ -10,7 +10,10 @@ import {formatPrice} from "../../utils/helpers";
 import { addToCart, getCartMessageStatus, setCartMessageOff, setCartMessageOn } from '../../store/cartSlice';
 import CartMessage from "../../components/CartMessage/CartMessage";
 import { FacebookProvider, CustomChat } from 'react-facebook';
+import CommentCpn from '../../components/Comment/Comment';
 const ProductSinglePage = () => {
+  const [comments, setComments] = useState([]);
+
   const {id} = useParams();
   const dispatch = useDispatch();
   const product = useSelector(getProductSingle);
@@ -170,14 +173,20 @@ const ProductSinglePage = () => {
                     <span className='btn-text'>buy now</span>
                   </button>
                 </div>
+                
               </div>
+              
             </div>
+           
           </div>
+         <div style={{padding:10,background:"white"}}>
+         <CommentCpn comments={comments} setComments={setComments} />
+         </div>
         </div>
       </div>
 
       {cartMessageStatus && <CartMessage />}
-      
+     
     </main>
   )
 }

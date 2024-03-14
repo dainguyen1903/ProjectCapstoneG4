@@ -1,62 +1,134 @@
-import React, { useState } from 'react';
-import { Comment, Tooltip, List, Input, Button, Rate } from 'antd';
-import moment from 'moment';
+import { Comment } from "@ant-design/compatible";
+import { Avatar, Button, Col, Divider, Form, Input, List, Row } from "antd";
+import moment from "moment";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { getCurrentUser } from "../../store/authSlice";
+import { LOCAL_STORAGE_KEY } from "../../constants/common";
+import { auth } from "../../pages/firebase/config";
 
 const { TextArea } = Input;
 
-const CommentCpn = () => {
-  const [comments, setComments] = useState([]);
-  const [value, setValue] = useState('');
-  const [rating, setRating] = useState(0);
+const CommentItem = ({ author, avatar, content, datetime }) => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        gap: 10,
+        marginTop: 20,
+        background:"white"
+      }}
+    >
+      <Avatar>{author[0].toUpperCase()}</Avatar>
+      <div>
+        <div>
+          <span
+            style={{
+              color: "rgb(41, 174, 189)",
+              marginRight: 10,
+              fontWeight:"bold"
+            }}
+          >
+            {author}
+          </span>
+          <span
+            style={{
+              color: "gray",
+              marginRight: 15,
+            }}
+          >
+            {datetime}
+          </span>
+        </div>
+        <p>{content}</p>
+      </div>
+    </div>
+  );
+};
+const CommentList = ({ comments }) => (
+  <div style={{
+    background:"white"
+  }}>
+    {!comments.length?<div>
+     <div>
+     0 bình luận
+     </div>
+    <Divider />
+    </div>:   <List
+    dataSource={comments}
+    header={`${comments.length} ${"bình luận"}`}
+    itemLayout="horizontal"
+    renderItem={(props) => <CommentItem {...props} />}
+  />}
+ 
+  </div>
+);
 
-  const handleChange = e => {
-    setValue(e.target.value);
-  };
+const Editor = ({ onChange, onSubmit, submitting, value }) => (
+  <div >
+    <Form.Item>
+      <Row>
+        <Col span={12}>
+          <TextArea rows={4} onChange={onChange} value={value} />
+        </Col>
+      </Row>
+    </Form.Item>
+    <Form.Item>
+      <Button
+        style={{
+          background: "rgb(41, 174, 189)",
+        }}
+        htmlType="submit"
+        onClick={onSubmit}
+        type="primary"
+      >
+        Thêm bình luận
+      </Button>
+    </Form.Item>
+  </div>
+);
 
-  const handleRateChange = value => {
-    setRating(value);
-  };
-
+const CommentCpn = ({ comments, setComments }) => {
+  const [submitting, setSubmitting] = useState(false);
+  const [value, setValue] = useState("");
+  const currentUser = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY.user));
   const handleSubmit = () => {
-    if (!value || !rating) {
-      return;
-    }
-    const newComment = {
-      author: 'Anonymous',
-      content: value,
-      datetime: moment().fromNow(),
-      rating: rating
-    };
-    setComments([...comments, newComment]);
-    setValue('');
-    setRating(0);
+    if (!value) return;
+
+    setSubmitting(true);
+
+    setValue("");
+    setComments([
+      ...comments,
+      {
+        author: currentUser.fullname,
+        avatar: "",
+        content: value,
+        datetime: moment().fromNow(),
+      },
+    ]);
+  };
+
+  const handleChange = (e) => {
+    setValue(e.target.value);
   };
 
   return (
     <div>
-      <List
-        className="comment-list"
-        header={`${comments.length} comments`}
-        itemLayout="horizontal"
-        dataSource={comments}
-        renderItem={item => (
-          <li>
-            <Comment
-              author={item.author}
-              content={item.content}
-              datetime={item.datetime}
-              actions={[<Rate disabled value={item.rating} />]}
-            />
-          </li>
-        )}
+       <CommentList comments={comments} />
+      <Comment
+        avatar={<Avatar>{currentUser.fullname[0].toUpperCase()}</Avatar>}
+        content={
+          <Editor
+            onChange={handleChange}
+            onSubmit={handleSubmit}
+            submitting={submitting}
+            value={value}
+          />
+        }
       />
-      <TextArea rows={4} value={value} onChange={handleChange} />
-      <Rate value={rating} onChange={handleRateChange} />
-      <Button onClick={handleSubmit} type="primary">
-        Add Comment
-      </Button>
     </div>
   );
 };
 
-export default CommentCpn
+export default CommentCpn;
