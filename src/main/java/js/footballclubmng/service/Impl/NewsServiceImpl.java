@@ -1,10 +1,12 @@
 package js.footballclubmng.service.Impl;
 
+import js.footballclubmng.entity.ImagesNews;
 import js.footballclubmng.entity.NewsType;
 import js.footballclubmng.model.request.CreateNewsRequest;
 import js.footballclubmng.model.response.ListNewsResponse;
 import js.footballclubmng.entity.News;
 import js.footballclubmng.model.response.ListNewsTypeResponse;
+import js.footballclubmng.repository.ImagesNewsRepository;
 import js.footballclubmng.repository.NewsRepository;
 import js.footballclubmng.repository.NewsTypeRepository;
 import js.footballclubmng.service.NewsService;
@@ -23,6 +25,8 @@ public class NewsServiceImpl implements NewsService {
     NewsRepository newsRepository;
     @Autowired
     NewsTypeRepository newsTypeRepository;
+    @Autowired
+    ImagesNewsRepository imagesNewsRepository;
 
     @Override
     public News getNewsById(long id) {
@@ -54,6 +58,14 @@ public class NewsServiceImpl implements NewsService {
             news.setDateCreate(LocalDateTime.now());
             news.setNewsType(newsType);
             newsRepository.save(news);
+            if (createNewsRequest.getImagesNewsList() != null){
+            for (String image : createNewsRequest.getImagesNewsList()){
+                ImagesNews imagesNews = new ImagesNews();
+                imagesNews.setPath(image);
+                imagesNews.setNews(news);
+                imagesNewsRepository.save(imagesNews);
+            }
+            }
             return true;
         } catch (Exception e) {
             return false;
