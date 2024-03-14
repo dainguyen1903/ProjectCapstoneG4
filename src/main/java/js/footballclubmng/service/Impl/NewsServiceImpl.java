@@ -83,6 +83,14 @@ public class NewsServiceImpl implements NewsService {
                 news.setDescription(createNewsRequest.getDescription());
                 news.setNewsType(newsType);
                 newsRepository.save(news);
+                if (createNewsRequest.getImagesNewsList() != null){
+                    for (String image : createNewsRequest.getImagesNewsList()){
+                        ImagesNews imagesNews = new ImagesNews();
+                        imagesNews.setPath(image);
+                        imagesNews.setNews(news);
+                        imagesNewsRepository.save(imagesNews);
+                    }
+                }
                 return true;
             }
         } catch (Exception e) {
