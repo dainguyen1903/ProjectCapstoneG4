@@ -21,9 +21,7 @@ public class NewsController {
     @Autowired
     NewsService newsService;
 
-
     @GetMapping(CommonConstant.NEWS_API.LIST_NEWS)
-    @PreAuthorize("hasRole('ROLE_Operator')")
     public ResponseAPI<List<ListNewsResponse>> newsList() {
         List<ListNewsResponse> newsList = newsService.findAllNews();
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK,null, newsList);

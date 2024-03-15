@@ -44,8 +44,10 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<News> searchNews(String search) {
-        List<News> newsList = newsRepository.searchNews(search);
-        return newsList;
+            if (search == null || search.isEmpty()) {
+                return newsRepository.findAll();
+            }
+            return newsRepository.searchNews(search);
     }
 
     @Override
