@@ -1,9 +1,10 @@
 package js.footballclubmng.entity;
 
-import lombok.*;
-
-import javax.persistence.*;
 import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
+import javax.persistence.*;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -26,6 +27,4 @@ public class Order {
     @OneToOne
     @JoinColumn(name = "product_id")
     private Product productId;
-
-
 }

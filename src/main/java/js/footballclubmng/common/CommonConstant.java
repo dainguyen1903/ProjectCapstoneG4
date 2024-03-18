@@ -97,7 +97,14 @@ public class CommonConstant {
         public static final String UPDATE_NEWS_SUCCESS = "Cập nhật tin tức thành công";
         public static final String DELETE_NEWS_FAIL = "Xóa tin tức thất bại";
         public static final String DELETE_NEWS_SUCCESS = "Xóa tin tức thành công";
-
+        public static final String NOT_FOUND_CATEGORY = "Không tìm thấy danh mục";
+        public static final String NOT_FOUND_NEWS_TYPE = "Không tìm thấy loại tin tức";
+        public static final String EXIST_NEWS_TYPE = "Loại tin tức đã tồn tại";
+        public static final String CREATE_NEWS_TYPE_FAIL = "Tạo loại tin tức thất bại";
+        public static final String CREATE_NEWS_TYPE_SUCCESS = "Tạo loại tin tức thành công";
+        public static final String CATEGORY_EXIST = "Danh mục đã tồn tại";
+        public static final String UPDATE_NEWS_TYPE_FAIL = "Cập nhật loại tin tức thất bại";
+        public static final String UPDATE_NEWS_TYPE_SUCCESS = "Cập nhật loại tin tức thành công";
     }
 
 
@@ -150,6 +157,12 @@ public class CommonConstant {
         public static final String CREATE_NEWS = HEAD_API + NEWS + "/create-news";
         public static final String UPDATE_NEWS = HEAD_API + NEWS + "/update-news/{id}";
         public static final String DELETE_NEWS = HEAD_API + NEWS + "/delete-news/{id}";
+        public static final String LIST_NEWS_TYPE = HEAD_API + NEWS + "/list-news-type";
+        public static final String DETAIL_NEWS_TYPE = HEAD_API + NEWS + "/detail-news-type/{id}";
+        public static final String CREATE_NEWS_TYPE = HEAD_API + NEWS + "/create-news-type";
+        public static final String UPDATE_NEWS_TYPE = HEAD_API + NEWS + "/update-news-type/{id}";
+        public static final String LIST_TOP4_NEWS = HEAD_API + NEWS + "/list-top4-news";
+        public static final String SEARCH_NEWS_TYPE = HEAD_API + NEWS + "/search-news-type";
     }
 
     public static class CATEGORY_API {
@@ -157,6 +170,7 @@ public class CommonConstant {
         public static final String LIST_CATEGORY = HEAD_API + CATEGORY + "/list-category";
         public static final String CREATE_CATEGORY = HEAD_API + CATEGORY + "/create-category";
         public static final String UPDATE_CATEGORY = HEAD_API + CATEGORY + "/update-category/{id}";
+        public static final String SEARCH_CATEGORY = HEAD_API + CATEGORY + "/search-category";
     }
 
     public static class PRODUCT_API {

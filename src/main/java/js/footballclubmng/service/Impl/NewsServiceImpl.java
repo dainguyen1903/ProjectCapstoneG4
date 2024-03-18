@@ -1,9 +1,12 @@
 package js.footballclubmng.service.Impl;
 
+import js.footballclubmng.entity.ImagesNews;
 import js.footballclubmng.entity.NewsType;
 import js.footballclubmng.model.request.CreateNewsRequest;
 import js.footballclubmng.model.response.ListNewsResponse;
 import js.footballclubmng.entity.News;
+import js.footballclubmng.model.response.ListNewsTypeResponse;
+import js.footballclubmng.repository.ImagesNewsRepository;
 import js.footballclubmng.repository.NewsRepository;
 import js.footballclubmng.repository.NewsTypeRepository;
 import js.footballclubmng.service.NewsService;
@@ -22,6 +25,8 @@ public class NewsServiceImpl implements NewsService {
     NewsRepository newsRepository;
     @Autowired
     NewsTypeRepository newsTypeRepository;
+    @Autowired
+    ImagesNewsRepository imagesNewsRepository;
 
     @Override
     public News getNewsById(long id) {
@@ -39,8 +44,10 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<News> searchNews(String search) {
-        List<News> newsList = newsRepository.searchNews(search);
-        return newsList;
+            if (search == null || search.isEmpty()) {
+                return newsRepository.findAll();
+            }
+            return newsRepository.searchNews(search);
     }
 
     @Override
@@ -53,6 +60,14 @@ public class NewsServiceImpl implements NewsService {
             news.setDateCreate(LocalDateTime.now());
             news.setNewsType(newsType);
             newsRepository.save(news);
+            if (createNewsRequest.getImagesNewsList() != null){
+            for (String image : createNewsRequest.getImagesNewsList()){
+                ImagesNews imagesNews = new ImagesNews();
+                imagesNews.setPath(image);
+                imagesNews.setNews(news);
+                imagesNewsRepository.save(imagesNews);
+            }
+            }
             return true;
         } catch (Exception e) {
             return false;
@@ -70,6 +85,14 @@ public class NewsServiceImpl implements NewsService {
                 news.setDescription(createNewsRequest.getDescription());
                 news.setNewsType(newsType);
                 newsRepository.save(news);
+                if (createNewsRequest.getImagesNewsList() != null){
+                    for (String image : createNewsRequest.getImagesNewsList()){
+                        ImagesNews imagesNews = new ImagesNews();
+                        imagesNews.setPath(image);
+                        imagesNews.setNews(news);
+                        imagesNewsRepository.save(imagesNews);
+                    }
+                }
                 return true;
             }
         } catch (Exception e) {
@@ -88,6 +111,92 @@ public class NewsServiceImpl implements NewsService {
         }
     }
 
+    @Override
+    public List<ListNewsTypeResponse> findAllNewsType() {
+        try {
+            List<NewsType> newsTypeList = newsTypeRepository.findAll();
+            return newsTypeList.stream()
+                    .map((newsType) -> mapToNewsTypeDto(newsType))
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public NewsType getNewsTypeById(long id) {
+        try {
+            NewsType newsType = newsTypeRepository.findById(id).orElse(null);
+            return newsType;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public boolean createNewsType(NewsType newsType) {
+        try {
+            NewsType newsType1 = new NewsType();
+            newsType1.setName(newsType.getName());
+            newsType1.setDescription(newsType.getDescription());
+            newsTypeRepository.save(newsType1);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean updateNewsType(long id, NewsType newsType) {
+        try {
+            NewsType newsType1 = newsTypeRepository.findById(id).orElse(null);
+            if (newsType1 != null) {
+                newsType1.setName(newsType.getName());
+                newsType1.setDescription(newsType.getDescription());
+                newsTypeRepository.save(newsType1);
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean deleteNewsType(long id) {
+        return false;
+    }
+
+    @Override
+    public List<News> findTop4News() {
+        try {
+            List<News> newsList = newsRepository.findTop4ByOrderByDateCreateDesc();
+            return newsList;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public NewsType getNewsTypeByName(String name) {
+        try {
+            NewsType newsType = newsTypeRepository.findByName(name);
+            return newsType;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<NewsType> searchNewsType(String search) {
+        try {
+            List<NewsType> newsTypeList = newsTypeRepository.findByNameContaining(search);
+            return newsTypeList;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 
     private ListNewsResponse mapToNewsDto(News news) {
         ListNewsResponse listNewsResponse = new ListNewsResponse();
@@ -95,6 +204,13 @@ public class NewsServiceImpl implements NewsService {
         listNewsResponse.setTitle(news.getTitle());
         listNewsResponse.setDateCreate(news.getDateCreate());
         return listNewsResponse;
+    }
+
+    private ListNewsTypeResponse mapToNewsTypeDto(NewsType newsType) {
+        ListNewsTypeResponse listNewsTypeResponse = new ListNewsTypeResponse();
+        listNewsTypeResponse.setId(newsType.getId());
+        listNewsTypeResponse.setName(newsType.getName());
+        return listNewsTypeResponse;
     }
 
 
