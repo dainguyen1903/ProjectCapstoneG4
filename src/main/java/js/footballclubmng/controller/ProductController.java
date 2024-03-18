@@ -1,6 +1,7 @@
 package js.footballclubmng.controller;
 
 import js.footballclubmng.common.CommonConstant;
+import js.footballclubmng.entity.News;
 import js.footballclubmng.entity.Player;
 import js.footballclubmng.entity.Product;
 import js.footballclubmng.model.request.CreateNewsRequest;
@@ -54,7 +55,7 @@ public class ProductController {
 
     @DeleteMapping(CommonConstant.PRODUCT_API.DELETE_PRODUCT)
     @PreAuthorize("hasRole('ROLE_Sale')")
-    public ResponseAPI<Object> deletePlayer(@PathVariable int id) {
+    public ResponseAPI<Object> deleteProduct(@PathVariable int id) {
         Product productEntity = productService.getProductById(id);
         if (productEntity == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.NOT_FOUND_PRODUCT);
@@ -64,6 +65,15 @@ public class ProductController {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.DELETE_PRODUCT_FAIL);
         }
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.DELETE_PRODUCT_SUCCESS);
+    }
+
+    @GetMapping(CommonConstant.PRODUCT_API.DETAILS_PRODUCT)
+    public ResponseAPI<Object> productDetail(@PathVariable int id) {
+        Product product = productService.getProductById(id);
+        if (product == null) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.NOT_FOUND_PRODUCT);
+        }
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, product);
     }
 
 
