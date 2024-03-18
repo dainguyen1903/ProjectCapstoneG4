@@ -1,8 +1,8 @@
 package js.footballclubmng.entity;
 
+import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-
 import javax.persistence.*;
 import java.util.Date;
 
@@ -16,17 +16,15 @@ public class Order {
     @Id
     @Column(name = "order_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
+
     @Column(name = "total_price")
-    private Float total;
+    private float totalPrice;
+
     @Column(name = "order_date")
-    private Date orderDate;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
-    @JsonIgnore
-    private User user;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "shipping_id")
-    @JsonIgnore
-    private Shipping shipping;
+    private LocalDateTime orderDate;
+
+    @OneToOne
+    @JoinColumn(name = "product_id")
+    private Product productId;
 }

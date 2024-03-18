@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByEmail(String email) {
         try {
-            User result = userRepository.findByEmailAndDeleteFlg(email, "0");
+            User result = userRepository.findByEmailAndIsActiveAndDeleteFlg(email, true, "0");
             if (result == null || null == result.getEmail()) {
                 return null;
             } else {

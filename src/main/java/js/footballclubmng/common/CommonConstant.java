@@ -40,11 +40,13 @@ public class CommonConstant {
         public static String OK = "OK";
         public static String USER_NOT_LOGIN = "USER_NOT_LOGIN";
         public static String USER_NOT_LOGIN_OR_QUALIFIED = "USER NOT QUALIFIED TO STAMP";
-        public static String PASSWORD_INCORRECT = "USERNAME_OR_PASSWORD_INCORRECT";
-        public static String INVALID_PARAMETER = "INVALID_DATA";
+        public static String PASSWORD_INCORRECT = "Tài khoản hoặc mật khẩu không chính xác";
+        public static String INVALID_PARAMETER = "Tài khoảng hoặc mật khẩu không được trống";
         public static String EXIST_USERNAME = "USERNAME_EXIST";
         public static String EXIST_KEY = "KEY_EXIST";
+
         public static String EXIST_TOKEN = "TOKEN_IS_EXIST";
+
         public static String EMPTY = "EMPTY";
         public static String EXCEPTION = "EXCEPTION";
         public static String EXIST_EMAIL = "Email đã tồn tại";
@@ -77,6 +79,18 @@ public class CommonConstant {
         public static final String CREATE_CATEGORY_SUCCESS = "Thêm danh mục thành công";
         public static final String UPDATE_CATEGORY_FAIL = "Cập nhật danh mục thất bại";
         public static final String UPDATE_CATEGORY_SUCCESS = "Cập nhật danh mục thành công";
+
+        //Message product
+        public static final String CREATE_PRODUCT_SUCCESS = "Thêm sản phẩm thành công";
+        public static final String CREATE_PRODUCT_FAIL = "Thêm sản phẩm thất bại";
+        public static String NOT_FOUND_PRODUCT = "Không tìm thấy sản phẩm";
+        public static final String UPDATE_PRODUCT_SUCCESS = "Cập nhật sản phẩm thành công";
+        public static final String UPDATE_PRODUCT_FAIL = "Cập nhật sản phẩm thất bại";
+        public static final String DELETE_PRODUCT_SUCCESS = "Xóa sản phẩm thành công";
+        public static final String DELETE_PRODUCT_FAIL = "Xóa sản phẩm thất bại";
+
+
+
         public static final String CREATE_NEWS_FAIL = "Tạo tin tức thất bại";
         public static final String CREATE_NEWS_SUCCESS = "Tạo tin tức thành công";
         public static final String UPDATE_NEWS_FAIL = "Cập nhật tin tức thất bại";
@@ -92,6 +106,7 @@ public class CommonConstant {
         public static final String UPDATE_NEWS_TYPE_FAIL = "Cập nhật loại tin tức thất bại";
         public static final String UPDATE_NEWS_TYPE_SUCCESS = "Cập nhật loại tin tức thành công";
     }
+
 
     public static class USER_API {
 
@@ -120,6 +135,8 @@ public class CommonConstant {
 
         public static final String PROFILE_USER = HEAD_API + USER + "/profile-user";
         public static final String UPDATE_PROFILE = HEAD_API + USER + "/update-profile-user";
+
+
     }
 
     public static class PLAYER_API {
@@ -154,6 +171,28 @@ public class CommonConstant {
         public static final String CREATE_CATEGORY = HEAD_API + CATEGORY + "/create-category";
         public static final String UPDATE_CATEGORY = HEAD_API + CATEGORY + "/update-category/{id}";
         public static final String SEARCH_CATEGORY = HEAD_API + CATEGORY + "/search-category";
+    }
+
+    public static class PRODUCT_API {
+        public static final String PRODUCT = "/product";
+
+        public static final String LIST_PRODUCT = HEAD_API + PRODUCT + "/list-product";
+
+        public static final String CREATE_PRODUCT = HEAD_API + PRODUCT + "/create-product";
+
+        public static final String UPDATE_PRODUCT = HEAD_API + PRODUCT + "/update-product/{id}";
+
+        public static final String DELETE_PRODUCT = HEAD_API + PRODUCT + "/delete-product/{id}";
+
+        public static final String DETAILS_PRODUCT = HEAD_API + PRODUCT + "/details-product";
+    }
+
+    public static class ORDER_API {
+
+        public static final String ORDER = "/order";
+
+        public static final String LIST_ORDER = HEAD_API + ORDER + "/list-order";
+
     }
 
 

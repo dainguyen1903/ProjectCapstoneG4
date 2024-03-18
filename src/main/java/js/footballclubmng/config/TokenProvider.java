@@ -11,13 +11,14 @@ import java.util.Date;
 public class TokenProvider {
     private static final Logger logger =  LoggerFactory.getLogger(TokenProvider.class);
 
+    // Đoạn JWT_SECRET này là bí mật, chỉ có phía server biết
     private final String JWT_SECRET = "SWPSEMISTER9KJASHFKJHDKSHFDLKASHFLKASWPSEMISTER9KJASHFKJHDKSHFDLKASHFLKASWPSEMISTER9KJASHFKJHDKSHFDLKASHFLKA";
 
+    //Thời gian có hiệu lực của chuỗi jwt
     private final long JWT_EXPIRATION = 12 * 60 * 60 * 1000L;
 
-
+    // Tạo ra jwt từ thông tin user
     public String generateJwtToken(String username) {
-
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION);
         return Jwts.builder()
