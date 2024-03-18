@@ -3,10 +3,8 @@ package js.footballclubmng.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.*;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
-import java.nio.file.Path;
 
 @Getter
 @Setter
@@ -29,7 +27,7 @@ public class Images {
     @Column(name = "image_type", nullable = false)
     private String imageType;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "news_id")
     @JsonIgnore
     private News news;

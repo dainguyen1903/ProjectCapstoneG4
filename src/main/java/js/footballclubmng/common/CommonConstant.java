@@ -40,11 +40,13 @@ public class CommonConstant {
         public static String OK = "OK";
         public static String USER_NOT_LOGIN = "USER_NOT_LOGIN";
         public static String USER_NOT_LOGIN_OR_QUALIFIED = "USER NOT QUALIFIED TO STAMP";
-        public static String PASSWORD_INCORRECT = "USERNAME_OR_PASSWORD_INCORRECT";
-        public static String INVALID_PARAMETER = "INVALID_DATA";
+        public static String PASSWORD_INCORRECT = "Tài khoản hoặc mật khẩu không chính xác";
+        public static String INVALID_PARAMETER = "Tài khoảng hoặc mật khẩu không được trống";
         public static String EXIST_USERNAME = "USERNAME_EXIST";
         public static String EXIST_KEY = "KEY_EXIST";
+
         public static String EXIST_TOKEN = "TOKEN_IS_EXIST";
+
         public static String EMPTY = "EMPTY";
         public static String EXCEPTION = "EXCEPTION";
         public static String EXIST_EMAIL = "Email đã tồn tại";
@@ -67,7 +69,37 @@ public class CommonConstant {
         public static String UPDATE_PROFILE_SUCCESS = "Cập nhật thông tin cá nhân thành công";
         public static String UPDATE_PROFILE_FAIL = "Cập nhật thông tin cá nhân thất bại";
         public static String EMPTY_TOKEN = "Đăng nhập để thực hiện chức năng này";
+        public static String CREATE_PLAYER_SUCCESS = "Tạo cầu thủ thành công";
+        public static String CREATE_PLAYER_FAIL = "Tạo cầu thủ thất bại";
+        public static final String UPDATE_PLAYER_SUCCESS = "Cập nhật cầu thủ thành công" ;
+        public static final String UPDATE_PLAYER_FAIL = "Cập nhật cầu thủ thất bại";
+        public static final String DELETE_PLAYER_SUCCESS = "Xóa cầu thủ thành công";
+        public static final String DELETE_PLAYER_FAIL = "Xóa cầu thủ thất bại";
+        public static final String CREATE_CATEGORY_FAIL = "Thêm danh mục thất bại";
+        public static final String CREATE_CATEGORY_SUCCESS = "Thêm danh mục thành công";
+        public static final String UPDATE_CATEGORY_FAIL = "Cập nhật danh mục thất bại";
+        public static final String UPDATE_CATEGORY_SUCCESS = "Cập nhật danh mục thành công";
+
+        //Message product
+        public static final String CREATE_PRODUCT_SUCCESS = "Thêm sản phẩm thành công";
+        public static final String CREATE_PRODUCT_FAIL = "Thêm sản phẩm thất bại";
+        public static String NOT_FOUND_PRODUCT = "Không tìm thấy sản phẩm";
+        public static final String UPDATE_PRODUCT_SUCCESS = "Cập nhật sản phẩm thành công";
+        public static final String UPDATE_PRODUCT_FAIL = "Cập nhật sản phẩm thất bại";
+        public static final String DELETE_PRODUCT_SUCCESS = "Xóa sản phẩm thành công";
+        public static final String DELETE_PRODUCT_FAIL = "Xóa sản phẩm thất bại";
+
+
+
+        public static final String CREATE_NEWS_FAIL = "Tạo tin tức thất bại";
+        public static final String CREATE_NEWS_SUCCESS = "Tạo tin tức thành công";
+        public static final String UPDATE_NEWS_FAIL = "Cập nhật tin tức thất bại";
+        public static final String UPDATE_NEWS_SUCCESS = "Cập nhật tin tức thành công";
+        public static final String DELETE_NEWS_FAIL = "Xóa tin tức thất bại";
+        public static final String DELETE_NEWS_SUCCESS = "Xóa tin tức thành công";
+
     }
+
 
     public static class USER_API {
 
@@ -96,19 +128,56 @@ public class CommonConstant {
 
         public static final String PROFILE_USER = HEAD_API + USER + "/profile-user";
         public static final String UPDATE_PROFILE = HEAD_API + USER + "/update-profile-user";
+
+
     }
 
     public static class PLAYER_API {
         public static final String PLAYER = "/player";
         public static final String LIST_PLAYER = HEAD_API + PLAYER + "/list-player";
         public static final String DETAIL_PLAYER = HEAD_API + PLAYER + "/detail-player/{id}";
-
+        public static final String CREATE_PLAYER = HEAD_API + PLAYER + "/create-player";
+        public static final String UPDATE_PLAYER = HEAD_API + PLAYER + "/update-player/{id}";
+        public static final String DELETE_PLAYER = HEAD_API + PLAYER + "/delete-player/{id}";
+        public static final String SEARCH_PLAYER = HEAD_API + PLAYER + "/search-player";
     }
 
     public static class NEWS_API {
         public static final String NEWS = "/news";
         public static final String LIST_NEWS = HEAD_API + NEWS + "/list-news";
         public static final String DETAIL_NEWS = HEAD_API + NEWS + "/news-detail/{id}";
+        public static final String SEARCH_NEWS = HEAD_API + NEWS + "/search-news";
+        public static final String CREATE_NEWS = HEAD_API + NEWS + "/create-news";
+        public static final String UPDATE_NEWS = HEAD_API + NEWS + "/update-news/{id}";
+        public static final String DELETE_NEWS = HEAD_API + NEWS + "/delete-news/{id}";
+    }
+
+    public static class CATEGORY_API {
+        public static final String CATEGORY = "/category";
+        public static final String LIST_CATEGORY = HEAD_API + CATEGORY + "/list-category";
+        public static final String CREATE_CATEGORY = HEAD_API + CATEGORY + "/create-category";
+        public static final String UPDATE_CATEGORY = HEAD_API + CATEGORY + "/update-category/{id}";
+    }
+
+    public static class PRODUCT_API {
+        public static final String PRODUCT = "/product";
+
+        public static final String LIST_PRODUCT = HEAD_API + PRODUCT + "/list-product";
+
+        public static final String CREATE_PRODUCT = HEAD_API + PRODUCT + "/create-product";
+
+        public static final String UPDATE_PRODUCT = HEAD_API + PRODUCT + "/update-product/{id}";
+
+        public static final String DELETE_PRODUCT = HEAD_API + PRODUCT + "/delete-product/{id}";
+
+        public static final String DETAILS_PRODUCT = HEAD_API + PRODUCT + "/details-product";
+    }
+
+    public static class ORDER_API {
+
+        public static final String ORDER = "/order";
+
+        public static final String LIST_ORDER = HEAD_API + ORDER + "/list-order";
 
     }
 

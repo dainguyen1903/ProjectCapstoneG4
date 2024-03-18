@@ -17,9 +17,9 @@ public class PlayerServiceImpl implements PlayerService {
     private PlayerRepository playerRepository;
 
     @Override
-    public Optional<Player> getPlayerById(long id) {
+    public Player getPlayerById(long id) {
         try {
-            Optional<Player> p = playerRepository.findById(id);
+            Player p = playerRepository.findById(id).orElse(null);
             return p;
         } catch (Exception e) {
             return null;
@@ -45,6 +45,7 @@ public class PlayerServiceImpl implements PlayerService {
             p.setPosition(player.getPosition());
             p.setBio(player.getBio());
             p.setJoinDate(player.getJoinDate());
+            p.setNumberPlayer(player.getNumberPlayer());
             playerRepository.save(p);
             return true;
         } catch (Exception e) {
@@ -53,15 +54,44 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public boolean updatePlayer(long id) {
-
-        return false;
+    public boolean updatePlayer(long id, Player player) {
+        try {
+            Player p = playerRepository.findById(id).orElse(null);
+            if (p != null) {
+                p.setName(player.getName());
+                p.setDateOfBirth(player.getDateOfBirth());
+                p.setHeight(player.getHeight());
+                p.setWeight(player.getWeight());
+                p.setNationality(player.getNationality());
+                p.setImageUrl(player.getImageUrl());
+                p.setPosition(player.getPosition());
+                p.setBio(player.getBio());
+                p.setJoinDate(player.getJoinDate());
+                p.setNumberPlayer(player.getNumberPlayer());
+                playerRepository.save(p);
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
     public boolean deletePlayer(long id) {
-        return false;
+        try {
+            playerRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
+
+    @Override
+    public List<Player> searchPlayer(String search) {
+        return playerRepository.searchPlayer(search);
+    }
+
 
     private ListPlayerResponse mapToPlayerDto(Player player) {
         ListPlayerResponse listPlayerResponse = new ListPlayerResponse();

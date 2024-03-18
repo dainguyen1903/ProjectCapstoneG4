@@ -35,8 +35,13 @@ public class News {
     @Column(name = "date_create", nullable = false)
     private LocalDateTime dateCreate;
 
-//    @OneToMany(mappedBy = "news")
-//    private List<Images> imagesList;
+    @OneToMany(mappedBy = "news",fetch = FetchType.EAGER)
+    private List<Images> imagesList;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "news_type_id")
+    @JsonIgnore
+    private NewsType newsType;
 //
 //    @OneToMany(mappedBy = "news")
 //    private List<NewsComment> newsCommentList;
