@@ -3,6 +3,7 @@ package js.footballclubmng.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -37,6 +38,9 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category categoryId;
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    private List<ImagesProduct> imagesProductList;
 
 
 

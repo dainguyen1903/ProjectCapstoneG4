@@ -76,5 +76,14 @@ public class ProductController {
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, product);
     }
 
+    @GetMapping(CommonConstant.PRODUCT_API.SEARCH_PRODUCT)
+    public ResponseAPI<Object> searchProduct(@RequestParam("query") String search) {
+        List<Product> productList = productService.searchProduct(search);
+        if(productList.isEmpty()) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.NOT_FOUND_PRODUCT);
+        }
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, productList);
+    }
+
 
 }

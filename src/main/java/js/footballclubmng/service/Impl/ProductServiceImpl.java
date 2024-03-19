@@ -1,11 +1,9 @@
 package js.footballclubmng.service.Impl;
 
-import js.footballclubmng.entity.Category;
-import js.footballclubmng.entity.News;
-import js.footballclubmng.entity.NewsType;
-import js.footballclubmng.entity.Product;
+import js.footballclubmng.entity.*;
 import js.footballclubmng.model.request.CreateProductRequest;
 import js.footballclubmng.repository.CategoryRepository;
+import js.footballclubmng.repository.ImagesProductRepository;
 import js.footballclubmng.repository.ProductRepository;
 import js.footballclubmng.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +19,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private ImagesProductRepository imagesProductRepository;
 
 
     public List<Product> getAllProduct() {
@@ -39,7 +40,6 @@ public class ProductServiceImpl implements ProductService {
     public boolean createProduct(CreateProductRequest createProductRequest) {
         try {
             Category category = categoryRepository.findByName(createProductRequest.getCategoryName());
-
             Product productEntity = new Product();
             productEntity.setProductName(createProductRequest.getProductName());
             productEntity.setPrice(createProductRequest.getPrice());
@@ -49,8 +49,15 @@ public class ProductServiceImpl implements ProductService {
             productEntity.setQuantity(createProductRequest.getQuantity());
             productEntity.setCategoryId(category);
             productRepository.save(productEntity);
+            if(createProductRequest.getImagesProductList() != null) {
+                for(String image : createProductRequest.getImagesProductList()) {
+                    ImagesProduct imagesProduct = new ImagesProduct();
+                    imagesProduct.setPath(image);
+                    imagesProduct.setProduct(productEntity);
+                    imagesProductRepository.save(imagesProduct);
+                }
+            }
             return true;
-
         } catch (Exception e) {
             return false;
         }
@@ -88,6 +95,10 @@ public class ProductServiceImpl implements ProductService {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public List<Product> searchProduct(String search) {
+        return productRepository.searchProductByName(search);
     }
 
 
