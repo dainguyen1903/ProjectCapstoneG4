@@ -1,23 +1,55 @@
-import React, { useEffect, useState } from "react";
-import { Form, Input, Button, DatePicker, Select, Modal } from "antd";
-import { FileImageOutlined } from "@ant-design/icons";
-import { useNavigate, useParams } from "react-router";
-import useNewsStore from "../../zustand/newsStore";
-import LoadingFull from "../../component/loading/loadingFull";
-const { Option } = Select;
+import { Form, Input, Modal, Select,Button } from "antd";
+import React, { useEffect, useState ,useRef} from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import useNewsCategoryStore from "../../zustand/newsCategoryStore";
+import { useNavigate, useParams } from "react-router";
 import { newsApi } from "../../api/news.api";
+import LoadingFull from "../../component/loading/loadingFull";
+const { Option } = Select;
+const modules = {
+  toolbar: [
+    [{ header: "1" }, { header: "2" }, { font: [] }],
+    [{ size: [] }],
+    ["bold", "italic", "underline", "strike", "blockquote"],
+    [
+      { list: "ordered" },
+      { list: "bullet" },
+      { indent: "-1" },
+      { indent: "+1" },
+    ],
+    ["link", "image", "video"],
+    ["clean"],
+  ],
+  clipboard: {
+    matchVisual: false,
+  },
+};
+const formats = [
+  "header",
+  "font",
+  "size",
+  "bold",
+  "italic",
+  "underline",
+  "strike",
+  "blockquote",
+  "list",
+  "bullet",
+  "indent",
+  "link",
+  "image",
+  "video",
+];
+
 const AddNewsForm = () => {
   const [form] = Form.useForm();
   const { id } = useParams();
-  const addNews = useNewsStore((state) => state.addNews);
-  const news = useNewsStore((state) => state.news);
-  const updateNews = useNewsStore((state) => state.updateNews);
   const [loading, setLoading] = useState(false);
   const [value, setValue] = useState("");
   const [listTypeNews, setListTypeNews] = useState([]);
+  const [url, setUrl] = useState(null);
+  const [imageName, setImageName] = useState("");
+  const fileRef = useRef();
   const navigate = useNavigate();
   // Confirm save
   const confirmSave = ({ title, typeNews }) => {
@@ -25,6 +57,7 @@ const AddNewsForm = () => {
       title,
       newsType: typeNews,
       description: value,
+      imagesNewsList:[url]
     };
     Modal.confirm({
       title: "Xác nhận",
@@ -51,6 +84,7 @@ const AddNewsForm = () => {
     if (res.data.status === 200) {
       const newsDetail = res.data.data;
       setValue(newsDetail.description);
+      setUrl(newsDetail.imagesNewsList[0]?.path)
       form.setFieldsValue(newsDetail);
     }
     setLoading(false);
@@ -65,6 +99,15 @@ const AddNewsForm = () => {
       }));
       setListTypeNews(listOptionType);
     }
+  };
+  const handleChangeFile = (e) => {
+    let file = e.target.files[0];
+    let reader = new FileReader();
+    reader.onloadend = function () {
+      setImageName(file.name);
+      setUrl(reader.result);
+    };
+    reader.readAsDataURL(file);
   };
   useEffect(() => {
     getListNewType();
@@ -89,6 +132,7 @@ const AddNewsForm = () => {
         layout="vertical"
       >
         <Form.Item
+     
           label={
             <span
               style={{
@@ -112,6 +156,7 @@ const AddNewsForm = () => {
             <span
               style={{
                 fontWeight: "bold",
+                marginBottom:-5
               }}
             >
               Tiêu đề
@@ -122,9 +167,42 @@ const AddNewsForm = () => {
             { required: true, message: "Vui lòng nhập tên tiêu đề bài viết!" },
           ]}
         >
-          <Input placeholder="Tên tiêu đề" className="Input" />
+          <Input  placeholder="Tên tiêu đề" className="Input" />
         </Form.Item>
-
+        <Form.Item  name="imageUrl">
+          <Button
+            onClick={() => fileRef.current.click()}
+            style={{
+            
+              marginRight: 10,
+            }}
+          >
+            Thêm Ảnh Tiêu đề
+          </Button>{" "}
+          <div>
+            {url && <img style={{
+              width:70,
+              height:70,
+              objectFit:"contain"
+            }} src={url} />}
+          </div>
+          <div
+            className="flex-start"
+            style={{
+              alignItems: "center",
+            }}
+          ></div>
+          <input
+            style={{
+              display: "none",
+            }}
+            ref={fileRef}
+            onChange={handleChangeFile}
+            placeholder="Ảnh"
+            type="file"
+            className="Input"
+          />
+        </Form.Item>
         <Form.Item
           rules={[{ required: true, message: "Vui lòng nhập mô tả bài viết!" }]}
           label={
@@ -139,12 +217,14 @@ const AddNewsForm = () => {
         >
           <ReactQuill
             style={{
-              marginBottom: 60,
+              marginBottom: 80,
               height: 400,
             }}
             theme="snow"
             value={value}
             onChange={setValue}
+            modules={modules}
+            formats={formats}
           />
         </Form.Item>
 
