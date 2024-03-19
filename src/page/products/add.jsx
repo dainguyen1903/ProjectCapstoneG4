@@ -1,14 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Form, Input, Button, DatePicker, Select, Modal } from "antd";
-import { FileImageOutlined } from "@ant-design/icons";
-import { useLocation, useParams } from "react-router";
-import "./../login/login.css";
-import useUserStore from "../../zustand/userStore";
+import { Button, Form, Input, Modal, Select } from "antd";
 import moment from "moment";
+import React, { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router";
+import { productApi } from "../../api/product.api";
 import LoadingFull from "../../component/loading/loadingFull";
-import useAuthStore from "../../zustand/authStore";
-import useCategoryStore from "../../zustand/productCategoryStore";
 import useProductStore from "../../zustand/productStore";
+import useUserStore from "../../zustand/userStore";
+import { categoryApi } from "../../api/category.api";
+import "./../login/login.css";
+import { showMessErr } from "../../ultis/helper";
 const { Option } = Select;
 
 const AddProduct = () => {
@@ -24,67 +24,72 @@ const AddProduct = () => {
   const [loading, setLoading] = useState(false);
   const users = useUserStore((state) => state.users);
   const products = useProductStore((state) => state.products);
-  let detail =  products.find((i) => i.id == id) || {};
-  const categories = useCategoryStore((state) => state.categories);
+  let detail = products.find((i) => i.id == id) || {};
   const addProduct = useProductStore((state) => state.addProduct);
   const updateProduct = useProductStore((state) => state.updateProduct);
+  const navigate = useNavigate();
+  const [categories, setCategories] = useState([]);
   // Confirm save
   const confirmSave = (value) => {
     Modal.confirm({
       title: "Xác nhận",
       content: !id ? "Thêm sản phẩm" : "Cập nhật sản phẩm",
-      onOk: () => {
+      onOk: async () => {
         const dataPosst = JSON.parse(JSON.stringify(value));
-        const category = categories.find(i => i.id == dataPosst.category_id);
-        dataPosst.image_name = imageName;
-        dataPosst.image_url = url;
-        dataPosst.category_name = category ? category.name : "";
-        setTimeout(() => {
-          if (id) {
-            updateProduct(id, dataPosst, isEditProfile);
-          } else {
-            addProduct(dataPosst);
-          }
+        // dataPosst.image_name = imageName;
+        // dataPosst.image_url = url;
+        // dataPosst.category_name = category ? category.name : "";
+        const res = !id
+          ? await productApi.createrProduct(dataPosst)
+          : await productApi.updateProduct(id, dataPosst);
+        if (res.data.status === 200) {
           Modal.success({
             title: "Thành công",
             content: !id ? "Thêm thành công" : "Cập nhật thành công",
           });
-          if (!id) {
-            form.resetFields();
-          }
-        }, 1000);
+          navigate(-1)
+        } else {
+          showMessErr(res.data);
+        }
       },
     });
   };
   const handleChangeFile = (e) => {
     let file = e.target.files[0];
     let reader = new FileReader();
-    reader.onloadend = function() {
+    reader.onloadend = function () {
       setImageName(file.name);
       setUrl(reader.result);
-    }
+    };
     reader.readAsDataURL(file);
+  };
+
+  const getDetail = async() => {
+    setLoading(true)
+    const res = await productApi.getDetailProduct(id);
+    const data = res.data.data
+    const categoryName = data.categoryId?.name;
+    data.categoryName = categoryName;
+    
+    form.setFieldsValue(data);
+    setLoading(false)
   }
   useEffect(() => {
     if (id) {
-      setLoading(true);
-      new Promise((resolve) => {
-        const dataDetail = JSON.parse(JSON.stringify(detail));
-        const imgName = detail.image_name;
-        setImageName(imgName);
-        dataDetail.date_of_birth = moment(dataDetail.date_of_birth);
-        setUrl(dataDetail.image_url);
-        dataDetail.image_url = imgName;
-        delete dataDetail.image_name;
-        setTimeout(() => {
-          form.setFieldsValue(dataDetail);
-          resolve();
-        }, 1000);
-      }).then(() => {
-        setLoading(false);
-      });
+      getDetail();
+      
     }
   }, [id]);
+
+  // get list category
+  const getListCategory = async () => {
+    const res = await categoryApi.getListCategory();
+    const data = res.data.data;
+    setCategories(data);
+  };
+  useEffect(() => {
+    getListCategory();
+  }, []);
   return (
     <div>
       <h2 style={{ marginBottom: 10 }}>
@@ -97,21 +102,21 @@ const AddProduct = () => {
         layout="vertical"
       >
         <Form.Item
-          name="name"
+          name="productName"
           rules={[{ required: true, message: "Vui lòng nhập tên sản phẩm!" }]}
         >
           <Input placeholder="Tên sản phẩm" className="Input" />
         </Form.Item>
         {
           <Form.Item
-            name="category_id"
+            name="categoryName"
             rules={[
               { required: true, message: "Vui lòng chọn loại sản phẩm!" },
             ]}
           >
             <Select placeholder="Loại sản phẩm" className="Select">
               {categories.map((i) => (
-                <Option value={i.id}>{i.name}</Option>
+                <Option value={i.name}>{i.name}</Option>
               ))}
             </Select>
           </Form.Item>
@@ -142,6 +147,12 @@ const AddProduct = () => {
         <Form.Item name="description">
           <Input placeholder="Mô tả sản phẩm" className="Input" />
         </Form.Item>
+        <Form.Item
+          rules={[{ required: true, message: "Vui lòng nhập số lượng!" }]}
+          name="quantity"
+        >
+          <Input placeholder="Số lượng" className="Input" />
+        </Form.Item>
 
         <Form.Item name="image_url">
           <Button
@@ -156,11 +167,16 @@ const AddProduct = () => {
           </Button>{" "}
           {imageName && <span>{imageName}</span>}
           <div>
-          {url && <img style={{
-            width:60,
-            height:60,
-            objectFit:"contain"
-          }} src={url} />}
+            {url && (
+              <img
+                style={{
+                  width: 60,
+                  height: 60,
+                  objectFit: "contain",
+                }}
+                src={url}
+              />
+            )}
           </div>
           <div
             className="flex-start"
@@ -193,7 +209,7 @@ const AddProduct = () => {
           </button>
         </Form.Item>
       </Form>
-      <img src={""}/>
+      <img src={""} />
       <LoadingFull show={loading} />
     </div>
   );

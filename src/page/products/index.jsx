@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Table, Input, Button, Space, Modal, Form, Row, Col } from "antd";
 import FormItem from "antd/es/form/FormItem";
 import {
@@ -12,6 +12,8 @@ import { Link } from "react-router-dom";
 import useNewsStore from "../../zustand/newsStore";
 import { useForm } from "antd/es/form/Form";
 import useProductStore from "../../zustand/productStore";
+import { productApi } from "../../api/product.api";
+import { showMessErr } from "../../ultis/helper";
 const ProductList = () => {
   const products = useProductStore((state) => state.products);
   const deleteProduct = useProductStore(state => state.deleteProduct)
@@ -20,17 +22,19 @@ const ProductList = () => {
 
   const navigate = useNavigate();
   const [searchText, setSearchText] = useState("");
-  const [product, setproduct] = useState(products);
+  const [product, setproduct] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   // Function to handle search
-  const handleSearch = (value) => {
-    setproduct(
-      products.filter((i) =>
-        i.name.toUpperCase().includes(value.name.toUpperCase())
-      )
-    );
+  const handleSearch = async(value) => {
+   const res  = await productApi.getListProduct();
+   if(res.data.status ===200){
+    setproduct(res.data.data);
+   }
+   else{
+    showMessErr(res.data)
+   }
   };
 
 
@@ -39,37 +43,29 @@ const ProductList = () => {
     Modal.confirm({
       title: "Xác nhận",
       content: "Xóa sản phẩm",
-      onOk: () => {
-        deleteProduct(id);
-        Modal.success({
-          title: "Thành công",
-          content: "Xóa thành công",
-        });
-        const txt = form.getFieldValue("name") || "";
-        setproduct(
-          products
-            .filter((i) => i.name.toUpperCase().includes(txt.toUpperCase()))
-            .filter((i) => i.id != id)
-        );
+      onOk: async() => {
+        const res = await productApi.deleteProduct(id);
+        if(res.data.status === 200){
+          Modal.success({
+            title: "Thành công",
+            content: "Xóa thành công",
+          });
+          handleSearch();
+        }
+        else{
+          showMessErr(res.data)
+        }
       },
     });
   };
-
+useEffect(() => {
+  handleSearch();
+},[])
   const columns = [
-    {
-      title: "Hình ảnh",
-      dataIndex: "img",
-      key: "title",
-      render:(v,re) => re.image_url ? <img style={{
-        width:60,
-        height:60,
-        objectFit:"contain"
-      }} src={re.image_url} /> : <></>
-      
-    },
+    
     {
       title: "Tên sản phẩm",
-      dataIndex: "name",
+      dataIndex: "productName",
       key: "title",
       
     },
@@ -77,6 +73,9 @@ const ProductList = () => {
       title: "Tên loại sản phẩm",
       dataIndex: "category_name",
       key: "title",
+      render:(_,row)=>{
+        return <span>{row?.categoryId?.name}</span>
+      }
      
     },
     {

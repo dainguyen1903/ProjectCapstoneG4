@@ -7,7 +7,6 @@ import useCategoryStore from "../../zustand/productCategoryStore";
 import { categoryApi } from "../../api/category.api";
 const ProductCategoryList = () => {
   const [form] = useForm();
-  const deleteCategory = useCategoryStore((state) => state.deleteCategory);
 
   const navigate = useNavigate();
   const [searchText, setSearchText] = useState("");
