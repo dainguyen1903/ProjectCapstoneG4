@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./HomePage.scss";
 import HeaderSlider from "../../components/Slider/HeaderSlider";
 import { useSelector, useDispatch } from "react-redux";
@@ -19,47 +19,49 @@ import NextMatch from "../../components/Match/NextMatch";
 import LastResult from "../../components/Match/LastResult";
 import { useNavigate } from "react-router-dom";
 import NextMatchPoster from "../../components/Match/NextMatchPoster";
+import { newsApi } from "../../api/news.api";
 
 const HomePage2 = () => {
     const navigate = useNavigate()
-  const listPost = [
-    {
-      img: "https://tse4.mm.bing.net/th?id=OIP.FkuIWzG7F-k-zmTDnITlDwHaEK&pid=Api&P=0&h=220",
-      title: "Chelsea lên ngôi vô địch C1",
-      date: "20 January, 2020",
-      description: "",
-    },
-    {
-      img: "https://tse4.mm.bing.net/th?id=OIP.CHyE-MloW5tIoL4VJczkSwHaEK&pid=Api&P=0&h=220",
-      title: "MU thua 0-7",
-      date: "20 January, 2020",
-      description: "",
-    },
-    {
-      img: "https://tse3.mm.bing.net/th?id=OIP.-bX8OA7F5kbWZsMd6KEioAAAAA&pid=Api&P=0&h=220",
-      title: "Xoay compa",
-      date: "20 January, 2020",
-      description: "",
-    },
-    {
-      img: "https://tse3.mm.bing.net/th?id=OIP.asdNdDiloSzHnaDCdbms1wHaEK&pid=Api&P=0&h=220",
-      title: "Messi phản lưới 2 quả, Barca thua 2-8",
-      date: "20 January, 2020",
-      description: "",
-    },
-    {
-      img: "https://tse4.mm.bing.net/th?id=OIP.WZdtYd5vsBSsQclkmU9ShAHaEK&pid=Api&P=0&h=220",
-      title: "Người hùng chile",
-      date: "20 January, 2020",
-      description: "",
-    },
-    {
-      img: "https://tse1.mm.bing.net/th?id=OIP.3JH4nmx0m9J_RkXtTa4FBgHaFO&pid=Api&P=0&h=220",
-      title: "Cúp trong lòng người hâm mộ ",
-      date: "20 January, 2020",
-      description: "",
-    },
-  ];
+    const [listPost,setListPost] = useState([])
+  // const listPost = [
+  //   {
+  //     img: "https://tse4.mm.bing.net/th?id=OIP.FkuIWzG7F-k-zmTDnITlDwHaEK&pid=Api&P=0&h=220",
+  //     title: "Chelsea lên ngôi vô địch C1",
+  //     date: "20 January, 2020",
+  //     description: "",
+  //   },
+  //   {
+  //     img: "https://tse4.mm.bing.net/th?id=OIP.CHyE-MloW5tIoL4VJczkSwHaEK&pid=Api&P=0&h=220",
+  //     title: "MU thua 0-7",
+  //     date: "20 January, 2020",
+  //     description: "",
+  //   },
+  //   {
+  //     img: "https://tse3.mm.bing.net/th?id=OIP.-bX8OA7F5kbWZsMd6KEioAAAAA&pid=Api&P=0&h=220",
+  //     title: "Xoay compa",
+  //     date: "20 January, 2020",
+  //     description: "",
+  //   },
+  //   {
+  //     img: "https://tse3.mm.bing.net/th?id=OIP.asdNdDiloSzHnaDCdbms1wHaEK&pid=Api&P=0&h=220",
+  //     title: "Messi phản lưới 2 quả, Barca thua 2-8",
+  //     date: "20 January, 2020",
+  //     description: "",
+  //   },
+  //   {
+  //     img: "https://tse4.mm.bing.net/th?id=OIP.WZdtYd5vsBSsQclkmU9ShAHaEK&pid=Api&P=0&h=220",
+  //     title: "Người hùng chile",
+  //     date: "20 January, 2020",
+  //     description: "",
+  //   },
+  //   {
+  //     img: "https://tse1.mm.bing.net/th?id=OIP.3JH4nmx0m9J_RkXtTa4FBgHaFO&pid=Api&P=0&h=220",
+  //     title: "Cúp trong lòng người hâm mộ ",
+  //     date: "20 January, 2020",
+  //     description: "",
+  //   },
+  // ];
   const listPostter = [
     "https://th.bing.com/th/id/OIP.PXcwltgBx1taPRUAFoz-UgHaEo?w=305&h=190&c=7&r=0&o=5&dpr=1.3&pid=1.7",
     "https://th.bing.com/th?id=OIF.40OLk87y%2fOOcS%2bBMH3e2kA&w=294&h=196&c=7&r=0&o=5&dpr=1.3&pid=1.7",
@@ -68,7 +70,19 @@ const HomePage2 = () => {
   const dispatch = useDispatch();
   const categories = useSelector(getAllCategories);
 
+  // GET LIST 4
+  const getList4 =async() => {
+   try {
+    const res = await newsApi.getList4();
+    if(res.data.status === 200){
+      setListPost(res.data.data)
+    }
+   } catch (error) {
+    console.log(error)
+   }
+  }
   useEffect(() => {
+    getList4()
     dispatch(fetchAsyncProducts(50));
   }, []);
 
@@ -87,19 +101,6 @@ const HomePage2 = () => {
       tempProducts[i] = products[randomIndex];
     }
   }
-
-  let catProductsOne = products.filter(
-    (product) => product.category === categories[0]
-  );
-  let catProductsTwo = products.filter(
-    (product) => product.category === categories[1]
-  );
-  let catProductsThree = products.filter(
-    (product) => product.category === categories[2]
-  );
-  let catProductsFour = products.filter(
-    (product) => product.category === categories[3]
-  );
 
   // renderListPost
   const renderListPost = listPost.map((item) => (

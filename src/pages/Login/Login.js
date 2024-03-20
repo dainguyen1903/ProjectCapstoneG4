@@ -58,8 +58,9 @@ function Login() {
       setLoading(false);
       navigate(redirectpath, { replace: true });
     } catch (error) {
-      console.log(err);
-      setErr(error);
+      if(typeof error === "string"){
+        setErr(error);
+      }
     } finally {
       setLoading(false);
     }

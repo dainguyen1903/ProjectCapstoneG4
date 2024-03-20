@@ -263,4 +263,7 @@ button{
 }
 .point{
   cursor: pointer;
+  &:hover{
+    color: rgb(41, 174, 189);
+  }
 }

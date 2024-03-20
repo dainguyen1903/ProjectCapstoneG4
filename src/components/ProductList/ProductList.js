@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import "./ProductList.scss";
 import Product from "../Product/Product";
+import { useDispatch } from 'react-redux';
+import { fetchAsyncProducts } from '../../store/productSlice';
 
 const ProductList = ({products}) => {
+ 
   return (
     <div className='product-lists grid bg-whitesmoke my-3'>
       {

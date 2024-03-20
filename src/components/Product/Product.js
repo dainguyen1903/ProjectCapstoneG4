@@ -4,31 +4,30 @@ import {formatPrice} from "../../utils/helpers";
 import "./Product.scss";
 
 const Product = ({product}) => {
+  const imageUrl = product.imagesProductList && product.imagesProductList.length>0 ? product.imagesProductList[0]:""
+  
   return (
     <Link to = {`/product/${product?.id}`} key = {product?.id}>
       <div className='product-item bg-white'>
         <div className='category'>{product?.category}</div>
         <div className='product-item-img'>
-          <img className='img-cover' src = {product?.images[0]} alt = {product.title} />
+          <img className='img-cover' src = {imageUrl} alt = {product.title} />
         </div>
         <div className='product-item-info fs-14'>
-          <div className='brand'>
-            <span>Nhãn hàng </span>
-            <span className='fw-7'>{product?.brand}</span>
-          </div>
+        
           <div className='title py-2'>
-            {product?.title}
+            {product?.productName}
           </div>
-          <div className='price flex align-center justify-center'>
-            <span className='old-price'>
+          <div className={`price flex align-center justify-center`}>
+            <span className={product?.discount >0?"old-price":"new-price"}>
               {formatPrice(product?.price)}
             </span>
-            <span className='new-price'>
-              {formatPrice(product?.discountedPrice)}
-            </span>
-            <span className='discount fw-6'>
-              ({product?.discountedPercentage}% Off)
-            </span>
+          {product.discount > 0 &&   <span className='new-price'>
+              {formatPrice(Math.ceil(product?.price*(100-product?.discount)/100))}
+            </span>}
+           {product.discount > 0 && <span className='discount fw-6'>
+              ({product?.discount}% Off)
+            </span>}
           </div>
         </div>
       </div>

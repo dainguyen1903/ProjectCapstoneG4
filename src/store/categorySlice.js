@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {BASE_URL} from "../utils/apiURL";
 import {STATUS} from "../utils/status";
+import { productApi } from "../api/product.api";
 
 const initialState = {
     categories: [],
@@ -44,9 +45,16 @@ const categorySlice = createSlice({
 });
 
 export const fetchAsyncCategories = createAsyncThunk('categories/fetch', async() => {
-    const response = await fetch(`${BASE_URL}products/categories`);
-    const data = await response.json();
-    return data;
+    try {
+        const response = await productApi.getListCategory({})
+        if(response.data.status === 200){
+            return response.data.data
+        }
+   
+    } catch (error) {
+        
+    }
+   
 });
 
 export const fetchAsyncProductsOfCategory = createAsyncThunk('category-products/fetch', async(category) => {

@@ -21,6 +21,11 @@ export const newsApi = {
             params
         })
    
+    },
+    getList4:(params) => {
+        return api.get(baseURLNews + "list-top4-news",{
+            params
+        })
     }
 
 }

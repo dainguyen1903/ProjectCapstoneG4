@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { BASE_URL } from "../utils/apiURL";
 import { STATUS } from "../utils/status";
+import { productApi } from "../api/product.api";
 
 const initialState = {
     products: [],
@@ -44,17 +45,25 @@ const productSlice = createSlice({
 });
 
 // for getting the products list with limited numbers
-export const fetchAsyncProducts = createAsyncThunk('products/fetch', async(limit) => {
-    const response = await fetch(`${BASE_URL}products?limit=${limit}`);
-    const data = await response.json();
-    return data.products;
+export const fetchAsyncProducts = createAsyncThunk('products/fetch', async(search,{rejectWithValue}) => {
+    const response = await productApi.searchProduct({query:search});
+    if(response.data.status === 200){
+        return response.data.data
+    }
+   else{
+    return rejectWithValue(response.data.message)
+   }
 });
 
 // getting the single product data also
-export const fetchAsyncProductSingle = createAsyncThunk('product-single/fetch', async(id) => {
-    const response = await fetch(`${BASE_URL}products/${id}`);
-    const data = await response.json();
-    return data;
+export const fetchAsyncProductSingle = createAsyncThunk('product-single/fetch', async(id,{rejectWithValue}) => {
+    const response = await productApi.getDetailProduct(id);
+    if(response.data.status === 200){
+        return response.data.data
+    }
+   else{
+    return rejectWithValue(response.data.message)
+   }
 });
 
 

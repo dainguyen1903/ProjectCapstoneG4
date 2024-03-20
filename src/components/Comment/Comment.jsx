@@ -2,34 +2,47 @@ import { Comment } from "@ant-design/compatible";
 import { Avatar, Button, Col, Divider, Form, Input, List, Row } from "antd";
 import moment from "moment";
 import { useState } from "react";
-import { useSelector } from "react-redux";
-import { getCurrentUser } from "../../store/authSlice";
 import { LOCAL_STORAGE_KEY } from "../../constants/common";
-import { auth } from "../../pages/firebase/config";
 
 const { TextArea } = Input;
 
-const CommentItem = ({ author, avatar, content, datetime }) => {
+const CommentItem = ({ author, avatar, content, datetime,id,handleChangeComment,handleDeleteCComment }) => {
+  const currentUser = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY.user));
+  const [modeEdit, setModeEdit] = useState(false);
+  const [txt, setTxt] = useState(content);
+  const deleteComment = () => {
+    handleDeleteCComment(id);
+  };
+  const editComment = () => {
+    handleChangeComment({
+      author,
+      avatar,
+      content:txt,
+      datetime:moment().fromNow(),
+      id
+    })
+    setModeEdit(false)
+  };
   return (
     <div
       style={{
         display: "flex",
         gap: 10,
         marginTop: 20,
-        background:"white"
+        background: "white",
       }}
     >
-      <Avatar>{author[0].toUpperCase()}</Avatar>
+      <Avatar>{author.name[0].toUpperCase()}</Avatar>
       <div>
         <div>
           <span
             style={{
               color: "rgb(41, 174, 189)",
               marginRight: 10,
-              fontWeight:"bold"
+              fontWeight: "bold",
             }}
           >
-            {author}
+            {author.name}
           </span>
           <span
             style={{
@@ -40,32 +53,78 @@ const CommentItem = ({ author, avatar, content, datetime }) => {
             {datetime}
           </span>
         </div>
-        <p>{content}</p>
+        {modeEdit ? (
+          <div>
+            <Input.TextArea
+              style={{
+                minWidth: 400,
+              }}
+              value={txt}
+              rows={3}
+              onChange={(e) => setTxt(e.target.value)}
+            />
+                      <div style={{marginTop:10}}>
+                        <Button
+                        onClick={() => editComment()}
+                          style={{
+                          marginRight:10,
+                          background:"rgb(41, 174, 189)",
+                          color:"white"
+                        }}>Ok</Button>
+                        <Button onClick = {() => {
+                          setModeEdit(false);
+                          setTxt(content)
+                        }}>Hủy</Button>
+                      </div>
+
+          </div>
+        ) : (
+          <p>{content}</p>
+        )}
+        {author.id === currentUser.id && !modeEdit&&(
+          <div
+            style={{
+              fontSize: 12,
+              display: "flex",
+              gap: 10,
+            }}
+          >
+            <span onClick={() => deleteComment()} className="point">
+              Xóa
+            </span>
+            <span onClick={() => setModeEdit(true)} className="point">
+              Sửa
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );
 };
-const CommentList = ({ comments }) => (
-  <div style={{
-    background:"white"
-  }}>
-    {!comments.length?<div>
-     <div>
-     0 bình luận
-     </div>
-    <Divider />
-    </div>:   <List
-    dataSource={comments}
-    header={`${comments.length} ${"bình luận"}`}
-    itemLayout="horizontal"
-    renderItem={(props) => <CommentItem {...props} />}
-  />}
- 
+const CommentList = ({ comments,handleChangeComment,handleDeleteCComment }) => (
+  <div
+    style={{
+      background: "white",
+    }}
+  >
+    {!comments.length ? (
+      <div>
+        <div>0 bình luận</div>
+        <Divider />
+      </div>
+    ) : (
+      <List
+        dataSource={comments}
+        header={`${comments.length} ${"bình luận"}`}
+        itemLayout="horizontal"
+        renderItem={(props) => <CommentItem handleChangeComment={handleChangeComment} handleDeleteCComment={handleDeleteCComment}  {...props} />}
+      />
+    )}
   </div>
 );
 
 const Editor = ({ onChange, onSubmit, submitting, value }) => (
-  <div >
+  <div>
     <Form.Item>
       <Row>
         <Col span={12}>
@@ -101,10 +160,14 @@ const CommentCpn = ({ comments, setComments }) => {
     setComments([
       ...comments,
       {
-        author: currentUser.fullname,
+        author: {
+          name: currentUser.fullname,
+          id: currentUser.id,
+        },
         avatar: "",
         content: value,
         datetime: moment().fromNow(),
+        id:Math.random()*199999
       },
     ]);
   };
@@ -113,9 +176,22 @@ const CommentCpn = ({ comments, setComments }) => {
     setValue(e.target.value);
   };
 
+
+  const handleDeleteCComment = (id) => {
+    setComments(comments.filter(i => i.id!==id))
+  }
+  const handleChangeComment = (newcomment) => {
+    const newList = [...comments];
+    const {id} = newcomment;
+    const index = newList.findIndex(i => i.id === id);
+    if(index >=0){
+      newList[index] = newcomment;
+      setComments(newList)
+    }
+  }
   return (
     <div>
-       <CommentList comments={comments} />
+      <CommentList handleDeleteCComment={handleDeleteCComment} handleChangeComment={handleChangeComment} comments={comments} />
       <Comment
         avatar={<Avatar>{currentUser.fullname[0].toUpperCase()}</Avatar>}
         content={
