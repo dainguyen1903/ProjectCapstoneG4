@@ -17,7 +17,7 @@ export const productApi = {
     return api.delete(baseURLProduct + `delete-product/${id}`);
   },
   searchProduct: (params) => {
-    return api.post(baseURLProduct + "search-product", {
+    return api.get(baseURLProduct + "search-product", {
       params,
     });
   },

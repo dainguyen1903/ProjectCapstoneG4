@@ -16,7 +16,7 @@ const AddProduct = () => {
   const location = useLocation();
   const isEditProfile = location.pathname.includes("profile");
   const { id } = useParams();
-  const [url, setUrl] = useState(null);
+  const [url, setUrl] = useState([]);
   const [imageName, setImageName] = useState("");
   const fileRef = useRef();
   const updateUsers = useUserStore((state) => state.updateuser);
@@ -36,6 +36,7 @@ const AddProduct = () => {
       content: !id ? "Thêm sản phẩm" : "Cập nhật sản phẩm",
       onOk: async () => {
         const dataPosst = JSON.parse(JSON.stringify(value));
+        dataPosst.ImagesProductList = url;
         // dataPosst.image_name = imageName;
         // dataPosst.image_url = url;
         // dataPosst.category_name = category ? category.name : "";
@@ -47,37 +48,46 @@ const AddProduct = () => {
             title: "Thành công",
             content: !id ? "Thêm thành công" : "Cập nhật thành công",
           });
-          navigate(-1)
+          navigate(-1);
         } else {
           showMessErr(res.data);
         }
       },
     });
   };
-  const handleChangeFile = (e) => {
-    let file = e.target.files[0];
-    let reader = new FileReader();
-    reader.onloadend = function () {
-      setImageName(file.name);
-      setUrl(reader.result);
-    };
-    reader.readAsDataURL(file);
+  const handleChangeFile = (event) => {
+    const files = event.target.files;
+    Array.from(files).forEach((file) => {
+      const reader = new FileReader();
+
+      // Xử lý sự kiện khi FileReader hoàn thành đọc tệp
+      reader.onload = function (event) {
+        const base64 = event.target.result;
+        setUrl((prevUrl) => [...prevUrl, base64]);
+      };
+
+      // Đọc tệp như là một chuỗi base64
+      reader.readAsDataURL(file);
+    });
   };
 
-  const getDetail = async() => {
-    setLoading(true)
+  const deleteImage = (index) => {
+    setUrl([...url.slice(0, index), ...url.slice(index + 1)]);
+  };
+  const getDetail = async () => {
+    setLoading(true);
     const res = await productApi.getDetailProduct(id);
-    const data = res.data.data
+    const data = res.data.data;
     const categoryName = data.categoryId?.name;
     data.categoryName = categoryName;
-    
+
     form.setFieldsValue(data);
-    setLoading(false)
-  }
+    setLoading(false);
+  };
+  console.log(url);
   useEffect(() => {
     if (id) {
       getDetail();
-      
     }
   }, [id]);
 
@@ -165,19 +175,42 @@ const AddProduct = () => {
           >
             Thêm Ảnh
           </Button>{" "}
-          {imageName && <span>{imageName}</span>}
-          <div>
-            {url && (
-              <img
-                style={{
-                  width: 60,
-                  height: 60,
-                  objectFit: "contain",
-                }}
-                src={url}
-              />
+          <div
+           
+          >
+            {url.length > 0 && (
+              <div  style={{
+                display: "flex",
+                gap: 10,
+                flexWrap: "wrap",
+              }}>
+                {url.map((item, index) => (
+                  <div
+                    style={{
+                      position: "relative",
+                      width: 100,
+                    }}
+                  >
+                    <img
+                      src={item}
+                      style={{
+                        width: "100%",
+                        height: 100,
+                        objectFit: "contain",
+                      }}
+                    />
+                    <div
+                      onClick={() => deleteImage(index)}
+                      className="deleteIcon"
+                    >
+                      X
+                    </div>
+                  </div>
+                ))}
+              </div>
             )}
           </div>
+          <div></div>
           <div
             className="flex-start"
             style={{
@@ -193,6 +226,7 @@ const AddProduct = () => {
             placeholder="Ảnh"
             type="file"
             className="Input"
+            multiple
           />
         </Form.Item>
 
@@ -209,7 +243,7 @@ const AddProduct = () => {
           </button>
         </Form.Item>
       </Form>
-      <img src={""} />
+
       <LoadingFull show={loading} />
     </div>
   );

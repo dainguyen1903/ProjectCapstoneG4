@@ -28,7 +28,10 @@ const ProductList = () => {
 
   // Function to handle search
   const handleSearch = async(value) => {
-   const res  = await productApi.getListProduct();
+    const name = form.getFieldValue("name") || "";
+   const res  = await productApi.searchProduct({
+    query:name
+   });
    if(res.data.status ===200){
     setproduct(res.data.data);
    }
