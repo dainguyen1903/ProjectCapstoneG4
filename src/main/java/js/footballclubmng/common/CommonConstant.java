@@ -105,6 +105,11 @@ public class CommonConstant {
         public static final String CATEGORY_EXIST = "Danh mục đã tồn tại";
         public static final String UPDATE_NEWS_TYPE_FAIL = "Cập nhật loại tin tức thất bại";
         public static final String UPDATE_NEWS_TYPE_SUCCESS = "Cập nhật loại tin tức thành công";
+
+        public static final String ADD_CART_ITEM_FAIL = "Thêm sản phẩm vào giỏ hàng thất bại";
+        public static final String ADD_CART_ITEM_SUCCESS = "Thêm sản phẩm vào giỏ hàng thành công";
+        public static final String OUT_OF_STOCK = "Sản phẩm đã hết hàng";
+
     }
 
 
@@ -192,6 +197,14 @@ public class CommonConstant {
         public static final String ORDER = "/order";
 
         public static final String LIST_ORDER = HEAD_API + ORDER + "/list-order";
+
+    }
+
+    public static class CART_API {
+
+        public static final String CART = "/cart";
+
+        public static final String ADD_CART_ITEM = HEAD_API + CART + "/add-cart-item/{productId}";
 
     }
 
