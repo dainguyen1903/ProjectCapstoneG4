@@ -82,3 +82,14 @@ form label {
   padding: 10px;
   margin-bottom: 10px;
 }
+
+.proImage{
+  width: 200px;
+  height: 200px;
+  background-size: contain;
+  border: 1px solid gray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+ cursor: pointer;
+}

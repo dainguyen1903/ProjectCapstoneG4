@@ -1,116 +1,204 @@
-import React from 'react';
+import {
+  Avatar,
+  Button,
+  Col,
+  DatePicker,
+  Form,
+  Input,
+  Row,
+  Select,
+  Spin,
+} from "antd";
+import React, { useEffect, useRef, useState } from "react";
+import { useLocation, useParams } from "react-router";
 import "./Profile.scss";
+import moment from "moment";
+import { userApi } from "../../api/user.api";
+const { Option } = Select;
+const ProfileUser = () => {
+  const [form] = Form.useForm();
+  const location = useLocation();
+  const isEditProfile = location.pathname.includes("profile");
+  const { id } = useParams();
+  const [url, setUrl] = useState(null);
+  const fileRef = useRef();
+  const [loading, setLoading] = useState(false);
 
-const Profile = () => {
-    return(
-       <div class="container bootstrap snippets bootdeys">
-<div class="row">
-  <div class="col-xs-12 col-sm-9">
-    <form class="form-horizontal">
-        <div class="panel panel-default" style={{marginLeft: "30%"}}>
-          <div class="panel-body text-center">
-           <img src="https://bootdey.com/img/Content/avatar/avatar6.png" class="img-circle profile-avatar" alt="User avatar"/>
-          </div>
-        </div>
-      <div class="panel panel-default">
-        <div class="panel-heading">
-        <h4 class="panel-title">User info</h4>
-        </div>
-        <div class="panel-body">
-          <div class="fom-group">
-            <label class="col-sm-2 control-label">Location</label>
-            <div class="col-sm-10">
-              <select class="form-control">
-                <option selected="">Select country</option>
-                <option>Belgium</option>
-                <option>Canada</option>
-                <option>Denmark</option>
-                <option>Estonia</option>
-                <option>France</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-2 control-label">Company name</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control"/>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-2 control-label">Position</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control"/>
-            </div>
-          </div>
-        </div>
-      </div>
+  const handleChangeFile = (e) => {
+    let file = e.target.files[0];
+    let reader = new FileReader();
+    reader.onloadend = function () {
+      setUrl(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
 
-      <div class="panel panel-default">
-        <div class="panel-heading">
-        <h4 class="panel-title">Contact info</h4>
-        </div>
-        <div class="panel-body">
-          <div class="form-group">
-            <label class="col-sm-2 control-label">Work number</label>
-            <div class="col-sm-10">
-              <input type="tel" class="form-control"/>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-2 control-label">Mobile number</label>
-            <div class="col-sm-10">
-              <input type="tel" class="form-control"/>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-2 control-label">E-mail address</label>
-            <div class="col-sm-10">
-              <input type="email" class="form-control"/>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-2 control-label">Work address</label>
-            <div class="col-sm-10">
-              <textarea rows="3" class="form-control"></textarea>
-            </div>
-          </div>
-        </div>
-      </div>
+  const onSave = async () => {
+    setLoading(true)
+    const objPost = form.getFieldsValue();
+    const date = form.getFieldValue("dateOfBirth");
+    const dateString = date ? moment(date).format("YYYY-MM-DD"):null;
+    objPost.dateOfBirth = dateString;
+    objPost.image = url;
+    const res = await userApi.udpateProfileUser(objPost);
+    setLoading(false)
+  };
 
-      <div class="panel panel-default">
-        <div class="panel-heading">
-        <h4 class="panel-title">Security</h4>
-        </div>
-        <div class="panel-body">
-          <div class="form-group">
-            <label class="col-sm-2 control-label">Current password</label>
-            <div class="col-sm-10">
-              <input type="password" class="form-control"/>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-2 control-label">New password</label>
-            <div class="col-sm-10">
-              <input type="password" class="form-control"/>
-            </div>
-          </div>
-      
+  // getDetail
+  const getDetail = async () => {
+    setLoading(true);
 
-         
-          <div class="form-group">
-            <div class="col-sm-10 col-sm-offset-2">
-              <button type="submit" class="search-btn">Submit</button>
-              
-            </div>
-          </div>
-        </div>
-      </div>
-    </form>
-  </div>
-</div>
-         
-     </div>
-  )
-}
+    const res = await userApi.getProfileUser();
+    const dataDetail = res.data.data;
 
-export default Profile
+    dataDetail.dateOfBirth = dataDetail.dateOfBirth
+      ? moment(dataDetail.dateOfBirth)
+      : null;
+    setUrl(isEditProfile ? dataDetail.image : dataDetail.imageUrl);
+    delete dataDetail.image_name;
+    setUrl(dataDetail.image);
+    form.setFieldsValue(dataDetail);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    getDetail();
+  }, []);
+
+  return (
+    <Row
+      className="main-content bg-whitesmoke bg-white"
+      style={{
+        padding: 20,
+        background: "white",
+      }}
+      gutter={[32, 32]}
+    >
+      <Col style={{}} span={8} offset={6}>
+        <div>
+          <h2 style={{ marginBottom: 10 }}>
+            {isEditProfile
+              ? "Chỉnh sửa thông tin cá nhân"
+              : !id
+              ? "Thêm người dùng"
+              : "Cập nhật người dùng"}
+          </h2>
+          <Form
+            style={{
+              width: "100%",
+            }}
+            form={form}
+            layout="vertical"
+          >
+            <Form.Item label={<span className="bold">Email</span>} name="email">
+              <Input placeholder="Email" />
+            </Form.Item>
+
+            <Form.Item
+              style={{
+                marginTop: -15,
+              }}
+              label={<span className="bold">Họ và tên đệm</span>}
+              name="firstName"
+            >
+              <Input placeholder="Họ và tên đệm" />
+            </Form.Item>
+            <Form.Item
+              style={{
+                marginTop: -15,
+              }}
+              label={<span className="bold">Tên</span>}
+              name="lastName"
+            >
+              <Input placeholder="Tên" />
+            </Form.Item>
+            <Form.Item
+              style={{
+                marginTop: -15,
+              }}
+              label={<span className="bold">Địa chỉ</span>}
+              name="address"
+            >
+              <Input placeholder="Địa chỉ" />
+            </Form.Item>
+            <Form.Item
+              style={{
+                marginTop: -15,
+              }}
+              label={<span className="bold">Ngày sinh</span>}
+              name="dateOfBirth"
+            >
+              <DatePicker />
+            </Form.Item>
+            <Form.Item
+              style={{
+                marginTop: -15,
+              }}
+              label={<span className="bold">Giới tính</span>}
+              name="gender"
+            >
+              <Select placeholder="Giới tính" className="Select">
+                <Option value="M">Nam</Option>
+                <Option value="F">Nữ</Option>
+              </Select>
+            </Form.Item>
+
+            <Form.Item>
+              <Button
+                style={{
+                  marginTop: 20,
+                  background: "rgb(41, 174, 189",
+                }}
+                disabled={loading}
+                onClick={() => onSave()}
+                htmlType="submit"
+                type="primary"
+              >
+                {loading && (
+                  <Spin
+                    size="small"
+                    style={{
+                      marginRight: 5,
+                    }}
+                  />
+                )}
+                Lưu
+              </Button>
+            </Form.Item>
+          </Form>
+          {/* <LoadingFull show={loading} /> */}
+        </div>
+      </Col>
+
+      <Col style={{ width: "100%", marginTop: 50 }} span={6}>
+        <input
+          onChange={handleChangeFile}
+          ref={fileRef}
+          type="file"
+          style={{
+            display: "none",
+          }}
+        />
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column",
+            marginTop: 50,
+          }}
+          onClick={() => {
+            fileRef.current.click();
+          }}
+          // className="proImage"
+        >
+          <Avatar size={150} src={url}></Avatar>
+          <Button style={{marginTop:10}}>+ Thêm ảnh</Button>
+        </div>
+      </Col>
+    </Row>
+  );
+};
+
+export default ProfileUser;

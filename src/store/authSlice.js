@@ -43,7 +43,7 @@ export const loginAction = createAsyncThunk(
       email,
       password,
     });
-
+ console.log(res)
     const data = res.data;
     if (data.status === 200) {
       const token = data.data.accessToken;

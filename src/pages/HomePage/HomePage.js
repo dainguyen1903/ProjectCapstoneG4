@@ -57,7 +57,7 @@ const HomePage = () => {
       <div className="slider-wrapper">
         <HeaderSlider images={sliderImgs} />
       </div>
-      <div className="main-content bg-whitesmoke">
+      <div className="main-content container bg-whitesmoke">
         <div className="container">
           <div className="categories py-5">
             <div className="categories-item">

@@ -56,8 +56,11 @@ function Login() {
 
       const originResult = unwrapResult(result);
       setLoading(false);
+      console.log("asas")
+      console.log(redirectpath)
       navigate(redirectpath, { replace: true });
     } catch (error) {
+      console.log(error)
       if(typeof error === "string"){
         setErr(error);
       }

@@ -4,9 +4,17 @@ import { Link } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
 import { useDispatch, useSelector } from "react-redux";
 import { getCurrentUser, isLogin, logout } from "../../store/authSlice";
-import { Avatar } from "antd";
+import { Avatar, Popover } from "antd";
+import { useNavigate } from "react-router";
 
 const Header = () => {
+  const navigate = useNavigate();
+  const content = (
+    <div>
+      <p onClick={() => navigate("/profile")} className="point">Tài khoản của tôi</p>
+      <p className="point">Đơn mua</p>
+    </div>
+  );
   const login = useSelector(isLogin);
   const currentUser = useSelector(getCurrentUser);
   const dispatch = useDispatch();
@@ -63,21 +71,33 @@ const Header = () => {
                 </li>
                 <li className="vert-line"></li>
                 {login && (
-                  <li>
-                    <div>
-                      <Avatar style={{
-                        border:"2px solid white",
-                        background:"white",
-                        color:"rgb(41, 174, 189)",
-                        fontWeight:"bold"
-                      }}>
-                        {currentUser  ? currentUser.fullname
-                          ? currentUser.fullname[0].toUpperCase()
-                          : "T":"T"}
-                      </Avatar>{" "}
-                      {currentUser && currentUser.fullname}
-                    </div>
-                  </li>
+                  <div
+                    style={{
+                      cursor: "pointer",
+                    }}
+                  >
+                    <Popover placement="bottom" content={content}>
+                      <li>
+                        <div>
+                          <Avatar
+                            style={{
+                              border: "2px solid white",
+                              background: "white",
+                              color: "rgb(41, 174, 189)",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {currentUser
+                              ? currentUser.fullname
+                                ? currentUser.fullname[0].toUpperCase()
+                                : "T"
+                              : "T"}
+                          </Avatar>{" "}
+                          {currentUser && currentUser.fullname}
+                        </div>
+                      </li>{" "}
+                    </Popover>
+                  </div>
                 )}
                 {!login && (
                   <li>
@@ -89,12 +109,15 @@ const Header = () => {
                 <li className="vert-line"></li>
                 {login && (
                   <li>
-                    <div style={{
-                      cursor:"pointer"
-                    }} onClick={() =>{
-                      dispatch(logout())
-                      window.location.href = "/login"
-                    }}>
+                    <div
+                      style={{
+                        cursor: "pointer",
+                      }}
+                      onClick={() => {
+                        dispatch(logout());
+                        window.location.href = "/login";
+                      }}
+                    >
                       <span className="top-link-itm-txt">Đăng xuất</span>
                     </div>
                   </li>

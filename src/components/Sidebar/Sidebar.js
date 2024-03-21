@@ -12,9 +12,13 @@ const Sidebar = () => {
   const categories = useSelector(getAllCategories);
 
   useEffect(() => {
-    dispatch(fetchAsyncCategories())
+    try {
+      dispatch(fetchAsyncCategories())
+    } catch (error) {
+      
+    }
   }, [dispatch])
-
+console.log(categories)
   return (
     <aside className={`sidebar ${isSidebarOn ? 'hide-sidebar' : ""}`}>
       <button type = "button" className='sidebar-hide-btn' onClick={() => dispatch(setSidebarOff())}>

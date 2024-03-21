@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { LOCAL_STORAGE_KEY } from '../constants/common';
+import { handleLoggout, isTokenExpired } from '../utils/helpers';
+let reTry = false;
 
 const api = axios.create({
   baseURL: 'http://localhost:8080/',
@@ -17,6 +19,21 @@ api.interceptors.request.use(
     return config;
   },
   (error) => {
+    return Promise.reject(error);
+  }
+);
+api.interceptors.response.use(
+  (res) => {
+    reTry = false;
+    return res;
+  },
+  (error) => {
+    const token = localStorage.getItem(LOCAL_STORAGE_KEY.token)
+    if(error.response && error.response.status === 401 && !reTry && token && isTokenExpired(token)){
+      reTry = true;
+    handleLoggout();
+    window.location.href = "/"
+    } 
     return Promise.reject(error);
   }
 );
