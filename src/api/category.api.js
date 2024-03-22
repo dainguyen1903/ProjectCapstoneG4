@@ -17,7 +17,7 @@ export const categoryApi = {
     return api.delete(baseURLCategory + `delete-category/${id}`);
   },
   searchCategory: (params) => {
-    return api.post(baseURLCategory + "search-category", {
+    return api.get(baseURLCategory + "search-category", {
       params,
     });
   },

@@ -16,9 +16,9 @@ const ProductCategoryList = () => {
   // Function to handle search
   const handleSearch = async (value) => {
     const name = form.getFieldValue("name") || "";
-    const res = await categoryApi.getListCategory({});
-    if (res.data.status === 200) {
-      setCategoryList(res.data.data);
+    const res = await categoryApi.searchCategory({search:name});
+    if (res.data.status === 200 ||res.data.status === 204 ) {
+      setCategoryList(res.data.data || []);
     }
   };
   useEffect(() => {

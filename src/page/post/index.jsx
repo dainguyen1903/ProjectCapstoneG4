@@ -22,8 +22,8 @@ const PostManage = () => {
     const res = await newsApi.searchNews({
       search: title,
     });
-    if (res.data.status === 200) {
-      setPosts(res.data.data);
+    if (res.data.status === 200 ||res.data.status === 204 ) {
+      setPosts(res.data.data || []);
     }
   };
 
