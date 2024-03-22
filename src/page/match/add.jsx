@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Form, Input, Button, DatePicker, Select, Modal } from "antd";
+import { Form, Input, Button, DatePicker, Select, Modal, Card } from "antd";
 import { useMatch, useMatches, useParams } from "react-router";
 import moment from "moment";
 import useMatchStore from "../../zustand/matchStore";
@@ -60,7 +60,8 @@ const AddMatchForm = () => {
     }
   }, [id]);
   return (
-    <Form
+   <Card>
+     <Form
       form={form}
       name="addMatchForm"
       labelCol={{ span: 8 }}
@@ -169,6 +170,7 @@ const AddMatchForm = () => {
       </Form.Item>
       <LoadingFull show={loading} />
     </Form>
+   </Card>
   );
 };
 

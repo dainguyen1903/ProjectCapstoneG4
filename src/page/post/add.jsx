@@ -121,20 +121,22 @@ const AddNewsForm = () => {
 
   return (
     <Card>
-      <div>
-        <h2 style={{ marginBottom: 30,textAlign:"center" }}>
-          {!id ? "Thêm bài viết" : "Cập nhật bài viết"}
-        </h2>
-        <Row>
-          <Col span={24}>
-            <Row>
-              <Col span={12}>
-                <Form
+      <Form
                   form={form}
                   wrapperCol={{ span: 24 }}
                   onFinish={confirmSave}
                   layout="vertical"
                 >
+      <div>
+        <h2 style={{ marginBottom: 30,textAlign:"center" }}>
+          {!id ? "Thêm bài viết" : "Cập nhật bài viết"}
+        </h2>
+        
+        <Row>
+          <Col span={24}>
+            <Row>
+              <Col span={12}>
+                
                   <Form.Item
                     label={
                       <span
@@ -179,7 +181,6 @@ const AddNewsForm = () => {
                   >
                     <Input placeholder="Tên tiêu đề" className="Input" />
                   </Form.Item>
-                </Form>
               </Col>
               <Col span={12}>
                 <AddImage
@@ -219,12 +220,18 @@ const AddNewsForm = () => {
           </Form.Item>
         </Col>
         <Form.Item>
-          <button className="Button" htmlType="submit" type="primary">
+          <button  className="Button" htmlType="submit" type="primary">
             {id ? "Cập nhật" : "Tạo mới"}
           </button>
         </Form.Item>
         <LoadingFull show={loading} />
       </div>
+      </Form>
+      <input ref={fileRef} type="file" style={{
+        display:"none"
+      }}
+      onChange={handleChangeFile}
+       />
     </Card>
   );
 };

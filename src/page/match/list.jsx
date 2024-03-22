@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Table, Input, Button, Space, Modal, Form, Row, Col, Tag } from "antd";
+import { Table, Input, Button, Space, Modal, Form, Row, Col, Tag, Card } from "antd";
 import FormItem from "antd/es/form/FormItem";
 import {
   UserOutlined,
@@ -148,7 +148,8 @@ const ListMatch = () => {
 
   return (
     <div>
-      <Form form={form} onFinish={handleSearch} layout="vertical">
+     <Card style={{marginBottom:20}}>
+     <Form form={form} onFinish={handleSearch} layout="vertical">
         <Row gutter={[8, 8]}>
           <Col span={8}>
             <Form.Item
@@ -215,6 +216,8 @@ const ListMatch = () => {
           </Col>
         </Row>
       </Form>
+     </Card>
+      <Card>
       <Table
         pagination={{
           pageSize: 10,
@@ -224,6 +227,7 @@ const ListMatch = () => {
         columns={columns}
         dataSource={listMatch}
       />
+      </Card>
       <Modal
         title="Edit Post"
         visible={isModalVisible}
