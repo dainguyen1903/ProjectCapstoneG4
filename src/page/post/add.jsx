@@ -1,10 +1,11 @@
-import { Form, Input, Modal, Select,Button } from "antd";
-import React, { useEffect, useState ,useRef} from "react";
+import { Form, Input, Modal, Select, Button, Card, Col, Row } from "antd";
+import React, { useEffect, useState, useRef } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useNavigate, useParams } from "react-router";
 import { newsApi } from "../../api/news.api";
 import LoadingFull from "../../component/loading/loadingFull";
+import AddImage from "../../component/common/AddImage";
 const { Option } = Select;
 const modules = {
   toolbar: [
@@ -57,7 +58,7 @@ const AddNewsForm = () => {
       title,
       newsType: typeNews,
       description: value,
-      imagesNewsList:[url]
+      imagesNewsList: [url],
     };
     Modal.confirm({
       title: "Xác nhận",
@@ -84,7 +85,7 @@ const AddNewsForm = () => {
     if (res.data.status === 200) {
       const newsDetail = res.data.data;
       setValue(newsDetail.description);
-      setUrl(newsDetail.imagesNewsList[0]?.path)
+      setUrl(newsDetail.imagesNewsList[0]?.path);
       form.setFieldsValue(newsDetail);
     }
     setLoading(false);
@@ -119,123 +120,112 @@ const AddNewsForm = () => {
   }, [id]);
 
   return (
-    <div>
-      <h2 style={{ marginBottom: 10 }}>
-        {!id ? "Thêm bài viết" : "Cập nhật bài viết"}
-      </h2>
-
-      <Form
-        form={form}
-        labelCol={{ span: 4 }}
-        wrapperCol={{ span: 12 }}
-        onFinish={confirmSave}
-        layout="vertical"
-      >
-        <Form.Item
-     
-          label={
-            <span
-              style={{
-                fontWeight: "bold",
-              }}
-            >
-              Loại bài viết
-            </span>
-          }
-          name="typeNews"
-          rules={[{ required: true, message: "Vui lòng chọn loại bài viết!" }]}
-        >
-          <Select placeholder={"Loại bài viết"} className="Select">
-            {listTypeNews.map((i) => (
-              <Option value={i.id}>{i.name}</Option>
-            ))}
-          </Select>
-        </Form.Item>
-        <Form.Item
-          label={
-            <span
-              style={{
-                fontWeight: "bold",
-                marginBottom:-5
-              }}
-            >
-              Tiêu đề
-            </span>
-          }
-          name="title"
-          rules={[
-            { required: true, message: "Vui lòng nhập tên tiêu đề bài viết!" },
-          ]}
-        >
-          <Input  placeholder="Tên tiêu đề" className="Input" />
-        </Form.Item>
-        <Form.Item  name="imageUrl">
-          <Button
-            onClick={() => fileRef.current.click()}
+    <Card>
+      <div>
+        <h2 style={{ marginBottom: 30,textAlign:"center" }}>
+          {!id ? "Thêm bài viết" : "Cập nhật bài viết"}
+        </h2>
+        <Row>
+          <Col span={24}>
+            <Row>
+              <Col span={12}>
+                <Form
+                  form={form}
+                  wrapperCol={{ span: 24 }}
+                  onFinish={confirmSave}
+                  layout="vertical"
+                >
+                  <Form.Item
+                    label={
+                      <span
+                        style={{
+                          fontWeight: "bold",
+                        }}
+                      >
+                        Loại bài viết
+                      </span>
+                    }
+                    name="typeNews"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Vui lòng chọn loại bài viết!",
+                      },
+                    ]}
+                  >
+                    <Select placeholder={"Loại bài viết"} className="Select">
+                      {listTypeNews.map((i) => (
+                        <Option value={i.id}>{i.name}</Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                  <Form.Item
+                    label={
+                      <span
+                        style={{
+                          fontWeight: "bold",
+                        }}
+                      >
+                        Tiêu đề
+                      </span>
+                    }
+                    name="title"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Vui lòng nhập tên tiêu đề bài viết!",
+                      },
+                    ]}
+                  >
+                    <Input placeholder="Tên tiêu đề" className="Input" />
+                  </Form.Item>
+                </Form>
+              </Col>
+              <Col span={12}>
+                <AddImage
+                  txt="Thêm ảnh tiêu đề"
+                  url={url}
+                  click={() => fileRef.current.click()}
+                />
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+        <Col style={{ marginTop: 10 }} span={24}>
+          <div
             style={{
-            
-              marginRight: 10,
+              fontWeight: "bold",
+              marginBottom: 10,
             }}
           >
-            Thêm Ảnh Tiêu đề
-          </Button>{" "}
-          <div>
-            {url && <img style={{
-              width:70,
-              height:70,
-              objectFit:"contain"
-            }} src={url} />}
+            <span>Mô tả</span>
           </div>
-          <div
-            className="flex-start"
-            style={{
-              alignItems: "center",
-            }}
-          ></div>
-          <input
-            style={{
-              display: "none",
-            }}
-            ref={fileRef}
-            onChange={handleChangeFile}
-            placeholder="Ảnh"
-            type="file"
-            className="Input"
-          />
-        </Form.Item>
-        <Form.Item
-          rules={[{ required: true, message: "Vui lòng nhập mô tả bài viết!" }]}
-          label={
-            <span
+          <Form.Item
+            rules={[
+              { required: true, message: "Vui lòng nhập mô tả bài viết!" },
+            ]}
+          >
+            <ReactQuill
               style={{
-                fontWeight: "bold",
+                marginBottom: 80,
+                height: 400,
               }}
-            >
-              Mô tả
-            </span>
-          }
-        >
-          <ReactQuill
-            style={{
-              marginBottom: 80,
-              height: 400,
-            }}
-            theme="snow"
-            value={value}
-            onChange={setValue}
-            modules={modules}
-            formats={formats}
-          />
-        </Form.Item>
-
+              theme="snow"
+              value={value}
+              onChange={setValue}
+              modules={modules}
+              formats={formats}
+            />
+          </Form.Item>
+        </Col>
         <Form.Item>
           <button className="Button" htmlType="submit" type="primary">
             {id ? "Cập nhật" : "Tạo mới"}
           </button>
         </Form.Item>
-      </Form>
-      <LoadingFull show={loading} />
-    </div>
+        <LoadingFull show={loading} />
+      </div>
+    </Card>
   );
 };
 

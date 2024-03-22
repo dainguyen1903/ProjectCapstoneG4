@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, Input, Button, Space, Modal, Form, Row, Col } from "antd";
+import { Table, Input, Button, Space, Modal, Form, Row, Col, Card } from "antd";
 import FormItem from "antd/es/form/FormItem";
 import {
   UserOutlined,
@@ -95,6 +95,7 @@ handleSearch({name:""})
 },[])
   return (
     <div>
+      <Card style={{marginBottom:20}}>
       <Form form={form} onFinish={handleSearch} layout="vertical">
         <Form.Item
           name={"name"}
@@ -134,7 +135,9 @@ handleSearch({name:""})
           </Row>
         </Form.Item>
       </Form>
-      <Table
+      </Card>
+     <Card>
+     <Table
         pagination={{
           pageSize: 10,
           total:users.length,
@@ -144,6 +147,7 @@ handleSearch({name:""})
         columns={columns}
         dataSource={users}
       />
+     </Card>
       <Modal
         title="Edit User"
         visible={isModalVisible}

@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Button, Col, Form, Input, Modal, Row, Space, Table } from "antd";
+import { Button, Card, Col, Form, Input, Modal, Row, Space, Table } from "antd";
 import { useForm } from "antd/es/form/Form";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
@@ -79,6 +79,7 @@ const ProductCategoryList = () => {
 
   return (
     <div>
+      <Card style={{marginBottom:20}}>
       <Form form={form} onFinish={handleSearch} layout="vertical">
         <Form.Item
           name={"name"}
@@ -120,7 +121,9 @@ const ProductCategoryList = () => {
           </Row>
         </Form.Item>
       </Form>
-      <Table
+      </Card>
+     <Card>
+     <Table
         pagination={{
           pageSize: 10,
           total: categories.length,
@@ -129,6 +132,7 @@ const ProductCategoryList = () => {
         columns={columns}
         dataSource={categories}
       />
+     </Card>
       <Modal
         title="Edit Post"
         visible={isModalVisible}

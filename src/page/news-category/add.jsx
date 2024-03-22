@@ -7,6 +7,7 @@ import LoadingFull from "../../component/loading/loadingFull";
 import useNewsCategoryStore from "../../zustand/newsCategoryStore";
 import { newsApi } from "../../api/news.api";
 import { showMessErr } from "../../ultis/helper";
+import {Card} from "antd";
 const { Option } = Select;
 
 const NewsCategoryAdd = () => {
@@ -60,7 +61,8 @@ const NewsCategoryAdd = () => {
     }
   }, [id]);
   return (
-    <div>
+ <Card>
+     <div>
       <h2 style={{ marginBottom: 10 }}>
         {!id ? "Thêm  danh mục bài viết" : "Cập nhật danh mục bài viết"}
       </h2>
@@ -88,6 +90,7 @@ const NewsCategoryAdd = () => {
       </Form>
       <LoadingFull show={loading} />
     </div>
+ </Card>
   );
 };
 

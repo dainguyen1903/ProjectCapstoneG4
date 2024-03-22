@@ -38,7 +38,6 @@ const RouterConfig = () => {
   }
  }
   },[user,isLogin])
-console.log(routesWithLayout)
   return (
     <>
       <Routes>

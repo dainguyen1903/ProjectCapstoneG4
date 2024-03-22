@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Button, Col, Form, Input, Modal, Row, Space, Table } from "antd";
+import { Button, Card, Col, Form, Input, Modal, Row, Space, Table } from "antd";
 import { useForm } from "antd/es/form/Form";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
@@ -86,6 +86,7 @@ const PostManage = () => {
 
   return (
     <div>
+      <Card style={{marginBottom:20}}>
       <Form form={form} onFinish={handleSearch} layout="vertical">
         <Form.Item
           name={"title"}
@@ -124,6 +125,8 @@ const PostManage = () => {
           </Row>
         </Form.Item>
       </Form>
+      </Card>
+      <Card>
       <Table
         pagination={{
           pageSize: 10,
@@ -133,6 +136,7 @@ const PostManage = () => {
         columns={columns}
         dataSource={posts}
       />
+      </Card>
       <Modal
         title="Edit Post"
         visible={isModalVisible}

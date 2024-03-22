@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Form, Input, Button, DatePicker, Select, Modal } from "antd";
+import { Form, Input, Button, DatePicker, Select, Modal, Card, Row, Col } from "antd";
 import { FileImageOutlined } from "@ant-design/icons";
 import moment from "moment";
 import { useNavigate, useParams } from "react-router";
 import usePlayerStore from "../../zustand/playerStore";
 import LoadingFull from "../../component/loading/loadingFull";
 import { playerApi } from "../../api/player.api";
+import AddImage from "../../component/common/AddImage";
 const { Option } = Select;
 
 const AddPlayerForm = () => {
@@ -82,14 +83,17 @@ const AddPlayerForm = () => {
     }
   }, [id]);
   return (
-    <div>
+   <Card>
+     <div>
       <h2 style={{ marginBottom: 10 }}>
         {!id ? "Thêm cầu thủ" : "Cập nhật cầu thủ"}
       </h2>
+    <Row>
+      <Col span={12}>
       <Form
         form={form}
-        labelCol={{ span: 4 }}
-        wrapperCol={{ span: 8 }}
+      
+        wrapperCol={{ span: 24 }}
         onFinish={confirmSave}
         layout="vertical"
       >
@@ -151,22 +155,7 @@ const AddPlayerForm = () => {
         </Form.Item>
 
         <Form.Item name="imageUrl">
-          <Button
-            onClick={() => fileRef.current.click()}
-            style={{
-              marginBottom: 10,
-              marginRight: 10,
-            }}
-          >
-            Thêm Ảnh
-          </Button>{" "}
-          {imageName && <span>{imageName}</span>}
-          <div
-            className="flex-start"
-            style={{
-              alignItems: "center",
-            }}
-          ></div>
+         
           <input
             style={{
               display: "none",
@@ -184,8 +173,14 @@ const AddPlayerForm = () => {
           </button>
         </Form.Item>
       </Form>
+      </Col>
+      <Col span={12}>
+        <AddImage url={url} click={() =>fileRef.current.click() } />
+      </Col>
+    </Row>
       <LoadingFull show={loading} />
     </div>
+   </Card>
   );
 };
 

@@ -1,4 +1,4 @@
-import { Button, Form, Input, Modal, Select } from "antd";
+import { Button, Card, Form, Input, Modal, Select } from "antd";
 import moment from "moment";
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
@@ -101,13 +101,16 @@ const AddProduct = () => {
     getListCategory();
   }, []);
   return (
-    <div>
-      <h2 style={{ marginBottom: 10 }}>
+    <Card style={{
+     
+    }}>
+      <h2 style={{ marginBottom: 10}}>
         {!id ? "Thêm sản phẩm" : "Cập nhật sản phẩm"}
       </h2>
       <Form
+      
         form={form}
-        wrapperCol={{ span: 8 }}
+        wrapperCol={{ span: 10 }}
         onFinish={confirmSave}
         layout="vertical"
       >
@@ -245,7 +248,7 @@ const AddProduct = () => {
       </Form>
 
       <LoadingFull show={loading} />
-    </div>
+    </Card>
   );
 };
 

@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Button, Col, Form, Input, Modal, Row, Space, Table } from "antd";
+import { Button, Card, Col, Form, Input, Modal, Row, Space, Table } from "antd";
 import { useForm } from "antd/es/form/Form";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
@@ -82,7 +82,8 @@ const ManagePlayer = () => {
 
   return (
     <div>
-      <Form form={form} onFinish={handleSearch} layout="vertical">
+     <Card style={{marginBottom:20}}>
+     <Form form={form} onFinish={handleSearch} layout="vertical">
         <Form.Item
           name={"name"}
           label={
@@ -120,7 +121,9 @@ const ManagePlayer = () => {
           </Row>
         </Form.Item>
       </Form>
-      <Table
+     </Card>
+     <Card>
+     <Table
         pagination={{
           position: "bottomCenter",
           pageSize: 10,
@@ -129,6 +132,7 @@ const ManagePlayer = () => {
         columns={columns}
         dataSource={users}
       />
+     </Card>
       <Modal
         title="Edit User"
         visible={isModalVisible}

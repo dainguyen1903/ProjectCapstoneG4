@@ -33,18 +33,20 @@ const LayOutPage = () => {
           height: "100%",
         }}
       >
-        <Card
+        <div
           style={{
-            width: "calc(100% - 190px)",
+            width: "calc(100% - 220px)",
             height: "100%",
             position: "relative",
             overflowY:"auto",
             padding:"10px",
-            paddingBottom:50,
+            paddingBottom:100,
+           
+            
           }}
         >
           <Outlet />
-        </Card>
+        </div>
       </div>
     </Layout>
   );

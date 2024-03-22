@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Form, Input, Button, DatePicker, Select, Modal } from "antd";
+import { Form, Input, Button, DatePicker, Select, Modal ,Card} from "antd";
 import { FileImageOutlined } from "@ant-design/icons";
 import { useNavigate, useParams } from "react-router";
 import useNewsStore from "../../zustand/newsStore";
@@ -33,7 +33,8 @@ const AddProductCategory = () => {
   };
 
   return (
-    <div>
+   <Card>
+     <div>
       <h2 style={{ marginBottom: 10 }}>
         {!id ? "Thêm  danh mục sản phẩm" : "Cập nhật danh mục sản phẩm"}
       </h2>
@@ -61,6 +62,7 @@ const AddProductCategory = () => {
       </Form>
       <LoadingFull show={loading} />
     </div>
+   </Card>
   );
 };
 

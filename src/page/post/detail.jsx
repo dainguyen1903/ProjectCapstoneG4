@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Form, Input, Button, DatePicker, Select, Modal } from "antd";
+import { Form, Input, Button, DatePicker, Select, Modal, Card } from "antd";
 import { FileImageOutlined } from "@ant-design/icons";
 import { useParams } from "react-router";
 import useNewsStore from "../../zustand/newsStore";
@@ -32,7 +32,8 @@ const DetailNews = () => {
   }, [id]);
  
   return (
-    <div>
+   <Card>
+     <div>
       <h2
         style={{
           fontSize: 20,
@@ -52,6 +53,7 @@ const DetailNews = () => {
       </p>
       <LoadingFull show={loading} />
     </div>
+   </Card>
   );
 };
 

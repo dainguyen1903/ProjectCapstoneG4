@@ -71,9 +71,9 @@
 
 
 .Button {
-    border-radius: 20px;
-    border: 1px solid #ff4b2b;
-    background-color: #ff4b2b;
+    border-radius: 10px;
+    border: 1px solid rgb(31, 167, 167);
+    background-color: rgb(31, 167, 167);
     color: #ffffff;
     font-size: 12px;
     font-weight: bold;
@@ -116,8 +116,8 @@
 
 .Overlay {
     background: #ff416c;
-    background: -webkit-linear-gradient(to right, #ff4b2b, #ff416c);
-    background: linear-gradient(to right, #ff4b2b, #ff416c);
+    background: -webkit-linear-gradient(to right, rgb(31, 167, 167), #ff416c);
+    background: linear-gradient(to right, rgb(31, 167, 167), #ff416c);
     background-repeat: no-repeat;
     background-size: cover;
     background-position: 0 0;

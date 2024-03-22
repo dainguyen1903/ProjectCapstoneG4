@@ -22,7 +22,7 @@ if(currentRoute){
     
       user ? <Menu selectedKeys={[activeKey]} style={{
         height:"100vh",
-        background:"#ff416c",
+        background:"rgb(31, 167, 167)",
         boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
         color:"white",
         fontWeight:"bold"

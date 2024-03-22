@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Form, Input, Button, DatePicker, Select, Modal } from "antd";
+import { Form, Input, Button, DatePicker, Select, Modal, Card, Row, Col } from "antd";
 import { FileImageOutlined } from "@ant-design/icons";
 import { useLocation, useParams } from "react-router";
 import "./../login/login.css";
@@ -8,6 +8,7 @@ import moment from "moment";
 import LoadingFull from "../../component/loading/loadingFull";
 import useAuthStore from "../../zustand/authStore";
 import { userApi } from "../../api/user.api";
+import AddImage from "../../component/common/AddImage";
 const { Option } = Select;
 
 const AddUserForm = () => {
@@ -134,6 +135,7 @@ const AddUserForm = () => {
     getDetail();
   }, [id]);
   return (
+    <Card>
     <div>
       <h2 style={{ marginBottom: 10 }}>
         {isEditProfile
@@ -142,9 +144,12 @@ const AddUserForm = () => {
           ? "Thêm người dùng"
           : "Cập nhật người dùng"}
       </h2>
+    
+    <Row>
+      <Col span={12}>
       <Form
         form={form}
-        wrapperCol={{ span: 8 }}
+        wrapperCol={{ span: 24 }}
         onFinish={confirmSave}
         layout="vertical"
       >
@@ -180,44 +185,15 @@ const AddUserForm = () => {
         <Form.Item name="dateOfBirth">
           <DatePicker placeholder="Ngày sinh" className="Input" />
         </Form.Item>
-        <Form.Item name="gender">
+       <div style={{marginBottom:10}}>
+       <Form.Item name="gender">
           <Select placeholder="Giới tính" className="Select">
             <Option value="M">Nam</Option>
             <Option value="F">Nữ</Option>
           </Select>
         </Form.Item>
-        <Form.Item name="image">
-          <Button
-            onClick={() => fileRef.current.click()}
-            style={{
-              marginBottom: 10,
-              marginRight: 10,
-              marginTop: 10,
-            }}
-          >
-            Thêm Ảnh
-          </Button>{" "}
-          {imageName && <span>{imageName}</span>}
-          <div>
-          {url && <img style={{width:70,height:70,objectFit:"contain"}} src={url} />}
-          </div>
-          <div
-            className="flex-start"
-            style={{
-              alignItems: "center",
-            }}
-          ></div>
-          <input
-            style={{
-              display: "none",
-            }}
-            ref={fileRef}
-            onChange={handleChangeFile}
-            placeholder="Ảnh"
-            type="file"
-            className="Input"
-          />
-        </Form.Item>
+       </div>
+       
         {!isEditProfile && (
           <Form.Item
             name="role"
@@ -247,8 +223,20 @@ const AddUserForm = () => {
           </button>
         </Form.Item>
       </Form>
+    
+      </Col>
+      <Col span={12}>
+        <input type="file" style={{
+          display:"none"
+          
+        }}
+        ref={fileRef} onChange={handleChangeFile} />
+      <AddImage url={url} click={() => fileRef.current.click() } />
+      </Col>
+    </Row>
       {/* <LoadingFull show={loading} /> */}
     </div>
+    </Card>
   );
 };
 

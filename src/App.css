@@ -1,89 +1,109 @@
-body{
-    background-color: #fff;
+body {
+  background-color: rgb(236, 228, 228);
+  
 }
-.text-center{
-text-align: center;
+.text-center {
+  text-align: center;
 }
-.flex-space-between{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
+.flex-space-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-.flex-center{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10;
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10;
 }
-.wrap-center{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
+.wrap-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
-h1,h2,h3{
-    margin: 0;
-    padding: 0;
+h1,
+h2,
+h3 {
+  margin: 0;
+  padding: 0;
 }
 .ant-form-item {
-   margin: 0 !important;
-   padding: 0 !important;
-  }
-  .ant-form{
-    margin-bottom: 20px !important;
-  }
-  .ant-select-selector{
-    background-color: #eee !important;
-    border: none !important;
-  }
-  .Input {
-    background-color: #eee;
-    border: none;
-    padding: 12px 15px;
-    margin: 8px 0;
-    width: 100%;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.ant-form {
+  margin-bottom: 20px !important;
+}
+.ant-select-selector {
+  background-color: #eee !important;
+  border: none !important;
+}
+.Input {
+  background-color: #eee;
+  border: none;
+  padding: 12px 15px;
+  margin: 8px 0;
+  width: 100%;
 }
 .Button {
-    border-radius: 20px;
-    border: 1px solid #ff4b2b;
-    background-color: #ff4b2b;
-    color: #ffffff;
-    font-size: 12px;
-    font-weight: bold;
-    padding: 12px 45px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    transition: transform 80ms ease-in;
+  border-radius: 10px;
+  border: 1px solid rgb(31, 167, 167);
+  background-color: rgb(31, 167, 167);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 12px 45px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: transform 80ms ease-in;
 }
-.Button-no-paading{
-    border: 1px solid #ff4b2b;
-    background-color: #ff4b2b;
-    color: white;
+.Button-no-paading {
+  border: 1px solid rgb(31, 167, 167);
+  background-color: rgb(31, 167, 167);
+  color: white;
 }
-.Shadow{
-    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+.Shadow {
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
 }
-.d-block{
- display: block;
+.d-block {
+  display: block;
 }
-.d-none{
-    display: none;
+.d-none {
+  display: none;
 }
-.ant-table-wrapper .ant-table-pagination{
-    display: block !important;
+.ant-table-wrapper .ant-table-pagination {
+  display: block !important;
 }
-.deleteIcon{
-    width: 20px;
-    height: 20px;
-    border-radius: 10px;
-    color: white;
-    background-color: #ff4b2b;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    top: 0;
-    right: 0;
-    cursor: pointer;
+.deleteIcon {
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  color: white;
+  background-color: rgb(31, 167, 167);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
 }
+div {
+  -ms-overflow-style: none; /* IE và Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+div::-webkit-scrollbar {
+  display: none; /* Chrome, Safari và một số phiên bản của Edge */
+}
+h1,h2,h3{
+    color: black;
+}
+.ant-table-thead > tr > th {
+    background-color: white !important; /* Màu nền */
+    
+}
+tr:nth-child(even) {
+  
+  }
