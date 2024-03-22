@@ -9,4 +9,5 @@ public interface CategoryService {
     public boolean updateCategory(long id, Category category);
     List<Category> searchCategory(String search);
     Category getCategoryByName(String name);
+    public Category getCategoryById(long id);
 }

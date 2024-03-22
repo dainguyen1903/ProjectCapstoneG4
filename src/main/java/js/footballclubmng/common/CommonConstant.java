@@ -189,6 +189,7 @@ public class CommonConstant {
         public static final String CREATE_CATEGORY = HEAD_API + CATEGORY + "/create-category";
         public static final String UPDATE_CATEGORY = HEAD_API + CATEGORY + "/update-category/{id}";
         public static final String SEARCH_CATEGORY = HEAD_API + CATEGORY + "/search-category";
+        public static final String DETAIL_CATEGORY = HEAD_API + CATEGORY + "/detail-category/{id}";
     }
 
     public static class PRODUCT_API {
