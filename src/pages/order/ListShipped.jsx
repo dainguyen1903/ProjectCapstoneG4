@@ -102,7 +102,8 @@ const ListShiped= () => {
                 <div style={{
                     display:"flex",
                     justifyContent:"flex-end",
-                    marginTop:10
+                    marginTop:10,
+                    paddingBottom:10,
                   }}>
                     <Button style={{
                       background:"rgb(41, 174, 189)",

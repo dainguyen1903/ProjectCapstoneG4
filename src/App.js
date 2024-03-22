@@ -111,9 +111,9 @@ function App() {
               <Route
               path="/order"
               element={
-                <PrivateRouter>
+               
                   <OrderPage />
-                </PrivateRouter>
+                
               }
             />
             {/* Cart */}

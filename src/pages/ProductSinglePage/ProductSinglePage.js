@@ -119,11 +119,14 @@ const ProductSinglePage = () => {
               <div className="product-img">
                 <div className="product-img-zoom">
                   <img
+                  style={{objectFit:"contain"}}
                     src={
-                      listImage.length  > 0 ? listImage[0]:""
+
+                      "https://3.bp.blogspot.com/-717kWO7jznI/W-EoQUvAflI/AAAAAAAAST0/kKK1lfc1IzIYv1Ljeu9aT0FGniMqN28XwCLcBGAs/s2560/cristiano-ronaldo-720x1280-4k-16390.jpg"
+                      // listImage.length  > 0 ? listImage[0]:""
                     }
                     alt=""
-                    className="img-cover"
+                    // className="img-cover"
                   />
                 </div>
 

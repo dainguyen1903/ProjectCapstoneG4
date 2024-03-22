@@ -32,9 +32,7 @@ const OrderPage = () => {
   const total = orders.reduce((cartTotal, cartItem) => {
     return (cartTotal += cartItem.totalPrice);
   }, 0);
-  if (orders.length === 0) {
-    return <Navigate to={"/cart"} />;
-  }
+  
 
   return (
     <div className="cart bg-whitesmoke">

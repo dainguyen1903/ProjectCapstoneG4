@@ -80,6 +80,7 @@ const Header = () => {
                       <li>
                         <div>
                           <Avatar
+                          src={currentUser?.imageUrl}
                             style={{
                               border: "2px solid white",
                               background: "white",

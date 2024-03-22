@@ -72,7 +72,7 @@ const ListCancel = () => {
                   <span className="cart-ctxt">{idx + 1}</span>
                 </div>
                 <div className="cart-ctd-or">
-                  <span className="cart-ctxt">{cart?.title}</span>
+                  <span className="cart-ctxt">{cart?.productName}</span>
                 </div>
                 <div className="cart-ctd-or">
                   <span className="cart-ctxt">
@@ -98,6 +98,8 @@ const ListCancel = () => {
                   display: "flex",
                   justifyContent: "flex-end",
                   marginTop: 10,
+                  paddingBottom:10,
+               
                 }}
               >
                 <Button

@@ -104,7 +104,7 @@ const HomePage2 = () => {
 
   // renderListPost
   const renderListPost = listPost.map((item) => (
-    <Col span={8}>
+    <Col span={12}>
       <BlogItem {...item} />
     </Col>
   ));
