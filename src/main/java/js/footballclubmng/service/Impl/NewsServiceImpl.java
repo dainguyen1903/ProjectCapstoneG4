@@ -164,7 +164,12 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public boolean deleteNewsType(long id) {
-        return false;
+        try {
+            newsTypeRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override

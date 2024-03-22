@@ -28,6 +28,6 @@ public class NewsType {
     @Column(name = "description")
     private String description;
 
-    @OneToMany(mappedBy = "newsType",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "newsType",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private List<News> newsList;
 }
