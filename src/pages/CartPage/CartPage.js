@@ -74,7 +74,7 @@ dispatch(setCartOrder({
                       <span className='cart-ctxt'>{idx + 1}</span>
                     </div>
                     <div className='cart-ctd'>
-                      <span className='cart-ctxt'>{cart?.title}</span>
+                      <span className='cart-ctxt'>{cart?.productName}</span>
                     </div>
                     <div className='cart-ctd'>
                       <span className='cart-ctxt'>{formatPrice(cart?.discountedPrice)}</span>
@@ -96,7 +96,7 @@ dispatch(setCartOrder({
                     </div>
 
                     <div className='cart-ctd'>
-                      <span className='cart-ctxt text-orange fw-5'>{formatPrice(cart?.totalPrice)}</span>
+                      <span className='cart-ctxt text-orange fw-5'>{formatPrice(cart?.totalPrice || cart?.price)}</span>
                     </div>
 
                     <div className='cart-ctd'>

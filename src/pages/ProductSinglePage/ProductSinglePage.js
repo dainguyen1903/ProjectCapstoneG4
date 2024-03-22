@@ -98,11 +98,11 @@ const ProductSinglePage = () => {
 
   const addToCartHandler = (product) => {
     let discountedPrice =
-      product?.price - product?.price * (product?.discountPercentage / 100);
+      product?.price - product?.price * (product?.discount / 100);
     let totalPrice = quantity * discountedPrice;
 
     dispatch(
-      addToCart({ ...product, quantity: quantity, totalPrice, discountedPrice })
+      addToCart({ ...product, quantity: quantity, totalPrice, discountedPrice,price:discountedPrice,title:product.productName })
     );
     dispatch(setCartMessageOn(true));
   };

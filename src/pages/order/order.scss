@@ -1,0 +1,21 @@
+.wrap-status{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 200px;
+    .status-active{
+        font-weight: bold;
+        display: block;
+        position: relative;
+        color: rgb(41, 174, 189);
+        &::after{
+            content: "";
+            width: 100%;
+            height: 3px;
+            background-color: rgb(41, 174, 189);
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+        }
+    }
+}

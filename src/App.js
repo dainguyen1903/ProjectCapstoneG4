@@ -40,6 +40,7 @@ import ConfirmOTP from "./pages/ResetPass/ConfirmOtp";
 import ResetPassword from "./pages/ResetPass/ResetPass";
 import BlogDetail from "./pages/Blog/BlogDetail";
 import CheckOutPage from "./pages/CheckOut/CheckOut";
+import OrderPage from "./pages/order/Order";
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -104,6 +105,14 @@ function App() {
               element={
                 <PrivateRouter>
                   <Cart />
+                </PrivateRouter>
+              }
+            />
+              <Route
+              path="/order"
+              element={
+                <PrivateRouter>
+                  <OrderPage />
                 </PrivateRouter>
               }
             />

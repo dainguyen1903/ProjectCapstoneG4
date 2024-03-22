@@ -26,7 +26,7 @@ export const  getQueryParams =() =>  {
 }
 
 export function isTokenExpired(token) {
-  token = parseBearerToken(token);
+  // token = parseBearerToken(token);
     // Giả sử token đã được tách ra từ "Bearer"
     const payloadBase64Url = token.split('.')[1];
     const payloadBase64 = payloadBase64Url.replace(/-/g, '+').replace(/_/g, '/');

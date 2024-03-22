@@ -12,7 +12,7 @@ const Header = () => {
   const content = (
     <div>
       <p onClick={() => navigate("/profile")} className="point">Tài khoản của tôi</p>
-      <p className="point">Đơn mua</p>
+      <p onClick={() => navigate("/order")} className="point">Đơn mua</p>
     </div>
   );
   const login = useSelector(isLogin);

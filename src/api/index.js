@@ -29,7 +29,8 @@ api.interceptors.response.use(
   },
   (error) => {
     const token = localStorage.getItem(LOCAL_STORAGE_KEY.token)
-    if(error.response && error.response.status === 401 && !reTry && token && isTokenExpired(token)){
+    console.log("oiauscguhujoikuhhjkl",!token)
+    if((error.response && error.response.status === 401 && !reTry && token && isTokenExpired(token))){
       reTry = true;
     handleLoggout();
     window.location.href = "/"
