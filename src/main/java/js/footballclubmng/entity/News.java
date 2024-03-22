@@ -2,6 +2,7 @@ package js.footballclubmng.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +39,7 @@ public class News {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "news_type_id")
-    @JsonIgnore
+    @JsonIgnoreProperties({"newsList"})
     private NewsType newsType;
 
 //    @OneToMany(mappedBy = "news")

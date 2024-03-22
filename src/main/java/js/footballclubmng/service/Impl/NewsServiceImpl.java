@@ -197,7 +197,6 @@ public class NewsServiceImpl implements NewsService {
         }
     }
 
-
     private ListNewsResponse mapToNewsDto(News news) {
         ListNewsResponse listNewsResponse = new ListNewsResponse();
         listNewsResponse.setId(news.getId());
