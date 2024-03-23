@@ -1,6 +1,7 @@
 package js.footballclubmng.controller;
 
 import js.footballclubmng.common.CommonConstant;
+import js.footballclubmng.entity.Cart;
 import js.footballclubmng.model.response.ResponseAPI;
 import js.footballclubmng.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,7 @@ public class CartController {
     private CartService cartService;
 
     @PostMapping(CommonConstant.CART_API.ADD_CART_ITEM)
-    @PreAuthorize("hasRole('ROLE_User')")
-    public ResponseAPI<Object> addCartItemToCart(@RequestHeader(name = "Authorization") String token,@PathVariable int productId) {
+    public ResponseAPI<Object> addCartItemToCart(@RequestHeader(name = "Authorization",required = false) String token,@PathVariable int productId) {
         if (token == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.EMPTY_TOKEN);
         }
@@ -39,4 +39,15 @@ public class CartController {
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.REMOVE_CART_ITEM_SUCCESS);
     }
 
+    @GetMapping(CommonConstant.CART_API.VIEW_CART)
+    public ResponseAPI<Object> viewCart(@RequestHeader(name = "Authorization",required = false) String token) {
+        if (token == null) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.EMPTY_TOKEN);
+        }
+        Cart cart = cartService.ViewCart(token);
+        if (cart == null) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.EMPTY_CART);
+        }
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, cart);
+    }
 }

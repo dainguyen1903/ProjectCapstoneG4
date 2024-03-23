@@ -134,6 +134,8 @@ public class CommonConstant {
         public static final String OUT_OF_STOCK = "Sản phẩm đã hết hàng";
         public static final String REMOVE_CART_ITEM_FAIL = "Xóa sản phẩm thất bại";
         public static final String REMOVE_CART_ITEM_SUCCESS = "Xóa sản phẩm thành công";
+        public static final String EMPTY_CART = "Giỏ hàng trống";
+        public static final String VIEW_CART_SUCCESS = "Xem giỏ hàng thành công";
     }
 
 
@@ -220,6 +222,7 @@ public class CommonConstant {
         public static final String CART = "/cart";
         public static final String ADD_CART_ITEM = HEAD_API + CART + "/add-cart-item/{productId}";
         public static final String REMOVE_CART_ITEM = HEAD_API + CART + "/remove-cart-item/{cartItemId}";
+        public static final String VIEW_CART = HEAD_API + CART + "/view-cart";
     }
 
 

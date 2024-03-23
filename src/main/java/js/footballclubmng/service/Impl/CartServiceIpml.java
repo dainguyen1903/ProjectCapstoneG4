@@ -82,4 +82,12 @@ public class CartServiceIpml implements CartService {
             return false;
         }
     }
+
+    @Override
+    public Cart ViewCart(String token) {
+        String jwtToken = token.substring(7);
+        String email = tokenProvider.getUsernameFromJWT(jwtToken);
+        User user = userRepository.findByEmail(email);
+        return cartRepository.findByUser(user);
+    }
 }

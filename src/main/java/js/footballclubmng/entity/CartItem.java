@@ -1,6 +1,7 @@
 package js.footballclubmng.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
@@ -24,7 +25,7 @@ public class CartItem {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id")
-    @JsonIgnore
+    @JsonIgnoreProperties("cartItems")
     private Product product;
 
     @Column(name = "quantity")
