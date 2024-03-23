@@ -62,13 +62,24 @@ public class CartServiceIpml implements CartService {
             return false;
         }
     }
-    public boolean checkQuantity(long productId){
+
+    public boolean checkQuantity(long productId) {
         Product product = productRepository.findById(productId).orElse(null);
         if (product != null) {
-            if (product.getQuantity()>=1) {
+            if (product.getQuantity() >= 1) {
                 return true;
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean removeCartItemFromCart(long cartItemId) {
+        try {
+            cartItemRepository.deleteById(cartItemId);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

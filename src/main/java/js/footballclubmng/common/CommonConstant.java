@@ -116,6 +116,7 @@ public class CommonConstant {
         public static final String DELETE_NEWS_FAIL = "Xóa tin tức thất bại";
         public static final String DELETE_NEWS_SUCCESS = "Xóa tin tức thành công";
 
+
         //Message news type
         public static final String NOT_FOUND_NEWS_TYPE = "Không tìm thấy loại tin tức";
         public static final String EXIST_NEWS_TYPE = "Loại tin tức đã tồn tại";
@@ -131,7 +132,8 @@ public class CommonConstant {
         public static final String ADD_CART_ITEM_FAIL = "Thêm sản phẩm vào giỏ hàng thất bại";
         public static final String ADD_CART_ITEM_SUCCESS = "Thêm sản phẩm vào giỏ hàng thành công";
         public static final String OUT_OF_STOCK = "Sản phẩm đã hết hàng";
-
+        public static final String REMOVE_CART_ITEM_FAIL = "Xóa sản phẩm thất bại";
+        public static final String REMOVE_CART_ITEM_SUCCESS = "Xóa sản phẩm thành công";
     }
 
 
@@ -217,7 +219,7 @@ public class CommonConstant {
     public static class CART_API {
         public static final String CART = "/cart";
         public static final String ADD_CART_ITEM = HEAD_API + CART + "/add-cart-item/{productId}";
-
+        public static final String REMOVE_CART_ITEM = HEAD_API + CART + "/remove-cart-item/{cartItemId}";
     }
 
 

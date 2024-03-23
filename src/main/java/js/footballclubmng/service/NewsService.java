@@ -9,7 +9,7 @@ import js.footballclubmng.model.response.ListNewsTypeResponse;
 import java.util.List;
 
 public interface NewsService {
-    News getNewsById(long id);
+    public News getNewsById(long id);
 
     public List<ListNewsResponse> findAllNews();
 
@@ -33,7 +33,7 @@ public interface NewsService {
 
     public List<News> findTop4News();
 
-    NewsType getNewsTypeByName(String name);
+    public NewsType getNewsTypeByName(String name);
 
-    List<NewsType> searchNewsType(String search);
+    public List<NewsType> searchNewsType(String search);
 }
