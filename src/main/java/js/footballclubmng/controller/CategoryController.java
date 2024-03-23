@@ -18,7 +18,6 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping(CommonConstant.CATEGORY_API.LIST_CATEGORY)
-    @PreAuthorize("hasRole('ROLE_Sale')")
     public ResponseAPI<List<Category>> listPlayer() {
         List<Category> list  = categoryService.getAllCategory();
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, list);
@@ -55,6 +54,16 @@ public class CategoryController {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.NOT_FOUND_CATEGORY);
         }
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, list);
+    }
+
+
+    @GetMapping(CommonConstant.CATEGORY_API.DETAIL_CATEGORY)
+    public ResponseAPI<Category> detailCategory(@PathVariable int id) {
+        Category category = categoryService.getCategoryById(id);
+        if (category == null) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_FOUND, CommonConstant.COMMON_MESSAGE.NOT_FOUND_CATEGORY);
+        }
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, category);
     }
 
 }

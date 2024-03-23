@@ -141,4 +141,18 @@ public class NewsController {
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK,null, newsTypeList);
     }
 
+    @DeleteMapping(CommonConstant.NEWS_API.DELETE_NEWS_TYPE)
+    @PreAuthorize("hasRole('ROLE_Operator')")
+    public ResponseAPI<String> deleteNewsType(@PathVariable int id) {
+        NewsType newsType = newsService.getNewsTypeById(id);
+        if(newsType==null){
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY,CommonConstant.COMMON_MESSAGE.NOT_FOUND_NEWS_TYPE);
+        }
+        boolean check = newsService.deleteNewsType(id);
+        if(!check){
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST,CommonConstant.COMMON_MESSAGE.DELETE_NEWS_TYPE_FAIL);
+        }
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK,CommonConstant.COMMON_MESSAGE.DELETE_NEWS_TYPE_SUCCESS);
+    }
+
 }

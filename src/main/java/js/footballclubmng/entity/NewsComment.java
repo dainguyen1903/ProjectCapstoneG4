@@ -30,10 +30,10 @@ public class NewsComment {
     @JsonIgnore
     private News news;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    @JsonIgnore
-    private User user;
+//    @ManyToOne
+//    @JoinColumn(name = "user_id")
+//    @JsonIgnore
+//    private User user;
 
 
 

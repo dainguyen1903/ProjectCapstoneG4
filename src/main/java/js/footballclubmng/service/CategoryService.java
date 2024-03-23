@@ -7,6 +7,7 @@ public interface CategoryService {
     public List<Category> getAllCategory();
     public boolean createCategory(Category category);
     public boolean updateCategory(long id, Category category);
-    List<Category> searchCategory(String search);
-    Category getCategoryByName(String name);
+    public List<Category> searchCategory(String search);
+    public Category getCategoryByName(String name);
+    public Category getCategoryById(long id);
 }
