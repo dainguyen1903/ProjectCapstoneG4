@@ -90,4 +90,24 @@ public class CartServiceIpml implements CartService {
         User user = userRepository.findByEmail(email);
         return cartRepository.findByUser(user);
     }
+
+    @Override
+    public boolean updateQuantityCartItem(long cartItemId, int quantity) {
+        try {
+            CartItem cartItem = cartItemRepository.findById(cartItemId).orElse(null);
+            if (cartItem != null) {
+                    cartItem.setQuantity(quantity);
+                    cartItemRepository.save(cartItem);
+                    return true;
+            }
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public CartItem getCartItemById(long cartItemId) {
+        return cartItemRepository.findById(cartItemId).orElse(null);
+    }
 }

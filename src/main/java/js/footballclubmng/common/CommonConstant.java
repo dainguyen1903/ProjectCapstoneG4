@@ -106,6 +106,8 @@ public class CommonConstant {
         public static final String UPDATE_PRODUCT_FAIL = "Cập nhật sản phẩm thất bại";
         public static final String DELETE_PRODUCT_SUCCESS = "Xóa sản phẩm thành công";
         public static final String DELETE_PRODUCT_FAIL = "Xóa sản phẩm thất bại";
+        public static final String PRODUCT_NOT_FOUND = "Không tìm thấy sản phẩm";
+
 
 
         //Message news
@@ -135,7 +137,10 @@ public class CommonConstant {
         public static final String REMOVE_CART_ITEM_FAIL = "Xóa sản phẩm thất bại";
         public static final String REMOVE_CART_ITEM_SUCCESS = "Xóa sản phẩm thành công";
         public static final String EMPTY_CART = "Giỏ hàng trống";
-        public static final String VIEW_CART_SUCCESS = "Xem giỏ hàng thành công";
+        public static final String UPDATE_QUANTITY_CART_ITEM_FAIL = "Cập nhật số lượng sản phẩm thất bại";
+        public static final String UPDATE_QUANTITY_CART_ITEM_SUCCESS = "Cập nhật số lượng sản phẩm thành công";
+        public static final String CART_ITEM_NOT_FOUND = "Không tìm thấy sản phẩm trong giỏ hàng";
+        public static final String QUANTITY_MUST_GREATER_THAN_ZERO = "Số lượng sản phẩm phải lớn hơn 0";
     }
 
 
@@ -223,6 +228,7 @@ public class CommonConstant {
         public static final String ADD_CART_ITEM = HEAD_API + CART + "/add-cart-item/{productId}";
         public static final String REMOVE_CART_ITEM = HEAD_API + CART + "/remove-cart-item/{cartItemId}";
         public static final String VIEW_CART = HEAD_API + CART + "/view-cart";
+        public static final String UPDATE_QUANTITY_CART_ITEM = HEAD_API + CART + "/update-quantity-cart-item/{cartItemId}";
     }
 
 

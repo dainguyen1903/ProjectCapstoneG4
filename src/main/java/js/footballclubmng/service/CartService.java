@@ -10,4 +10,6 @@ public interface CartService {
     public boolean checkQuantity(long productId);
     public boolean removeCartItemFromCart(long cartItemId);
     public Cart ViewCart(String token);
+    public boolean updateQuantityCartItem(long cartItemId, int quantity);
+    public CartItem getCartItemById(long cartItemId);
 }
