@@ -212,14 +212,20 @@ public class CommonConstant {
 
         public static final String DELETE_PRODUCT = HEAD_API + PRODUCT + "/delete-product/{id}";
 
-        public static final String DETAILS_PRODUCT = HEAD_API + PRODUCT + "/details-product";
+        public static final String DETAILS_PRODUCT = HEAD_API + PRODUCT + "/details-product/{id}";
+
+        public static final String SEARCH_PRODUCT = HEAD_API + PRODUCT + "search-product";
     }
 
     public static class ORDER_API {
 
         public static final String ORDER = "/order";
 
+        public static final String ORDER_DETAIL = "/order-details";
+
         public static final String LIST_ORDER = HEAD_API + ORDER + "/list-order";
+
+        public static final String VIEW_ORDER_DETAILS = HEAD_API + ORDER_DETAIL + "/{id}";
 
     }
 
@@ -230,6 +236,7 @@ public class CommonConstant {
         public static final String VIEW_CART = HEAD_API + CART + "/view-cart";
         public static final String UPDATE_QUANTITY_CART_ITEM = HEAD_API + CART + "/update-quantity-cart-item/{cartItemId}";
     }
+
 
 
 }

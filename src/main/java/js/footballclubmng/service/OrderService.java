@@ -1,10 +1,12 @@
 package js.footballclubmng.service;
 
 
-import js.footballclubmng.entity.Order;
+import js.footballclubmng.model.response.ListOrderResponse;
 
 import java.util.List;
 
+
 public interface OrderService {
-    List<Order> getAllOrder();
+    List<ListOrderResponse> getAllOrder();
+
 }
