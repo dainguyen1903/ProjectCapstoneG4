@@ -13,10 +13,9 @@ public interface PlayerRepository extends JpaRepository<Player,Long> {
     @Query(value = "select * from player p where " +
             "lower(p.name) like lower(concat('%', :query, '%')) or " +
             "lower(p.nationality) like lower(concat('%', :query, '%')) or " +
-//            "p.date_of_birth = :query OR " +
             "p.height = :query or " +
             "p.weight = :query or " +
-            "p.number_player = :query or " +
+            "p.player_number = :query or " +
             "lower(p.position) like lower(concat('%', :query, '%'))", nativeQuery = true)
     List<Player> searchPlayer(String query);
 

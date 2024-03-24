@@ -1,5 +1,6 @@
 package js.footballclubmng.controller;
 
+
 import js.footballclubmng.common.CommonConstant;
 import js.footballclubmng.entity.Order;
 import js.footballclubmng.entity.Product;
@@ -27,5 +28,3 @@ public class OrderController {
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, orderList);
     }
 
-
-}

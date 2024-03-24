@@ -11,21 +11,15 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity(name = "images")
-public class Images {
+@Entity(name = "images_news")
+public class ImagesNews {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "image_id")
+    @Column(name = "image_news_id")
     private Long id;
-
-    @Column(name = "name", nullable = false)
-    private String imageName;
 
     @Column(name = "path", nullable = false)
     private String path;
-
-    @Column(name = "image_type", nullable = false)
-    private String imageType;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "news_id")

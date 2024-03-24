@@ -1,5 +1,6 @@
 package js.footballclubmng.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
@@ -35,12 +36,14 @@ public class Product {
     @Column(name = "quantity")
     private Integer quantity;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
+    @JsonIgnoreProperties({"listProducts"})
     private Category categoryId;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private List<ImagesProduct> imagesProductList;
+
 
 
 

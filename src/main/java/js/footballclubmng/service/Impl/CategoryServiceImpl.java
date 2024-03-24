@@ -13,6 +13,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
     private CategoryRepository categoryRepository;
+
     @Override
     public List<Category> getAllCategory() {
         List<Category> list;
@@ -27,7 +28,7 @@ public class CategoryServiceImpl implements CategoryService {
             category1.setName(category.getName());
             categoryRepository.save(category1);
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }
@@ -47,8 +48,30 @@ public class CategoryServiceImpl implements CategoryService {
         return false;
     }
 
+
     @Override
-    public boolean deleteCategory(long id) {
-        return false;
+    public List<Category> searchCategory(String search) {
+        try {
+            List<Category> list = categoryRepository.findCategoryByNameContaining(search);
+            return list;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public Category getCategoryByName(String name) {
+        try {
+            Category category = categoryRepository.findCategoryByName(name);
+            return category;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public Category getCategoryById(long id) {
+        Category category = categoryRepository.findById(id).orElse(null);
+        return category;
     }
 }

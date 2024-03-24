@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,5 +22,8 @@ public class Category {
     @NotBlank(message = "Tên không được để trống.")
     @Column(name = "name")
     private String name;
+
+    @OneToMany(mappedBy = "categoryId",fetch = FetchType.EAGER)
+    private List<Product> listProducts;
 
 }
