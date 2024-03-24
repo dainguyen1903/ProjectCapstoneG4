@@ -179,9 +179,14 @@ public class CommonConstant {
 
         public static final String ORDER = "/order";
 
+        public static final String ORDER_DETAIL = "/order-details";
+
         public static final String LIST_ORDER = HEAD_API + ORDER + "/list-order";
 
+        public static final String VIEW_ORDER_DETAILS = HEAD_API + ORDER_DETAIL + "/{id}";
+
     }
+
 
 
 }
