@@ -1,5 +1,6 @@
 package js.footballclubmng.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -31,19 +32,14 @@ public class OrderDetail {
     @Column(name = "size")
     private String size;
 
-    @Column(name = "order_id")
-    private Long orderId;
-
-//    @Column(name = "product_id")
-//    private Long productId;
-
-    @OneToOne
-    @JoinColumn(name = "product_id", nullable = false)
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "product_id")
+    @JsonIgnore
     private Product product;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id", nullable = false, insertable = false, updatable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "order_id")
+    @JsonIgnore
     private Order order;
-
 
 }
