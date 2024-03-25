@@ -18,5 +18,4 @@ public class ListOrderResponse {
     private float totalPrice;
     private LocalDateTime orderDate;
 
-
 }
