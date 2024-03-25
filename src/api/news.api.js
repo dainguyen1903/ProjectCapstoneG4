@@ -33,7 +33,7 @@ export const newsApi = {
     return api.put(baseURLNews + `update-news-type/${id}`, data);
   },
   deleteNewsType: (id) => {
-    return api.delete(baseURLNews + `delete-news-type/${id}`);
+    return api.delete( `delete-news-type/${id}`);
   },
   getDetailNewsType: (id) => {
     return api.get(baseURLNews + `detail-news-type/${id}`);

@@ -37,7 +37,7 @@ const NewsCategoryList = () => {
       title: "Xác nhận",
       content: "Xóa danh mục bài viết",
       onOk: async() => {
-       const res = await newsApi.deleteNews(id);
+       const res = await newsApi.deleteNewsType(id);
        if(res.data.status === 200 || res.data.status === 204){
         Modal.success({
           title: "Thành công",
