@@ -21,11 +21,12 @@ const NewsCategoryList = () => {
   const handleSearch = async () => {
     const name = form.getFieldValue("name") || "";
     const res = await newsApi.searchNewsType({ search:name });
-    if (res.data.status === 200) {
-      setPosts(res.data.data);
+    if (res.data.status === 200 || res.data.status === 204) {
+      setPosts(res.data.data || []);
     }
     else{
       showMessErr(res.data)
+      setPosts([]);
     }
   };
 
@@ -37,7 +38,7 @@ const NewsCategoryList = () => {
       content: "Xóa danh mục bài viết",
       onOk: async() => {
        const res = await newsApi.deleteNews(id);
-       if(res.data.status === 200){
+       if(res.data.status === 200 || res.data.status === 204){
         Modal.success({
           title: "Thành công",
           content: "Xóa thành công",

@@ -23,7 +23,7 @@ const ConfirmOTP = () => {
       email: emailReset,
       otp,
     });
-    if (res.data.status === 200) {
+    if (res.data.status === 200 || res.data.status === 204) {
     
       navgate("/reset-pass");
     } else {

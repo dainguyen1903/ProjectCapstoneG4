@@ -28,7 +28,7 @@ const NewsCategoryAdd = () => {
         const res = !id
           ? await newsApi.createrNewsType(dataPost)
           : await newsApi.updateNewsType(id, dataPost);
-        if (res.data.status === 200) {
+        if (res.data.status === 200 || res.data.status === 204) {
           Modal.success({
             title: "Thành công",
             content: !id ? "Thêm thành công" : "Cập nhật thành công",
@@ -48,7 +48,7 @@ const NewsCategoryAdd = () => {
   const getDetail = async () => {
     setLoading(true);
     const res = await newsApi.getDetailNewsType(id);
-    if (res.data.status === 200) {
+    if (res.data.status === 200 || res.data.status === 204) {
       form.setFieldsValue(res.data.data);
     } else {
       showMessErr(res.data);

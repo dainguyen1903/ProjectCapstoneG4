@@ -20,7 +20,7 @@ const ResetSendOTP = () => {
     const res = await userApi.genOtp({
       email,
     });
-    if (res.data.status === 200) {
+    if (res.data.status === 200 || res.data.status === 204) {
       setEmailReset(email);
       navgate("/otp");
     } else {

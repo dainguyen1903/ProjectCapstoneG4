@@ -28,7 +28,7 @@ const ResetPassword = () => {
           const res = await userApi.resetPassword(data, {
             email: emailReset,
           });
-          if (res.data.status === 200) {
+          if (res.data.status === 200 || res.data.status === 204) {
             setEmailReset(null);
             setErr(null);
             Modal.success({

@@ -52,8 +52,17 @@ const AddNewsForm = () => {
   const [imageName, setImageName] = useState("");
   const fileRef = useRef();
   const navigate = useNavigate();
+  const [txtErr,setTxtErr]  = useState("");
   // Confirm save
   const confirmSave = ({ title, typeNews }) => {
+    if(!url){
+    
+      setTxtErr("Vui lòng chọn ảnh");
+      return ;
+    }
+    else{
+      setTxtErr("");
+    }
     const dataPost = {
       title,
       newsType: typeNews,
@@ -67,7 +76,7 @@ const AddNewsForm = () => {
         const res = !id
           ? await newsApi.createrNews(dataPost)
           : await newsApi.updateNews(id, dataPost);
-        if (res.data.status === 200) {
+        if (res.data.status === 200 || res.data.status === 204) {
           Modal.success({
             title: "Thành công",
             content: !id ? "Thêm thành công" : "Cập nhật thành công",
@@ -82,9 +91,10 @@ const AddNewsForm = () => {
   const getDetailNews = async () => {
     setLoading(true);
     const res = await newsApi.getDetailNews(id);
-    if (res.data.status === 200) {
+    if (res.data.status === 200 || res.data.status === 204) {
       const newsDetail = res.data.data;
       setValue(newsDetail.description);
+      newsDetail.typeNews  = newsDetail?.newsType?.name
       setUrl(newsDetail.imagesNewsList[0]?.path);
       form.setFieldsValue(newsDetail);
     }
@@ -93,9 +103,9 @@ const AddNewsForm = () => {
 
   const getListNewType = async () => {
     const res = await newsApi.searchNewsType({ search: "" });
-    if (res.data.status === 200) {
+    if (res.data.status === 200 || res.data.status === 204) {
       const listOptionType = res.data.data.map((i) => ({
-        id: i.id,
+        id: i.name,
         name: i.name,
       }));
       setListTypeNews(listOptionType);
@@ -188,6 +198,7 @@ const AddNewsForm = () => {
                   url={url}
                   click={() => fileRef.current.click()}
                 />
+                <div style={{color:"red",textAlign:"center"}}>{txtErr}</div>
               </Col>
             </Row>
           </Col>

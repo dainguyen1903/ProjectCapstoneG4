@@ -17,7 +17,7 @@ const ProductCategoryList = () => {
   const handleSearch = async (value) => {
     const name = form.getFieldValue("name") || "";
     const res = await categoryApi.searchCategory({search:name});
-    if (res.data.status === 200 ||res.data.status === 204 ) {
+    if (res.data.status === 200 || res.data.status === 204 ||res.data.status === 204 ) {
       setCategoryList(res.data.data || []);
     }
   };
@@ -32,7 +32,7 @@ const ProductCategoryList = () => {
       content: "Xóa danh mục sản phẩm",
       onOk: async () => {
         const res = await categoryApi.deleteCategory(id);
-        if (res.data.status === 200) {
+        if (res.data.status === 200 || res.data.status === 204) {
           Modal.success({
             title: "Thành công",
             content: "Xóa thành công",

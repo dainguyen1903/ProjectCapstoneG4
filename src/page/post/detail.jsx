@@ -18,7 +18,7 @@ const DetailNews = () => {
   const getDetailNews = async () => {
     setLoading(true);
     const res = await newsApi.getDetailNews(id);
-    if (res.data.status === 200) {
+    if (res.data.status === 200 || res.data.status === 204) {
       const newsDetail = res.data.data;
       setDescription(newsDetail.description)
      setTitle(newsDetail.title)

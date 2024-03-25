@@ -22,7 +22,7 @@ const ChangePassword = () => {
         newPassword,
         reNewPassword: confirmNewPassword,
       });
-      if (res.data.status === 200) {
+      if (res.data.status === 200 || res.data.status === 204) {
         Modal.success({
           title: "Thành công",
           content: "Cập nhật mật khẩu thành công",

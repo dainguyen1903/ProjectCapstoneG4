@@ -43,7 +43,7 @@ const AddProduct = () => {
         const res = !id
           ? await productApi.createrProduct(dataPosst)
           : await productApi.updateProduct(id, dataPosst);
-        if (res.data.status === 200) {
+        if (res.data.status === 200 || res.data.status === 204) {
           Modal.success({
             title: "Thành công",
             content: !id ? "Thêm thành công" : "Cập nhật thành công",

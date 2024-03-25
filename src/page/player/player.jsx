@@ -33,7 +33,7 @@ const ManagePlayer = () => {
       content: "Xóa cầu thủ",
       onOk: async () => {
         const res = await playerApi.deletePlayer(userId);
-        if (res.data.status === 200) {
+        if (res.data.status === 200 || res.data.status === 204) {
           Modal.success({
             title: "Thành công",
             content: "Xóa thành công",

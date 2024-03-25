@@ -22,11 +22,14 @@ const PostManage = () => {
     const res = await newsApi.searchNews({
       search: title,
     });
-    if (res.data.status === 200 ||res.data.status === 204 ) {
-      setPosts(res.data.data || []);
+    if (res.data.status === 200 || res.data.status === 204 ||res.data.status === 204 ) {
+      setPosts(res.data.data ? res.data.data: []);
+    }
+    else{
+      setPosts([])
     }
   };
-
+console.log(posts)
   useEffect(() => {
   handleSearch()
   },[])
@@ -38,7 +41,7 @@ const PostManage = () => {
       content: "Xóa bài viết",
       onOk: async () => {
         const res = await newsApi.deleteNews(id);
-        if (res.data.status === 200) {
+        if (res.data.status === 200 || res.data.status === 204) {
           Modal.success({
             title: "Thành công",
             content: "Xóa thành công",
@@ -62,7 +65,7 @@ const PostManage = () => {
       title: "Loại bài viết",
       dataIndex: "typeNewsValue",
       key: "typeNewsValue",
-      render: (value, row) => <span>{value}</span>,
+      render: (value, row) => <span>{row?.newsType?.name}</span>,
     },
 
     {
@@ -130,7 +133,7 @@ const PostManage = () => {
       <Table
         pagination={{
           pageSize: 10,
-          total: posts.length,
+          total: posts?.length,
           position: ["bottomCenter"],
         }}
         columns={columns}
