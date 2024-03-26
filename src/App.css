@@ -107,3 +107,6 @@ h1,h2,h3{
 tr:nth-child(even) {
   
   }
+.bold{
+  font-weight: bold;
+}

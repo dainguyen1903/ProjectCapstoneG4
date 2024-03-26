@@ -237,7 +237,7 @@ export const router = [
     component: AddMatchForm,
     path: "/match/edit/:id",
     key: "/match",
-    role: [ROLE.SALE],
+    role: [ROLE.OPERATOR],
   },
   {
     show: false,

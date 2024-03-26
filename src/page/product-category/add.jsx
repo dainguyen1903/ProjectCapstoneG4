@@ -20,7 +20,7 @@ const AddProductCategory = () => {
       title: "Xác nhận",
       content: !id ? "Thêm danh mục sản phẩm" : "Cập nhật danh mục sản phẩm",
       onOk: async () => {
-        const res = !id ? await categoryApi.createrCategory({ name }) : null;
+        const res = !id ? await categoryApi.createrCategory({ name }) : await categoryApi.updateCategory(id,{ name });
         if (res.data.status === 200 || res.data.status === 204) {
           Modal.success({
             title: "Thành công",
@@ -31,6 +31,16 @@ const AddProductCategory = () => {
       },
     });
   };
+
+  const getDetail = async() =>{
+    const res = await categoryApi.getDetailCategory(id);
+    const data = res.data.data?.listProducts[0]?.categoryId?.name;
+    form.setFieldValue("name",data)
+    console.log(res);
+  }
+  useEffect(()=>{
+       getDetail();
+   },[])
 
   return (
    <Card>

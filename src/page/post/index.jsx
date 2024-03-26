@@ -18,7 +18,7 @@ const PostManage = () => {
 
   // Function to handle search
   const handleSearch = async (value) => {
-    const title = form.getFieldValue("title") || "";
+    const title = form.getFieldValue("title") ?form.getFieldValue("title").trim(): "";
     const res = await newsApi.searchNews({
       search: title,
     });

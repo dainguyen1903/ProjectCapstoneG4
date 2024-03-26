@@ -1,4 +1,4 @@
-import { Button, Card, Form, Input, Modal, Select } from "antd";
+import { Button, Card, Checkbox, Form, Input, Modal, Select } from "antd";
 import moment from "moment";
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
@@ -10,7 +10,6 @@ import { categoryApi } from "../../api/category.api";
 import "./../login/login.css";
 import { showMessErr } from "../../ultis/helper";
 const { Option } = Select;
-
 const AddProduct = () => {
   const [form] = Form.useForm();
   const location = useLocation();
@@ -27,19 +26,42 @@ const AddProduct = () => {
   let detail = products.find((i) => i.id == id) || {};
   const addProduct = useProductStore((state) => state.addProduct);
   const updateProduct = useProductStore((state) => state.updateProduct);
+  const [isCustom,setIsCustom ] = useState(false)
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
+  const [txtErr, settxterr] = useState("");
+  const [listSize,setListSize] = useState([{
+    id:Math.random()*100,
+    size:"",
+  }]);
+
+  // Change Size
+  const changeSize = (id,newValue) => {
+    const newListSize = [...listSize];
+    const index = listSize.findIndex(i => i.id ===id);
+    if(index >=0){
+      newListSize[index].size = newValue;
+      setListSize(newListSize)
+    }
+  }
   // Confirm save
   const confirmSave = (value) => {
+    if (url.length === 0) {
+      settxterr("Vui lòng chọn ảnh");
+      return;
+    } else {
+      settxterr("");
+    }
+
     Modal.confirm({
       title: "Xác nhận",
       content: !id ? "Thêm sản phẩm" : "Cập nhật sản phẩm",
       onOk: async () => {
         const dataPosst = JSON.parse(JSON.stringify(value));
-        dataPosst.ImagesProductList = url;
-        // dataPosst.image_name = imageName;
-        // dataPosst.image_url = url;
-        // dataPosst.category_name = category ? category.name : "";
+        dataPosst.imagesProductList = url;
+        const listSizePost = Array.from(new Set(listSize.filter(i=>i.size).map(i => i.size.trim())));
+        dataPosst.size = listSizePost.join(";")
+        dataPosst.isCustomise  = isCustom;
         const res = !id
           ? await productApi.createrProduct(dataPosst)
           : await productApi.updateProduct(id, dataPosst);
@@ -78,13 +100,21 @@ const AddProduct = () => {
     setLoading(true);
     const res = await productApi.getDetailProduct(id);
     const data = res.data.data;
+    const listImage = res.data.data.imagesProductList
+      ? res.data.data.imagesProductList.map((i) => i.path)
+      : [];
+    setUrl(listImage);
+    setIsCustom(data.isCustomise)
+    setListSize(data.size.split(";").filter(i => i).map((i,index) => ({
+      size:i,
+      id:index
+    })))
     const categoryName = data.categoryId?.name;
     data.categoryName = categoryName;
 
     form.setFieldsValue(data);
     setLoading(false);
   };
-  console.log(url);
   useEffect(() => {
     if (id) {
       getDetail();
@@ -101,14 +131,11 @@ const AddProduct = () => {
     getListCategory();
   }, []);
   return (
-    <Card style={{
-     
-    }}>
-      <h2 style={{ marginBottom: 10}}>
+    <Card style={{}}>
+      <h2 style={{ marginBottom: 10 }}>
         {!id ? "Thêm sản phẩm" : "Cập nhật sản phẩm"}
       </h2>
       <Form
-      
         form={form}
         wrapperCol={{ span: 10 }}
         onFinish={confirmSave}
@@ -151,12 +178,12 @@ const AddProduct = () => {
         >
           <Input placeholder="Khuyến mãi" className="Input" />
         </Form.Item>
-        <Form.Item
+        {/* <Form.Item
           rules={[{ required: true, message: "Vui lòng nhập kích thước!" }]}
           name="size"
         >
           <Input placeholder="Kích cỡ" className="Input" />
-        </Form.Item>
+        </Form.Item> */}
         <Form.Item name="description">
           <Input placeholder="Mô tả sản phẩm" className="Input" />
         </Form.Item>
@@ -166,6 +193,29 @@ const AddProduct = () => {
         >
           <Input placeholder="Số lượng" className="Input" />
         </Form.Item>
+       <div style={{marginBottom:15,marginTop :0}}>
+        <div style={{
+          marginTop:5
+        }} className="bold" >
+          <span>Size</span>
+          <Button onClick={() => {
+            setListSize([...listSize,{
+              id:Date.now(),
+              size:""
+            }])
+          }} style={{marginLeft:10}}>Thêm size</Button>
+        </div>
+        
+        {listSize.map(item => {
+          return <div>
+            <Input style={{
+            width:300,
+            marginTop:10
+          }} value={item.size} onChange={(e) => changeSize(item.id,e.target.value)} />
+          </div>
+        })}
+       </div>
+       <Checkbox checked={isCustom} onChange={e => setIsCustom(e.target.checked)} >Cho phép tùy chỉnh sản phấm</Checkbox>
 
         <Form.Item name="image_url">
           <Button
@@ -178,15 +228,15 @@ const AddProduct = () => {
           >
             Thêm Ảnh
           </Button>{" "}
-          <div
-           
-          >
+          <div>
             {url.length > 0 && (
-              <div  style={{
-                display: "flex",
-                gap: 10,
-                flexWrap: "wrap",
-              }}>
+              <div
+                style={{
+                  display: "flex",
+                  gap: 10,
+                  flexWrap: "wrap",
+                }}
+              >
                 {url.map((item, index) => (
                   <div
                     style={{

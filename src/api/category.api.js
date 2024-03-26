@@ -5,7 +5,7 @@ export const categoryApi = {
     return api.get(baseURLCategory + "list-category");
   },
   getDetailCategory: (id) => {
-    return api.get(baseURLCategory + `category-detail/${id}`);
+    return api.get(baseURLCategory + `detail-category/${id}`);
   },
   createrCategory: (data) => {
     return api.post(baseURLCategory + "create-category", data);

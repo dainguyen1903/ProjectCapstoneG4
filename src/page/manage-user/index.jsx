@@ -28,7 +28,7 @@ const ManageUser = () => {
     const res = await userApi.getListuser({name :name|| ""});
     console.log(res.data.data)
     setUsers(
-      res.data.data
+      res.data.data|| []
     );
   };
 

@@ -17,9 +17,9 @@ const ManagePlayer = () => {
 
   // Function to handle search
   const handleSearch = async () => {
-    const txt = form.getFieldValue("name") || "";
-    const res = await playerApi.getListPlayer({ query: txt });
-    setUsers(res.data.data);
+    const txt = form.getFieldValue("name") ?form.getFieldValue("name").trim(): "";
+    const res = await playerApi.searchPlayer({ query: txt });
+    setUsers(res.data.data || []);
   };
 
   useEffect(() => {

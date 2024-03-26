@@ -19,7 +19,7 @@ const NewsCategoryList = () => {
 
   // Function to handle search
   const handleSearch = async () => {
-    const name = form.getFieldValue("name") || "";
+    const name = form.getFieldValue("name") ?form.getFieldValue("name").trim(): "";;
     const res = await newsApi.searchNewsType({ search:name });
     if (res.data.status === 200 || res.data.status === 204) {
       setPosts(res.data.data || []);
