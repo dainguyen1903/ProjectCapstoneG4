@@ -48,6 +48,7 @@ public class ProductServiceImpl implements ProductService {
             productEntity.setDescription(createProductRequest.getDescription());
             productEntity.setQuantity(createProductRequest.getQuantity());
             productEntity.setCategoryId(category);
+            productEntity.setIsCustomise(createProductRequest.getIsCustomise());
             productRepository.save(productEntity);
             if(createProductRequest.getImagesProductList() != null) {
                 for(String image : createProductRequest.getImagesProductList()) {
@@ -69,16 +70,23 @@ public class ProductServiceImpl implements ProductService {
             Product product = productRepository.findById(id).orElse(null);
             if (product != null) {
                 Category category = categoryRepository.findByName(createProductRequest.getCategoryName());
-
-                Product productEntity = new Product();
-                productEntity.setProductName(createProductRequest.getProductName());
-                productEntity.setPrice(createProductRequest.getPrice());
-                productEntity.setDiscount(createProductRequest.getDiscount());
-                productEntity.setSize(createProductRequest.getSize());
-                productEntity.setDescription(createProductRequest.getDescription());
-                productEntity.setQuantity(createProductRequest.getQuantity());
-                productEntity.setCategoryId(category);
-                productRepository.save(productEntity);
+                product.setProductName(createProductRequest.getProductName());
+                product.setPrice(createProductRequest.getPrice());
+                product.setDiscount(createProductRequest.getDiscount());
+                product.setSize(createProductRequest.getSize());
+                product.setDescription(createProductRequest.getDescription());
+                product.setQuantity(createProductRequest.getQuantity());
+                product.setCategoryId(category);
+                product.setIsCustomise(createProductRequest.getIsCustomise());
+                productRepository.save(product);
+                if(createProductRequest.getImagesProductList() != null) {
+                    for(String image : createProductRequest.getImagesProductList()) {
+                        ImagesProduct imagesProduct = new ImagesProduct();
+                        imagesProduct.setPath(image);
+                        imagesProduct.setProduct(product);
+                        imagesProductRepository.save(imagesProduct);
+                    }
+                }
                 return true;
             }
         } catch (Exception e) {

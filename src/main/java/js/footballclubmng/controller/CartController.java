@@ -4,12 +4,15 @@ import js.footballclubmng.common.CommonConstant;
 import js.footballclubmng.entity.Cart;
 import js.footballclubmng.entity.CartItem;
 import js.footballclubmng.entity.Product;
+import js.footballclubmng.model.request.CustomiseProductRequest;
 import js.footballclubmng.model.response.ResponseAPI;
 import js.footballclubmng.service.CartService;
 import js.footballclubmng.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 public class CartController {
@@ -20,7 +23,7 @@ public class CartController {
     private ProductService productService;
 
     @PostMapping(CommonConstant.CART_API.ADD_CART_ITEM)
-    public ResponseAPI<Object> addCartItemToCart(@RequestHeader(name = "Authorization",required = false) String token,@PathVariable int productId) {
+    public ResponseAPI<Object> addCartItemToCart(@RequestHeader(name = "Authorization", required = false) String token, @PathVariable int productId, @RequestParam String size) {
         if (token == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.EMPTY_TOKEN);
         }
@@ -32,7 +35,10 @@ public class CartController {
         if (!quantity) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.OUT_OF_STOCK);
         }
-        boolean check = cartService.addCartItemToCart(token, productId);
+        if (size == null || size.isEmpty()) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.SIZE_REQUIRED);
+        }
+        boolean check = cartService.addCartItemToCart(token, productId, size);
         if (!check) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.ADD_CART_ITEM_FAIL);
         }
@@ -54,7 +60,7 @@ public class CartController {
     }
 
     @GetMapping(CommonConstant.CART_API.VIEW_CART)
-    public ResponseAPI<Object> viewCart(@RequestHeader(name = "Authorization",required = false) String token) {
+    public ResponseAPI<Object> viewCart(@RequestHeader(name = "Authorization", required = false) String token) {
         if (token == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.EMPTY_TOKEN);
         }
@@ -88,4 +94,26 @@ public class CartController {
         }
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.UPDATE_QUANTITY_CART_ITEM_SUCCESS);
     }
+
+    @PostMapping(CommonConstant.CART_API.CUSTOMISE_ADD_CART_ITEM)
+    public ResponseAPI<Object> customiseAddCartItemToCart(@RequestHeader(name = "Authorization", required = false) String token, @PathVariable int productId, @RequestBody @Valid CustomiseProductRequest customiseProductRequest) {
+        if (token == null) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.EMPTY_TOKEN);
+        }
+        Product product = productService.getProductById(productId);
+        if (product == null) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.PRODUCT_NOT_FOUND);
+        }
+        boolean quantity = cartService.checkQuantity(productId);
+        if (!quantity) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.OUT_OF_STOCK);
+        }
+        boolean check = cartService.customiseAddCartItemToCart(token, productId, customiseProductRequest);
+        if (!check) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.ADD_CART_ITEM_FAIL);
+        }
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.ADD_CART_ITEM_SUCCESS);
+    }
+
+
 }

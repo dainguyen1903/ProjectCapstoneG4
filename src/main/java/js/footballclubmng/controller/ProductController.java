@@ -22,7 +22,6 @@ public class ProductController {
     ProductService productService;
 
     @GetMapping(CommonConstant.PRODUCT_API.LIST_PRODUCT)
-    @PreAuthorize("hasRole('ROLE_Sale')")
     public ResponseAPI<List<Product>> listProduct() {
         List<Product> list = productService.getAllProduct();
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, list);
@@ -39,7 +38,6 @@ public class ProductController {
     }
 
     @PutMapping(CommonConstant.PRODUCT_API.UPDATE_PRODUCT)
-
     public ResponseAPI<Object> updateProduct(@PathVariable int id, @RequestBody @Valid CreateProductRequest createProductRequest) {
         Product product = productService.getProductById(id);
         if(product==null) {

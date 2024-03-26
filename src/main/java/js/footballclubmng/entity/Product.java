@@ -44,4 +44,6 @@ public class Product {
     @OneToMany(mappedBy = "product", fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private List<ImagesProduct> imagesProductList;
 
+    @Column(name = "is_customise")
+    private Boolean isCustomise;
 }
