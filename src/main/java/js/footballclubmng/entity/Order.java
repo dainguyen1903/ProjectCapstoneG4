@@ -11,7 +11,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity(name = "order")
+@Entity(name = "orders")
 public class Order {
     @Id
     @Column(name = "order_id")

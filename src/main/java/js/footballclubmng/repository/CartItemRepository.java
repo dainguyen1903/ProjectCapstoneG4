@@ -8,5 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CartItemRepository extends JpaRepository<CartItem, Long> {
-    CartItem findByProductAndAndCart(Product product, Cart cart);
+    CartItem findByProductAndCartAndSize(Product product, Cart cart, String size);
+    CartItem findByProductAndCartAndSizeAndPlayerNumberAndPlayerName(Product product, Cart cart, String size, Integer playerNumber, String playerName);
 }
