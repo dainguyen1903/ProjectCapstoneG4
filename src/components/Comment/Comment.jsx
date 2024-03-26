@@ -81,7 +81,7 @@ const CommentItem = ({ author, avatar, content, datetime,id,handleChangeComment,
         ) : (
           <p>{content}</p>
         )}
-        {author.id === currentUser.id && !modeEdit&&(
+        {author?.id === currentUser?.id && !modeEdit&&(
           <div
             style={{
               fontSize: 12,
@@ -161,8 +161,8 @@ const CommentCpn = ({ comments, setComments }) => {
       ...comments,
       {
         author: {
-          name: currentUser.fullname,
-          id: currentUser.id,
+          name: currentUser?.fullname,
+          id: currentUser?.id,
         },
         avatar: "",
         content: value,
@@ -192,8 +192,8 @@ const CommentCpn = ({ comments, setComments }) => {
   return (
     <div>
       <CommentList handleDeleteCComment={handleDeleteCComment} handleChangeComment={handleChangeComment} comments={comments} />
-      <Comment
-        avatar={<Avatar>{currentUser.fullname[0].toUpperCase()}</Avatar>}
+      {currentUser && <Comment
+        avatar={<Avatar>{currentUser.fullname && currentUser.fullname[0].toUpperCase()}</Avatar>}
         content={
           <Editor
             onChange={handleChange}
@@ -202,7 +202,7 @@ const CommentCpn = ({ comments, setComments }) => {
             value={value}
           />
         }
-      />
+      />}
     </div>
   );
 };

@@ -43,7 +43,6 @@ export const loginAction = createAsyncThunk(
       email,
       password,
     });
- console.log(res)
     const data = res.data;
     if (data.status === 200) {
       const token = data.data.accessToken;
@@ -67,7 +66,6 @@ export const getDetailUserAction = createAsyncThunk(
     const data = res.data;
     if (data.status === 200) {
       dispatch(setCurrentUser(data.data));
-      console.log(data.data)
       localStorage.setItem(LOCAL_STORAGE_KEY.user,JSON.stringify(data.data))
       return data.data;
     } else {

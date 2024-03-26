@@ -13,6 +13,7 @@ import Loader from "../../components/Loader/Loader";
 import { formatPrice } from "../../utils/helpers";
 import moment from "moment";
 import {
+  addCartAction,
   addToCart,
   getCartMessageStatus,
   setCartMessageOff,
@@ -21,40 +22,41 @@ import {
 import CartMessage from "../../components/CartMessage/CartMessage";
 import { FacebookProvider, CustomChat } from "react-facebook";
 import CommentCpn from "../../components/Comment/Comment";
+import { cartAPI } from "../../api/cart.api";
 const ProductSinglePage = () => {
-  const [comments, setComments] = useState([{
-    author: {
-      name:"User 1",
-      id: 1212121,
+  const [comments, setComments] = useState([
+    {
+      author: {
+        name: "User 1",
+        id: 1212121,
+      },
+      avatar: "",
+      content: "comment1",
+      datetime: moment().fromNow(),
+      id: Math.random() * 199999,
     },
-    avatar: "",
-    content: "comment1",
-    datetime: moment().fromNow(),
-    id:Math.random()*199999
-  },
-  {
-    author: {
-      name:"User 2",
-      id: 1212122,
+    {
+      author: {
+        name: "User 2",
+        id: 1212122,
+      },
+      avatar: "",
+      content: "comment2",
+      datetime: moment().fromNow(),
+      id: Math.random() * 199999,
     },
-    avatar: "",
-    content: "comment2",
-    datetime: moment().fromNow(),
-    id:Math.random()*199999
-  },
-  {
-    author: {
-      name:"User 3",
-      id: 1212123,
+    {
+      author: {
+        name: "User 3",
+        id: 1212123,
+      },
+      avatar: "",
+      content: "comment3",
+      datetime: moment().fromNow(),
+      id: Math.random() * 199999,
     },
-    avatar: "",
-    content: "comment3",
-    datetime: moment().fromNow(),
-    id:Math.random()*199999
-  },
-  
-]);
-  
+  ]);
+
   const { id } = useParams();
   const dispatch = useDispatch();
   const product = useSelector(getProductSingle);
@@ -64,7 +66,7 @@ const ProductSinglePage = () => {
   const listImage = product.imagesProductList || [];
   // getting single product
   useEffect(() => {
-    dispatch(fetchAsyncProductSingle(id));
+    
 
     if (cartMessageStatus) {
       setTimeout(() => {
@@ -72,7 +74,9 @@ const ProductSinglePage = () => {
       }, 2000);
     }
   }, [cartMessageStatus]);
-
+  useEffect(() => {
+    dispatch(fetchAsyncProductSingle(id));
+  },[id])
   let discountedPrice = Math.ceil(
     product?.price - product?.price * (product?.discount / 100)
   );
@@ -96,15 +100,15 @@ const ProductSinglePage = () => {
     });
   };
 
-  const addToCartHandler = (product) => {
-    let discountedPrice =
-      product?.price - product?.price * (product?.discount / 100);
-    let totalPrice = quantity * discountedPrice;
-
-    dispatch(
-      addToCart({ ...product, quantity: quantity, totalPrice, discountedPrice,price:discountedPrice,title:product.productName })
-    );
-    dispatch(setCartMessageOn(true));
+  const addToCartHandler = async (product) => {
+    try {
+      dispatch(addCartAction({
+        productId:product.id,
+        quantity
+      }))
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   return (
@@ -119,9 +123,8 @@ const ProductSinglePage = () => {
               <div className="product-img">
                 <div className="product-img-zoom">
                   <img
-                  style={{objectFit:"contain"}}
+                    style={{ objectFit: "contain" }}
                     src={
-
                       "https://3.bp.blogspot.com/-717kWO7jznI/W-EoQUvAflI/AAAAAAAAST0/kKK1lfc1IzIYv1Ljeu9aT0FGniMqN28XwCLcBGAs/s2560/cristiano-ronaldo-720x1280-4k-16390.jpg"
                       // listImage.length  > 0 ? listImage[0]:""
                     }
@@ -157,9 +160,11 @@ const ProductSinglePage = () => {
 
                 <div className="price">
                   <div className="flex align-center">
-                   {product?.discount > 0 &&  <div className="old-price text-gray">
-                      {formatPrice(product?.price)}
-                    </div>}
+                    {product?.discount > 0 && (
+                      <div className="old-price text-gray">
+                        {formatPrice(product?.price)}
+                      </div>
+                    )}
                   </div>
 
                   <div className="flex align-center my-1">
@@ -205,13 +210,13 @@ const ProductSinglePage = () => {
                 </div>
 
                 <div className="btns">
-                  <button type="button" className="add-to-cart-btn btn">
+                  <button onClick={() => {
+                        addToCartHandler(product);
+                      }} type="button" className="add-to-cart-btn btn">
                     <i className="fas fa-shopping-cart"></i>
                     <span
                       className="btn-text mx-2"
-                      onClick={() => {
-                        addToCartHandler(product);
-                      }}
+                      
                     >
                       add to cart
                     </span>

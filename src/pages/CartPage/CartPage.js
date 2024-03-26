@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { shopping_cart } from '../../utils/images';
 import { Link, useNavigate } from 'react-router-dom';
 import { formatPrice } from '../../utils/helpers';
-import { getAllCarts, removeFromCart, toggleCartQty, clearCart, getCartTotal, setCartOrder } from '../../store/cartSlice';
+import { getAllCarts, removeFromCart, toggleCartQty, clearCart, getCartTotal, setCartOrder, removeCartAction, updateQuantity } from '../../store/cartSlice';
 import { Checkbox } from 'antd';
 import e from 'cors';
 
@@ -81,7 +81,7 @@ dispatch(setCartOrder({
                     </div>
                     <div className='cart-ctd'>
                       <div className='qty-change flex align-center'>
-                        <button type = "button" className='qty-decrease flex align-center justify-center' onClick={() => dispatch(toggleCartQty({id: cart?.id, type: "DEC"}))}>
+                        <button type = "button" className='qty-decrease flex align-center justify-center' onClick={() => dispatch(updateQuantity({id: cart?.cartItemId, quantity: cart?.quantity-1}))}>
                           <i className='fas fa-minus'></i>
                         </button>
 
@@ -89,7 +89,7 @@ dispatch(setCartOrder({
                           {cart?.quantity}
                         </div>
 
-                        <button type = "button" className='qty-increase flex align-center justify-center' onClick={() => dispatch(toggleCartQty({id: cart?.id, type: "INC"}))}>
+                        <button type = "button" className='qty-increase flex align-center justify-center' onClick={() => dispatch(updateQuantity({id: cart?.cartItemId, quantity: cart?.quantity+1}))}>
                           <i className='fas fa-plus'></i>
                         </button>
                       </div>
@@ -100,7 +100,7 @@ dispatch(setCartOrder({
                     </div>
 
                     <div className='cart-ctd'>
-                      <button type = "button" className='delete-btn text-dark' onClick={() => dispatch(removeFromCart(cart?.id))}>Delete</button>
+                      <button type = "button" className='delete-btn text-dark' onClick={() => dispatch(removeCartAction(cart?.cartItemId))}>Delete</button>
                     </div>
                   </div>
                 )

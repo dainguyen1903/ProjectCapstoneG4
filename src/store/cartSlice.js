@@ -1,4 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { cartAPI } from "../api/cart.api";
 
 const fetchFromLocalStorage = () => {
   let cart = localStorage.getItem("cart");
@@ -14,7 +15,7 @@ const storeInLocalStorage = (data) => {
 };
 
 const initialState = {
-  carts: fetchFromLocalStorage(),
+  carts: [],
   itemsCount: 0,
   totalAmount: 0,
   isCartMessageOn: false,
@@ -24,6 +25,31 @@ const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
+    setCart: (state, { payload }) => {
+      if (payload) {
+        let { cartItems } = payload;
+        cartItems = cartItems.map(({ product, id, quantity }) => {
+          let discountedPrice =
+            product?.price - product?.price * (product?.discount / 100);
+          let totalPrice = quantity * discountedPrice;
+          return {
+            ...product,
+            totalPrice,
+            discountedPrice,
+            price: discountedPrice,
+            title: product.productName,
+            cartItemId: id,
+            quantity,
+          };
+        });
+        state.totalAmount = cartItems.reduce((cartTotal, cartItem) => {
+          return (cartTotal += cartItem.totalPrice);
+        }, 0);
+        state.carts = cartItems;
+      } else {
+        state.carts = [];
+      }
+    },
     addToCart: (state, action) => {
       const isItemInCart = state.carts.find(
         (item) => item.id === action.payload.id
@@ -117,8 +143,104 @@ const cartSlice = createSlice({
     },
   },
 });
-
+export const getListCart = createAsyncThunk(
+  "listCart/action",
+  async (id, { dispatch, rejectWithValue }) => {
+    try {
+      const res = await cartAPI.getListCart();
+      const data = res.data;
+      if (data.status === 200) {
+        dispatch(setCart(res.data.data));
+        return data.data;
+      } else {
+        return rejectWithValue(res.data.message);
+      }
+    } catch (error) {
+      return rejectWithValue("Error");
+    }
+  }
+);
+export const removeCartAction = createAsyncThunk(
+  "removeCart/action",
+  async (id, { dispatch, rejectWithValue }) => {
+    try {
+      const res = await cartAPI.removeCartItem(id);
+      const data = res.data;
+      if (data.status === 200) {
+        dispatch(getListCart());
+        return data.data;
+      } else {
+        return rejectWithValue(res.data.message);
+      }
+    } catch (error) {
+      return rejectWithValue("Error");
+    }
+  }
+);
+export const updateQuantity = createAsyncThunk(
+  "removeCart/action",
+  async ({ id, quantity }, { dispatch, rejectWithValue }) => {
+    try {
+      const res = await cartAPI.updateCartQuantity(id, quantity);
+      const data = res.data;
+      if (data.status === 200) {
+        dispatch(getListCart());
+        return data.data;
+      } else {
+        return rejectWithValue(res.data.message);
+      }
+    } catch (error) {
+      return rejectWithValue("Error");
+    }
+  }
+);
+export const addCartAction = createAsyncThunk(
+  "addCart/action",
+  async ({ productId, quantity }, { dispatch, rejectWithValue, getState }) => {
+    try {
+      let newQuantity = 0;
+      const listCart = getState().cart.carts;
+      const prevListId = listCart.map((i) => i.cartItemId);
+      const item = listCart.find((i) => i.id === productId);
+      if (item) {
+        newQuantity = item.quantity + quantity;
+      }
+      const res = await cartAPI.addCartItem(productId);
+      await dispatch(getListCart());
+      const newListCartId = getState().cart.carts.map((i) => i.cartItemId);
+      const data = res.data;
+      if (data.status === 200) {
+        if (quantity > 1) {
+          let idCartUpdate;
+          if (item) {
+            idCartUpdate = item.cartItemId;
+          } else {
+            const arr = newListCartId.filter((i) => !prevListId.includes(i));
+            if (arr.length === 1) {
+              idCartUpdate = arr[0];
+            }
+          }
+          if (idCartUpdate) {
+            dispatch(
+              updateQuantity({
+                id: idCartUpdate,
+                quantity: item ? newQuantity : quantity,
+              })
+            );
+          }
+        }
+        dispatch(setCartMessageOn())
+        return data.data;
+      } else {
+        return rejectWithValue(res.data.message);
+      }
+    } catch (error) {
+      return rejectWithValue("Error");
+    }
+  }
+);
 export const {
+  setCart,
   addToCart,
   setCartMessageOff,
   setCartMessageOn,
@@ -126,7 +248,7 @@ export const {
   toggleCartQty,
   clearCart,
   removeFromCart,
-  setCartOrder
+  setCartOrder,
 } = cartSlice.actions;
 export const getAllCarts = (state) => state.cart.carts;
 export const getCartItemsCount = (state) => state.cart.itemsCount;

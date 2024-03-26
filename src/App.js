@@ -14,7 +14,7 @@ import Header from "./components/Header/Header";
 import Sidebar from "./components/Sidebar/Sidebar";
 import Footer from "./components/Footer/Footer";
 import store from "./store/store";
-import { Provider, useDispatch } from "react-redux";
+import { Provider, useDispatch, useSelector } from "react-redux";
 import Blog from "./pages/Blog/Blog";
 import Login from "./pages/Login/Login";
 
@@ -32,7 +32,7 @@ import HomePage from "./pages/HomePage/HomePage";
 import LayOut from "./layout/layout";
 import PrivateRouter from "./router/privateRouter";
 import { useEffect } from "react";
-import { logout, setCurrentUser, setLogin } from "./store/authSlice";
+import { getCurrentUser, logout, setCurrentUser, setLogin } from "./store/authSlice";
 import { LOCAL_STORAGE_KEY } from "./constants/common";
 import RouterWithoutLogin from "./router/routerWithOutLogin";
 import ResetSendOTP from "./pages/ResetPass/ResetSendOtp";
@@ -41,8 +41,10 @@ import ResetPassword from "./pages/ResetPass/ResetPass";
 import BlogDetail from "./pages/Blog/BlogDetail";
 import CheckOutPage from "./pages/CheckOut/CheckOut";
 import OrderPage from "./pages/order/Order";
+import { getListCart } from "./store/cartSlice";
 function App() {
   const dispatch = useDispatch();
+  const user =useSelector(getCurrentUser)
   useEffect(() => {
     const user = localStorage.getItem(LOCAL_STORAGE_KEY.user);
     if (user) {
@@ -51,6 +53,12 @@ function App() {
       dispatch(setLogin());
     }
   }, []);
+
+  useEffect(() => {
+   if(user){
+    dispatch(getListCart())
+   }
+  },[user])
   return (
     <div className="App">
       <BrowserRouter>
