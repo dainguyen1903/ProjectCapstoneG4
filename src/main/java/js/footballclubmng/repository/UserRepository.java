@@ -20,6 +20,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query(value = "select * from users u where (u.first_name Like concat('%',:name,'%') or  u.last_name Like concat('%',:name,'%')) and u.delete_flg ='0' ", nativeQuery = true)
     List<User> getByName(@Param("name") String name);
+
     boolean existsByEmail(String email);
 }
 

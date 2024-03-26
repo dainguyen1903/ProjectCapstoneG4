@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -39,5 +40,8 @@ public class Product {
     @JoinColumn(name = "category_id")
     @JsonIgnoreProperties({"listProducts"})
     private Category categoryId;
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    private List<ImagesProduct> imagesProductList;
 
 }

@@ -10,6 +10,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Getter
 @Setter
@@ -32,5 +33,7 @@ public class CreateProductRequest {
     private  Integer quantity;
 
     private String description;
+
+    private List<String> ImagesProductList;
 
 }
