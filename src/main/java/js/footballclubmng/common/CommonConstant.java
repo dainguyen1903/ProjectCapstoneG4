@@ -215,7 +215,7 @@ public class CommonConstant {
 
         public static final String DETAILS_PRODUCT = HEAD_API + PRODUCT + "/details-product/{id}";
 
-        public static final String SEARCH_PRODUCT = HEAD_API + PRODUCT + "search-product";
+        public static final String SEARCH_PRODUCT = HEAD_API + PRODUCT + "/search-product";
     }
 
     public static class ORDER_API {

@@ -35,5 +35,6 @@ public class CreateProductRequest {
     private String description;
 
     private List<String> ImagesProductList;
+    private Boolean isCustomise;
 
 }
