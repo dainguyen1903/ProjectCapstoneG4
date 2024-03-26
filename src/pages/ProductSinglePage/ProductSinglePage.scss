@@ -140,3 +140,35 @@
         }
     }
 }
+.listSize{
+    margin: 10px 0;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    .size{
+     padding: 5px;
+     cursor: pointer;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     border: 1px solid  gray;
+     color: black;
+     width: 50px;
+    }
+}
+.wrap-custom{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 20px;
+    .txt-custom{
+        display: inline-block;
+        margin-right: 10px;
+        width:100px
+    }
+    .txtInput{
+        width:300px
+    }
+}

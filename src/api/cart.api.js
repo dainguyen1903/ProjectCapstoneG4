@@ -1,20 +1,36 @@
 import api from ".";
 const baseURLCart = "api/cart/";
 export const cartAPI = {
-  addCartItem: (productId) => {
-    return api.post(baseURLCart+`add-cart-item/${productId}`,{});
+  addCartItem: (productId, size) => {
+    return api.post(
+      baseURLCart + `add-cart-item/${productId}`,
+      {},
+      {
+        params: {
+          size,
+        },
+      }
+    );
   },
-  updateCartQuantity: (cartItemId,quantity) => {
-    return api.put(baseURLCart+`update-quantity-cart-item/${cartItemId}`,{},{
-        params:{
-            quantity
-        }
-    });
+
+  addCartItemCustom: (productId, body) => {
+    return api.post(baseURLCart + `customise-add-cart-item/${productId}`, body);
   },
-  removeCartItem : (id) => {
-    return api.delete(baseURLCart+`remove-cart-item/${id}`);
+  updateCartQuantity: (cartItemId, quantity) => {
+    return api.put(
+      baseURLCart + `update-quantity-cart-item/${cartItemId}`,
+      {},
+      {
+        params: {
+          quantity,
+        },
+      }
+    );
   },
-  getListCart : () => {
-  return api.get(baseURLCart+"view-cart")
-  }
+  removeCartItem: (id) => {
+    return api.delete(baseURLCart + `remove-cart-item/${id}`);
+  },
+  getListCart: () => {
+    return api.get(baseURLCart + "view-cart");
+  },
 };

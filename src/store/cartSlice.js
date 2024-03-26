@@ -196,7 +196,7 @@ export const updateQuantity = createAsyncThunk(
 );
 export const addCartAction = createAsyncThunk(
   "addCart/action",
-  async ({ productId, quantity }, { dispatch, rejectWithValue, getState }) => {
+  async ({ productId, quantity,size }, { dispatch, rejectWithValue, getState }) => {
     try {
       let newQuantity = 0;
       const listCart = getState().cart.carts;
@@ -205,7 +205,7 @@ export const addCartAction = createAsyncThunk(
       if (item) {
         newQuantity = item.quantity + quantity;
       }
-      const res = await cartAPI.addCartItem(productId);
+      const res = await cartAPI.addCartItem(productId,size);
       await dispatch(getListCart());
       const newListCartId = getState().cart.carts.map((i) => i.cartItemId);
       const data = res.data;

@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import "./ProductSinglePage.scss";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   fetchAsyncProductSingle,
@@ -23,38 +23,14 @@ import CartMessage from "../../components/CartMessage/CartMessage";
 import { FacebookProvider, CustomChat } from "react-facebook";
 import CommentCpn from "../../components/Comment/Comment";
 import { cartAPI } from "../../api/cart.api";
+
+import { Input } from "antd";
+import { LOCAL_STORAGE_KEY } from "../../constants/common";
 const ProductSinglePage = () => {
+  const currentUser = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY.user));
+  const navigate = useNavigate();
   const [comments, setComments] = useState([
-    {
-      author: {
-        name: "User 1",
-        id: 1212121,
-      },
-      avatar: "",
-      content: "comment1",
-      datetime: moment().fromNow(),
-      id: Math.random() * 199999,
-    },
-    {
-      author: {
-        name: "User 2",
-        id: 1212122,
-      },
-      avatar: "",
-      content: "comment2",
-      datetime: moment().fromNow(),
-      id: Math.random() * 199999,
-    },
-    {
-      author: {
-        name: "User 3",
-        id: 1212123,
-      },
-      avatar: "",
-      content: "comment3",
-      datetime: moment().fromNow(),
-      id: Math.random() * 199999,
-    },
+   
   ]);
 
   const { id } = useParams();
@@ -63,11 +39,16 @@ const ProductSinglePage = () => {
   const productSingleStatus = useSelector(getSingleProductStatus);
   const [quantity, setQuantity] = useState(1);
   const cartMessageStatus = useSelector(getCartMessageStatus);
-  const listImage = product.imagesProductList || [];
+  const [currentImg, setCurrentImg] = useState(null);
+  const [size, setSize] = useState("");
+  const listSize = product && product.size ? product.size.split(";") : [];
+  const [playerNumber, setPlayerNumber] = useState("");
+  const [playerName, setPlayerName] = useState("");
+  const listImage = product?.imagesProductList
+    ? product.imagesProductList.map((i) => i.path)
+    : [];
   // getting single product
   useEffect(() => {
-    
-
     if (cartMessageStatus) {
       setTimeout(() => {
         dispatch(setCartMessageOff());
@@ -76,7 +57,16 @@ const ProductSinglePage = () => {
   }, [cartMessageStatus]);
   useEffect(() => {
     dispatch(fetchAsyncProductSingle(id));
-  },[id])
+  }, [id]);
+
+  useEffect(() => {
+    if (product) {
+      const sizes = product?.size;
+      if (sizes) {
+        setSize(sizes.split(";")[0]);
+      }
+    }
+  }, [product]);
   let discountedPrice = Math.ceil(
     product?.price - product?.price * (product?.discount / 100)
   );
@@ -102,12 +92,15 @@ const ProductSinglePage = () => {
 
   const addToCartHandler = async (product) => {
     try {
-      dispatch(addCartAction({
-        productId:product.id,
-        quantity
-      }))
+      dispatch(
+        addCartAction({
+          productId: product.id,
+          quantity,
+          size
+        })
+      );
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
@@ -125,8 +118,7 @@ const ProductSinglePage = () => {
                   <img
                     style={{ objectFit: "contain" }}
                     src={
-                      "https://3.bp.blogspot.com/-717kWO7jznI/W-EoQUvAflI/AAAAAAAAST0/kKK1lfc1IzIYv1Ljeu9aT0FGniMqN28XwCLcBGAs/s2560/cristiano-ronaldo-720x1280-4k-16390.jpg"
-                      // listImage.length  > 0 ? listImage[0]:""
+                      currentImg || (listImage.length > 0 ? listImage[0] : "")
                     }
                     alt=""
                     // className="img-cover"
@@ -135,7 +127,13 @@ const ProductSinglePage = () => {
 
                 <div className="product-img-thumbs flex align-center my-2">
                   {listImage.map((i) => (
-                    <div className="thumb-item">
+                    <div
+                      style={{
+                        cursor: "pointer",
+                      }}
+                      onClick={() => setCurrentImg(i)}
+                      className="thumb-item"
+                    >
                       <img src={i} alt="" className="img-cover" />
                     </div>
                   ))}
@@ -180,8 +178,8 @@ const ProductSinglePage = () => {
                 </div>
 
                 <div className="qty flex align-center my-4">
-                  <div className="qty-text">Quantity:</div>
-                  <div className="qty-change flex align-center mx-3">
+                  <div style={{width:100 }}>Quantity:</div>
+                  <div className="qty-change flex align-center mx-2">
                     <button
                       type="button"
                       className="qty-decrease flex align-center justify-center"
@@ -189,6 +187,7 @@ const ProductSinglePage = () => {
                     >
                       <i className="fas fa-minus"></i>
                     </button>
+
                     <div className="qty-value flex align-center justify-center">
                       {quantity}
                     </div>
@@ -200,6 +199,7 @@ const ProductSinglePage = () => {
                       <i className="fas fa-plus"></i>
                     </button>
                   </div>
+
                   {product?.quantity === 0 ? (
                     <div className="qty-error text-uppercase bg-danger text-white fs-12 ls-1 mx-2 fw-5">
                       out of stock
@@ -209,17 +209,56 @@ const ProductSinglePage = () => {
                   )}
                 </div>
 
+                <div className="listSize qty flex align-center">
+                  <div style={{width:100 }} className="qty-text">
+                    Size:
+                  </div>
+                  <div className="listSize">
+                    {listSize.map((i) => (
+                      <div
+                        onClick={() => setSize(i)}
+                        style={{
+                          borderColor: size === i && "rgb(41, 174, 189)",
+                          borderWidth: size === i && 2,
+                        }}
+                        className="size"
+                      >
+                        {i}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                {product?.isCustomise && (
+                  <div style={{
+                    marginBottom:20
+                  }} className="">
+                   <div className="wrap-custom">
+                    <span className="txt-custom">Sô áo</span>
+                    <Input className="txtInput" value={playerNumber} onChange={(e) => setPlayerNumber(e.target.value)} />
+                   </div>
+                   <div className="wrap-custom">
+                    <span className="txt-custom">Tên cầu thủ</span>
+                    <Input className="txtInput" value={playerName} onChange={(e) => setPlayerName(e.target.value)} />
+                   </div>
+                  </div>
+                )}
+
                 <div className="btns">
-                  <button onClick={() => {
+                  <button
+                    onClick={() => {
+                      if(currentUser){
                         addToCartHandler(product);
-                      }} type="button" className="add-to-cart-btn btn">
+                      }
+                      else{
+                        navigate("/login")
+                      }
+                     
+                    }}
+                    type="button"
+                    className="add-to-cart-btn btn"
+                  >
                     <i className="fas fa-shopping-cart"></i>
-                    <span
-                      className="btn-text mx-2"
-                      
-                    >
-                      add to cart
-                    </span>
+                    <span className="btn-text mx-2">add to cart</span>
                   </button>
                   <button type="button" className="buy-now btn mx-3">
                     <span className="btn-text">buy now</span>

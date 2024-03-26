@@ -5,36 +5,7 @@ import { newsApi } from "../../api/news.api";
 import moment from "moment";
 import CommentCpn from "../../components/Comment/Comment";
 const BlogDetail = () => {
-  const [comments, setComments] = useState([{
-    author: {
-      name:"User 1",
-      id: 1212121,
-    },
-    avatar: "",
-    content: "comment1",
-    datetime: moment().fromNow(),
-    id:Math.random()*199999
-  },
-  {
-    author: {
-      name:"User 2",
-      id: 1212122,
-    },
-    avatar: "",
-    content: "comment2",
-    datetime: moment().fromNow(),
-    id:Math.random()*199999
-  },
-  {
-    author: {
-      name:"User 3",
-      id: 1212123,
-    },
-    avatar: "",
-    content: "comment3",
-    datetime: moment().fromNow(),
-    id:Math.random()*199999
-  },
+  const [comments, setComments] = useState([
   
 ]);  const { id } = useParams();
   const [detail, setDetail] = useState({});
