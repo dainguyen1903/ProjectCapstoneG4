@@ -14,6 +14,7 @@ import { formatPrice } from "../../utils/helpers";
 import moment from "moment";
 import {
   addCartAction,
+  addCartActionCustom,
   addToCart,
   getCartMessageStatus,
   setCartMessageOff,
@@ -90,15 +91,28 @@ const ProductSinglePage = () => {
     });
   };
 
-  const addToCartHandler = async (product) => {
+  const addToCartHandler = async ({id}) => {
     try {
+     if(product?.isCustomise){
+      dispatch(
+        addCartActionCustom({
+          productId: id,
+          quantity,
+          size,
+          playerName,
+          playerNumber
+        })
+      );
+     }
+     else{
       dispatch(
         addCartAction({
-          productId: product.id,
+          productId: id,
           quantity,
           size
         })
       );
+     }
     } catch (error) {
       console.log(error);
     }
@@ -234,7 +248,7 @@ const ProductSinglePage = () => {
                   }} className="">
                    <div className="wrap-custom">
                     <span className="txt-custom">Sô áo</span>
-                    <Input className="txtInput" value={playerNumber} onChange={(e) => setPlayerNumber(e.target.value)} />
+                    <Input type="number" className="txtInput" value={playerNumber} onChange={(e) => setPlayerNumber(e.target.value)} />
                    </div>
                    <div className="wrap-custom">
                     <span className="txt-custom">Tên cầu thủ</span>

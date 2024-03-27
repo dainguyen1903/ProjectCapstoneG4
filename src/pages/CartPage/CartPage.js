@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { shopping_cart } from '../../utils/images';
 import { Link, useNavigate } from 'react-router-dom';
 import { formatPrice } from '../../utils/helpers';
-import { getAllCarts, removeFromCart, toggleCartQty, clearCart, getCartTotal, setCartOrder, removeCartAction, updateQuantity } from '../../store/cartSlice';
+import { getAllCarts, removeFromCart, toggleCartQty, clearCart, getCartTotal, setCartOrder, removeCartAction, updateQuantity, getListCart } from '../../store/cartSlice';
 import { Checkbox } from 'antd';
 import e from 'cors';
 
@@ -14,6 +14,7 @@ const CartPage = () => {
   const disabledCheckout = carts.filter(i=>i.isOrder).length === 0;
   const { itemsCount, totalAmount} = useSelector((state) => state.cart);
   const navigate = useNavigate();
+  console.log(carts)
 
   if(carts.length === 0){
     return (
@@ -110,10 +111,16 @@ dispatch(setCartOrder({
 
           <div className='cart-cfoot flex align-start justify-between py-3 bg-white'>
             <div className='cart-cfoot-l'>
-              <button type='button' className='clear-cart-btn text-danger fs-15 text-uppercase fw-4' onClick={() => dispatch(clearCart())}>
+              {/* <button type='button' className='clear-cart-btn text-danger fs-15 text-uppercase fw-4' onClick={() => {
+               carts.forEach(async(cart )=> {
+               await dispatch(removeCartAction(cart?.cartItemId))
+                
+               })
+               dispatch(getListCart());
+              }}>
                 <i className='fas fa-trash'></i>
                 <span className='mx-1'>Clear Cart</span>
-              </button>
+              </button> */}
             </div>
 
             <div className='cart-cfoot-r flex flex-column justify-end'>
