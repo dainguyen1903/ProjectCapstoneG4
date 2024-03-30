@@ -42,7 +42,7 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<ListNewsResponse> findAllNews() {
-        List<News> newsList = newsRepository.findAll();
+        List<News> newsList = newsRepository.viewAllNews();
         return newsList.stream()
                 .map((news) -> mapToNewsDto(news))
                 .collect(Collectors.toList());

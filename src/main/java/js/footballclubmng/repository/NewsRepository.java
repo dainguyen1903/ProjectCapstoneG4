@@ -11,10 +11,14 @@ import java.util.List;
 public interface NewsRepository extends JpaRepository<News,Long> {
     @Query(value = "select * from news n " +
             "join news_type nt on n.news_type_id = nt.news_type_id where " +
-            "lower(n.title) like lower(concat('%', :query, '%')) or " +
-            "lower(n.description) like lower(concat('%', :query, '%')) or " +
-            "lower(nt.name) like lower(concat('%', :query, '%'))", nativeQuery = true)
+            "n.status = 1 and "+
+            "(lower(n.title) like lower(concat('%', :query, '%'))or " +
+            "lower(n.description) like lower(concat('%', :query, '%'))or " +
+            "lower(nt.name) like lower(concat('%', :query, '%')))", nativeQuery = true)
     List<News> searchNews(String query);
+
+    @Query(value = "select * from news n where n.status = 1", nativeQuery = true)
+    List<News> viewAllNews();
 
     List<News> findTop4ByOrderByDateCreateDesc();
 }
