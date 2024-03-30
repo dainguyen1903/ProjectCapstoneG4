@@ -27,11 +27,10 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public List<ListPlayerResponse> getAllPlayer() {
-        List<Player> playerList = playerRepository.findAll();
+    public List<ListPlayerResponse> getAllPlayer(){
+        List<Player> playerList = playerRepository.viewAllPlayer();
         return playerList.stream().map((player) -> mapToPlayerDto(player)).collect(Collectors.toList());
     }
-
     @Override
     public boolean createPlayer(Player player) {
         try {
@@ -46,6 +45,7 @@ public class PlayerServiceImpl implements PlayerService {
             p.setBio(player.getBio());
             p.setJoinDate(player.getJoinDate());
             p.setNumberPlayer(player.getNumberPlayer());
+            p.setStatus(true);
             playerRepository.save(p);
             return true;
         } catch (Exception e) {
@@ -80,7 +80,9 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public boolean deletePlayer(long id) {
         try {
-            playerRepository.deleteById(id);
+            Player p = playerRepository.findById(id).orElse(null);
+            p.setStatus(false);
+            playerRepository.save(p);
             return true;
         } catch (Exception e) {
             return false;

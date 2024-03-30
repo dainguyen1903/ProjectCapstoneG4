@@ -81,5 +81,4 @@ public class PlayerController {
         }
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, playerList);
     }
-
 }
