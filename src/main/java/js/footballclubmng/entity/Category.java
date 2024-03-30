@@ -26,4 +26,6 @@ public class Category {
     @OneToMany(mappedBy = "categoryId",fetch = FetchType.EAGER)
     private List<Product> listProducts;
 
+    @Column(name = "status")
+    private boolean status;
 }
