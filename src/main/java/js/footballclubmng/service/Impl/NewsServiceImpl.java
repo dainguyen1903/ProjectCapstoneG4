@@ -94,19 +94,31 @@ public class NewsServiceImpl implements NewsService {
                 newsRepository.save(news);
                 List<String> newImagePaths = createNewsRequest.getImagesNewsList();
                 List<ImagesNews> imagesNewsList = imagesNewsRepository.findImagesNewsByNews(news);
-                if (newImagePaths != null) {
-                    for (ImagesNews imagesNews : imagesNewsList) {
-                        for (String newImagePath : newImagePaths) {
-                            ImagesNews imagesNews1 = imagesNewsRepository.findById(imagesNews.getId()).orElse(null);
-                            if (imagesNews1 != null) {
-                                imagesNews1.setPath(newImagePath);
-                                imagesNewsRepository.save(imagesNews1);
-                                newImagePaths.remove(newImagePath);
-                                break;
-                            }
-                        }
+                for (ImagesNews imagesNews : imagesNewsList) {
+                    ImagesNews imagesNews1 = imagesNewsRepository.findById(imagesNews.getId()).orElse(null);
+                    if(imagesNews1 != null) {
+                        imagesNewsRepository.delete(imagesNews1);
                     }
                 }
+                for (String newImagePath : newImagePaths) {
+                    ImagesNews imagesNews = new ImagesNews();
+                    imagesNews.setPath(newImagePath);
+                    imagesNews.setNews(news);
+                    imagesNewsRepository.save(imagesNews);
+                }
+//                if (newImagePaths != null) {
+//                    for (ImagesNews imagesNews : imagesNewsList) {
+//                        for (String newImagePath : newImagePaths) {
+//                            ImagesNews imagesNews1 = imagesNewsRepository.findById(imagesNews.getId()).orElse(null);
+//                            if (imagesNews1 != null) {
+//                                imagesNews1.setPath(newImagePath);
+//                                imagesNewsRepository.save(imagesNews1);
+//                                newImagePaths.remove(newImagePath);
+//                                break;
+//                            }
+//                        }
+//                    }
+//                }
             }
             return true;
 
@@ -126,6 +138,8 @@ public class NewsServiceImpl implements NewsService {
             return false;
         }
     }
+
+
 
     @Override
     public List<ListNewsTypeResponse> findAllNewsType() {

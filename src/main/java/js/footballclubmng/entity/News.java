@@ -36,7 +36,7 @@ public class News {
     private LocalDateTime dateCreate;
 
     @OneToMany(mappedBy = "news",fetch = FetchType.EAGER)
-    private Set<ImagesNews> imagesNewsList;
+    private List<ImagesNews> imagesNewsList;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "news_type_id")
