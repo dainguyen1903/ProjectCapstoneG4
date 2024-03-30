@@ -130,7 +130,7 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public List<ListNewsTypeResponse> findAllNewsType() {
         try {
-            List<NewsType> newsTypeList = newsTypeRepository.findAll();
+            List<NewsType> newsTypeList = newsTypeRepository.findAllNewsType();
             return newsTypeList.stream()
                     .map((newsType) -> mapToNewsTypeDto(newsType))
                     .collect(Collectors.toList());
@@ -155,6 +155,7 @@ public class NewsServiceImpl implements NewsService {
             NewsType newsType1 = new NewsType();
             newsType1.setName(newsType.getName());
             newsType1.setDescription(newsType.getDescription());
+            newsType1.setStatus(true);
             newsTypeRepository.save(newsType1);
             return true;
         } catch (Exception e) {
@@ -181,7 +182,9 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public boolean deleteNewsType(long id) {
         try {
-            newsTypeRepository.deleteById(id);
+            NewsType newsType = newsTypeRepository.findById(id).orElse(null);
+            newsType.setStatus(false);
+            newsTypeRepository.save(newsType);
             return true;
         } catch (Exception e) {
             return false;
@@ -209,10 +212,12 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<NewsType> searchNewsType(String search) {
+    public List<ListNewsTypeResponse> searchNewsType(String search) {
         try {
-            List<NewsType> newsTypeList = newsTypeRepository.findByNameContaining(search);
-            return newsTypeList;
+            List<NewsType> newsTypeList = newsTypeRepository.searchNewsType(search);
+            return newsTypeList.stream()
+                    .map((newsType) -> mapToNewsTypeDto(newsType))
+                    .collect(Collectors.toList());
         } catch (Exception e) {
             return null;
         }
