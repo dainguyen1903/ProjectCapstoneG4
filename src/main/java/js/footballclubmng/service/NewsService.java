@@ -35,5 +35,5 @@ public interface NewsService {
 
     public NewsType getNewsTypeByName(String name);
 
-    public List<NewsType> searchNewsType(String search);
+    public List<ListNewsTypeResponse> searchNewsType(String search);
 }

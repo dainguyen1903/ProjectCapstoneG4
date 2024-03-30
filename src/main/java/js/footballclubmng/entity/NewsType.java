@@ -30,4 +30,7 @@ public class NewsType {
 
     @OneToMany(mappedBy = "newsType",fetch = FetchType.EAGER,cascade = CascadeType.REMOVE)
     private List<News> newsList;
+
+    @Column(name = "status")
+    private boolean status;
 }

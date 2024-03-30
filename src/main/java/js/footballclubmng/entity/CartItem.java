@@ -39,4 +39,5 @@ public class CartItem {
 
     @Column(name = "player_number")
     private Integer playerNumber;
+
 }

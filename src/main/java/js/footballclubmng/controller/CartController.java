@@ -46,7 +46,6 @@ public class CartController {
     }
 
     @DeleteMapping(CommonConstant.CART_API.REMOVE_CART_ITEM)
-    @PreAuthorize("hasRole('ROLE_User')")
     public ResponseAPI<Object> removeCartItemFromCart(@PathVariable int cartItemId) {
         CartItem cartItem = cartService.getCartItemById(cartItemId);
         if (cartItem == null) {
@@ -72,7 +71,6 @@ public class CartController {
     }
 
     @PutMapping(CommonConstant.CART_API.UPDATE_QUANTITY_CART_ITEM)
-    @PreAuthorize("hasRole('ROLE_User')")
     public ResponseAPI<Object> updateQuantityCartItem(@PathVariable int cartItemId, @RequestParam int quantity) {
         CartItem cartItem = cartService.getCartItemById(cartItemId);
         if (cartItem == null) {

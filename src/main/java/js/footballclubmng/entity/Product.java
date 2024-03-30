@@ -27,14 +27,8 @@ public class Product {
     @Column(name = "discount")
     private float discount;
 
-    @Column(name = "size")
-    private String size;
-
     @Column(name = "description")
     private String description;
-
-    @Column(name = "quantity")
-    private Integer quantity;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")

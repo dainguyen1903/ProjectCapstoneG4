@@ -11,12 +11,15 @@ import java.util.List;
 @Repository
 public interface PlayerRepository extends JpaRepository<Player,Long> {
     @Query(value = "select * from player p where " +
-            "lower(p.name) like lower(concat('%', :query, '%')) or " +
+            "p.status = 1 and " +
+            "(lower(p.name) like lower(concat('%', :query, '%')) or " +
             "lower(p.nationality) like lower(concat('%', :query, '%')) or " +
             "p.height = :query or " +
             "p.weight = :query or " +
             "p.player_number = :query or " +
-            "lower(p.position) like lower(concat('%', :query, '%'))", nativeQuery = true)
+            "lower(p.position) like lower(concat('%', :query, '%')))", nativeQuery = true)
     List<Player> searchPlayer(String query);
 
+    @Query(value = "select * from player p where p.status = true", nativeQuery = true)
+    List<Player> viewAllPlayer();
 }

@@ -44,9 +44,7 @@ public class ProductServiceImpl implements ProductService {
             productEntity.setProductName(createProductRequest.getProductName());
             productEntity.setPrice(createProductRequest.getPrice());
             productEntity.setDiscount(createProductRequest.getDiscount());
-            productEntity.setSize(createProductRequest.getSize());
             productEntity.setDescription(createProductRequest.getDescription());
-            productEntity.setQuantity(createProductRequest.getQuantity());
             productEntity.setCategoryId(category);
             productEntity.setIsCustomise(createProductRequest.getIsCustomise());
             productRepository.save(productEntity);
@@ -73,9 +71,7 @@ public class ProductServiceImpl implements ProductService {
                 product.setProductName(createProductRequest.getProductName());
                 product.setPrice(createProductRequest.getPrice());
                 product.setDiscount(createProductRequest.getDiscount());
-                product.setSize(createProductRequest.getSize());
                 product.setDescription(createProductRequest.getDescription());
-                product.setQuantity(createProductRequest.getQuantity());
                 product.setCategoryId(category);
                 product.setIsCustomise(createProductRequest.getIsCustomise());
                 productRepository.save(product);

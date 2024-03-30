@@ -174,6 +174,7 @@ public class CommonConstant {
         public static final String UPDATE_PLAYER = HEAD_API + PLAYER + "/update-player/{id}";
         public static final String DELETE_PLAYER = HEAD_API + PLAYER + "/delete-player/{id}";
         public static final String SEARCH_PLAYER = HEAD_API + PLAYER + "/search-player";
+        public static final String VIEW_ALL_PLAYER = HEAD_API + PLAYER + "/view-all-player";
     }
 
     public static class NEWS_API {
@@ -190,7 +191,7 @@ public class CommonConstant {
         public static final String UPDATE_NEWS_TYPE = HEAD_API + NEWS + "/update-news-type/{id}";
         public static final String LIST_TOP4_NEWS = HEAD_API + NEWS + "/list-top4-news";
         public static final String SEARCH_NEWS_TYPE = HEAD_API + NEWS + "/search-news-type";
-        public static final String DELETE_NEWS_TYPE = "/delete-news-type/{id}";
+        public static final String DELETE_NEWS_TYPE = HEAD_API + NEWS + "/delete-news-type/{id}";
     }
 
     public static class CATEGORY_API {
