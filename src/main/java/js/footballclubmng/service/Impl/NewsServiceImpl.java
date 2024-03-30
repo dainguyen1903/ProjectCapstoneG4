@@ -14,8 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,6 +31,8 @@ public class NewsServiceImpl implements NewsService {
     NewsTypeRepository newsTypeRepository;
     @Autowired
     ImagesNewsRepository imagesNewsRepository;
+    @PersistenceContext
+    EntityManager entityManager;
 
     @Override
     public News getNewsById(long id) {
@@ -44,10 +50,10 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<News> searchNews(String search) {
-            if (search == null || search.isEmpty()) {
-                return newsRepository.findAll();
-            }
-            return newsRepository.searchNews(search);
+        if (search == null || search.isEmpty()) {
+            return newsRepository.findAll();
+        }
+        return newsRepository.searchNews(search);
     }
 
     @Override
@@ -59,14 +65,15 @@ public class NewsServiceImpl implements NewsService {
             news.setDescription(createNewsRequest.getDescription());
             news.setDateCreate(LocalDateTime.now());
             news.setNewsType(newsType);
+            news.setStatus(true);
             newsRepository.save(news);
-            if (createNewsRequest.getImagesNewsList() != null){
-            for (String image : createNewsRequest.getImagesNewsList()){
-                ImagesNews imagesNews = new ImagesNews();
-                imagesNews.setPath(image);
-                imagesNews.setNews(news);
-                imagesNewsRepository.save(imagesNews);
-            }
+            if (createNewsRequest.getImagesNewsList() != null) {
+                for (String image : createNewsRequest.getImagesNewsList()) {
+                    ImagesNews imagesNews = new ImagesNews();
+                    imagesNews.setPath(image);
+                    imagesNews.setNews(news);
+                    imagesNewsRepository.save(imagesNews);
+                }
             }
             return true;
         } catch (Exception e) {
@@ -85,26 +92,35 @@ public class NewsServiceImpl implements NewsService {
                 news.setDescription(createNewsRequest.getDescription());
                 news.setNewsType(newsType);
                 newsRepository.save(news);
-                if (createNewsRequest.getImagesNewsList() != null){
-                    for (String image : createNewsRequest.getImagesNewsList()){
-                        ImagesNews imagesNews = new ImagesNews();
-                        imagesNews.setPath(image);
-                        imagesNews.setNews(news);
-                        imagesNewsRepository.save(imagesNews);
+                List<String> newImagePaths = createNewsRequest.getImagesNewsList();
+                List<ImagesNews> imagesNewsList = imagesNewsRepository.findImagesNewsByNews(news);
+                if (newImagePaths != null) {
+                    for (ImagesNews imagesNews : imagesNewsList) {
+                        for (String newImagePath : newImagePaths) {
+                            ImagesNews imagesNews1 = imagesNewsRepository.findById(imagesNews.getId()).orElse(null);
+                            if (imagesNews1 != null) {
+                                imagesNews1.setPath(newImagePath);
+                                imagesNewsRepository.save(imagesNews1);
+                                newImagePaths.remove(newImagePath);
+                                break;
+                            }
+                        }
                     }
                 }
-                return true;
             }
+            return true;
+
         } catch (Exception e) {
             return false;
         }
-        return false;
     }
 
     @Override
     public boolean deleteNews(long id) {
         try {
-            newsRepository.deleteById(id);
+            News news = newsRepository.findById(id).orElse(null);
+            news.setStatus(false);
+            newsRepository.save(news);
             return true;
         } catch (Exception e) {
             return false;

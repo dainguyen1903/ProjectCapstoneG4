@@ -33,7 +33,6 @@ public class CartServiceIpml implements CartService {
             String jwtToken = token.substring(7);
             String email = tokenProvider.getUsernameFromJWT(jwtToken);
             User user = userRepository.findByEmail(email);
-
             Product product = productRepository.findById(productId).orElse(null);
 
             Cart cart = cartRepository.findByUser(user);
@@ -68,12 +67,12 @@ public class CartServiceIpml implements CartService {
     }
 
     public boolean checkQuantity(long productId) {
-        Product product = productRepository.findById(productId).orElse(null);
-        if (product != null) {
-            if (product.getQuantity() >= 1) {
-                return true;
-            }
-        }
+//        Product product = productRepository.findById(productId).orElse(null);
+//        if (product != null) {
+//            if (product.getQuantity() >= 1) {
+//                return true;
+//            }
+//        }
         return false;
     }
 
