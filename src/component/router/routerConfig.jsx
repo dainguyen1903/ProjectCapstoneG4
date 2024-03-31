@@ -31,7 +31,18 @@ const RouterConfig = () => {
  if(user){
   const listRouteLayout = router.filter(i => ((!i.role ||  i.role.includes(user.authority)) && i.isProtected!==false ));
   if(isLogin){
-    setrousWithLayout(listRouteLayout)
+    let listRoute = [];
+    listRouteLayout.forEach(item => {
+      if(!item.children){
+        listRoute.push(item)
+      }
+      else{
+        item.children.forEach(i => {
+          listRoute.push(i)
+        })
+      }
+    })
+    setrousWithLayout(listRoute)
   }
   else{
     setrousWithLayout([])

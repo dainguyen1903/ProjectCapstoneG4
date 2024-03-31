@@ -52,15 +52,13 @@ const AddNewsForm = () => {
   const [imageName, setImageName] = useState("");
   const fileRef = useRef();
   const navigate = useNavigate();
-  const [txtErr,setTxtErr]  = useState("");
+  const [txtErr, setTxtErr] = useState("");
   // Confirm save
   const confirmSave = ({ title, typeNews }) => {
-    if(!url){
-    
+    if (!url) {
       setTxtErr("Vui lòng chọn ảnh");
-      return ;
-    }
-    else{
+      return;
+    } else {
       setTxtErr("");
     }
     const dataPost = {
@@ -94,7 +92,7 @@ const AddNewsForm = () => {
     if (res.data.status === 200 || res.data.status === 204) {
       const newsDetail = res.data.data;
       setValue(newsDetail.description);
-      newsDetail.typeNews  = newsDetail?.newsType?.name
+      newsDetail.typeNews = newsDetail?.newsType?.name;
       setUrl(newsDetail.imagesNewsList[0]?.path);
       form.setFieldsValue(newsDetail);
     }
@@ -132,31 +130,25 @@ const AddNewsForm = () => {
   return (
     <Card>
       <Form
-                  form={form}
-                  wrapperCol={{ span: 24 }}
-                  onFinish={confirmSave}
-                  layout="vertical"
-                >
-      <div>
-        <h2 style={{ marginBottom: 30,textAlign:"center" }}>
-          {!id ? "Thêm bài viết" : "Cập nhật bài viết"}
-        </h2>
-        
-        <Row>
-          <Col span={24}>
-            <Row>
-              <Col span={12}>
-                
+        form={form}
+        wrapperCol={{ span: 24 }}
+        onFinish={confirmSave}
+        layout="vertical"
+      >
+        <div>
+          <h2 style={{ marginBottom: 30, textAlign: "center" }}>
+            {!id ? "Thêm bài viết" : "Cập nhật bài viết"}
+          </h2>
+
+          <Row>
+            <Col span={24}>
+              <Row>
+                <Col span={12}>
+                <div style={{
+                        paddingBottom:10
+                      }} className="inputLabel">Loại bài viết</div>
                   <Form.Item
-                    label={
-                      <span
-                        style={{
-                          fontWeight: "bold",
-                        }}
-                      >
-                        Loại bài viết
-                      </span>
-                    }
+                  
                     name="typeNews"
                     rules={[
                       {
@@ -165,22 +157,16 @@ const AddNewsForm = () => {
                       },
                     ]}
                   >
+                     
                     <Select placeholder={"Loại bài viết"} className="Select">
                       {listTypeNews.map((i) => (
                         <Option value={i.id}>{i.name}</Option>
                       ))}
                     </Select>
                   </Form.Item>
+                  <div className="inputLabel">Tiêu đề</div>
                   <Form.Item
-                    label={
-                      <span
-                        style={{
-                          fontWeight: "bold",
-                        }}
-                      >
-                        Tiêu đề
-                      </span>
-                    }
+                    
                     name="title"
                     rules={[
                       {
@@ -189,60 +175,66 @@ const AddNewsForm = () => {
                       },
                     ]}
                   >
+                   
                     <Input placeholder="Tên tiêu đề" className="Input" />
                   </Form.Item>
-              </Col>
-              <Col span={12}>
-                <AddImage
-                  txt="Thêm ảnh tiêu đề"
-                  url={url}
-                  click={() => fileRef.current.click()}
-                />
-                <div style={{color:"red",textAlign:"center"}}>{txtErr}</div>
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-        <Col style={{ marginTop: 10 }} span={24}>
-          <div
-            style={{
-              fontWeight: "bold",
-              marginBottom: 10,
-            }}
-          >
-            <span>Mô tả</span>
-          </div>
-          <Form.Item
-            rules={[
-              { required: true, message: "Vui lòng nhập mô tả bài viết!" },
-            ]}
-          >
-            <ReactQuill
+                </Col>
+                <Col span={12}>
+                  <AddImage
+                    txt="Thêm ảnh tiêu đề"
+                    url={url}
+                    click={() => fileRef.current.click()}
+                  />
+                  <div style={{ color: "red", textAlign: "center" }}>
+                    {txtErr}
+                  </div>
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+          <Col style={{ marginTop: 10 }} span={24}>
+            <div
               style={{
-                marginBottom: 80,
-                height: 400,
+                fontWeight: "bold",
+                marginBottom: 10,
               }}
-              theme="snow"
-              value={value}
-              onChange={setValue}
-              modules={modules}
-              formats={formats}
-            />
+            >
+              <span>Mô tả</span>
+            </div>
+            <Form.Item
+              rules={[
+                { required: true, message: "Vui lòng nhập mô tả bài viết!" },
+              ]}
+            >
+              <ReactQuill
+                style={{
+                  marginBottom: 80,
+                  height: 400,
+                }}
+                theme="snow"
+                value={value}
+                onChange={setValue}
+                modules={modules}
+                formats={formats}
+              />
+            </Form.Item>
+          </Col>
+          <Form.Item>
+            <button className="Button" htmlType="submit" type="primary">
+              {id ? "Cập nhật" : "Tạo mới"}
+            </button>
           </Form.Item>
-        </Col>
-        <Form.Item>
-          <button  className="Button" htmlType="submit" type="primary">
-            {id ? "Cập nhật" : "Tạo mới"}
-          </button>
-        </Form.Item>
-        <LoadingFull show={loading} />
-      </div>
+          <LoadingFull show={loading} />
+        </div>
       </Form>
-      <input ref={fileRef} type="file" style={{
-        display:"none"
-      }}
-      onChange={handleChangeFile}
-       />
+      <input
+        ref={fileRef}
+        type="file"
+        style={{
+          display: "none",
+        }}
+        onChange={handleChangeFile}
+      />
     </Card>
   );
 };

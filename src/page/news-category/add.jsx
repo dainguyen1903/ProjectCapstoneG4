@@ -7,7 +7,7 @@ import LoadingFull from "../../component/loading/loadingFull";
 import useNewsCategoryStore from "../../zustand/newsCategoryStore";
 import { newsApi } from "../../api/news.api";
 import { showMessErr } from "../../ultis/helper";
-import {Card} from "antd";
+import { Card } from "antd";
 const { Option } = Select;
 
 const NewsCategoryAdd = () => {
@@ -32,14 +32,12 @@ const NewsCategoryAdd = () => {
           Modal.success({
             title: "Thành công",
             content: !id ? "Thêm thành công" : "Cập nhật thành công",
-            onOk:() => {
+            onOk: () => {
               navigate(-1);
-            }
+            },
           });
-         
-        }
-        else{
-          showMessErr(res.data)
+        } else {
+          showMessErr(res.data);
         }
       },
     });
@@ -61,36 +59,41 @@ const NewsCategoryAdd = () => {
     }
   }, [id]);
   return (
- <Card>
-     <div>
-      <h2 style={{ marginBottom: 10 }}>
-        {!id ? "Thêm  danh mục bài viết" : "Cập nhật danh mục bài viết"}
-      </h2>
-      <Form
-        form={form}
-        labelCol={{ span: 4 }}
-        wrapperCol={{ span: 8 }}
-        onFinish={confirmSave}
-        layout="vertical"
-      >
-        <Form.Item
-          name="name"
-          rules={[
-            { required: true, message: "Vui lòng nhập tên danh mục bài viết!" },
-          ]}
+    <Card>
+      <div>
+        <h2 style={{ marginBottom: 10 }}>
+          {!id ? "Thêm  danh mục bài viết" : "Cập nhật danh mục bài viết"}
+        </h2>
+        <Form
+          form={form}
+          labelCol={{ span: 4 }}
+          wrapperCol={{ span: 8 }}
+          onFinish={confirmSave}
+          layout="vertical"
         >
-          <Input placeholder="Tên danh mục bài viết" className="Input" />
-        </Form.Item>
+          <div className="inputLabel">Tên danh mục bài viết</div>
 
-        <Form.Item>
-          <button className="Button" htmlType="submit" type="primary">
-            {id ? "Cập nhật" : "Tạo mới"}
-          </button>
-        </Form.Item>
-      </Form>
-      <LoadingFull show={loading} />
-    </div>
- </Card>
+          <Form.Item
+            name="name"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập tên danh mục bài viết!",
+              },
+            ]}
+          >
+            <Input placeholder="Tên danh mục bài viết" className="Input" />
+          </Form.Item>
+
+          <Form.Item>
+            <button className="Button" htmlType="submit" type="primary">
+              {id ? "Cập nhật" : "Tạo mới"}
+            </button>
+          </Form.Item>
+        </Form>
+        <LoadingFull show={loading} />
+      </div>
+    </Card>
   );
 };
 

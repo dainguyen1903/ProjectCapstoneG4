@@ -82,12 +82,7 @@ useEffect(() => {
       }
      
     },
-    {
-      title: "Kích cỡ",
-      dataIndex: "size",
-      key: "title",
-     
-    },
+    
     {
       title: "Giá",
       dataIndex: "price",

@@ -55,12 +55,14 @@ const AddProductCategory = () => {
         onFinish={confirmSave}
         layout="vertical"
       >
+          <div className="inputLabel">Tên danh mục sản phẩm</div>
         <Form.Item
           name="name"
           rules={[
             { required: true, message: "Vui lòng nhập tên danh mục sản phẩm!" },
           ]}
         >
+          
           <Input placeholder="Tên danh mục sản phẩm" className="Input" />
         </Form.Item>
 

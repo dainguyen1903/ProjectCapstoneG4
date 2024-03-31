@@ -5,6 +5,7 @@ import { Button, Divider, Flex, Radio } from 'antd';
 import {UserOutlined }from '@ant-design/icons';
 import { Link, useNavigate } from "react-router-dom";
 import useAuthStore from "../../zustand/authStore";
+import { LOCAL_STORAGE_KEY } from "../../constants/common";
 
 const HeaderPage = () => {
   const user = useAuthStore(state => state.user)
@@ -24,6 +25,8 @@ const HeaderPage = () => {
         <hr/>
         <div onClick={() => {
           logout()
+          localStorage.removeItem(LOCAL_STORAGE_KEY.CURRENT_MENU);
+          localStorage.removeItem(LOCAL_STORAGE_KEY.token)
           navigate("/")
         }} className="flex-center" style={{marginRight:10,color:"black",cursor:"pointer",fontWeight:"bold"}}>Đăng xuất</div>
   </div>

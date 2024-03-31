@@ -1,14 +1,26 @@
-import { Button, Card, Checkbox, Form, Input, Modal, Select } from "antd";
-import moment from "moment";
-import React, { useEffect, useRef, useState } from "react";
+import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  Avatar,
+  Button,
+  Card,
+  Col,
+  Form,
+  Input,
+  Modal,
+  Row,
+  Select,
+  Table,
+} from "antd";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
+import { categoryApi } from "../../api/category.api";
+import { playerApi } from "../../api/player.api";
 import { productApi } from "../../api/product.api";
 import LoadingFull from "../../component/loading/loadingFull";
-import useProductStore from "../../zustand/productStore";
-import useUserStore from "../../zustand/userStore";
-import { categoryApi } from "../../api/category.api";
-import "./../login/login.css";
 import { showMessErr } from "../../ultis/helper";
+import useProductStore from "../../zustand/productStore";
+import "./../login/login.css";
+
 const { Option } = Select;
 const AddProduct = () => {
   const [form] = Form.useForm();
@@ -17,51 +29,63 @@ const AddProduct = () => {
   const { id } = useParams();
   const [url, setUrl] = useState([]);
   const [imageName, setImageName] = useState("");
-  const fileRef = useRef();
-  const updateUsers = useUserStore((state) => state.updateuser);
-  const addUser = useUserStore((state) => state.adduser);
   const [loading, setLoading] = useState(false);
-  const users = useUserStore((state) => state.users);
   const products = useProductStore((state) => state.products);
-  let detail = products.find((i) => i.id == id) || {};
-  const addProduct = useProductStore((state) => state.addProduct);
-  const updateProduct = useProductStore((state) => state.updateProduct);
-  const [isCustom,setIsCustom ] = useState(false)
+  const [isCustom, setIsCustom] = useState(false);
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [txtErr, settxterr] = useState("");
-  const [listSize,setListSize] = useState([{
-    id:Math.random()*100,
-    size:"",
-  }]);
+  const [listPlayer, setListPlayer] = useState([]);
+  const [dataImage, setDataImage] = useState([]);
+  const [listSize, setListSize] = useState([
+    {
+      id: Math.random() * 100,
+      size: "",
+      quantity: "",
+    },
+  ]);
 
   // Change Size
-  const changeSize = (id,newValue) => {
+  const changeSize = (id, newValue, field = "size") => {
     const newListSize = [...listSize];
-    const index = listSize.findIndex(i => i.id ===id);
-    if(index >=0){
-      newListSize[index].size = newValue;
-      setListSize(newListSize)
+    const index = listSize.findIndex((i) => i.id === id);
+    if (index >= 0) {
+      newListSize[index][field] = newValue;
+      setListSize(newListSize);
     }
-  }
+  };
   // Confirm save
   const confirmSave = (value) => {
-    if (url.length === 0) {
-      settxterr("Vui lòng chọn ảnh");
-      return;
-    } else {
-      settxterr("");
-    }
+    // if (url.length === 0) {
+    //   settxterr("Vui lòng chọn ảnh");
+    //   return;
+    // } else {
+    //   settxterr("");
+    // }
 
     Modal.confirm({
       title: "Xác nhận",
       content: !id ? "Thêm sản phẩm" : "Cập nhật sản phẩm",
       onOk: async () => {
         const dataPosst = JSON.parse(JSON.stringify(value));
-        dataPosst.imagesProductList = url;
-        const listSizePost = Array.from(new Set(listSize.filter(i=>i.size).map(i => i.size.trim())));
-        dataPosst.size = listSizePost.join(";")
-        dataPosst.isCustomise  = isCustom;
+        dataPosst.imagesProductList = dataImage.map(
+          (i) => i.image + "*" + i.playerId
+        );
+        const listSizePost = Array.from(
+          new Set(listSize.filter((i) => i.size))
+        );
+        let sizeFk = "";
+        dataPosst.size = listSizePost.forEach((item, index) => {
+          let sizeItem = item.size + "-" + item.quantity;
+          if (index !== listSizePost.length - 1) {
+            sizeItem += ";";
+          }
+          sizeFk = sizeFk + sizeItem;
+        });
+        dataPosst.isCustomise = isCustom;
+        dataPosst.size = sizeFk;
+        dataPosst.description =  dataPosst.description + "*" +sizeFk
+        dataPosst.quantity=100;
         const res = !id
           ? await productApi.createrProduct(dataPosst)
           : await productApi.updateProduct(id, dataPosst);
@@ -77,7 +101,7 @@ const AddProduct = () => {
       },
     });
   };
-  const handleChangeFile = (event) => {
+  const handleChangeFile = (id) => (event) => {
     const files = event.target.files;
     Array.from(files).forEach((file) => {
       const reader = new FileReader();
@@ -85,7 +109,12 @@ const AddProduct = () => {
       // Xử lý sự kiện khi FileReader hoàn thành đọc tệp
       reader.onload = function (event) {
         const base64 = event.target.result;
-        setUrl((prevUrl) => [...prevUrl, base64]);
+        const index = dataImage.findIndex((i) => i.id === id);
+        if (index >= 0) {
+          const newDataImage = [...dataImage];
+          newDataImage[index].image = base64;
+          setDataImage(newDataImage);
+        }
       };
 
       // Đọc tệp như là một chuỗi base64
@@ -93,27 +122,57 @@ const AddProduct = () => {
     });
   };
 
-  const deleteImage = (index) => {
-    setUrl([...url.slice(0, index), ...url.slice(index + 1)]);
-  };
   const getDetail = async () => {
-    setLoading(true);
+    try {
+      setLoading(true);
     const res = await productApi.getDetailProduct(id);
     const data = res.data.data;
     const listImage = res.data.data.imagesProductList
       ? res.data.data.imagesProductList.map((i) => i.path)
       : [];
     setUrl(listImage);
-    setIsCustom(data.isCustomise)
-    setListSize(data.size.split(";").filter(i => i).map((i,index) => ({
-      size:i,
-      id:index
-    })))
+    setIsCustom(data.isCustomise);
+    const imagesProductList = Array.from(new Set(data.imagesProductList.map(i => i.path)));
+    let dataImage = [];
+    imagesProductList.forEach((item,index) => {
+     
+      const arrImage = item.split("*");
+      dataImage.push({
+        id:index,
+        image:arrImage[0],
+        playerId:Number(arrImage[1])
+      })
+    })
+   
+    setDataImage(dataImage)
+    // des
+    const arrDes = data.description.split("*");
+    data.description = arrDes[0];
+    const listSize = arrDes[1];
+    const arrSize = listSize.split(";");
+    const sizes = [];
+    arrSize.forEach((item,index) => {
+    
+      const arr = item.split("-");
+      sizes.push({
+        id:index,
+        size:arr[0],
+        quantity:arr[1]
+      })
+      
+    })
+    setListSize(sizes)
+    
     const categoryName = data.categoryId?.name;
     data.categoryName = categoryName;
 
     form.setFieldsValue(data);
     setLoading(false);
+    } catch (error) {
+      console.log(error)
+
+      setLoading(false);
+    }
   };
   useEffect(() => {
     if (id) {
@@ -130,172 +189,283 @@ const AddProduct = () => {
   useEffect(() => {
     getListCategory();
   }, []);
+
+  // column image
+  const columnImage = [
+    {
+      title: (
+        <>
+          {" "}
+          <Button
+            onClick={() =>
+              setDataImage([
+                ...dataImage,
+                {
+                  id: Date.now(),
+                  image: "",
+                  playerId: "",
+                },
+              ])
+            }
+            size="small"
+            style={{
+              marginRight: 20,
+            }}
+          >
+            <PlusOutlined />
+          </Button>
+          Tên cầu thủ và số áo
+        </>
+      ),
+      dataIndex: "playerName",
+      align: "start",
+      render: (value, row) => {
+        return (
+          <Select
+            onChange={(v) => {
+              const index = dataImage.findIndex((i) => i.id === row.id);
+              if (index >= 0) {
+                const newDataImage = [...dataImage];
+                dataImage[index].playerId = v;
+                setDataImage(newDataImage);
+              }
+            }}
+            value={row.playerId}
+            style={{ width: "100%" }}
+          >
+            {listPlayer.map((i) => (
+              <Option
+                disabled={dataImage.map((i) => i.playerId).includes(i.id)}
+                value={i.id}
+              >
+                {i.numberPlayer + "." + i.name}
+              </Option>
+            ))}
+          </Select>
+        );
+      },
+    },
+    {
+      title: "Ảnh sản phẩm",
+      dataIndex: "image",
+      align: "center",
+      render: (value, row) => {
+        return (
+          <>
+            <input
+              id={row.id}
+              type="file"
+              style={{
+                display: "none",
+              }}
+              onChange={handleChangeFile(row.id)}
+            />
+            <Avatar
+              onClick={() => {
+                const element = document.getElementById(row.id);
+                if (element) {
+                  element.click();
+                }
+              }}
+              style={{
+                cursor: "pointer",
+              }}
+              size={"large"}
+              src={value}
+            />
+          </>
+        );
+      },
+    },
+
+    {
+      title: "Xóa",
+      dataIndex: "delete",
+      align: "center",
+      render: (_, row) => {
+        return (
+          <DeleteOutlined
+            onClick={() => {
+              setDataImage(dataImage.filter((i) => i.id !== row.id));
+            }}
+          />
+        );
+      },
+    },
+  ];
+
+  // list player
+  const getListPlayer = async () => {
+    const res = await playerApi.searchPlayer({ query: "" });
+    console.log(res);
+    const status = res.data.status;
+    if (status === 200 || status === 204) {
+      setListPlayer(res.data.data || []);
+    }
+  };
+  useEffect(() => {
+    getListPlayer();
+  }, []);
   return (
     <Card style={{}}>
       <h2 style={{ marginBottom: 10 }}>
         {!id ? "Thêm sản phẩm" : "Cập nhật sản phẩm"}
       </h2>
-      <Form
-        form={form}
-        wrapperCol={{ span: 10 }}
-        onFinish={confirmSave}
-        layout="vertical"
-      >
-        <Form.Item
-          name="productName"
-          rules={[{ required: true, message: "Vui lòng nhập tên sản phẩm!" }]}
-        >
-          <Input placeholder="Tên sản phẩm" className="Input" />
-        </Form.Item>
-        {
-          <Form.Item
-            name="categoryName"
-            rules={[
-              { required: true, message: "Vui lòng chọn loại sản phẩm!" },
-            ]}
+      <Row gutter={[64, 64]}>
+        <Col span={10}>
+          <Form
+            form={form}
+            wrapperCol={{ span: 24 }}
+            onFinish={confirmSave}
+            layout="vertical"
           >
-            <Select placeholder="Loại sản phẩm" className="Select">
-              {categories.map((i) => (
-                <Option value={i.name}>{i.name}</Option>
-              ))}
-            </Select>
-          </Form.Item>
-        }
-        <Form.Item
-          name="price"
-          rules={[{ required: true, message: "Vui lòng nhập giá!" }]}
-        >
-          <Input placeholder="Giá" className="Input" />
-        </Form.Item>
-        <Form.Item
-          name="discount"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng nhập số phần trăm khuyến mãi!",
-            },
-          ]}
-        >
-          <Input placeholder="Khuyến mãi" className="Input" />
-        </Form.Item>
-        {/* <Form.Item
-          rules={[{ required: true, message: "Vui lòng nhập kích thước!" }]}
-          name="size"
-        >
-          <Input placeholder="Kích cỡ" className="Input" />
-        </Form.Item> */}
-        <Form.Item name="description">
-          <Input placeholder="Mô tả sản phẩm" className="Input" />
-        </Form.Item>
-        <Form.Item
-          rules={[{ required: true, message: "Vui lòng nhập số lượng!" }]}
-          name="quantity"
-        >
-          <Input placeholder="Số lượng" className="Input" />
-        </Form.Item>
-       <div style={{marginBottom:15,marginTop :0}}>
-        <div style={{
-          marginTop:5
-        }} className="bold" >
-          <span>Size</span>
-          <Button onClick={() => {
-            setListSize([...listSize,{
-              id:Date.now(),
-              size:""
-            }])
-          }} style={{marginLeft:10}}>Thêm size</Button>
-        </div>
-        
-        {listSize.map(item => {
-          return <div>
-            <Input style={{
-            width:300,
-            marginTop:10
-          }} value={item.size} onChange={(e) => changeSize(item.id,e.target.value)} />
-          </div>
-        })}
-       </div>
-       <Checkbox checked={isCustom} onChange={e => setIsCustom(e.target.checked)} >Cho phép tùy chỉnh sản phấm</Checkbox>
+            <div className="inputLabel">Tên sản phẩm</div>
+            <Form.Item
+              name="productName"
+              rules={[
+                { required: true, message: "Vui lòng nhập tên sản phẩm!" },
+              ]}
+            >
+              
+              <Input placeholder="Tên sản phẩm" className="Input" />
+            </Form.Item>
+            <div className="inputLabel">Loại sản phẩm</div>
+              <Form.Item
+                name="categoryName"
+                rules={[
+                  { required: true, message: "Vui lòng chọn loại sản phẩm!" },
+                ]}
+              >
+               
+                <Select
+                  style={{ marginTop: 10 }}
+                  placeholder="Loại sản phẩm"
+                  className="Select"
+                >
+                  {categories.map((i) => (
+                    <Option value={i.name}>{i.name}</Option>
+                  ))}
+                </Select>
+              </Form.Item>
+              <div className="inputLabel">Giá</div>
+            <Form.Item
+              name="price"
+              rules={[{ required: true, message: "Vui lòng nhập giá!" }]}
+            >
+           
+              <Input placeholder="Giá" className="Input" />
+            </Form.Item>
+            <div className="inputLabel">Khuyến mãi</div>
 
-        <Form.Item name="image_url">
-          <Button
-            onClick={() => fileRef.current.click()}
-            style={{
-              marginBottom: 10,
-              marginRight: 10,
-              marginTop: 10,
-            }}
-          >
-            Thêm Ảnh
-          </Button>{" "}
-          <div>
-            {url.length > 0 && (
+            <Form.Item
+              name="discount"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng nhập số phần trăm khuyến mãi!",
+                },
+              ]}
+            >
+            
+              <Input placeholder="Khuyến mãi" className="Input" />
+            </Form.Item>
+            <div className="inputLabel">Mô tả</div>
+            <Form.Item name="description">
+              
+
+              <Input placeholder="Mô tả sản phẩm" className="Input" />
+            </Form.Item>
+
+            <div style={{ marginBottom: 15, marginTop: 0 }}>
               <div
                 style={{
-                  display: "flex",
-                  gap: 10,
-                  flexWrap: "wrap",
+                  marginTop: 5,
                 }}
+                className="bold"
               >
-                {url.map((item, index) => (
+                <span>Size</span>
+                <Button
+                  onClick={() => {
+                    setListSize([
+                      ...listSize,
+                      {
+                        id: Date.now(),
+                        size: "",
+                      },
+                    ]);
+                  }}
+                  style={{ marginLeft: 10 }}
+                >
+                  + Thêm size
+                </Button>
+              </div>
+
+              {listSize.map((item) => {
+                return (
                   <div
                     style={{
-                      position: "relative",
-                      width: 100,
+                      marginTop: 10,
                     }}
+                    className="flex-start"
                   >
-                    <img
-                      src={item}
-                      style={{
-                        width: "100%",
-                        height: 100,
-                        objectFit: "contain",
-                      }}
-                    />
-                    <div
-                      onClick={() => deleteImage(index)}
-                      className="deleteIcon"
-                    >
-                      X
+                    <div>
+                      <div style={{ marginBottom: -10 }}>Kích thước</div>
+                      <Input
+                        style={{
+                          width: 200,
+                          marginTop: 10,
+                          marginRight: 10,
+                        }}
+                        value={item.size}
+                        onChange={(e) => changeSize(item.id, e.target.value)}
+                      />
                     </div>
+                    <div>
+                      <div style={{ marginBottom: -10 }}>Số lượng</div>
+                      <Input
+                        style={{
+                          width: 200,
+                          marginTop: 10,
+                          marginRight: 10,
+                        }}
+                        value={item.quantity}
+                        onChange={(e) =>
+                          changeSize(item.id, e.target.value, "quantity")
+                        }
+                      />
+                    </div>
+                    <DeleteOutlined
+                      onClick={() => {
+                        setListSize(listSize.filter((i) => i.id !== item.id));
+                      }}
+                      style={{ marginBottom: -20, cursor: "pointer" }}
+                    />
                   </div>
-                ))}
-              </div>
-            )}
-          </div>
-          <div></div>
-          <div
-            className="flex-start"
-            style={{
-              alignItems: "center",
-            }}
-          ></div>
-          <input
-            style={{
-              display: "none",
-            }}
-            ref={fileRef}
-            onChange={handleChangeFile}
-            placeholder="Ảnh"
-            type="file"
-            className="Input"
-            multiple
+                );
+              })}
+            </div>
+            <Form.Item>
+              <button
+                style={{
+                  marginTop: 15,
+                }}
+                className="Button"
+                htmlType="submit"
+                type="primary"
+              >
+                {id ? "Cập nhật" : "Tạo mới"}
+              </button>
+            </Form.Item>
+          </Form>
+        </Col>
+        <Col span={14}>
+          <Table
+            pagination={false}
+            columns={columnImage}
+            dataSource={dataImage}
           />
-        </Form.Item>
-
-        <Form.Item>
-          <button
-            style={{
-              marginTop: 15,
-            }}
-            className="Button"
-            htmlType="submit"
-            type="primary"
-          >
-            {id ? "Cập nhật" : "Tạo mới"}
-          </button>
-        </Form.Item>
-      </Form>
+        </Col>
+      </Row>
 
       <LoadingFull show={loading} />
     </Card>

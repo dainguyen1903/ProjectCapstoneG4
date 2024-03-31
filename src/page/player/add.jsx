@@ -1,5 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Form, Input, Button, DatePicker, Select, Modal, Card, Row, Col } from "antd";
+import {
+  Form,
+  Input,
+  Button,
+  DatePicker,
+  Select,
+  Modal,
+  Card,
+  Row,
+  Col,
+} from "antd";
 import { FileImageOutlined } from "@ant-design/icons";
 import moment from "moment";
 import { useNavigate, useParams } from "react-router";
@@ -7,6 +17,7 @@ import usePlayerStore from "../../zustand/playerStore";
 import LoadingFull from "../../component/loading/loadingFull";
 import { playerApi } from "../../api/player.api";
 import AddImage from "../../component/common/AddImage";
+import { POSITION_PLAYER } from "../../constants/common";
 const { Option } = Select;
 
 const AddPlayerForm = () => {
@@ -73,7 +84,7 @@ const AddPlayerForm = () => {
     setUrl(dataDetail.imageUrl);
     dataDetail.imageUrl = imgName;
     delete dataDetail.image_name;
-
+    console.log(dataDetail);
     form.setFieldsValue(dataDetail);
     setLoading(false);
   };
@@ -83,104 +94,136 @@ const AddPlayerForm = () => {
     }
   }, [id]);
   return (
-   <Card>
-     <div>
-      <h2 style={{ marginBottom: 10 }}>
-        {!id ? "Thêm cầu thủ" : "Cập nhật cầu thủ"}
-      </h2>
-    <Row>
-      <Col span={12}>
-      <Form
-        form={form}
-      
-        wrapperCol={{ span: 24 }}
-        onFinish={confirmSave}
-        layout="vertical"
-      >
-        <Form.Item
-          name="name"
-          rules={[{ required: true, message: "Vui lòng nhập tên cầu thủ!" }]}
-        >
-          <Input className="Input" placeholder="Tên cầu thủ" />
-        </Form.Item>
-        <Form.Item
-          name="dateOfBirth"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng nhập ngày sinh cầu thủ!",
-            },
-          ]}
-        >
-          <DatePicker placeholder="Ngày sinh" className="Input" />
-        </Form.Item>
-        <Form.Item
-          name="height"
-          rules={[{ required: true, message: "Vui lòng nhập chiều cao!" }]}
-        >
-          <Input placeholder="Chiều cao (cm)" type="number" className="Input" />
-        </Form.Item>
-        <Form.Item
-          name="weight"
-          rules={[{ required: true, message: "Vui lòng nhập cân nặng!" }]}
-        >
-          <Input placeholder="Cân nặng (kg)" type="number" className="Input" />
-        </Form.Item>
-        <Form.Item
-          name="nationality"
-          rules={[{ required: true, message: "Vui lòng nhập quốc tịch" }]}
-        >
-          <Input placeholder="Quốc tịch" className="Input" />
-        </Form.Item>
-        <Form.Item
-          name="position"
-          rules={[{ required: true, message: "Vui lòng nhập vị trí!" }]}
-        >
-          <Input placeholder="Vị trí" className="Input" />
-        </Form.Item>
-        <Form.Item name="bio">
-          <Input.TextArea placeholder="Tiểu sử" className="Input" />
-        </Form.Item>
-        <Form.Item
-          name="joinDate"
-          rules={[{ required: true, message: "Vui lòng nhập ngày gia nhập!" }]}
-        >
-          <DatePicker placeholder="Ngày gia nhập" className="Input" />
-        </Form.Item>
-        <Form.Item
-          name="numberPlayer"
-          rules={[{ required: true, message: "Vui lòng nhập số điện thoại!" }]}
-        >
-          <Input placeholder="Số điện thoại" type="text" className="Input" />
-        </Form.Item>
+    <Card>
+      <div>
+        <h2 style={{ marginBottom: 10 }}>
+          {!id ? "Thêm cầu thủ" : "Cập nhật cầu thủ"}
+        </h2>
+        <Row>
+          <Col span={12}>
+            <Form
+              form={form}
+              wrapperCol={{ span: 24 }}
+              onFinish={confirmSave}
+              layout="vertical"
+            >
+              <div className="inputLabel">Tên cầu thủ</div>
+              <Form.Item
+                name="name"
+                rules={[
+                  { required: true, message: "Vui lòng nhập tên cầu thủ!" },
+                ]}
+              >
+                <Input className="Input" placeholder="Tên cầu thủ" />
+              </Form.Item>
+              <div className="inputLabel">Ngày sinh</div>
+              <Form.Item
+                name="dateOfBirth"
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng nhập ngày sinh cầu thủ!",
+                  },
+                ]}
+              >
+                <DatePicker placeholder="Ngày sinh" className="Input" />
+              </Form.Item>
+              <div className="inputLabel">Chiều cao</div>
+              <Form.Item
+                name="height"
+                rules={[
+                  { required: true, message: "Vui lòng nhập chiều cao!" },
+                ]}
+              >
+                <Input
+                  placeholder="Chiều cao (cm)"
+                  type="number"
+                  className="Input"
+                />
+              </Form.Item>
+              <div className="inputLabel">Cân nặng</div>
+              <Form.Item
+                name="weight"
+                rules={[{ required: true, message: "Vui lòng nhập cân nặng!" }]}
+              >
+                <Input
+                  placeholder="Cân nặng (kg)"
+                  type="number"
+                  className="Input"
+                />
+              </Form.Item>
+              <div className="inputLabel">Quốc tịch</div>
+              <Form.Item
+                name="nationality"
+                rules={[{ required: true, message: "Vui lòng nhập quốc tịch" }]}
+              >
+                <Input placeholder="Quốc tịch" type="text" className="Input" />
+              </Form.Item>
+              <div  style={{ marginBottom: 10 }} className="inputLabel">Vị trí</div>
+              <Form.Item
+                name="position"
+                rules={[{ required: true, message: "Vui lòng nhập vị trí!" }]}
+              >
+                {/* <div style={{ marginBottom: 10, marginTop: 10 }}> */}
+                  <Select placeholder="Vị trí" className="Select">
+                    {POSITION_PLAYER.map((i) => (
+                      <Option value={i}>{i}</Option>
+                    ))}
+                  </Select>
+                {/* </div> */}
+              </Form.Item>
+              <div className="inputLabel">Tiểu sử</div>
+              <Form.Item name="bio">
+                <Input.TextArea placeholder="Tiểu sử" className="Input" />
+              </Form.Item>
+              <div className="inputLabel">Ngày gia nhập</div>
+              <Form.Item
+                name="joinDate"
+                rules={[
+                  { required: true, message: "Vui lòng nhập ngày gia nhập!" },
+                ]}
+              >
+                <DatePicker placeholder="Ngày gia nhập" className="Input" />
+              </Form.Item>
+              <div className="inputLabel">Số áo</div>
+              <Form.Item
+                name="numberPlayer"
+                rules={[{ required: true, message: "Vui lòng nhập số áo!" }]}
+              >
+                <Input placeholder="Số áo" type="text" className="Input" />
+              </Form.Item>
 
-        <Form.Item name="imageUrl">
-         
-          <input
-            style={{
-              display: "none",
-            }}
-            ref={fileRef}
-            onChange={handleChangeFile}
-            placeholder="Ảnh"
-            type="file"
-            className="Input"
-          />
-        </Form.Item>
-        <Form.Item>
-          <button className="Button" htmlType="submit" type="primary">
-            {id ? "Cập nhật" : "Tạo mới"}
-          </button>
-        </Form.Item>
-      </Form>
-      </Col>
-      <Col span={12}>
-        <AddImage url={url} click={() =>fileRef.current.click() } />
-      </Col>
-    </Row>
-      <LoadingFull show={loading} />
-    </div>
-   </Card>
+              <Form.Item name="imageUrl">
+                <input
+                  style={{
+                    display: "none",
+                  }}
+                  ref={fileRef}
+                  onChange={handleChangeFile}
+                  placeholder="Ảnh"
+                  type="file"
+                  className="Input"
+                />
+              </Form.Item>
+              <Form.Item>
+                <button
+                  style={{ marginTop: -20 }}
+                  className="Button"
+                  htmlType="submit"
+                  type="primary"
+                >
+                  {id ? "Cập nhật" : "Tạo mới"}
+                </button>
+              </Form.Item>
+            </Form>
+          </Col>
+          <Col span={12}>
+            <AddImage url={url} click={() => fileRef.current.click()} />
+          </Col>
+        </Row>
+        <LoadingFull show={loading} />
+      </div>
+    </Card>
   );
 };
 

@@ -127,7 +127,7 @@ const ManagePlayer = () => {
         pagination={{
           position: "bottomCenter",
           pageSize: 10,
-          total: players.length,
+          total: users?.length,
         }}
         columns={columns}
         dataSource={users}
