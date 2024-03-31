@@ -13,7 +13,7 @@ const CartModal = ({carts}) => {
             {
               carts.map(cart => {
                 console.log(cart)
-                const image = cart?.imagesProductList.length > 0 ? cart?.imagesProductList[0].path :""
+                const image = cart?.imagesProductList.length > 0 ? cart?.imagesProductList[0].path.split("*")[0] :""
 
                 return (
                   <div className='cart-modal-item grid align-center font-manrope py-2' key = {cart.id}>

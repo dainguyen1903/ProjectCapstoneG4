@@ -4,7 +4,7 @@ import {formatPrice} from "../../utils/helpers";
 import "./Product.scss";
 
 const Product = ({product}) => {
-  const imageUrl = product.imagesProductList && product.imagesProductList.length>0 ? product.imagesProductList[0]?.path:""
+  const imageUrl = product.imagesProductList && product.imagesProductList.length>0 ? product.imagesProductList[0]?.path?.split("*")[0]:""
   
   return (
     <Link to = {`/product/${product?.id}`} key = {product?.id}>

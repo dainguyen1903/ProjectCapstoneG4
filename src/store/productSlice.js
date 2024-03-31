@@ -48,7 +48,7 @@ const productSlice = createSlice({
 export const fetchAsyncProducts = createAsyncThunk('products/fetch', async(search,{rejectWithValue}) => {
     const response = await productApi.searchProduct({query:search});
     if(response.data.status === 200){
-        return response.data.data
+        return response.data.data ? response.data.data.reverse() :[]
     }
    else{
     return rejectWithValue(response.data.message)

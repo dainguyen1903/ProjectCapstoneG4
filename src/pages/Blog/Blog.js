@@ -12,7 +12,7 @@ const Blog = () => {
   const getListBlog = async () => {
     const res = await newsApi.searchNews({search:search||""});
     if (res.data.status === 200 || res.data.status === 204) {
-      setListBlog(res.data.data || []);
+      setListBlog(res.data.data.reverse() || []);
     }
   };
   useEffect(() => {

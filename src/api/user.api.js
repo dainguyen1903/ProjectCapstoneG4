@@ -38,4 +38,9 @@ export const userApi = {
   register: (data) => {
     return api.post(baseURLUser + "register",data);
   },
+  searchPlayer:(params) => {
+    return api.get("api/player/" + "search-player",{
+      params
+  });
+  }
 };

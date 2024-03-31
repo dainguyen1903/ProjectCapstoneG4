@@ -1,31 +1,28 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import "./ProductSinglePage.scss";
+import { CustomChat, FacebookProvider } from "react-facebook";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import CartMessage from "../../components/CartMessage/CartMessage";
+import CommentCpn from "../../components/Comment/Comment";
+import Loader from "../../components/Loader/Loader";
+import {
+  addCartAction,
+  addCartActionCustom,
+  getCartMessageStatus,
+  setCartMessageOff
+} from "../../store/cartSlice";
 import {
   fetchAsyncProductSingle,
   getProductSingle,
   getSingleProductStatus,
 } from "../../store/productSlice";
-import { STATUS } from "../../utils/status";
-import Loader from "../../components/Loader/Loader";
 import { formatPrice } from "../../utils/helpers";
-import moment from "moment";
-import {
-  addCartAction,
-  addCartActionCustom,
-  addToCart,
-  getCartMessageStatus,
-  setCartMessageOff,
-  setCartMessageOn,
-} from "../../store/cartSlice";
-import CartMessage from "../../components/CartMessage/CartMessage";
-import { FacebookProvider, CustomChat } from "react-facebook";
-import CommentCpn from "../../components/Comment/Comment";
-import { cartAPI } from "../../api/cart.api";
+import { STATUS } from "../../utils/status";
+import "./ProductSinglePage.scss";
 
-import { Input } from "antd";
+import { Select } from "antd";
+import { userApi } from "../../api/user.api";
 import { LOCAL_STORAGE_KEY } from "../../constants/common";
 const ProductSinglePage = () => {
   const currentUser = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY.user));
@@ -40,14 +37,56 @@ const ProductSinglePage = () => {
   const productSingleStatus = useSelector(getSingleProductStatus);
   const [quantity, setQuantity] = useState(1);
   const cartMessageStatus = useSelector(getCartMessageStatus);
-  const [currentImg, setCurrentImg] = useState(null);
+  const [currentImg, setCurrentImg] = useState("");
   const [size, setSize] = useState("");
   const listSize = product && product.size ? product.size.split(";") : [];
   const [playerNumber, setPlayerNumber] = useState("");
   const [playerName, setPlayerName] = useState("");
-  const listImage = product?.imagesProductList
+  const [listPlayer, setListPlayer] = useState([]);
+  const [playerId,setPlayerId] = useState("");
+  const listSizeAndQUantity = product?.description?.split("*")[1] 
+  const sizeMap = new Map();
+  listSizeAndQUantity?.split(";").forEach(sizeItem => {
+    const sizeArr = sizeItem?.split("-");
+    if(sizeArr.length === 2){
+      sizeMap.set(sizeArr[0],sizeArr[1])
+    }
+  })
+  const listPlayerid = product?.imagesProductList
+    ? product.imagesProductList?.map((i) => i.path)?.map(i => i?.split("*")[1])
+    : [];
+     // list player
+const getListPlayerA = async () => {
+  const res = await userApi.searchPlayer({ query: "" });
+  const status = res.data.status;
+  if (status === 200 || status === 204) {
+    setListPlayer(res.data.data || []);
+    if(res.data.data.length >=1){
+      const item = res.data.data.find(i =>listPlayerid.includes(i.id +"") )
+      if(item)
+      setPlayerId(item.id + "")
+    }
+  }
+};
+useEffect(() => {
+  if(product,playerId){
+    const listImage = product?.imagesProductList
     ? product.imagesProductList.map((i) => i.path)
     : [];
+  listImage.forEach(item => {
+      const arrImg = item.split("*");
+      if(arrImg[1] == playerId){
+        setCurrentImg(arrImg[0])
+      }
+    })
+  }
+
+},[product,playerId])
+useEffect(() => {
+  if(product){
+    getListPlayerA();
+  }
+}, [product]);
   // getting single product
   useEffect(() => {
     if (cartMessageStatus) {
@@ -75,6 +114,7 @@ const ProductSinglePage = () => {
     return <Loader />;
   }
 
+ 
   const increaseQty = () => {
     setQuantity((prevQty) => {
       let tempQty = prevQty + 1;
@@ -117,6 +157,7 @@ const ProductSinglePage = () => {
       console.log(error);
     }
   };
+  
 
   return (
     <main className="py-5 bg-whitesmoke">
@@ -130,16 +171,16 @@ const ProductSinglePage = () => {
               <div className="product-img">
                 <div className="product-img-zoom">
                   <img
-                    style={{ objectFit: "contain" }}
+                    style={{ objectFit: "contain"}}
                     src={
-                      currentImg || (listImage.length > 0 ? listImage[0] : "")
+                      currentImg 
                     }
                     alt=""
                     // className="img-cover"
                   />
                 </div>
 
-                <div className="product-img-thumbs flex align-center my-2">
+                {/* <div className="product-img-thumbs flex align-center my-2">
                   {listImage.map((i) => (
                     <div
                       style={{
@@ -151,7 +192,7 @@ const ProductSinglePage = () => {
                       <img src={i} alt="" className="img-cover" />
                     </div>
                   ))}
-                </div>
+                </div> */}
               </div>
             </div>
 
@@ -159,7 +200,9 @@ const ProductSinglePage = () => {
               <div className="product-details font-manrope">
                 <div className="title fs-20 fw-5">{product?.productName}</div>
                 <div>
-                  <p className="para fw-3 fs-15">{product?.description}</p>
+                  <p className="para fw-3 fs-15">
+                    {product?.description?.split("*")[0]}
+                  </p>
                 </div>
                 <div className="info flex align-center flex-wrap fs-14">
                   <div className="brand">
@@ -192,7 +235,7 @@ const ProductSinglePage = () => {
                 </div>
 
                 <div className="qty flex align-center my-4">
-                  <div style={{width:100 }}>Quantity:</div>
+                  <div style={{ width: 100 }}>Quantity:</div>
                   <div className="qty-change flex align-center mx-2">
                     <button
                       type="button"
@@ -224,11 +267,11 @@ const ProductSinglePage = () => {
                 </div>
 
                 <div className="listSize qty flex align-center">
-                  <div style={{width:100 }} className="qty-text">
+                  <div style={{ width: 100 }} className="qty-text">
                     Size:
                   </div>
                   <div className="listSize">
-                    {listSize.map((i) => (
+                    {Array.from(sizeMap.keys()).map((i) => (
                       <div
                         onClick={() => setSize(i)}
                         style={{
@@ -242,31 +285,52 @@ const ProductSinglePage = () => {
                     ))}
                   </div>
                 </div>
-                {product?.isCustomise && (
-                  <div style={{
-                    marginBottom:20
-                  }} className="">
-                   <div className="wrap-custom">
-                    <span className="txt-custom">Sô áo</span>
-                    <Input type="number" className="txtInput" value={playerNumber} onChange={(e) => setPlayerNumber(e.target.value)} />
-                   </div>
-                   <div className="wrap-custom">
-                    <span className="txt-custom">Tên cầu thủ</span>
-                    <Input className="txtInput" value={playerName} onChange={(e) => setPlayerName(e.target.value)} />
-                   </div>
+                {size && (
+                  <div
+                    style={{
+                      marginLeft: 110,
+                      marginTop: -10,
+                      marginBottom: 10,
+                    }}
+                  >
+                    Còn {sizeMap.get(size)} sản phẩm
                   </div>
                 )}
+                <div
+                  style={{
+                    marginBottom: 20,
+                  }}
+                  className=""
+                >
+                  <div className="wrap-custom">
+                    <span className="txt-custom">Tên cầu thủ và số áo</span>
+                    <Select
+                    value={playerId}
+                      onChange={(v) => {
+                        setPlayerId(v)
+                      }}
+                      style={{ width: 300 }}
+                    >
+                      {listPlayer.filter(i => listPlayerid.includes(i.id + "")).map((i) => (
+                        <Select.Option
+                        value={i.id + ""}
+                          
+                        >
+                          {i.numberPlayer + "." + i.name}
+                        </Select.Option>
+                      ))}
+                    </Select>
+                  </div>
+                </div>
 
                 <div className="btns">
                   <button
                     onClick={() => {
-                      if(currentUser){
+                      if (currentUser) {
                         addToCartHandler(product);
+                      } else {
+                        navigate("/login");
                       }
-                      else{
-                        navigate("/login")
-                      }
-                     
                     }}
                     type="button"
                     className="add-to-cart-btn btn"
