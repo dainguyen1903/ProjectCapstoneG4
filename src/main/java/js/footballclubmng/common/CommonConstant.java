@@ -141,6 +141,7 @@ public class CommonConstant {
         public static final String UPDATE_QUANTITY_CART_ITEM_SUCCESS = "Cập nhật số lượng sản phẩm thành công";
         public static final String CART_ITEM_NOT_FOUND = "Không tìm thấy sản phẩm trong giỏ hàng";
         public static final String QUANTITY_MUST_GREATER_THAN_ZERO = "Số lượng sản phẩm phải lớn hơn 0";
+        public static final String SIZE_REQUIRED = "Vui lòng chọn size";
     }
 
 
@@ -173,6 +174,7 @@ public class CommonConstant {
         public static final String UPDATE_PLAYER = HEAD_API + PLAYER + "/update-player/{id}";
         public static final String DELETE_PLAYER = HEAD_API + PLAYER + "/delete-player/{id}";
         public static final String SEARCH_PLAYER = HEAD_API + PLAYER + "/search-player";
+        public static final String VIEW_ALL_PLAYER = HEAD_API + PLAYER + "/view-all-player";
     }
 
     public static class NEWS_API {
@@ -189,7 +191,7 @@ public class CommonConstant {
         public static final String UPDATE_NEWS_TYPE = HEAD_API + NEWS + "/update-news-type/{id}";
         public static final String LIST_TOP4_NEWS = HEAD_API + NEWS + "/list-top4-news";
         public static final String SEARCH_NEWS_TYPE = HEAD_API + NEWS + "/search-news-type";
-        public static final String DELETE_NEWS_TYPE = "/delete-news-type/{id}";
+        public static final String DELETE_NEWS_TYPE = HEAD_API + NEWS + "/delete-news-type/{id}";
     }
 
     public static class CATEGORY_API {
@@ -214,7 +216,7 @@ public class CommonConstant {
 
         public static final String DETAILS_PRODUCT = HEAD_API + PRODUCT + "/details-product/{id}";
 
-        public static final String SEARCH_PRODUCT = HEAD_API + PRODUCT + "search-product";
+        public static final String SEARCH_PRODUCT = HEAD_API + PRODUCT + "/search-product";
     }
 
     public static class ORDER_API {
@@ -235,6 +237,7 @@ public class CommonConstant {
         public static final String REMOVE_CART_ITEM = HEAD_API + CART + "/remove-cart-item/{cartItemId}";
         public static final String VIEW_CART = HEAD_API + CART + "/view-cart";
         public static final String UPDATE_QUANTITY_CART_ITEM = HEAD_API + CART + "/update-quantity-cart-item/{cartItemId}";
+        public static final String CUSTOMISE_ADD_CART_ITEM = HEAD_API + CART + "/customise-add-cart-item/{productId}";
     }
 
 

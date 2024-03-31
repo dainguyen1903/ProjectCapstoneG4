@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.*;
 
@@ -34,13 +35,16 @@ public class News {
     @Column(name = "date_create", nullable = false)
     private LocalDateTime dateCreate;
 
-    @OneToMany(mappedBy = "news",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "news",fetch = FetchType.EAGER)
     private List<ImagesNews> imagesNewsList;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "news_type_id")
     @JsonIgnoreProperties({"newsList"})
     private NewsType newsType;
+
+    @Column(name = "status")
+    private Boolean status;
 
 //    @OneToMany(mappedBy = "news")
 //    private List<NewsComment> newsCommentList;

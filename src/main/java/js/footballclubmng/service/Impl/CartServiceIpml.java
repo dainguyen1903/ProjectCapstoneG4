@@ -5,6 +5,7 @@ import js.footballclubmng.entity.Cart;
 import js.footballclubmng.entity.CartItem;
 import js.footballclubmng.entity.Product;
 import js.footballclubmng.entity.User;
+import js.footballclubmng.model.request.CustomiseProductRequest;
 import js.footballclubmng.repository.CartItemRepository;
 import js.footballclubmng.repository.CartRepository;
 import js.footballclubmng.repository.ProductRepository;
@@ -27,12 +28,11 @@ public class CartServiceIpml implements CartService {
     private ProductRepository productRepository;
 
     @Override
-    public boolean addCartItemToCart(String token, long productId) {
+    public boolean addCartItemToCart(String token, long productId, String size) {
         try {
             String jwtToken = token.substring(7);
             String email = tokenProvider.getUsernameFromJWT(jwtToken);
             User user = userRepository.findByEmail(email);
-
             Product product = productRepository.findById(productId).orElse(null);
 
             Cart cart = cartRepository.findByUser(user);
@@ -44,18 +44,21 @@ public class CartServiceIpml implements CartService {
                 cartItem.setProduct(product);
                 cartItem.setQuantity(1);
                 cartItem.setCart(cart1);
+                cartItem.setSize(size);
                 cartItemRepository.save(cartItem);
             }
-            CartItem cartItem = cartItemRepository.findByProductAndAndCart(product, cart);
+            CartItem cartItem = cartItemRepository.findByProductAndCartAndSize(product, cart, size);
             if (cartItem == null) {
                 CartItem cartItem1 = new CartItem();
                 cartItem1.setProduct(product);
                 cartItem1.setQuantity(1);
                 cartItem1.setCart(cart);
+                cartItem1.setSize(size);
                 cartItemRepository.save(cartItem1);
-            } else {
-                cartItem.setQuantity(cartItem.getQuantity() + 1);
-                cartItemRepository.save(cartItem);
+            }
+            if (cartItem != null && cartItem.getSize().equals(size)) {
+            cartItem.setQuantity(cartItem.getQuantity() + 1);
+            cartItemRepository.save(cartItem);
             }
             return true;
         } catch (Exception e) {
@@ -64,12 +67,12 @@ public class CartServiceIpml implements CartService {
     }
 
     public boolean checkQuantity(long productId) {
-        Product product = productRepository.findById(productId).orElse(null);
-        if (product != null) {
-            if (product.getQuantity() >= 1) {
-                return true;
-            }
-        }
+//        Product product = productRepository.findById(productId).orElse(null);
+//        if (product != null) {
+//            if (product.getQuantity() >= 1) {
+//                return true;
+//            }
+//        }
         return false;
     }
 
@@ -96,9 +99,9 @@ public class CartServiceIpml implements CartService {
         try {
             CartItem cartItem = cartItemRepository.findById(cartItemId).orElse(null);
             if (cartItem != null) {
-                    cartItem.setQuantity(quantity);
-                    cartItemRepository.save(cartItem);
-                    return true;
+                cartItem.setQuantity(quantity);
+                cartItemRepository.save(cartItem);
+                return true;
             }
             return false;
         } catch (Exception e) {
@@ -109,5 +112,49 @@ public class CartServiceIpml implements CartService {
     @Override
     public CartItem getCartItemById(long cartItemId) {
         return cartItemRepository.findById(cartItemId).orElse(null);
+    }
+
+    @Override
+    public boolean customiseAddCartItemToCart(String token, long productId, CustomiseProductRequest customiseProductRequest) {
+        try {
+            String jwtToken = token.substring(7);
+            String email = tokenProvider.getUsernameFromJWT(jwtToken);
+            User user = userRepository.findByEmail(email);
+
+            Product product = productRepository.findById(productId).orElse(null);
+
+            Cart cart = cartRepository.findByUser(user);
+            if (cart == null) {
+                Cart cart1 = new Cart();
+                cart1.setUser(user);
+                cartRepository.save(cart1);
+                CartItem cartItem = new CartItem();
+                cartItem.setProduct(product);
+                cartItem.setQuantity(1);
+                cartItem.setCart(cart1);
+                cartItem.setSize(customiseProductRequest.getSize());
+                cartItem.setPlayerName(customiseProductRequest.getPlayerName());
+                cartItem.setPlayerNumber(customiseProductRequest.getPlayerNumber());
+                cartItemRepository.save(cartItem);
+            }
+            CartItem cartItem = cartItemRepository.findByProductAndCartAndSizeAndPlayerNumberAndPlayerName(product, cart, customiseProductRequest.getSize(), customiseProductRequest.getPlayerNumber(), customiseProductRequest.getPlayerName());
+            if (cartItem == null) {
+                CartItem cartItem1 = new CartItem();
+                cartItem1.setProduct(product);
+                cartItem1.setQuantity(1);
+                cartItem1.setCart(cart);
+                cartItem1.setSize(customiseProductRequest.getSize());
+                cartItem1.setPlayerName(customiseProductRequest.getPlayerName());
+                cartItem1.setPlayerNumber(customiseProductRequest.getPlayerNumber());
+                cartItemRepository.save(cartItem1);
+            }
+            if (cartItem != null && cartItem.getSize().equals(customiseProductRequest.getSize())) {
+                cartItem.setQuantity(cartItem.getQuantity() + 1);
+                cartItemRepository.save(cartItem);
+            }
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

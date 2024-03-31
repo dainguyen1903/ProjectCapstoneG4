@@ -30,4 +30,14 @@ public class CartItem {
 
     @Column(name = "quantity")
     private int quantity;
+
+    @Column(name = "size")
+    private String size;
+
+    @Column(name = "player_name")
+    private String playerName;
+
+    @Column(name = "player_number")
+    private Integer playerNumber;
+
 }

@@ -49,4 +49,7 @@ public class Player {
     @Column(name = "player_number")
     private Integer numberPlayer;
 
+    @Column(name = "status")
+    private Boolean status;
+
 }
