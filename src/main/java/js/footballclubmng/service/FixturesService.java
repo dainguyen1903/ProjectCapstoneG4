@@ -7,7 +7,7 @@ import java.util.List;
 public interface FixturesService {
     public List<Fixtures> findAllFixtures();
     public Fixtures getFixturesById(long id);
-    public boolean addMatch(Fixtures match);
+    public boolean addFixtures(Fixtures fixtures);
     public boolean updateMatch(long id, Fixtures match);
     public boolean deleteMatch(long id);
 }
