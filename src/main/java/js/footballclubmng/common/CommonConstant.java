@@ -36,8 +36,6 @@ public class CommonConstant {
     }
 
     public static class COMMON_MESSAGE {
-
-
         public static String NOT_CONVERT = "CAN_NOT_CONVERT";
         public static String OK = "OK";
         public static String USER_NOT_LOGIN = "USER_NOT_LOGIN";
@@ -151,6 +149,8 @@ public class CommonConstant {
         public static final String ADD_FIXTURES_SUCCESS = "Thêm trận đấu thành công";
         public static final String UPDATE_FIXTURES_FAIL = "Cập nhật trận đấu thất bại";
         public static final String UPDATE_FIXTURES_SUCCESS = "Cập nhật trận đấu thành công";
+        public static final String DELETE_FIXTURES_FAIL = "Xóa trận đấu thất bại";
+        public static final String DELETE_FIXTURES_SUCCESS = "Xóa trận đấu thành công";
     }
 
 
@@ -255,6 +255,7 @@ public class CommonConstant {
         public static final String FIXTURES_DETAIL = HEAD_API + FIXTURES + "/detail-fixtures/{id}";
         public static final String CREATE_FIXTURES = HEAD_API + FIXTURES + "/create-fixtures";
         public static final String UPDATE_FIXTURES = HEAD_API + FIXTURES + "/update-fixtures/{id}";
+        public static final String DELETE_FIXTURES = HEAD_API + FIXTURES + "/delete-fixtures/{id}";
     }
 
 }

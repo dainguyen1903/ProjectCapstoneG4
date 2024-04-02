@@ -70,7 +70,14 @@ public class FixturesServiceImpl implements FixturesService {
     }
 
     @Override
-    public boolean deleteMatch(long id) {
-        return false;
+    public boolean deleteFixtures(long id) {
+        try {
+            Fixtures fixtures = fixtureRepository.findById(id).orElse(null);
+            fixtures.setStatus(false);
+            fixtureRepository.save(fixtures);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

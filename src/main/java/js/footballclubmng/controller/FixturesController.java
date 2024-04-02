@@ -53,4 +53,18 @@ public class FixturesController {
         }
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.UPDATE_FIXTURES_SUCCESS, null);
     }
+
+    @DeleteMapping(CommonConstant.FIXTURES_API.DELETE_FIXTURES)
+    @PreAuthorize("hasRole('ROLE_Operator')")
+    public ResponseAPI<Fixtures> deleteFixtures(@PathVariable int id) {
+        Fixtures fixtures = fixturesService.getFixturesById(id);
+        if (fixtures == null) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.NOT_FOUND_FIXTURES, null);
+        }
+        boolean result = fixturesService.deleteFixtures(id);
+        if (!result) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.DELETE_FIXTURES_FAIL, null);
+        }
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.DELETE_FIXTURES_SUCCESS, null);
+    }
 }
