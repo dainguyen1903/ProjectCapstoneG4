@@ -1,10 +1,8 @@
 package js.footballclubmng.controller;
 
 import js.footballclubmng.common.CommonConstant;
-import js.footballclubmng.entity.News;
-import js.footballclubmng.entity.Player;
 import js.footballclubmng.entity.Product;
-import js.footballclubmng.model.request.CreateNewsRequest;
+import js.footballclubmng.model.dto.ProductDto;
 import js.footballclubmng.model.request.CreateProductRequest;
 import js.footballclubmng.model.response.ResponseAPI;
 import js.footballclubmng.service.ProductService;
@@ -14,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class ProductController {
@@ -22,8 +21,8 @@ public class ProductController {
     ProductService productService;
 
     @GetMapping(CommonConstant.PRODUCT_API.LIST_PRODUCT)
-    public ResponseAPI<List<Product>> listProduct() {
-        List<Product> list = productService.getAllProduct();
+    public ResponseAPI<List<ProductDto>> listProduct() {
+        List<ProductDto> list = productService.getAllProduct();
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, list);
     }
 

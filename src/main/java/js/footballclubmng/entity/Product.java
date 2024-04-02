@@ -1,5 +1,6 @@
 package js.footballclubmng.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
@@ -30,14 +31,24 @@ public class Product {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "category_id")
-    @JsonIgnoreProperties({"listProducts"})
-    private Category categoryId;
-
-    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    private List<ImagesProduct> imagesProductList;
+    @Column(name = "status")
+    private Boolean status;
 
     @Column(name = "is_customise")
     private Boolean isCustomise;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id")
+    @JsonIgnore
+    private Category category;
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
+    private List<ImagesProduct> imagesProduct;
+
+
+
+
+
+
+
 }

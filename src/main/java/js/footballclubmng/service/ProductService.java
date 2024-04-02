@@ -1,13 +1,17 @@
 package js.footballclubmng.service;
 
 import js.footballclubmng.entity.Product;
+import js.footballclubmng.model.dto.ProductDto;
 import js.footballclubmng.model.request.CreateProductRequest;
 
 import java.util.List;
 
 
 public interface ProductService {
-    List<Product> getAllProduct();
+
+    List<ProductDto> getAllProduct();
+
+
 
     Product getProductById(long id);
 
@@ -16,6 +20,8 @@ public interface ProductService {
     public boolean updateProduct(long id, CreateProductRequest createProductRequest);
 
     public boolean deleteProduct(long id);
+
+
 
     public List<Product> searchProduct(String product);
 

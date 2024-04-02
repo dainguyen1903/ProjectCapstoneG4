@@ -23,9 +23,11 @@ public class Category {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "categoryId",fetch = FetchType.EAGER)
-    private List<Product> listProducts;
-
     @Column(name = "status")
     private boolean status;
+
+    @OneToMany(mappedBy = "category",fetch = FetchType.EAGER)
+    private List<Product> listProducts;
+
+
 }
