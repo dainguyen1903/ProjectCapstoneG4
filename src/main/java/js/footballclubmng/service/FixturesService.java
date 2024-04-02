@@ -8,6 +8,6 @@ public interface FixturesService {
     public List<Fixtures> findAllFixtures();
     public Fixtures getFixturesById(long id);
     public boolean addFixtures(Fixtures fixtures);
-    public boolean updateMatch(long id, Fixtures match);
+    public boolean updateFixtures(long id, Fixtures fixtures);
     public boolean deleteMatch(long id);
 }

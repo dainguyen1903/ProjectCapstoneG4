@@ -39,4 +39,18 @@ public class FixturesController {
         }
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.ADD_FIXTURES_SUCCESS, null);
     }
+
+    @PutMapping(CommonConstant.FIXTURES_API.UPDATE_FIXTURES)
+    @PreAuthorize("hasRole('ROLE_Operator')")
+    public ResponseAPI<Fixtures> updateFixtures(@PathVariable int id, @RequestBody Fixtures fixtures) {
+        Fixtures fixtures1 = fixturesService.getFixturesById(id);
+        if (fixtures1 == null) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.NOT_FOUND_FIXTURES, null);
+        }
+        boolean result = fixturesService.updateFixtures(id, fixtures);
+        if (!result) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.UPDATE_FIXTURES_FAIL, null);
+        }
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.UPDATE_FIXTURES_SUCCESS, null);
+    }
 }

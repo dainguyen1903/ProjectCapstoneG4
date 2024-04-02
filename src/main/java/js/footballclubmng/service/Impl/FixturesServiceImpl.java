@@ -47,8 +47,26 @@ public class FixturesServiceImpl implements FixturesService {
     }
 
     @Override
-    public boolean updateMatch(long id, Fixtures match) {
-        return false;
+    public boolean updateFixtures(long id, Fixtures fixtures) {
+        try {
+            Fixtures fixtures1 = fixtureRepository.findById(id).orElse(null);
+            if (fixtures1 == null) {
+                return false;
+            }
+            fixtures1.setName(fixtures.getName());
+            fixtures1.setRound(fixtures.getRound());
+            fixtures1.setHomeTeam(fixtures.getHomeTeam());
+            fixtures1.setAwayTeam(fixtures.getAwayTeam());
+            fixtures1.setDateTime(fixtures.getDateTime());
+            fixtures1.setLocation(fixtures.getLocation());
+            fixtures1.setStatusMatch(fixtures.getStatusMatch());
+            fixtures1.setHomeScore(fixtures.getHomeScore());
+            fixtures1.setAwayScore(fixtures.getAwayScore());
+            fixtureRepository.save(fixtures1);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
