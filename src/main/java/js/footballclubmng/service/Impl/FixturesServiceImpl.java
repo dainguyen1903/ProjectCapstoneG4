@@ -14,14 +14,15 @@ public class FixturesServiceImpl implements FixturesService {
     @Autowired
     private FixturesRepository matchRepository;
     @Override
-    public List<Fixtures> findAllMatch() {
-        List<Fixtures> matchList = matchRepository.findAll();
+    public List<Fixtures> findAllFixtures() {
+        List<Fixtures> matchList = matchRepository.viewAllFixtures();
         return matchList;
     }
 
     @Override
-    public Fixtures getMatchById(long id) {
-        return null;
+    public Fixtures getFixturesById(long id) {
+        Fixtures fixtures  = matchRepository.findById(id).orElse(null);
+        return fixtures;
     }
 
     @Override

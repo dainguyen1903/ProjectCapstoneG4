@@ -141,6 +141,10 @@ public class CommonConstant {
         public static final String CART_ITEM_NOT_FOUND = "Không tìm thấy sản phẩm trong giỏ hàng";
         public static final String QUANTITY_MUST_GREATER_THAN_ZERO = "Số lượng sản phẩm phải lớn hơn 0";
         public static final String SIZE_REQUIRED = "Vui lòng chọn size";
+
+
+        //Message fixtures
+        public static final String NOT_FOUND_FIXTURES = "Không tìm thấy trận đấu";
     }
 
 
@@ -242,6 +246,7 @@ public class CommonConstant {
     public static class FIXTURES_API {
         public static final String FIXTURES = "/fixtures";
         public static final String FIXTURES_LIST = HEAD_API + FIXTURES + "/list-fixtures";
+        public static final String FIXTURES_DETAIL = HEAD_API + FIXTURES + "/detail-fixtures/{id}";
     }
 
 }

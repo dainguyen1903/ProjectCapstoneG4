@@ -5,8 +5,8 @@ import js.footballclubmng.entity.Fixtures;
 import java.util.List;
 
 public interface FixturesService {
-    public List<Fixtures> findAllMatch();
-    public Fixtures getMatchById(long id);
+    public List<Fixtures> findAllFixtures();
+    public Fixtures getFixturesById(long id);
     public boolean addMatch(Fixtures match);
     public boolean updateMatch(long id, Fixtures match);
     public boolean deleteMatch(long id);
