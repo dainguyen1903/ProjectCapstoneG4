@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Table, Input, Button, Space, Modal, Form, Row, Col, Tag, Card } from "antd";
 import FormItem from "antd/es/form/FormItem";
 import {
@@ -11,16 +11,19 @@ import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { useForm } from "antd/es/form/Form";
 import useMatchStore from "../../zustand/matchStore";
+import { matchApi } from "../../api/match.api";
+import moment from "moment";
 const ListMatch = () => {
   const matchs = useMatchStore((state) => state.matches);
   const [form] = useForm();
 
   const navigate = useNavigate();
   const [searchText, setSearchText] = useState("");
-  const [listMatch, setLisstMatch] = useState(matchs);
+  const [listMatch, setLisstMatch] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const deleteMatch = useMatchStore((state) => state.deleteMatch);
+  const [listAll,setListAll] = useState([])
   const getStatusColor = (status) => {
     switch (status) {
       case "0":
@@ -35,15 +38,15 @@ const ListMatch = () => {
   };
   // Function to handle search
   const handleSearch = (value) => {
-    const tournamentName = form.getFieldValue("tournamentName") || "";
+    const name = form.getFieldValue("name") || "";
     const homeTeam = form.getFieldValue("homeTeam") || "";
     const awayTeam = form.getFieldValue("awayTeam") || "";
     setLisstMatch(
-      matchs.filter(
+      listAll.filter(
         (i) =>
-          i.tournamentName
+          i.name
             .toUpperCase()
-            .includes(tournamentName.toUpperCase()) &&
+            .includes(name.toUpperCase()) &&
           i.homeTeam
             .toUpperCase()
             .includes(homeTeam.toUpperCase()) &&
@@ -52,26 +55,44 @@ const ListMatch = () => {
     );
   };
 
-  // Function to handle edit
-  const handleEdit = (userId) => {
-    setSelectedUserId(userId);
-    setIsModalVisible(true);
-    // Fetch user details based on userId and populate form fields
-  };
+  const getAllList =async() => {
+    try {
+      const res  = await matchApi.getListmatch();
+      if(res.data.status === 200 || res.data.status ===204){
+        setListAll(res.data.data || [])
+        setLisstMatch(res.data.data || [])
+      }
+      
+    } catch (error) {
+      setListAll([])
+      Modal.confirm({
+        type:"error",
+        title:"error",
+        content:"Error",
+
+      })
+    }
+  }
+  useEffect(() => {
+    getAllList()
+  },[])
 
   // Function to handle delete
   const handleDelete = (id) => {
     Modal.confirm({
       title: "Xác nhận",
       content: "Xóa lịch thi đấu",
-      onOk: () => {
-        deleteMatch(id);
+      onOk: async() => {
+       const res = await matchApi.deletematch(id);
+       if(res.data.status === 200 || res.data.status === 204){
         Modal.success({
           title: "Thành công",
           content: "Xóa thành công",
         });
        handleSearch()
        setLisstMatch(listMatch.filter(i => i.id != id))
+       }
+       
       },
     });
   };
@@ -79,8 +100,8 @@ const ListMatch = () => {
   const columns = [
     {
       title: "Tên Giải Đấu",
-      dataIndex: "tournamentName",
-      key: "tournamentName",
+      dataIndex: "name",
+      key: "name",
     },
     {
       title: "Vòng Đấu",
@@ -101,16 +122,19 @@ const ListMatch = () => {
       title: "Ngày và Giờ",
       dataIndex: "dateTime",
       key: "dateTime",
+      render:(value) => {
+        return value ?  moment(value).format("YYYY-MM-DD hh:mm:ss"):""
+      }
     },
     {
       title: "Sân Vận Động",
-      dataIndex: "stadium",
-      key: "stadium",
+      dataIndex: "location",
+      key: "location",
     },
     {
       title: "Tình Trạng Trận Đấu",
-      dataIndex: "matchStatus",
-      key: "matchStatus",
+      dataIndex: "statusMatch",
+      key: "statusMatch",
       render: (status) => (
         <Tag color={getStatusColor(status)}>
           {status === "0"
@@ -125,6 +149,10 @@ const ListMatch = () => {
       title: "Kết Quả Trận Đấu",
       dataIndex: "matchResult",
       key: "matchResult",
+      render:(_,row) => {
+       return <span>{ row.statusMatch!="0" ?( row.homeScore + " - " + row.awayScore):""}</span>
+      } 
+      
     },
 
     {
@@ -153,7 +181,7 @@ const ListMatch = () => {
         <Row gutter={[8, 8]}>
           <Col span={8}>
             <Form.Item
-              name={"tournamentName"}
+              name={"name"}
               label={
                 <span
                   style={{

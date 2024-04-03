@@ -1,9 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { Form, Input, Button, DatePicker, Select, Modal, Card } from "antd";
-import { useMatch, useMatches, useParams } from "react-router";
+import {
+  Form,
+  Input,
+  Button,
+  DatePicker,
+  Select,
+  Modal,
+  Card,
+  Row,
+  Col,
+} from "antd";
+import { useMatch, useMatches, useNavigate, useParams } from "react-router";
 import moment from "moment";
 import useMatchStore from "../../zustand/matchStore";
 import LoadingFull from "../../component/loading/loadingFull";
+import { matchApi } from "../../api/match.api";
 const { Option } = Select;
 
 const AddMatchForm = () => {
@@ -12,8 +23,13 @@ const AddMatchForm = () => {
   const addMatch = useMatchStore((state) => state.addMatch);
   const updateMatch = useMatchStore((state) => state.updateMatch);
   const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState("");
 
   const matches = useMatchStore((state) => state.matches);
+  const [homeScore, setHomeScore] = useState("");
+  const [awayScore, setAwayScore] = useState("");
+  const navigate = useNavigate();
+
   let detail = matches.find((i) => i.id == id) || {};
   const [form] = Form.useForm();
   const onFinish = (values) => {
@@ -21,51 +37,72 @@ const AddMatchForm = () => {
     Modal.confirm({
       title: "Xác nhận",
       content: id ? "Thêm lịch thi đấu" : "Cập nhật lịch thi đấu",
-      onOk: () => {
-        const dataPosst = JSON.parse(JSON.stringify(values));
-        const birdday = dataPosst.dateTime;
-        dataPosst.dateTime = moment(birdday).format("YYYY-MM-DD HH:mm:ss");
-        console.log(dataPosst);
-
-        setTimeout(() => {
-          if (id) {
-            updateMatch(id, dataPosst);
+      onOk: async () => {
+        try {
+          const dataPosst = JSON.parse(JSON.stringify(values));
+          const birdday = dataPosst.dateTime;
+          dataPosst.dateTime = moment(birdday).format("YYYY-MM-DDTHH:mm");
+          if (status != "0") {
+            dataPosst.awayScore = awayScore;
+            dataPosst.homeScore = homeScore;
+          }
+          dataPosst.status = true;
+          const res = !id
+            ? await matchApi.creatermatch(dataPosst)
+            : await matchApi.updatematch(id, dataPosst);
+          if (res.data.status === 200 || res.data.status === 204) {
+            Modal.success({
+              title: "Thành công",
+              content: !id ? "Thêm thành công" : "Cập nhật thành công",
+            });
+            navigate(-1);
           } else {
-            addMatch(dataPosst);
+            Modal.error({
+              title: "Thất bại",
+              content: !id ? "Thêm thất bại" : "Cập nhật thất bại",
+            });
           }
-          Modal.success({
-            title: "Thành công",
-            content: !id ? "Thêm thành công" : "Cập nhật thành công",
+        } catch (error) {
+          Modal.error({
+            title: "Thất bại",
+            content: !id ? "Thêm thất bại" : "Cập nhật thất bại",
           });
-          if (!id) {
-            form.resetFields();
-          }
-        }, 1000);
+        }
       },
     });
   };
+
+  // Get detail
+  const getDetail = async () => {
+    try {
+      setLoading(true);
+      const res = await matchApi.getDetailmatch(id);
+      if (res.data.status === 200 || res.status.data === 204) {
+        const detail = res.data.data;
+        setStatus(detail.statusMatch);
+        setHomeScore(detail?.homeScore);
+        setAwayScore(detail?.awayScore );
+        detail.dateTime = detail.dateTime ? moment(detail.dateTime) : null;
+        form.setFieldsValue(detail);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
     if (id) {
-      setLoading(true);
-      new Promise((resolve) => {
-        const dataDetail = JSON.parse(JSON.stringify(detail));
-        dataDetail.dateTime = moment(dataDetail.dateTime);
-        setTimeout(() => {
-          form.setFieldsValue(dataDetail);
-          resolve();
-        }, 1000);
-      }).then(() => {
-        setLoading(false);
-      });
+      getDetail();
     }
   }, [id]);
+  console.log(form.getFieldValue("statusMatch"));
   return (
     <Card>
       <Form
         form={form}
         name="addMatchForm"
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 10 }}
+        wrapperCol={{ span: 12 }}
         onFinish={onFinish}
       >
         <h2 style={{ marginBottom: 10 }}>
@@ -73,7 +110,7 @@ const AddMatchForm = () => {
         </h2>
         <div className="inputLabel">Tên giải đấu</div>
         <Form.Item
-          name="tournamentName"
+          name="name"
           rules={[{ required: true, message: "Vui lòng nhập tên giải đấu!" }]}
         >
           <Input placeholder="Tên Giải Đấu" className="Input" />
@@ -116,7 +153,7 @@ const AddMatchForm = () => {
         </Form.Item>
         <div className="inputLabel">Sân vận động</div>
         <Form.Item
-          name="stadium"
+          name="location"
           rules={[
             { required: true, message: "Vui lòng nhập tên sân vận động!" },
           ]}
@@ -132,43 +169,56 @@ const AddMatchForm = () => {
           Tình trạng trận đấu
         </div>
         <Form.Item
-          name="matchStatus"
+          name="statusMatch"
           rules={[
             { required: true, message: "Vui lòng chọn tình trạng trận đấu!" },
           ]}
         >
-          <Select placeholder="Tình Trạng Trận Đấu" className="Select">
+          <Select
+            onChange={(v) => setStatus(v)}
+            placeholder="Tình Trạng Trận Đấu"
+            className="Select"
+          >
             <Option value="0">Chưa Bắt Đầu</Option>
             <Option value="1">Đang Diễn Ra</Option>
             <Option value="2">Đã Kết Thúc</Option>
           </Select>
         </Form.Item>
-        <div className="inputLabel">Kết quả trận đấu</div>
-        <Form.Item
-          name="matchResult"
-          dependencies={["matchStatus"]}
-          rules={[
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (getFieldValue("matchStatus") === "đã kết thúc" && !value) {
-                  return Promise.reject(
-                    new Error(
-                      "Khi trận đấu đã kết thúc, vui lòng nhập kết quả!"
-                    )
-                  );
-                }
-                return Promise.resolve();
-              },
-            }),
-          ]}
-        >
-          <Input
-            disabled={form.getFieldValue("matchStatus") != "2"}
-            placeholder="Kết Quả Trận Đấu"
-            className="Input"
-          />
-        </Form.Item>
+        {status && status != "0" && (
+          <>
+            <div className="inputLabel">Kết quả trận đấu</div>
+            <div
+              style={{
+                display: "flex",
+                gap: 20,
+              }}
+            >
+              <div>
+                <div style={{ marginTop: 5, marginBottom: -5 }}>Đội nhà</div>
 
+                <Input
+                  type="number"
+                  value={homeScore}
+                  onChange={(e) => setHomeScore(e.target.value)}
+                  setVal
+                  style={{ marginRight: 10 }}
+                  placeholder="Đội nhà"
+                  className="Input"
+                />
+              </div>
+              <div>
+                <div style={{ marginTop: 5, marginBottom: -5 }}>Đội khách</div>
+                <Input
+                  value={awayScore}
+                  onChange={(e) => setAwayScore(e.target.value)}
+                  type="number"
+                  placeholder="Đội khách"
+                  className="Input"
+                />
+              </div>
+            </div>
+          </>
+        )}
         <Form.Item>
           <button
             style={{
