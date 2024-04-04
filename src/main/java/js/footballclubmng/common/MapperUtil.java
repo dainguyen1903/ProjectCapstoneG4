@@ -67,7 +67,9 @@ public class MapperUtil {
         for (ImagesProduct imagesProduct : imagesProductList) {
             ImagesProductDto imagesProductDto = new ImagesProductDto();
             imagesProductDto.setPath(imagesProduct.getPath());
-            imagesProductDto.setPlayerId(imagesProduct.getPlayer().getId());
+            if (imagesProduct.getPlayer() != null) {
+                imagesProductDto.setPlayerId(imagesProduct.getPlayer().getId());
+            }
             imagesProductDtoList.add(imagesProductDto);
         }
 
