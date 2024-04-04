@@ -30,6 +30,8 @@ public class CreateProductRequest {
     @Max(value = 100, message = "chiết khẩu sản phẩm phải nhỏ hơn hoặc bằng 100")
     private float discount;
 
+    private Boolean isCustomise;
+
     private String description;
 
     private List<ImagesProduct> ImagesProductList;
