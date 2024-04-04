@@ -38,6 +38,7 @@ public class Product {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
+    @JsonIgnoreProperties({"listProducts"})
     private Category category;
 
     @OneToMany(mappedBy = "product")

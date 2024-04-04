@@ -32,6 +32,7 @@ public class MapperUtil {
     public static CategoryDto mapToCategoryDto(Category category) {
         CategoryDto categoryDto = new CategoryDto();
 
+        categoryDto.setId(category.getId());
         categoryDto.setName(category.getName());
 
 

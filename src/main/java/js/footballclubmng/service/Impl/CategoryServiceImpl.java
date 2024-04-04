@@ -1,12 +1,15 @@
 package js.footballclubmng.service.Impl;
 
+import js.footballclubmng.common.MapperUtil;
 import js.footballclubmng.entity.Category;
+import js.footballclubmng.model.dto.CategoryDto;
 import js.footballclubmng.repository.CategoryRepository;
 import js.footballclubmng.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -15,10 +18,12 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryRepository categoryRepository;
 
     @Override
-    public List<Category> getAllCategory() {
-        List<Category> list;
-        list = categoryRepository.viewAllCategory();
-        return list;
+    public List<CategoryDto> getAllCategory() {
+        List<Category> listCategory;
+        listCategory = categoryRepository.viewAllCategory();
+        return listCategory.stream()
+                .map(MapperUtil::mapToCategoryDto)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -51,10 +56,12 @@ public class CategoryServiceImpl implements CategoryService {
 
 
     @Override
-    public List<Category> searchCategory(String search) {
+    public List<CategoryDto> searchCategory(String search) {
         try {
             List<Category> list = categoryRepository.searchCategory(search);
-            return list;
+            return list.stream()
+                    .map(MapperUtil::mapToCategoryDto)
+                    .collect(Collectors.toList());
         } catch (Exception e) {
             return null;
         }

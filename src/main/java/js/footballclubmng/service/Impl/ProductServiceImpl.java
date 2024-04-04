@@ -170,8 +170,11 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-    public List<Product> searchProduct(String search) {
-        return productRepository.searchProductByName(search);
+    public List<ProductDto> searchProduct(String productName) {
+        List<Product> listProduct = productRepository.searchProductByName(productName);
+        return listProduct.stream()
+                .map(MapperUtil::mapToProductDto)
+                .collect(Collectors.toList());
     }
 
     public List<String> getImagesByProductIdAndPlayerId(Long productId, Long playerId) {

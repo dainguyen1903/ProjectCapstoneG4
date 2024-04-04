@@ -40,7 +40,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 
 
-    @Query(value = "SELECT * FROM product p WHERE lower(p.name) LIKE lower(concat('%', :query, '%'))", nativeQuery = true)
-    List<Product> searchProductByName(String query);
+    @Query(value = "SELECT * FROM product p WHERE lower(p.product_name) LIKE lower(concat('%', :productName, '%'))", nativeQuery = true)
+    List<Product> searchProductByName(String productName);
 
 }
