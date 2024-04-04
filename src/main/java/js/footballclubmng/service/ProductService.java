@@ -1,5 +1,6 @@
 package js.footballclubmng.service;
 
+import js.footballclubmng.entity.ImagesProduct;
 import js.footballclubmng.entity.Product;
 import js.footballclubmng.model.dto.ProductDetailsDto;
 import js.footballclubmng.model.dto.ProductDto;
@@ -23,9 +24,9 @@ public interface ProductService {
 
     public boolean deleteProduct(long id);
 
-
-
     public List<Product> searchProduct(String product);
+
+    public List<String> getImagesByProductIdAndPlayerId(Long productId, Long playerId);
 
 
 }

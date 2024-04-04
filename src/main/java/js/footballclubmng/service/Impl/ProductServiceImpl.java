@@ -174,5 +174,9 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.searchProductByName(search);
     }
 
+    public List<String> getImagesByProductIdAndPlayerId(Long productId, Long playerId) {
+        return imagesProductRepository.findAllByProductIdAndPlayerId(productId, playerId);
+    }
+
 
 }

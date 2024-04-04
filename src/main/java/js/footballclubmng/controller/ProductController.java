@@ -1,6 +1,7 @@
 package js.footballclubmng.controller;
 
 import js.footballclubmng.common.CommonConstant;
+import js.footballclubmng.entity.ImagesProduct;
 import js.footballclubmng.entity.Product;
 import js.footballclubmng.model.dto.ProductDetailsDto;
 import js.footballclubmng.model.dto.ProductDto;
@@ -81,6 +82,15 @@ public class ProductController {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.NOT_FOUND_PRODUCT);
         }
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, productList);
+    }
+
+    @GetMapping(CommonConstant.PRODUCT_API.GET_IMAGE_PRODUCT_BY_PLAYER)
+    public ResponseAPI<List<String>> getImagesByProductIdAndPlayerId(@PathVariable Long productId, @PathVariable Long playerId) {
+        List<String> images = productService.getImagesByProductIdAndPlayerId(productId, playerId);
+        if (images.isEmpty()) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.NOT_FOUND_PRODUCT);
+        }
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, images);
     }
 
 
