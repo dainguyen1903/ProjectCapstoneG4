@@ -83,7 +83,7 @@ public class CommonConstant {
         public static String EMPTY_TOKEN = "Đăng nhập để thực hiện chức năng này";
         public static String CREATE_PLAYER_SUCCESS = "Tạo cầu thủ thành công";
         public static String CREATE_PLAYER_FAIL = "Tạo cầu thủ thất bại";
-        public static final String UPDATE_PLAYER_SUCCESS = "Cập nhật cầu thủ thành công" ;
+        public static final String UPDATE_PLAYER_SUCCESS = "Cập nhật cầu thủ thành công";
         public static final String UPDATE_PLAYER_FAIL = "Cập nhật cầu thủ thất bại";
         public static final String DELETE_PLAYER_SUCCESS = "Xóa cầu thủ thành công";
         public static final String DELETE_PLAYER_FAIL = "Xóa cầu thủ thất bại";
@@ -107,7 +107,6 @@ public class CommonConstant {
         public static final String DELETE_PRODUCT_SUCCESS = "Xóa sản phẩm thành công";
         public static final String DELETE_PRODUCT_FAIL = "Xóa sản phẩm thất bại";
         public static final String PRODUCT_NOT_FOUND = "Không tìm thấy sản phẩm";
-
 
 
         //Message news
@@ -142,6 +141,16 @@ public class CommonConstant {
         public static final String CART_ITEM_NOT_FOUND = "Không tìm thấy sản phẩm trong giỏ hàng";
         public static final String QUANTITY_MUST_GREATER_THAN_ZERO = "Số lượng sản phẩm phải lớn hơn 0";
         public static final String SIZE_REQUIRED = "Vui lòng chọn size";
+
+
+        //Message fixtures
+        public static final String NOT_FOUND_FIXTURES = "Không tìm thấy trận đấu";
+        public static final String ADD_FIXTURES_FAIL = "Thêm trận đấu thất bại";
+        public static final String ADD_FIXTURES_SUCCESS = "Thêm trận đấu thành công";
+        public static final String UPDATE_FIXTURES_FAIL = "Cập nhật trận đấu thất bại";
+        public static final String UPDATE_FIXTURES_SUCCESS = "Cập nhật trận đấu thành công";
+        public static final String DELETE_FIXTURES_FAIL = "Xóa trận đấu thất bại";
+        public static final String DELETE_FIXTURES_SUCCESS = "Xóa trận đấu thành công";
     }
 
 
@@ -240,7 +249,14 @@ public class CommonConstant {
         public static final String CUSTOMISE_ADD_CART_ITEM = HEAD_API + CART + "/customise-add-cart-item/{productId}";
     }
 
-
+    public static class FIXTURES_API {
+        public static final String FIXTURES = "/fixtures";
+        public static final String FIXTURES_LIST = HEAD_API + FIXTURES + "/list-fixtures";
+        public static final String FIXTURES_DETAIL = HEAD_API + FIXTURES + "/detail-fixtures/{id}";
+        public static final String CREATE_FIXTURES = HEAD_API + FIXTURES + "/create-fixtures";
+        public static final String UPDATE_FIXTURES = HEAD_API + FIXTURES + "/update-fixtures/{id}";
+        public static final String DELETE_FIXTURES = HEAD_API + FIXTURES + "/delete-fixtures/{id}";
+    }
 
 }
 

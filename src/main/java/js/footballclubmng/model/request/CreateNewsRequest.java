@@ -1,6 +1,5 @@
 package js.footballclubmng.model.request;
 
-import js.footballclubmng.entity.ImagesNews;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,5 +19,6 @@ public class CreateNewsRequest {
     private String title;
     @NotBlank(message = "Mô tả không được để trống.")
     private String description;
-    private List<String> imagesNewsList;
+    @NotBlank(message = "Ảnh tiêu đề không được để trống.")
+    private String imageUrl;
 }

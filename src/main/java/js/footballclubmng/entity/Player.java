@@ -51,5 +51,4 @@ public class Player {
 
     @Column(name = "status")
     private Boolean status;
-
 }

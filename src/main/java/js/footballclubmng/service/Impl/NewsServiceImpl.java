@@ -1,12 +1,10 @@
 package js.footballclubmng.service.Impl;
 
-import js.footballclubmng.entity.ImagesNews;
 import js.footballclubmng.entity.NewsType;
 import js.footballclubmng.model.request.CreateNewsRequest;
 import js.footballclubmng.model.response.ListNewsResponse;
 import js.footballclubmng.entity.News;
 import js.footballclubmng.model.response.ListNewsTypeResponse;
-import js.footballclubmng.repository.ImagesNewsRepository;
 import js.footballclubmng.repository.NewsRepository;
 import js.footballclubmng.repository.NewsTypeRepository;
 import js.footballclubmng.service.NewsService;
@@ -17,9 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,8 +25,6 @@ public class NewsServiceImpl implements NewsService {
     NewsRepository newsRepository;
     @Autowired
     NewsTypeRepository newsTypeRepository;
-    @Autowired
-    ImagesNewsRepository imagesNewsRepository;
     @PersistenceContext
     EntityManager entityManager;
 
@@ -66,15 +60,8 @@ public class NewsServiceImpl implements NewsService {
             news.setDateCreate(LocalDateTime.now());
             news.setNewsType(newsType);
             news.setStatus(true);
+            news.setImageUrl(createNewsRequest.getImageUrl());
             newsRepository.save(news);
-            if (createNewsRequest.getImagesNewsList() != null) {
-                for (String image : createNewsRequest.getImagesNewsList()) {
-                    ImagesNews imagesNews = new ImagesNews();
-                    imagesNews.setPath(image);
-                    imagesNews.setNews(news);
-                    imagesNewsRepository.save(imagesNews);
-                }
-            }
             return true;
         } catch (Exception e) {
             return false;
@@ -91,34 +78,8 @@ public class NewsServiceImpl implements NewsService {
                 news.setTitle(createNewsRequest.getTitle());
                 news.setDescription(createNewsRequest.getDescription());
                 news.setNewsType(newsType);
+                news.setImageUrl(createNewsRequest.getImageUrl());
                 newsRepository.save(news);
-                List<String> newImagePaths = createNewsRequest.getImagesNewsList();
-                List<ImagesNews> imagesNewsList = imagesNewsRepository.findImagesNewsByNews(news);
-                for (ImagesNews imagesNews : imagesNewsList) {
-                    ImagesNews imagesNews1 = imagesNewsRepository.findById(imagesNews.getId()).orElse(null);
-                    if(imagesNews1 != null) {
-                        imagesNewsRepository.delete(imagesNews1);
-                    }
-                }
-                for (String newImagePath : newImagePaths) {
-                    ImagesNews imagesNews = new ImagesNews();
-                    imagesNews.setPath(newImagePath);
-                    imagesNews.setNews(news);
-                    imagesNewsRepository.save(imagesNews);
-                }
-//                if (newImagePaths != null) {
-//                    for (ImagesNews imagesNews : imagesNewsList) {
-//                        for (String newImagePath : newImagePaths) {
-//                            ImagesNews imagesNews1 = imagesNewsRepository.findById(imagesNews.getId()).orElse(null);
-//                            if (imagesNews1 != null) {
-//                                imagesNews1.setPath(newImagePath);
-//                                imagesNewsRepository.save(imagesNews1);
-//                                newImagePaths.remove(newImagePath);
-//                                break;
-//                            }
-//                        }
-//                    }
-//                }
             }
             return true;
 

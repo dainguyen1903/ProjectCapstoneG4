@@ -31,10 +31,10 @@ public class CartController {
         if (product == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.PRODUCT_NOT_FOUND);
         }
-        boolean quantity = cartService.checkQuantity(productId);
-        if (!quantity) {
-            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.OUT_OF_STOCK);
-        }
+//        boolean quantity = cartService.checkQuantity(productId);
+//        if (!quantity) {
+//            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.OUT_OF_STOCK);
+//        }
         if (size == null || size.isEmpty()) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.SIZE_REQUIRED);
         }
@@ -102,10 +102,10 @@ public class CartController {
         if (product == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.PRODUCT_NOT_FOUND);
         }
-        boolean quantity = cartService.checkQuantity(productId);
-        if (!quantity) {
-            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.OUT_OF_STOCK);
-        }
+//        boolean quantity = cartService.checkQuantity(productId);
+//        if (!quantity) {
+//            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.OUT_OF_STOCK);
+//        }
         boolean check = cartService.customiseAddCartItemToCart(token, productId, customiseProductRequest);
         if (!check) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.ADD_CART_ITEM_FAIL);
