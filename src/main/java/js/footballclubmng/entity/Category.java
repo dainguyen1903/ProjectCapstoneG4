@@ -20,7 +20,7 @@ public class Category {
     private Long id;
 
     @NotBlank(message = "Tên không được để trống.")
-    @Column(name = "name")
+    @Column(name = "category_name")
     private String name;
 
     @Column(name = "status")

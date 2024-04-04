@@ -9,7 +9,6 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class ProductSizeDto {
-    private Long id;
 
     private String size;
 

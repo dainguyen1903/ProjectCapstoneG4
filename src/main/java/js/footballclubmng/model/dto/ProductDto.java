@@ -27,9 +27,6 @@ public class ProductDto {
 
     private Boolean isCustomise;
 
-    private Category category;
+    private CategoryDto category;
 
-    private List<String> imagesProductList;
-
-//    private List<ProductSize> productSizeList;
 }

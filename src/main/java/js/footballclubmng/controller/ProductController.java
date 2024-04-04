@@ -2,6 +2,7 @@ package js.footballclubmng.controller;
 
 import js.footballclubmng.common.CommonConstant;
 import js.footballclubmng.entity.Product;
+import js.footballclubmng.model.dto.ProductDetailsDto;
 import js.footballclubmng.model.dto.ProductDto;
 import js.footballclubmng.model.request.CreateProductRequest;
 import js.footballclubmng.model.response.ResponseAPI;
@@ -28,9 +29,9 @@ public class ProductController {
 
     @PostMapping(CommonConstant.PRODUCT_API.CREATE_PRODUCT)
     @PreAuthorize("hasRole('ROLE_Sale')")
-    public ResponseAPI<Object> createProduct(@RequestBody CreateProductRequest createProductRequest) {
-        boolean check = productService.createProduct(createProductRequest);
-        if(!check) {
+    public ResponseAPI<Product> createProduct(@RequestBody CreateProductRequest request) {
+        Product createProduct = productService.createProduct(request);
+        if(createProduct == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.CREATE_PRODUCT_FAIL);
         }
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.CREATE_PRODUCT_SUCCESS);
@@ -65,12 +66,12 @@ public class ProductController {
     }
 
     @GetMapping(CommonConstant.PRODUCT_API.DETAILS_PRODUCT)
-    public ResponseAPI<Object> productDetail(@PathVariable int id) {
-        Product product = productService.getProductById(id);
-        if (product == null) {
+    public ResponseAPI<Object> productDetail(@PathVariable Long id) {
+        ProductDetailsDto productDetails = productService.getProductDetailsById(id);
+        if (productDetails == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.NOT_FOUND_PRODUCT);
         }
-        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, product);
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, productDetails);
     }
 
     @GetMapping(CommonConstant.PRODUCT_API.SEARCH_PRODUCT)

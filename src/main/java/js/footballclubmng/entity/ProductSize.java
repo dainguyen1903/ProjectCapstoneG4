@@ -24,7 +24,7 @@ public class ProductSize {
     @Column(name = "quantity")
     private int quantity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id")
     @JsonIgnoreProperties({"productSizes"})
     private Product product;

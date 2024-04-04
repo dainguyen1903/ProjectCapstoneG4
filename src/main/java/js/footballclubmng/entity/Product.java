@@ -1,6 +1,5 @@
 package js.footballclubmng.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
@@ -19,7 +18,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "product_name")
     private String productName;
 
     @Column(name = "price")
@@ -39,16 +38,12 @@ public class Product {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
-    @JsonIgnore
     private Category category;
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "product")
     private List<ImagesProduct> imagesProduct;
 
-
-
-
-
-
+    @OneToMany(mappedBy = "product")
+    private List<ProductSize> productSizes;
 
 }

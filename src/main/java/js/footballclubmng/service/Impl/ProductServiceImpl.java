@@ -1,25 +1,24 @@
 package js.footballclubmng.service.Impl;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import js.footballclubmng.common.MapperUtil;
 import js.footballclubmng.entity.*;
-import js.footballclubmng.model.dto.CategoryDto;
-import js.footballclubmng.model.dto.ImagesProductDto;
-import js.footballclubmng.model.dto.ProductDto;
-import js.footballclubmng.model.dto.ProductSizeDto;
+import js.footballclubmng.model.dto.*;
 import js.footballclubmng.model.request.CreateProductRequest;
 import js.footballclubmng.model.response.ListPlayerResponse;
 import js.footballclubmng.repository.CategoryRepository;
 import js.footballclubmng.repository.ImagesProductRepository;
 import js.footballclubmng.repository.ProductRepository;
+import js.footballclubmng.repository.ProductSizeRepository;
 import js.footballclubmng.service.ProductService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -34,86 +33,33 @@ public class ProductServiceImpl implements ProductService {
     private ImagesProductRepository imagesProductRepository;
 
     @Autowired
-    private ModelMapper mapper;
+    private ProductSizeRepository productSizeRepository;
 
-    @Transactional
+
     public List<ProductDto> getAllProduct() {
-//        List<Product> productList = productRepository.findAll();
-//        if (!CollectionUtils.isEmpty(productList)) {
-//            List<ProductDto> listProduct = productList.stream().map(product -> {
-//                List<ImagesProduct> imgs = product.getImagesProduct();
-//
-//                Category category = product.getCategory(); // Lấy category từ Product
-//                CategoryDto categoryDto = null;
-//                if (category != null) {
-//                    categoryDto = CategoryDto.builder()
-//                            .name(category.getName())
-//                            // Thêm các trường khác của CategoryDto nếu cần
-//                            .build();
-//                }
-//
-//                ProductDto resp = ProductDto.builder()
-//                        .productName(product.getProductName())
-//                        .price(product.getPrice())
-//                        .description(product.getDescription())
-//                        .category(categoryDto) // Đặt categoryDto vào ProductDto
-//                        .build();
-//
-//                List<ProductSizeDto> productSizeList = product.getProductSizes().stream()
-//                        .map(productSize -> ProductSizeDto.builder()
-//                                .size(productSize.getSize())
-//                                // Thêm các trường khác của ProductSizeDto nếu cần
-//                                .build())
-//                        .collect(Collectors.toList());
-//
-//                if (!CollectionUtils.isEmpty(imgs)) {
-//                    resp.setImagesProductList(imgs.stream()
-//                            .map(img -> ImagesProductDto.builder()
-//                                    .path(img.getPath())
-//                                    .id(img.getId())
-//                                    .build())
-//                            .collect(Collectors.toList()));
-//                }
-//                return resp;
-//            }).collect(Collectors.toList());
-//            return listProduct;
-//        }
-//        return new ArrayList<>();
-        List<Product> listProduct = productRepository.getAllProduct();
 
-//        return listProduct.stream()
-//                .map(product -> mapper.map(product, ProductDto.class))
-//
-//                .collect(Collectors.toList());
-        return listProduct.stream().map((product) -> mapToProductDto(product)).collect(Collectors.toList());
+        List<Product> listProduct = productRepository.findAll();
 
+        return listProduct.stream()
+                .map(MapperUtil::mapToProductDto)
+                .collect(Collectors.toList());
     }
 
-    private ProductDto mapToProductDto(Product product) {
-        ProductDto listProductResponse = new ProductDto();
+    @Override
+    public ProductDetailsDto getProductDetailsById(Long id) {
+        Product product = productRepository.findById(id).orElse(null);
+        if (product != null) {
+            List<ImagesProduct> imagesProductList = imagesProductRepository.findAllByProductId(id);
+            List<ProductSize> productSizeList = productSizeRepository.findAllByProductId(id);
+            product.setImagesProduct(imagesProductList);
+            product.setProductSizes(productSizeList);
 
-        listProductResponse.setId(product.getId());
-        listProductResponse.setProductName(product.getProductName());
-        listProductResponse.setPrice(product.getPrice());
-        listProductResponse.setDiscount(product.getDiscount());
-        listProductResponse.setDescription(product.getDescription());
-        listProductResponse.setStatus(product.getStatus());
-        listProductResponse.setIsCustomise(product.getIsCustomise());
-        listProductResponse.setCategory(product.getCategory());
+            return MapperUtil.mapToProductDetailsDto(product, imagesProductList, productSizeList);
 
-        List<String> imageUrls = new ArrayList<>();
-        for (ImagesProduct image : product.getImagesProduct()) {
-            imageUrls.add(image.getPath());
         }
-        listProductResponse.setImagesProductList(imageUrls);
 
-
-        return listProductResponse;
+        return null;
     }
-
-
-
-
 
     @Override
     public Product getProductById(long id) {
@@ -122,44 +68,94 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public boolean createProduct(CreateProductRequest createProductRequest) {
-//        try {
-//            Category category = categoryRepository.findByName(createProductRequest.getCategoryName());
-//            Product productEntity = new Product();
-//
-//        } catch (Exception e) {
-//            return false;
-//        }
-        return false;
+    public Product createProduct(CreateProductRequest request) {
+        try {
+
+
+            Product product = new Product();
+            product.setProductName(request.getProductName());
+            product.setPrice(request.getPrice());
+            product.setDiscount(request.getDiscount());
+            product.setDescription(request.getDescription());
+            product.setStatus(true);
+
+            // Kiểm tra và lấy danh mục từ cơ sở dữ liệu hoặc tạo mới nếu chưa tồn tại
+            Category category = categoryRepository.findByName(request.getCategoryName());
+            if (category == null) {
+                category = new Category();
+                category.setName(request.getCategoryName());
+                category = categoryRepository.save(category);
+            }
+            product.setCategory(category);
+
+            // Lưu sản phẩm vào cơ sở dữ liệu
+            Product savedProduct = productRepository.save(product);
+
+            // Lưu danh sách hình ảnh sản phẩm vào cơ sở dữ liệu
+            if (request.getImagesProductList() != null) {
+                for (ImagesProduct imagesProduct : request.getImagesProductList()) {
+                    imagesProduct.setProduct(savedProduct);
+                    imagesProductRepository.save(imagesProduct);
+                }
+            }
+
+            // Lưu danh sách kích thước sản phẩm vào cơ sở dữ liệu
+            if (request.getProductSizeList() != null) {
+                for (ProductSize productSize : request.getProductSizeList()) {
+                    productSize.setProduct(savedProduct);
+                    productSizeRepository.save(productSize);
+                }
+            }
+
+            return savedProduct;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
-    public boolean updateProduct(long id, CreateProductRequest createProductRequest) {
-//        try {
-//            Product product = productRepository.findById(id).orElse(null);
-//            if (product != null) {
-//                Category category = categoryRepository.findByName(createProductRequest.getCategoryName());
-//                product.setProductName(createProductRequest.getProductName());
-//                product.setPrice(createProductRequest.getPrice());
-//                product.setDiscount(createProductRequest.getDiscount());
-//                product.setDescription(createProductRequest.getDescription());
-//                product.setCategoryId(category);
-//                product.setIsCustomise(createProductRequest.getIsCustomise());
-//                productRepository.save(product);
-//                if(createProductRequest.getImagesProductList() != null) {
-//                    for(String image : createProductRequest.getImagesProductList()) {
-//                        ImagesProductDto imagesProduct = new ImagesProductDto();
-//                        imagesProduct.setPath(image);
-//                        imagesProduct.setProduct(product);
-//                        imagesProductRepository.save(imagesProduct);
-//                    }
-//                }
-//                return true;
-//            }
-//        } catch (Exception e) {
-//            return false;
-//        }
-        return false;
+    public boolean updateProduct(long id, CreateProductRequest request) {
+        try {
+            Product existingProduct = productRepository.findById(id).orElse(null);
+
+            //Cập nhật thông tin của sản phẩm
+            existingProduct.setProductName(request.getProductName());
+            existingProduct.setPrice(request.getPrice());
+            existingProduct.setDiscount(request.getDiscount());
+            existingProduct.setDescription(request.getDescription());
+
+            // Kiểm tra và lấy danh mục từ cơ sở dữ liệu hoặc tạo mới nếu chưa tồn tại
+            Category category = categoryRepository.findByName(request.getCategoryName());
+            if (category == null) {
+                category = new Category();
+                category.setName(request.getCategoryName());
+                category = categoryRepository.save(category);
+            }
+            existingProduct.setCategory(category);
+
+            Product updatedProduct = productRepository.save(existingProduct);
+
+            // Cập nhật danh sách hình ảnh sản phẩm
+            if (request.getImagesProductList() != null) {
+                for (ImagesProduct imagesProduct : request.getImagesProductList()) {
+                    imagesProduct.setProduct(updatedProduct); // Đặt sản phẩm cho hình ảnh
+                    imagesProductRepository.save(imagesProduct); // Lưu hình ảnh vào cơ sở dữ liệu
+                }
+            }
+
+            // Cập nhật danh sách kích thước sản phẩm
+            if (request.getProductSizeList() != null) {
+                for (ProductSize productSize : request.getProductSizeList()) {
+                    productSize.setProduct(updatedProduct);
+                    productSizeRepository.save(productSize);
+                }
+            }
+
+            return true;
+
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override

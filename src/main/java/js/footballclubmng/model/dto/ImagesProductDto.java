@@ -1,6 +1,7 @@
 package js.footballclubmng.model.dto;
 
 
+import js.footballclubmng.entity.Player;
 import lombok.*;
 
 @Getter
@@ -9,7 +10,8 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class ImagesProductDto {
-    private Long id;
 
     private String path;
+
+    private Long playerId;
 }

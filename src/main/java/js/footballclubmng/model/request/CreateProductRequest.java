@@ -1,6 +1,8 @@
 package js.footballclubmng.model.request;
 
 import js.footballclubmng.entity.Category;
+import js.footballclubmng.entity.ImagesProduct;
+import js.footballclubmng.entity.ProductSize;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,14 +29,11 @@ public class CreateProductRequest {
     @Min(value = 0, message = "chiết khẩu sản phẩm phải lớn hơn hoặc bằng 0")
     @Max(value = 100, message = "chiết khẩu sản phẩm phải nhỏ hơn hoặc bằng 100")
     private float discount;
-    @NotBlank(message = "Giá trị kích cỡ không được để trống")
-    private String size;
-    @NotNull(message = "Số lượng phẩm không được trống")
-    private  Integer quantity;
 
     private String description;
 
-    private List<String> ImagesProductList;
-    private Boolean isCustomise;
+    private List<ImagesProduct> ImagesProductList;
+
+    private List<ProductSize> productSizeList;
 
 }
