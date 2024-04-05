@@ -24,9 +24,12 @@ public class ProductSize {
     @Column(name = "quantity")
     private int quantity;
 
+    @Column(name = "product_id", nullable = false)
+    private Long productId;
+
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "product_id")
-    @JsonIgnoreProperties({"productSizes"})
+    @JoinColumn(name = "product_id", insertable = false, updatable = false)
+    @JsonIgnore
     private Product product;
 
 

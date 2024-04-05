@@ -3,6 +3,8 @@ package js.footballclubmng.model.request;
 import js.footballclubmng.entity.Category;
 import js.footballclubmng.entity.ImagesProduct;
 import js.footballclubmng.entity.ProductSize;
+import js.footballclubmng.model.dto.ImagesProductDto;
+import js.footballclubmng.model.dto.ProductSizeDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +23,8 @@ import java.util.List;
 public class CreateProductRequest {
     @NotBlank(message = "Tên sản phẩm không được để trống")
     private String productName;
+    @NotNull(message = "ID Loại sản phẩm không được để trống")
+    private Long categoryId;
     @NotBlank(message = "Loại sản phẩm không được để trống")
     private String categoryName;
     @NotNull(message = "Giá sản phẩm không được trống")
@@ -34,8 +38,8 @@ public class CreateProductRequest {
 
     private String description;
 
-    private List<ImagesProduct> ImagesProductList;
+    private List<ImagesProductDto> ImagesProductList;
 
-    private List<ProductSize> productSizeList;
+    private List<ProductSizeDto> productSizeList;
 
 }

@@ -69,6 +69,7 @@ public class MapperUtil {
             imagesProductDto.setPath(imagesProduct.getPath());
             if (imagesProduct.getPlayer() != null) {
                 imagesProductDto.setPlayerId(imagesProduct.getPlayer().getId());
+                imagesProductDto.setPlayerName(imagesProduct.getPlayer().getName());
             }
             imagesProductDtoList.add(imagesProductDto);
         }

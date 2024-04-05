@@ -30,6 +30,10 @@ public class Order {
     @JsonIgnore
     private User user;
 
+    @OneToOne
+    @JoinColumn(name = "shipping_id")
+    private Shipping shipping;
+
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "order")
     private List<OrderDetail> orderDetailList;
 

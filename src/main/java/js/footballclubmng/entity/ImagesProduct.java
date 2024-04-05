@@ -22,13 +22,19 @@ public class ImagesProduct {
     @Column(name = "path", nullable = false)
     private String path;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "product_id")
+    @Column(name = "product_id", nullable = false)
+    private Long productId;
+
+    @Column(name = "player_id")
+    private Long playerId;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id", insertable = false, updatable = false)
     @JsonIgnore
     private Product product;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "player_id")
+    @ManyToOne
+    @JoinColumn(name = "player_id", insertable = false, updatable = false)
     @JsonIgnore
     private Player player;
 }
