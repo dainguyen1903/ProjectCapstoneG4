@@ -7,15 +7,13 @@ import js.footballclubmng.entity.*;
 import js.footballclubmng.model.dto.*;
 import js.footballclubmng.model.request.CreateProductRequest;
 import js.footballclubmng.model.response.ListPlayerResponse;
-import js.footballclubmng.repository.CategoryRepository;
-import js.footballclubmng.repository.ImagesProductRepository;
-import js.footballclubmng.repository.ProductRepository;
-import js.footballclubmng.repository.ProductSizeRepository;
+import js.footballclubmng.repository.*;
 import js.footballclubmng.service.ProductService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,6 +32,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductSizeRepository productSizeRepository;
+
+    @Autowired
+    private PlayerRepository playerRepository;
 
 
     public List<ProductDto> getAllProduct() {
@@ -123,6 +124,7 @@ public class ProductServiceImpl implements ProductService {
             existingProduct.setProductName(request.getProductName());
             existingProduct.setPrice(request.getPrice());
             existingProduct.setDiscount(request.getDiscount());
+            existingProduct.setIsCustomise(request.getIsCustomise());
             existingProduct.setDescription(request.getDescription());
 
             // Kiểm tra và lấy danh mục từ cơ sở dữ liệu hoặc tạo mới nếu chưa tồn tại
@@ -136,21 +138,11 @@ public class ProductServiceImpl implements ProductService {
 
             Product updatedProduct = productRepository.save(existingProduct);
 
-            // Cập nhật danh sách hình ảnh sản phẩm
-            if (request.getImagesProductList() != null) {
-                for (ImagesProduct imagesProduct : request.getImagesProductList()) {
-                    imagesProduct.setProduct(updatedProduct); // Đặt sản phẩm cho hình ảnh
-                    imagesProductRepository.save(imagesProduct); // Lưu hình ảnh vào cơ sở dữ liệu
-                }
-            }
+            // Xử lý danh sách hình ảnh
+            updateProductImages(existingProduct, request.getImagesProductList());
 
-            // Cập nhật danh sách kích thước sản phẩm
-            if (request.getProductSizeList() != null) {
-                for (ProductSize productSize : request.getProductSizeList()) {
-                    productSize.setProduct(updatedProduct);
-                    productSizeRepository.save(productSize);
-                }
-            }
+            // Xử lý danh sách kích thước
+            updateProductSizes(existingProduct, request.getProductSizeList());
 
             return true;
 
@@ -158,6 +150,68 @@ public class ProductServiceImpl implements ProductService {
             return false;
         }
     }
+
+    private void updateProductSizes(Product existingProduct, List<ProductSize> productSizeList) {
+
+        List<ProductSize> existingSizes = productSizeRepository.findAllByProductId((existingProduct.getId()));
+
+        List<ProductSize> updateProductSize = new ArrayList<>();
+        if(productSizeList != null) {
+            for(ProductSize productSize : productSizeList) {
+                ProductSize newProductSize = new ProductSize();
+                newProductSize.setSize(productSize.getSize());
+                newProductSize.setQuantity(productSize.getQuantity());
+
+                productSize.setProduct(existingProduct);
+                updateProductSize.add(productSize);
+            }
+        }
+        // Xóa các size, quantity hiện tại không có trong danh sách mới
+        List<ProductSize> sizesToDelete = existingSizes.stream()
+                .filter(image -> !updateProductSize.contains(image))
+                .collect(Collectors.toList());
+        productSizeRepository.deleteAll(sizesToDelete);
+        // Lưu danh sách size, quantity mới vào cơ sở dữ liệu
+        productSizeRepository.saveAll(updateProductSize);
+
+    }
+
+    private void updateProductImages(Product existingProduct, List<ImagesProduct> imagesProductList) {
+
+        List<ImagesProduct> existingImages = imagesProductRepository.findAllByProductId(existingProduct.getId());
+
+        List<ImagesProduct> updateImagesProducts = new ArrayList<>();
+        if(imagesProductList != null) {
+            for(ImagesProduct imagesProduct : imagesProductList) {
+                ImagesProduct newImagesProduct = new ImagesProduct();
+                newImagesProduct.setPath(imagesProduct.getPath());
+
+                // Cập nhật playerId cho mỗi ảnh, nếu có
+                if (imagesProduct.getPlayer() != null && imagesProduct.getPlayer().getId() != null) {
+                    Player player = playerRepository.findById(imagesProduct.getPlayer().getId()).orElse(null);
+                    if (player != null) {
+                        // Cập nhật playerId cho hình ảnh hiện tại
+                        imagesProduct.setPlayer(player);
+                    } else {
+                        // Nếu không tìm thấy player, đặt playerId thành null
+                        imagesProduct.setPlayer(null);
+                    }
+                }
+                newImagesProduct.setProduct(existingProduct);
+                updateImagesProducts.add(newImagesProduct);
+            }
+            // Xóa các hình ảnh hiện tại không có trong danh sách mới
+            List<ImagesProduct> imagesToDelete = existingImages.stream()
+                    .filter(image -> !updateImagesProducts.contains(image))
+                    .collect(Collectors.toList());
+            imagesProductRepository.deleteAll(imagesToDelete);
+            // Lưu danh sách hình ảnh mới vào cơ sở dữ liệu
+            imagesProductRepository.saveAll(updateImagesProducts);
+
+        }
+    }
+
+
 
     @Override
     public boolean deleteProduct(long id) {

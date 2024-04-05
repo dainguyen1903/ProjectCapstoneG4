@@ -34,5 +34,4 @@ public class Order {
     private List<OrderDetail> orderDetailList;
 
 
-
 }
