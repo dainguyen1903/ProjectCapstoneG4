@@ -28,7 +28,7 @@ console.log(categories)
         <div className='cat-title fs-17 text-uppercase fw-6 ls-1h'>All Categories</div>
         <ul className='cat-list'>
           {
-            categories.map((category, idx) => {
+            categories?.map((category, idx) => {
               return (
                 <li key = {idx} onClick = {() => dispatch(setSidebarOff())}>
                   <Link to = {`category/${category.id}`} className='cat-list-link text-capitalize'>{category.name}</Link>

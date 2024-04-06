@@ -42,6 +42,8 @@ import BlogDetail from "./pages/Blog/BlogDetail";
 import CheckOutPage from "./pages/CheckOut/CheckOut";
 import OrderPage from "./pages/order/Order";
 import { getListCart } from "./store/cartSlice";
+import ListTicket from "./pages/ticket/Ticket";
+import Listmatch from "./pages/match/Match";
 function App() {
   const dispatch = useDispatch();
   const user =useSelector(getCurrentUser)
@@ -93,6 +95,22 @@ function App() {
               element={
                 <>
                   <ProductSingle />
+                </>
+              }
+            />
+             <Route
+              path="/ticket"
+              element={
+                <>
+                  <ListTicket />
+                </>
+              }
+            />
+              <Route
+              path="/match"
+              element={
+                <>
+                  <Listmatch />
                 </>
               }
             />

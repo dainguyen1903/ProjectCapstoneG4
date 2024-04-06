@@ -1,0 +1,19 @@
+.ticket-time{
+    width:80px;
+    padding: 10px;
+    background-color: lightgray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    margin: 0px 10px;
+    font-size: 16px;
+}
+.ticket-club{
+    font-weight: bold;
+    font-size: 20px;
+    width: calc(50% - 50px);
+}
+.ticket-club:nth-child(1){
+    text-align: right;
+}

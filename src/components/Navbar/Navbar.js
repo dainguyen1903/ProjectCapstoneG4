@@ -59,7 +59,7 @@ const Navbar = () => {
           }} className='navbar-nav flex align-center fs-12 fw-4 font-manrope'>
             {
               // taking only first 8 categories
-              categories.slice(0, 8).map((category, idx) => (
+              categories?.slice(0, 8)?.map((category, idx) => (
                 <li className='nav-item no-wrap' key = {idx}>
                   <Link to = {`category/${category.id}`} className='nav-link text-capitalize'>{category.name}</Link>
                 </li>

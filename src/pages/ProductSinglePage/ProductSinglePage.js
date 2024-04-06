@@ -10,7 +10,7 @@ import {
   addCartAction,
   addCartActionCustom,
   getCartMessageStatus,
-  setCartMessageOff
+  setCartMessageOff,
 } from "../../store/cartSlice";
 import {
   fetchAsyncProductSingle,
@@ -27,9 +27,7 @@ import { LOCAL_STORAGE_KEY } from "../../constants/common";
 const ProductSinglePage = () => {
   const currentUser = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY.user));
   const navigate = useNavigate();
-  const [comments, setComments] = useState([
-   
-  ]);
+  const [comments, setComments] = useState([]);
 
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -43,50 +41,50 @@ const ProductSinglePage = () => {
   const [playerNumber, setPlayerNumber] = useState("");
   const [playerName, setPlayerName] = useState("");
   const [listPlayer, setListPlayer] = useState([]);
-  const [playerId,setPlayerId] = useState("");
-  const listSizeAndQUantity = product?.description?.split("*")[1] 
+  const [playerId, setPlayerId] = useState("");
+  const listSizeAndQUantity = product?.description?.split("*")[1];
   const sizeMap = new Map();
-  listSizeAndQUantity?.split(";").forEach(sizeItem => {
+  listSizeAndQUantity?.split(";").forEach((sizeItem) => {
     const sizeArr = sizeItem?.split("-");
-    if(sizeArr.length === 2){
-      sizeMap.set(sizeArr[0],sizeArr[1])
+    if (sizeArr.length === 2) {
+      sizeMap.set(sizeArr[0], sizeArr[1]);
     }
-  })
+  });
+  const listSizes = product?.productSizeDtoList || []
+  const getQuantity = (size) => {
+   const item = listSizes.find(i => i.size == size);
+   if(item){
+    return item.quantity
+   }
+   return 0
+  }
   const listPlayerid = product?.imagesProductList
-    ? product.imagesProductList?.map((i) => i.path)?.map(i => i?.split("*")[1])
+    ? product.imagesProductList
+        ?.map((i) => i.path)
+        ?.map((i) => i?.split("*")[1])
     : [];
-     // list player
-const getListPlayerA = async () => {
-  const res = await userApi.searchPlayer({ query: "" });
-  const status = res.data.status;
-  if (status === 200 || status === 204) {
-    setListPlayer(res.data.data || []);
-    if(res.data.data.length >=1){
-      const item = res.data.data.find(i =>listPlayerid.includes(i.id +"") )
-      if(item)
-      setPlayerId(item.id + "")
-    }
-  }
-};
-useEffect(() => {
-  if(product,playerId){
-    const listImage = product?.imagesProductList
-    ? product.imagesProductList.map((i) => i.path)
-    : [];
-  listImage.forEach(item => {
-      const arrImg = item.split("*");
-      if(arrImg[1] == playerId){
-        setCurrentImg(arrImg[0])
-      }
-    })
-  }
 
-},[product,playerId])
-useEffect(() => {
-  if(product){
-    getListPlayerA();
-  }
-}, [product]);
+  const listImage = product?.imagesProductDtoList || [];
+  // list player
+  useEffect(() => {
+    if (product && product?.isCustomise && listImage.length > 0) {
+      if (!playerId) {
+        setPlayerId(listImage[0].playerId + "");
+        setCurrentImg(listImage[0].path);
+      } else {
+        const item = listImage.find((i) => i.playerId == playerId);
+        if (item) {
+          setCurrentImg(item.path);
+        }
+      }
+      
+    }
+    else if(product && !product.isCustomise && listImage.length >0){
+      setCurrentImg(listImage[0].path);
+
+    }
+  }, [product, playerId]);
+
   // getting single product
   useEffect(() => {
     if (cartMessageStatus) {
@@ -114,7 +112,6 @@ useEffect(() => {
     return <Loader />;
   }
 
- 
   const increaseQty = () => {
     setQuantity((prevQty) => {
       let tempQty = prevQty + 1;
@@ -131,33 +128,31 @@ useEffect(() => {
     });
   };
 
-  const addToCartHandler = async ({id}) => {
+  const addToCartHandler = async ({ id }) => {
     try {
-     if(product?.isCustomise){
-      dispatch(
-        addCartActionCustom({
-          productId: id,
-          quantity,
-          size,
-          playerName,
-          playerNumber
-        })
-      );
-     }
-     else{
-      dispatch(
-        addCartAction({
-          productId: id,
-          quantity,
-          size
-        })
-      );
-     }
+      if (product?.isCustomise) {
+        dispatch(
+          addCartActionCustom({
+            productId: id,
+            quantity,
+            size,
+            playerName,
+            playerNumber:playerId,
+          })
+        );
+      } else {
+        dispatch(
+          addCartAction({
+            productId: id,
+            quantity,
+            size,
+          })
+        );
+      }
     } catch (error) {
       console.log(error);
     }
   };
-  
 
   return (
     <main className="py-5 bg-whitesmoke">
@@ -171,28 +166,28 @@ useEffect(() => {
               <div className="product-img">
                 <div className="product-img-zoom">
                   <img
-                    style={{ objectFit: "contain"}}
-                    src={
-                      currentImg 
-                    }
+                    style={{ objectFit: "contain" }}
+                    src={currentImg}
                     alt=""
                     // className="img-cover"
                   />
                 </div>
 
-                {/* <div className="product-img-thumbs flex align-center my-2">
-                  {listImage.map((i) => (
-                    <div
-                      style={{
-                        cursor: "pointer",
-                      }}
-                      onClick={() => setCurrentImg(i)}
-                      className="thumb-item"
-                    >
-                      <img src={i} alt="" className="img-cover" />
-                    </div>
-                  ))}
-                </div> */}
+                {!product?.isCustomise && (
+                  <div className="product-img-thumbs flex align-center my-2">
+                    {listImage.map((i) => (
+                      <div
+                        style={{
+                          cursor: "pointer",
+                        }}
+                        onClick={() => setCurrentImg(i.path)}
+                        className="thumb-item"
+                      >
+                        <img src={i.path} alt="" className="img-cover" />
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 
@@ -208,7 +203,7 @@ useEffect(() => {
                   <div className="brand">
                     <span className="text-orange fw-5">Category:</span>
                     <span className="mx-1 text-capitalize">
-                      {product?.categoryId?.name}
+                      {product?.category?.name}
                     </span>
                   </div>
                 </div>
@@ -271,16 +266,16 @@ useEffect(() => {
                     Size:
                   </div>
                   <div className="listSize">
-                    {Array.from(sizeMap.keys()).map((i) => (
+                    {listSizes?.map((i) => (
                       <div
-                        onClick={() => setSize(i)}
+                        onClick={() => setSize(i.size)}
                         style={{
                           borderColor: size === i && "rgb(41, 174, 189)",
                           borderWidth: size === i && 2,
                         }}
                         className="size"
                       >
-                        {i}
+                        {i.size}
                       </div>
                     ))}
                   </div>
@@ -293,7 +288,7 @@ useEffect(() => {
                       marginBottom: 10,
                     }}
                   >
-                    Còn {sizeMap.get(size)} sản phẩm
+                    Còn {getQuantity(size)} sản phẩm
                   </div>
                 )}
                 <div
@@ -302,25 +297,24 @@ useEffect(() => {
                   }}
                   className=""
                 >
-                  <div className="wrap-custom">
-                    <span className="txt-custom">Tên cầu thủ và số áo</span>
-                    <Select
-                    value={playerId}
-                      onChange={(v) => {
-                        setPlayerId(v)
-                      }}
-                      style={{ width: 300 }}
-                    >
-                      {listPlayer.filter(i => listPlayerid.includes(i.id + "")).map((i) => (
-                        <Select.Option
-                        value={i.id + ""}
-                          
-                        >
-                          {i.numberPlayer + "." + i.name}
-                        </Select.Option>
-                      ))}
-                    </Select>
-                  </div>
+                  {product?.isCustomise && (
+                    <div className="wrap-custom">
+                      <span className="txt-custom">Tên cầu thủ và số áo</span>
+                      <Select
+                        value={playerId}
+                        onChange={(v) => {
+                          setPlayerId(v);
+                        }}
+                        style={{ width: 300 }}
+                      >
+                        {listImage.map((i) => (
+                          <Select.Option value={i.playerId + ""}>
+                            {i.playerId + "." + i.playerName}
+                          </Select.Option>
+                        ))}
+                      </Select>
+                    </div>
+                  )}
                 </div>
 
                 <div className="btns">
