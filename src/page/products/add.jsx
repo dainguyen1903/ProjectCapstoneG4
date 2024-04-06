@@ -3,6 +3,7 @@ import {
   Avatar,
   Button,
   Card,
+  Checkbox,
   Col,
   Form,
   Input,
@@ -31,7 +32,7 @@ const AddProduct = () => {
   const [imageName, setImageName] = useState("");
   const [loading, setLoading] = useState(false);
   const products = useProductStore((state) => state.products);
-  const [isCustom, setIsCustom] = useState(false);
+  const [isCustom, setIsCustom] = useState(true);
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [txtErr, settxterr] = useState("");
@@ -68,24 +69,31 @@ const AddProduct = () => {
       content: !id ? "Thêm sản phẩm" : "Cập nhật sản phẩm",
       onOk: async () => {
         const dataPosst = JSON.parse(JSON.stringify(value));
-        dataPosst.imagesProductList = dataImage.map(
-          (i) => i.image + "*" + i.playerId
-        );
+        let categoryName = "abc";
+        const item = categories.find((i) => i.id === dataPosst.categoryId);
+        if (item) {
+          categoryName = item.name;
+        }
         const listSizePost = Array.from(
           new Set(listSize.filter((i) => i.size))
         );
-        let sizeFk = "";
-        dataPosst.size = listSizePost.forEach((item, index) => {
-          let sizeItem = item.size + "-" + item.quantity;
-          if (index !== listSizePost.length - 1) {
-            sizeItem += ";";
-          }
-          sizeFk = sizeFk + sizeItem;
-        });
+        dataPosst.categoryName = categoryName;
         dataPosst.isCustomise = isCustom;
-        dataPosst.size = sizeFk;
-        dataPosst.description =  dataPosst.description + "*" +sizeFk
-        dataPosst.quantity=100;
+        dataPosst.quantity = 100;
+        dataPosst.productSizeList = listSize.map((i) => {
+          delete i.id;
+          return i;
+        });
+        dataPosst.imagesProductList = dataImage.map((i) => {
+          const id = i.playerId;
+
+          return {
+            path: i.image,
+
+            playerId: id,
+          };
+        });
+
         const res = !id
           ? await productApi.createrProduct(dataPosst)
           : await productApi.updateProduct(id, dataPosst);
@@ -125,51 +133,31 @@ const AddProduct = () => {
   const getDetail = async () => {
     try {
       setLoading(true);
-    const res = await productApi.getDetailProduct(id);
-    const data = res.data.data;
-    const listImage = res.data.data.imagesProductList
-      ? res.data.data.imagesProductList.map((i) => i.path)
-      : [];
-    setUrl(listImage);
-    setIsCustom(data.isCustomise);
-    const imagesProductList = Array.from(new Set(data.imagesProductList.map(i => i.path)));
-    let dataImage = [];
-    imagesProductList.forEach((item,index) => {
-     
-      const arrImage = item.split("*");
-      dataImage.push({
-        id:index,
-        image:arrImage[0],
-        playerId:Number(arrImage[1])
-      })
-    })
-   
-    setDataImage(dataImage)
-    // des
-    const arrDes = data.description.split("*");
-    data.description = arrDes[0];
-    const listSize = arrDes[1];
-    const arrSize = listSize.split(";");
-    const sizes = [];
-    arrSize.forEach((item,index) => {
-    
-      const arr = item.split("-");
-      sizes.push({
-        id:index,
-        size:arr[0],
-        quantity:arr[1]
-      })
-      
-    })
-    setListSize(sizes)
-    
-    const categoryName = data.categoryId?.name;
-    data.categoryName = categoryName;
+      const res = await productApi.getDetailProduct(id);
+      const data = res.data.data;
+      const listImage = res.data.data.imagesProductList
+        ? res.data.data.imagesProductList?.map((i) => i.path)
+        : [];
+      setUrl(listImage);
+      setIsCustom(data.isCustomise);
+      setDataImage(
+        data.imagesProductDtoList.map((i, index) => ({
+          playerId: i.playerId,
+          id: index,
+          image: i.path || "",
+        }))
+      );
+      setListSize(
+        data.productSizeDtoList.map((i, index) => ({ ...i, id: index }))
+      );
+      // des
+      const categoryId = data.category?.id;
+      data.categoryId = categoryId;
 
-    form.setFieldsValue(data);
-    setLoading(false);
+      form.setFieldsValue(data);
+      setLoading(false);
     } catch (error) {
-      console.log(error)
+      console.log(error);
 
       setLoading(false);
     }
@@ -191,62 +179,35 @@ const AddProduct = () => {
   }, []);
 
   // column image
-  const columnImage = [
+  let columnImage = [
     {
       title: (
         <>
           {" "}
-          <Button
-            onClick={() =>
-              setDataImage([
-                ...dataImage,
-                {
-                  id: Date.now(),
-                  image: "",
-                  playerId: "",
-                },
-              ])
-            }
-            size="small"
-            style={{
-              marginRight: 20,
-            }}
-          >
-            <PlusOutlined />
-          </Button>
-          Tên cầu thủ và số áo
+          {!isCustom && (
+            <Button
+              disabled={isCustom && dataImage.length === listPlayer.length}
+              onClick={() =>
+                setDataImage([
+                  ...dataImage,
+                  {
+                    id: Date.now(),
+                    image: "",
+                    playerId: "",
+                  },
+                ])
+              }
+              size="small"
+              style={{
+                marginRight: 20,
+              }}
+            >
+              <PlusOutlined />
+            </Button>
+          )}
+          Ảnh sản phẩm
         </>
       ),
-      dataIndex: "playerName",
-      align: "start",
-      render: (value, row) => {
-        return (
-          <Select
-            onChange={(v) => {
-              const index = dataImage.findIndex((i) => i.id === row.id);
-              if (index >= 0) {
-                const newDataImage = [...dataImage];
-                dataImage[index].playerId = v;
-                setDataImage(newDataImage);
-              }
-            }}
-            value={row.playerId}
-            style={{ width: "100%" }}
-          >
-            {listPlayer.map((i) => (
-              <Option
-                disabled={dataImage.map((i) => i.playerId).includes(i.id)}
-                value={i.id}
-              >
-                {i.numberPlayer + "." + i.name}
-              </Option>
-            ))}
-          </Select>
-        );
-      },
-    },
-    {
-      title: "Ảnh sản phẩm",
       dataIndex: "image",
       align: "center",
       render: (value, row) => {
@@ -293,14 +254,95 @@ const AddProduct = () => {
       },
     },
   ];
+  if (isCustom) {
+    columnImage = [
+      {
+        title: (
+          <>
+            {" "}
+            {isCustom && (
+              <Button
+                disabled={isCustom && dataImage.length === listPlayer.length}
+                onClick={() =>
+                  setDataImage([
+                    ...dataImage,
+                    {
+                      id: Date.now(),
+                      image: "",
+                      playerId: "",
+                    },
+                  ])
+                }
+                size="small"
+                style={{
+                  marginRight: 20,
+                }}
+              >
+                <PlusOutlined />
+              </Button>
+            )}
+            Tên cầu thủ và số áo
+          </>
+        ),
+        dataIndex: "playerName",
+        align: "start",
+        render: (value, row) => {
+          return (
+            <Select
+              onChange={(v) => {
+                const index = dataImage.findIndex((i) => i.id === row.id);
+                if (index >= 0) {
+                  const newDataImage = [...dataImage];
+                  dataImage[index].playerId = v;
+                  setDataImage(newDataImage);
+                }
+              }}
+              value={row.playerId}
+              style={{ width: "100%" }}
+            >
+              {listPlayer?.map((i) => (
+                <Option
+                  disabled={dataImage?.map((i) => i.playerId).includes(i.id)}
+                  value={i.id}
+                >
+                  {i.numberPlayer + "." + i.name}
+                </Option>
+              ))}
+            </Select>
+          );
+        },
+      },
+      ...columnImage,
+    ];
+  }
+  useEffect(() => {
+    if (isCustom) {
+      setInitDataImage(listPlayer);
+    } else {
+      setDataImage([]);
+    }
+  }, [isCustom]);
+  console.log(listPlayer);
 
+  const setInitDataImage = (list) => {
+    const dataImage = list?.map((i, index) => ({
+      id: index,
+      image: "",
+      playerId: i.id,
+    }));
+    setDataImage(dataImage);
+  };
   // list player
   const getListPlayer = async () => {
     const res = await playerApi.searchPlayer({ query: "" });
     console.log(res);
     const status = res.data.status;
     if (status === 200 || status === 204) {
-      setListPlayer(res.data.data || []);
+      const list = res.data.data || [];
+      setListPlayer(list);
+      if (!id) {
+        setInitDataImage(list);
+      }
     }
   };
   useEffect(() => {
@@ -326,33 +368,30 @@ const AddProduct = () => {
                 { required: true, message: "Vui lòng nhập tên sản phẩm!" },
               ]}
             >
-              
               <Input placeholder="Tên sản phẩm" className="Input" />
             </Form.Item>
             <div className="inputLabel">Loại sản phẩm</div>
-              <Form.Item
-                name="categoryName"
-                rules={[
-                  { required: true, message: "Vui lòng chọn loại sản phẩm!" },
-                ]}
+            <Form.Item
+              name="categoryId"
+              rules={[
+                { required: true, message: "Vui lòng chọn loại sản phẩm!" },
+              ]}
+            >
+              <Select
+                style={{ marginTop: 10 }}
+                placeholder="Loại sản phẩm"
+                className="Select"
               >
-               
-                <Select
-                  style={{ marginTop: 10 }}
-                  placeholder="Loại sản phẩm"
-                  className="Select"
-                >
-                  {categories.map((i) => (
-                    <Option value={i.name}>{i.name}</Option>
-                  ))}
-                </Select>
-              </Form.Item>
-              <div className="inputLabel">Giá</div>
+                {categories?.map((i) => (
+                  <Option value={i.id}>{i.name}</Option>
+                ))}
+              </Select>
+            </Form.Item>
+            <div className="inputLabel">Giá</div>
             <Form.Item
               name="price"
               rules={[{ required: true, message: "Vui lòng nhập giá!" }]}
             >
-           
               <Input placeholder="Giá" className="Input" />
             </Form.Item>
             <div className="inputLabel">Khuyến mãi</div>
@@ -366,13 +405,10 @@ const AddProduct = () => {
                 },
               ]}
             >
-            
               <Input placeholder="Khuyến mãi" className="Input" />
             </Form.Item>
             <div className="inputLabel">Mô tả</div>
             <Form.Item name="description">
-              
-
               <Input placeholder="Mô tả sản phẩm" className="Input" />
             </Form.Item>
 
@@ -400,7 +436,7 @@ const AddProduct = () => {
                 </Button>
               </div>
 
-              {listSize.map((item) => {
+              {listSize?.map((item) => {
                 return (
                   <div
                     style={{
@@ -445,6 +481,14 @@ const AddProduct = () => {
               })}
             </div>
             <Form.Item>
+              <div>
+                <Checkbox
+                  checked={isCustom}
+                  onChange={(e) => setIsCustom(e.target.checked)}
+                >
+                  Sản phẩm gắn liền với cầu thủ
+                </Checkbox>
+              </div>
               <button
                 style={{
                   marginTop: 15,
