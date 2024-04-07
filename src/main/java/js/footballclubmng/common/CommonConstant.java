@@ -36,6 +36,7 @@ public class CommonConstant {
     }
 
     public static class COMMON_MESSAGE {
+        public static final String EXCEED_THE_QUANTITY_IN_STOCK = "Vượt quá số lượng sản phẩm trong kho hàng";
         public static String NOT_CONVERT = "CAN_NOT_CONVERT";
         public static String OK = "OK";
         public static String USER_NOT_LOGIN = "USER_NOT_LOGIN";
