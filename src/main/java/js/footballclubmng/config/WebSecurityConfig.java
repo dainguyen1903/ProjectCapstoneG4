@@ -93,6 +93,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers("/api/fixtures/list-fixtures").permitAll()
 
+
+
+                .antMatchers("/api/fixtures/list-fixtures").permitAll()
+
+                .antMatchers("/api/category/search-category").permitAll()
+
                 .anyRequest()
                 .authenticated()
                 .and()
