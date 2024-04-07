@@ -3,32 +3,38 @@ package js.footballclubmng.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity(name = "match")
-public class Match {
+@Entity(name = "fixtures")
+public class Fixtures {
     @Id
-    @Column(name = "match_id")
+    @Column(name = "fixtures_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "name")
     private String name;
-    @Column(name = "date")
-    private String date;
-    @Column(name = "time")
-    private String time;
+    @Column(name ="round")
+    private String round;
     @Column(name = "home_team")
     private String homeTeam;
     @Column(name = "away_team")
     private String awayTeam;
+    @Column(name = "date_time")
+    private LocalDateTime dateTime;
+    @Column(name = "location")
+    private String location;
+    @Column(name = "status_match")
+    private String statusMatch;
     @Column(name = "home_score")
     private int homeScore;
     @Column(name = "away_score")
     private int awayScore;
-    @Column(name = "location")
-    private String location;
+    @Column(name = "status")
+    private boolean status;
+
 }
