@@ -20,7 +20,7 @@ public class Player {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name",nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "date_of_birth")
@@ -54,7 +54,8 @@ public class Player {
     private Boolean status;
 
 
-    @OneToMany(mappedBy = "player", fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "player", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<ImagesProduct> imagesProductList;
+}
 
 
