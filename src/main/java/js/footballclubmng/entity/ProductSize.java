@@ -1,6 +1,5 @@
 package js.footballclubmng.entity;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
@@ -12,29 +11,26 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity(name = "images_product")
-public class ImagesProduct {
+@Entity(name = "product_size")
+public class ProductSize {
     @Id
-    @Column(name = "image_product_id")
+    @Column(name = "product_size_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "path", nullable = false)
-    private String path;
+    @Column(name = "size")
+    private String size;
+
+    @Column(name = "quantity")
+    private int quantity;
 
     @Column(name = "product_id", nullable = false)
     private Long productId;
 
-    @Column(name = "player_id")
-    private Long playerId;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id", insertable = false, updatable = false)
     @JsonIgnore
     private Product product;
 
-    @ManyToOne
-    @JoinColumn(name = "player_id", insertable = false, updatable = false)
-    @JsonIgnore
-    private Player player;
+
 }

@@ -1,10 +1,10 @@
 package js.footballclubmng.controller;
 
 import js.footballclubmng.common.CommonConstant;
-import js.footballclubmng.entity.News;
-import js.footballclubmng.entity.Player;
+import js.footballclubmng.entity.ImagesProduct;
 import js.footballclubmng.entity.Product;
-import js.footballclubmng.model.request.CreateNewsRequest;
+import js.footballclubmng.model.dto.ProductDetailsDto;
+import js.footballclubmng.model.dto.ProductDto;
 import js.footballclubmng.model.request.CreateProductRequest;
 import js.footballclubmng.model.response.ResponseAPI;
 import js.footballclubmng.service.ProductService;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class ProductController {
@@ -22,16 +23,16 @@ public class ProductController {
     ProductService productService;
 
     @GetMapping(CommonConstant.PRODUCT_API.LIST_PRODUCT)
-    public ResponseAPI<List<Product>> listProduct() {
-        List<Product> list = productService.getAllProduct();
+    public ResponseAPI<List<ProductDto>> listProduct() {
+        List<ProductDto> list = productService.getAllProduct();
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, list);
     }
 
     @PostMapping(CommonConstant.PRODUCT_API.CREATE_PRODUCT)
     @PreAuthorize("hasRole('ROLE_Sale')")
-    public ResponseAPI<Object> createProduct(@RequestBody CreateProductRequest createProductRequest) {
-        boolean check = productService.createProduct(createProductRequest);
-        if(!check) {
+    public ResponseAPI<Product> createProduct(@RequestBody CreateProductRequest request) {
+        Product createProduct = productService.createProduct(request);
+        if(createProduct == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.CREATE_PRODUCT_FAIL);
         }
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.CREATE_PRODUCT_SUCCESS);
@@ -66,21 +67,30 @@ public class ProductController {
     }
 
     @GetMapping(CommonConstant.PRODUCT_API.DETAILS_PRODUCT)
-    public ResponseAPI<Object> productDetail(@PathVariable int id) {
-        Product product = productService.getProductById(id);
-        if (product == null) {
+    public ResponseAPI<Object> productDetail(@PathVariable Long id) {
+        ProductDetailsDto productDetails = productService.getProductDetailsById(id);
+        if (productDetails == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.NOT_FOUND_PRODUCT);
         }
-        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, product);
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, productDetails);
     }
 
     @GetMapping(CommonConstant.PRODUCT_API.SEARCH_PRODUCT)
-    public ResponseAPI<Object> searchProduct(@RequestParam("query") String search) {
-        List<Product> productList = productService.searchProduct(search);
+    public ResponseAPI<List<ProductDto>> searchProduct(@RequestParam("productName") String productName) {
+        List<ProductDto> productList = productService.searchProduct(productName);
         if(productList.isEmpty()) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.NOT_FOUND_PRODUCT);
         }
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, productList);
+    }
+
+    @GetMapping(CommonConstant.PRODUCT_API.GET_IMAGE_PRODUCT_BY_PLAYER)
+    public ResponseAPI<List<String>> getImagesByProductIdAndPlayerId(@PathVariable Long productId, @PathVariable Long playerId) {
+        List<String> images = productService.getImagesByProductIdAndPlayerId(productId, playerId);
+        if (images.isEmpty()) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.NOT_FOUND_PRODUCT);
+        }
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, images);
     }
 
 

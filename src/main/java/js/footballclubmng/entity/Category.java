@@ -20,12 +20,14 @@ public class Category {
     private Long id;
 
     @NotBlank(message = "Tên không được để trống.")
-    @Column(name = "name")
+    @Column(name = "category_name")
     private String name;
-
-    @OneToMany(mappedBy = "categoryId",fetch = FetchType.EAGER)
-    private List<Product> listProducts;
 
     @Column(name = "status")
     private boolean status;
+
+    @OneToMany(mappedBy = "category",fetch = FetchType.EAGER)
+    private List<Product> listProducts;
+
+
 }

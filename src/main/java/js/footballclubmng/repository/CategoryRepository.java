@@ -12,7 +12,7 @@ public interface CategoryRepository extends JpaRepository<Category,Long> {
     Category findCategoryByName(String name);
     @Query(value = "select * from category c where " +
             "(c.status = 1) and" +
-            "(lower(c.name) like lower(concat('%', :name, '%')))", nativeQuery = true)
+            "(lower(c.category_name) like lower(concat('%', :name, '%')))", nativeQuery = true)
     List<Category> searchCategory(String name);
 
     Category findByName(String name);
