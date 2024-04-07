@@ -2,6 +2,7 @@ package js.footballclubmng.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
 
 import javax.persistence.*;
 import java.util.List;
@@ -18,7 +19,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "product_name")
     private String productName;
 
     @Column(name = "price")
@@ -30,14 +31,24 @@ public class Product {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "category_id")
-    @JsonIgnoreProperties({"listProducts"})
-    private Category categoryId;
-
-    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    private List<ImagesProduct> imagesProductList;
+    @Column(name = "status")
+    private Boolean status;
 
     @Column(name = "is_customise")
     private Boolean isCustomise;
+
+    @Column(name = "category_id")
+    private Long categoryId;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id", insertable = false, updatable = false)
+    @JsonIgnoreProperties({"listProducts"})
+    private Category category;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ImagesProduct> imagesProduct;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ProductSize> productSizes;
+
 }

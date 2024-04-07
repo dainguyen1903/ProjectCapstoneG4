@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -51,4 +52,9 @@ public class Player {
 
     @Column(name = "status")
     private Boolean status;
+
+
+    @OneToMany(mappedBy = "player", fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    private List<ImagesProduct> imagesProductList;
+
 }

@@ -2,6 +2,7 @@ package js.footballclubmng.controller;
 
 import js.footballclubmng.common.CommonConstant;
 import js.footballclubmng.entity.Category;
+import js.footballclubmng.model.dto.CategoryDto;
 import js.footballclubmng.model.response.ResponseAPI;
 import js.footballclubmng.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,8 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping(CommonConstant.CATEGORY_API.LIST_CATEGORY)
-    public ResponseAPI<List<Category>> listPlayer() {
-        List<Category> list  = categoryService.getAllCategory();
+    public ResponseAPI<List<CategoryDto>> listPlayer() {
+        List<CategoryDto> list  = categoryService.getAllCategory();
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, list);
     }
 
@@ -48,8 +49,8 @@ public class CategoryController {
     }
 
     @GetMapping(CommonConstant.CATEGORY_API.SEARCH_CATEGORY)
-    public ResponseAPI<List<Category>> searchCategory(@RequestParam String search) {
-        List<Category> list = categoryService.searchCategory(search);
+    public ResponseAPI<List<CategoryDto>> searchCategory(@RequestParam String search) {
+        List<CategoryDto> list = categoryService.searchCategory(search);
         if (list.isEmpty()) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.NOT_FOUND_CATEGORY);
         }

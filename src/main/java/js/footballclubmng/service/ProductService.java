@@ -1,23 +1,32 @@
 package js.footballclubmng.service;
 
+import js.footballclubmng.entity.ImagesProduct;
 import js.footballclubmng.entity.Product;
+import js.footballclubmng.model.dto.ProductDetailsDto;
+import js.footballclubmng.model.dto.ProductDto;
 import js.footballclubmng.model.request.CreateProductRequest;
 
 import java.util.List;
 
 
 public interface ProductService {
-    List<Product> getAllProduct();
+
+    List<ProductDto> getAllProduct();
+
 
     Product getProductById(long id);
 
-    boolean createProduct(CreateProductRequest createProductRequest);
+    ProductDetailsDto getProductDetailsById(Long id);
+
+    Product createProduct(CreateProductRequest createProductRequest);
 
     public boolean updateProduct(long id, CreateProductRequest createProductRequest);
 
     public boolean deleteProduct(long id);
 
-    public List<Product> searchProduct(String product);
+    public List<ProductDto> searchProduct(String productName);
+
+    public List<String> getImagesByProductIdAndPlayerId(Long productId, Long playerId);
 
 
 }

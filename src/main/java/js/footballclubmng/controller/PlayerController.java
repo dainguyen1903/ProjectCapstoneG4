@@ -29,7 +29,7 @@ public class PlayerController {
     }
 
     @GetMapping(CommonConstant.PLAYER_API.LIST_PLAYER)
-    @PreAuthorize("hasRole('ROLE_Operator')")
+
     public ResponseAPI<List<ListPlayerResponse>> listPlayer() {
         List<ListPlayerResponse> playerList = playerService.getAllPlayer();
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, playerList);
