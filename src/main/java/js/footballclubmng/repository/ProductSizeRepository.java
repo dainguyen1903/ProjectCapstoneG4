@@ -16,4 +16,6 @@ public interface ProductSizeRepository extends JpaRepository<ProductSize, Long> 
 
     ProductSize findProductSizeByProductIdAndSize(Long productId, String size);
 
+
+
 }
