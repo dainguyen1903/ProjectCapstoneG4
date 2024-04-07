@@ -1,10 +1,8 @@
 package js.footballclubmng.common;
 
-import js.footballclubmng.entity.Category;
-import js.footballclubmng.entity.ImagesProduct;
-import js.footballclubmng.entity.Product;
-import js.footballclubmng.entity.ProductSize;
+import js.footballclubmng.entity.*;
 import js.footballclubmng.model.dto.*;
+import js.footballclubmng.model.response.ListCartItemsResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,6 +86,20 @@ public class MapperUtil {
         }
 
         return productSizeDtoList;
+    }
+
+    public static ListCartItemsResponse mapToListCartItemsResponses(CartItem cartItem) {
+
+            ListCartItemsResponse listCartItemsResponse = new ListCartItemsResponse();
+            listCartItemsResponse.setCartItemId(cartItem.getId());
+            listCartItemsResponse.setProductId(cartItem.getProductId());
+            listCartItemsResponse.setQuantity(cartItem.getQuantity());
+            listCartItemsResponse.setSize(cartItem.getSize());
+            listCartItemsResponse.setPlayerName(cartItem.getPlayerName());
+            listCartItemsResponse.setPlayerNumber(cartItem.getPlayerNumber());
+
+            return listCartItemsResponse;
+
     }
 
 }

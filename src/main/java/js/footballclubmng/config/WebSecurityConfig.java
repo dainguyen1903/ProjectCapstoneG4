@@ -85,18 +85,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/category/list-category").permitAll()
                 .antMatchers("/api/cart/view-cart").permitAll()
                 .antMatchers("/api/cart/add-cart-item/{productId}").permitAll()
+                .antMatchers("/api/cart/customise-add-cart-item/{productId}").permitAll()
                 .antMatchers("/api/product/search-product").permitAll()
                 .antMatchers("/api/product/details-product/{id}").permitAll()
                 .antMatchers("/api/product/list-product").permitAll()
                 .antMatchers("/api/news/list-news-type").permitAll()
                 .antMatchers("/api/category/search-category").permitAll()
-
                 .antMatchers("/api/fixtures/list-fixtures").permitAll()
-
-
-
                 .antMatchers("/api/fixtures/list-fixtures").permitAll()
-
                 .antMatchers("/api/category/search-category").permitAll()
 
                 .anyRequest()

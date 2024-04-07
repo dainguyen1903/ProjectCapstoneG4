@@ -13,4 +13,7 @@ public interface ProductSizeRepository extends JpaRepository<ProductSize, Long> 
     List<ImagesProduct> findAllSizesByProductId(Long productId);
 
     List<ProductSize> findAllByProductId(Long productId);
+
+    ProductSize findProductSizeByProductIdAndSize(Long productId, String size);
+
 }

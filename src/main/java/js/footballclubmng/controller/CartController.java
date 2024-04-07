@@ -4,7 +4,9 @@ import js.footballclubmng.common.CommonConstant;
 import js.footballclubmng.entity.Cart;
 import js.footballclubmng.entity.CartItem;
 import js.footballclubmng.entity.Product;
+import js.footballclubmng.model.dto.ProductDetailsDto;
 import js.footballclubmng.model.request.CustomiseProductRequest;
+import js.footballclubmng.model.response.ListCartItemsResponse;
 import js.footballclubmng.model.response.ResponseAPI;
 import js.footballclubmng.service.CartService;
 import js.footballclubmng.service.ProductService;
@@ -13,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 public class CartController {
@@ -23,18 +26,18 @@ public class CartController {
     private ProductService productService;
 
     @PostMapping(CommonConstant.CART_API.ADD_CART_ITEM)
-    public ResponseAPI<Object> addCartItemToCart(@RequestHeader(name = "Authorization", required = false) String token, @PathVariable int productId, @RequestParam String size) {
+    public ResponseAPI<Object> addCartItemToCart(@RequestHeader(name = "Authorization", required = false) String token, @PathVariable Long productId, @RequestParam String size) {
         if (token == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.EMPTY_TOKEN);
         }
-        Product product = productService.getProductById(productId);
-        if (product == null) {
+        ProductDetailsDto productDetailsDto = productService.getProductDetailsById(productId);
+        if (productDetailsDto == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.PRODUCT_NOT_FOUND);
         }
-//        boolean quantity = cartService.checkQuantity(productId);
-//        if (!quantity) {
-//            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.OUT_OF_STOCK);
-//        }
+        boolean quantity = cartService.checkQuantity(productId, size);
+        if (!quantity) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.OUT_OF_STOCK);
+        }
         if (size == null || size.isEmpty()) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.SIZE_REQUIRED);
         }
@@ -63,11 +66,11 @@ public class CartController {
         if (token == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.EMPTY_TOKEN);
         }
-        Cart cart = cartService.ViewCart(token);
-        if (cart == null || cart.getCartItems().isEmpty()) {
+        List<ListCartItemsResponse> listCartItemsResponse = cartService.ViewCart(token);
+        if (listCartItemsResponse == null || listCartItemsResponse.isEmpty()) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.EMPTY_CART);
         }
-        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, cart);
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, listCartItemsResponse);
     }
 
     @PutMapping(CommonConstant.CART_API.UPDATE_QUANTITY_CART_ITEM)
@@ -94,18 +97,18 @@ public class CartController {
     }
 
     @PostMapping(CommonConstant.CART_API.CUSTOMISE_ADD_CART_ITEM)
-    public ResponseAPI<Object> customiseAddCartItemToCart(@RequestHeader(name = "Authorization", required = false) String token, @PathVariable int productId, @RequestBody @Valid CustomiseProductRequest customiseProductRequest) {
+    public ResponseAPI<Object> customiseAddCartItemToCart(@RequestHeader(name = "Authorization", required = false) String token, @PathVariable Long productId, @RequestBody @Valid CustomiseProductRequest customiseProductRequest) {
         if (token == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.EMPTY_TOKEN);
         }
-        Product product = productService.getProductById(productId);
-        if (product == null) {
+        ProductDetailsDto productDetailsDto = productService.getProductDetailsById(productId);
+        if (productDetailsDto == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.PRODUCT_NOT_FOUND);
         }
-//        boolean quantity = cartService.checkQuantity(productId);
-//        if (!quantity) {
-//            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.OUT_OF_STOCK);
-//        }
+        boolean quantity = cartService.checkQuantity(productId, customiseProductRequest.getSize());
+        if (!quantity) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.OUT_OF_STOCK);
+        }
         boolean check = cartService.customiseAddCartItemToCart(token, productId, customiseProductRequest);
         if (!check) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.ADD_CART_ITEM_FAIL);
