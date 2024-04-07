@@ -53,6 +53,7 @@ public class Player {
     @Column(name = "status")
     private Boolean status;
 
+
     @OneToMany(mappedBy = "player", fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private List<ImagesProduct> imagesProductList;
 
