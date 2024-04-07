@@ -1,18 +1,18 @@
 package js.footballclubmng.service.Impl;
 
+import js.footballclubmng.common.MapperUtil;
 import js.footballclubmng.config.TokenProvider;
-import js.footballclubmng.entity.Cart;
-import js.footballclubmng.entity.CartItem;
-import js.footballclubmng.entity.Product;
-import js.footballclubmng.entity.User;
+import js.footballclubmng.entity.*;
 import js.footballclubmng.model.request.CustomiseProductRequest;
-import js.footballclubmng.repository.CartItemRepository;
-import js.footballclubmng.repository.CartRepository;
-import js.footballclubmng.repository.ProductRepository;
-import js.footballclubmng.repository.UserRepository;
+import js.footballclubmng.model.response.ListCartItemsResponse;
+import js.footballclubmng.repository.*;
 import js.footballclubmng.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CartServiceIpml implements CartService {
@@ -26,6 +26,8 @@ public class CartServiceIpml implements CartService {
     private UserRepository userRepository;
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private ProductSizeRepository productSizeRepository;
 
     @Override
     public boolean addCartItemToCart(String token, long productId, String size) {
@@ -66,13 +68,13 @@ public class CartServiceIpml implements CartService {
         }
     }
 
-    public boolean checkQuantity(long productId) {
-//        Product product = productRepository.findById(productId).orElse(null);
-//        if (product != null) {
-//            if (product.getQuantity() >= 1) {
-//                return true;
-//            }
-//        }
+    public boolean checkQuantity(Long productId, String size) {
+        ProductSize productSize = productSizeRepository.findProductSizeByProductIdAndSize(productId, size);
+        if (productSize != null) {
+            if (productSize.getQuantity() >= 1) {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -87,11 +89,15 @@ public class CartServiceIpml implements CartService {
     }
 
     @Override
-    public Cart ViewCart(String token) {
+    public List<ListCartItemsResponse> ViewCart(String token) {
         String jwtToken = token.substring(7);
         String email = tokenProvider.getUsernameFromJWT(jwtToken);
         User user = userRepository.findByEmail(email);
-        return cartRepository.findByUser(user);
+        Cart cart =  cartRepository.findByUser(user);
+        List<CartItem> cartItemList = cartItemRepository.findAllByCart(cart);
+        return cartItemList.stream()
+                .map(MapperUtil::mapToListCartItemsResponses)
+                .collect(Collectors.toList());
     }
 
     @Override
