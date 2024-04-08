@@ -1,12 +1,16 @@
 package js.footballclubmng.service.Impl;
 
 import js.footballclubmng.entity.Fixtures;
+import js.footballclubmng.entity.News;
+import js.footballclubmng.model.dto.FixturesDto;
+import js.footballclubmng.model.response.ListNewsResponse;
 import js.footballclubmng.repository.FixturesRepository;
 import js.footballclubmng.service.FixturesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FixturesServiceImpl implements FixturesService {
@@ -14,19 +18,21 @@ public class FixturesServiceImpl implements FixturesService {
     @Autowired
     private FixturesRepository fixtureRepository;
     @Override
-    public List<Fixtures> findAllFixtures() {
+    public List<FixturesDto> findAllFixtures() {
         List<Fixtures> matchList = fixtureRepository.viewAllFixtures();
-        return matchList;
+        return matchList.stream()
+                .map((fixtures) -> mapToFixturesDto (fixtures))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Fixtures getFixturesById(long id) {
-        Fixtures fixtures  = fixtureRepository.findById(id).orElse(null);
-        return fixtures;
+    public FixturesDto getFixturesById(long id) {
+        Fixtures fixtures1  = fixtureRepository.findById(id).orElse(null);
+        return mapToFixturesDto(fixtures1);
     }
 
     @Override
-    public boolean addFixtures(Fixtures fixtures) {
+    public boolean addFixtures(FixturesDto fixtures) {
         try {
             Fixtures fixtures1 = new Fixtures();
             fixtures1.setName(fixtures.getName());
@@ -38,6 +44,8 @@ public class FixturesServiceImpl implements FixturesService {
             fixtures1.setStatusMatch(fixtures.getStatusMatch());
             fixtures1.setHomeScore(fixtures.getHomeScore());
             fixtures1.setAwayScore(fixtures.getAwayScore());
+            fixtures1.setNumberOfTicket(fixtures.getNumberOfTicket());
+            fixtures1.setPriceOfTicket(fixtures.getPriceOfTicket());
             fixtures1.setStatus(true);
             fixtureRepository.save(fixtures1);
             return true;
@@ -47,7 +55,7 @@ public class FixturesServiceImpl implements FixturesService {
     }
 
     @Override
-    public boolean updateFixtures(long id, Fixtures fixtures) {
+    public boolean updateFixtures(long id, FixturesDto fixtures) {
         try {
             Fixtures fixtures1 = fixtureRepository.findById(id).orElse(null);
             if (fixtures1 == null) {
@@ -62,6 +70,8 @@ public class FixturesServiceImpl implements FixturesService {
             fixtures1.setStatusMatch(fixtures.getStatusMatch());
             fixtures1.setHomeScore(fixtures.getHomeScore());
             fixtures1.setAwayScore(fixtures.getAwayScore());
+            fixtures1.setNumberOfTicket(fixtures.getNumberOfTicket());
+            fixtures1.setPriceOfTicket(fixtures.getPriceOfTicket());
             fixtureRepository.save(fixtures1);
             return true;
         } catch (Exception e) {
@@ -79,5 +89,23 @@ public class FixturesServiceImpl implements FixturesService {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    private FixturesDto mapToFixturesDto(Fixtures fixtures) {
+        FixturesDto fixturesDto = new FixturesDto();
+        fixturesDto.setId(fixtures.getId());
+        fixturesDto.setName(fixtures.getName());
+        fixturesDto.setRound(fixtures.getRound());
+        fixturesDto.setHomeTeam(fixtures.getHomeTeam());
+        fixturesDto.setAwayTeam(fixtures.getAwayTeam());
+        fixturesDto.setDateTime(fixtures.getDateTime());
+        fixturesDto.setLocation(fixtures.getLocation());
+        fixturesDto.setStatusMatch(fixtures.getStatusMatch());
+        fixturesDto.setHomeScore(fixtures.getHomeScore());
+        fixturesDto.setAwayScore(fixtures.getAwayScore());
+        fixturesDto.setNumberOfTicket(fixtures.getNumberOfTicket());
+        fixturesDto.setPriceOfTicket(fixtures.getPriceOfTicket());
+        fixturesDto.setStatus(fixtures.getStatus());
+        return fixturesDto;
     }
 }
