@@ -49,20 +49,20 @@ public class CartServiceIpml implements CartService {
                 cartItem.setSize(size);
                 cartItem.setQuantity(quantity);
                 cartItemRepository.save(cartItem);
-            }
-            CartItem cartItem = cartItemRepository.findByProductAndCartAndSize(product, cart, size);
-            if (cartItem == null) {
-                CartItem cartItem1 = new CartItem();
-                cartItem1.setProductId(productId);
-                cartItem1.setQuantity(1);
-                cartItem1.setCart(cart);
-                cartItem1.setSize(size);
-                cartItem1.setQuantity(quantity);
-                cartItemRepository.save(cartItem1);
-            }
-            if (cartItem != null && cartItem.getSize().equals(size)) {
-            cartItem.setQuantity(cartItem.getQuantity() + quantity);
-            cartItemRepository.save(cartItem);
+            } else {
+                CartItem cartItem = cartItemRepository.findByProductAndCartAndSize(product, cart, size);
+                if (cartItem == null) {
+                    CartItem cartItem1 = new CartItem();
+                    cartItem1.setProductId(productId);
+                    cartItem1.setQuantity(1);
+                    cartItem1.setCart(cart);
+                    cartItem1.setSize(size);
+                    cartItem1.setQuantity(quantity);
+                    cartItemRepository.save(cartItem1);
+                }else {
+                    cartItem.setQuantity(cartItem.getQuantity() + quantity);
+                    cartItemRepository.save(cartItem);
+                }
             }
             return true;
         } catch (Exception e) {
@@ -82,8 +82,8 @@ public class CartServiceIpml implements CartService {
 
     public boolean checkQuantityInStock(Long productId, String size, int quantity) {
         ProductSize productSize = productSizeRepository.findProductSizeByProductIdAndSize(productId, size);
-        if(productSize != null) {
-            if(productSize.getQuantity() > quantity) {
+        if (productSize != null) {
+            if (productSize.getQuantity() > quantity) {
                 return true;
             }
         }
@@ -102,7 +102,7 @@ public class CartServiceIpml implements CartService {
 
             CartItem cartItem = cartItemRepository.findByProductAndCartAndSize(product, cart, size);
 
-            if(cartItem == null) {
+            if (cartItem == null) {
                 return true;
             }
 
@@ -112,11 +112,12 @@ public class CartServiceIpml implements CartService {
 
                     return true;
                 }
-            }} catch(Exception e){
-                return false;
             }
+        } catch (Exception e) {
             return false;
         }
+        return false;
+    }
 
     @Override
     public boolean removeCartItemFromCart(long cartItemId) {
@@ -133,7 +134,7 @@ public class CartServiceIpml implements CartService {
         String jwtToken = token.substring(7);
         String email = tokenProvider.getUsernameFromJWT(jwtToken);
         User user = userRepository.findByEmail(email);
-        Cart cart =  cartRepository.findByUser(user);
+        Cart cart = cartRepository.findByUser(user);
         List<CartItem> cartItemList = cartItemRepository.findAllByCart(cart);
         return cartItemList.stream()
                 .map(MapperUtil::mapToListCartItemsResponses)
@@ -183,6 +184,7 @@ public class CartServiceIpml implements CartService {
                 cartItem.setPlayerName(customiseProductRequest.getPlayerName());
                 cartItem.setPlayerNumber(customiseProductRequest.getPlayerNumber());
                 cartItemRepository.save(cartItem);
+                return true;
             }
             CartItem cartItem = cartItemRepository.findByProductAndCartAndSizeAndPlayerNumberAndPlayerName(product, cart, customiseProductRequest.getSize(), customiseProductRequest.getPlayerNumber(), customiseProductRequest.getPlayerName());
             if (cartItem == null) {
@@ -195,14 +197,16 @@ public class CartServiceIpml implements CartService {
                 cartItem1.setPlayerName(customiseProductRequest.getPlayerName());
                 cartItem1.setPlayerNumber(customiseProductRequest.getPlayerNumber());
                 cartItemRepository.save(cartItem1);
+                return true;
             }
             if (cartItem != null && cartItem.getSize().equals(customiseProductRequest.getSize())) {
                 cartItem.setQuantity(cartItem.getQuantity() + customiseProductRequest.getQuantity());
                 cartItemRepository.save(cartItem);
+                return true;
             }
-            return true;
         } catch (Exception e) {
             return false;
         }
+        return false;
     }
 }

@@ -3,11 +3,24 @@ package js.footballclubmng.common;
 import js.footballclubmng.entity.*;
 import js.footballclubmng.model.dto.*;
 import js.footballclubmng.model.response.ListCartItemsResponse;
+import js.footballclubmng.repository.ImagesProductRepository;
+import js.footballclubmng.repository.ProductSizeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@Component
 public class MapperUtil {
+    private static ImagesProductRepository imagesProductRepository;
+    private static ProductSizeRepository productSizeRepository;
+
+    @Autowired
+    public MapperUtil(ImagesProductRepository imagesProductRepository, ProductSizeRepository productSizeRepository) {
+        this.imagesProductRepository = imagesProductRepository;
+        this.productSizeRepository = productSizeRepository;
+    }
+
 
     public static ProductDto mapToProductDto(Product product) {
         ProductDto productDto = new ProductDto();
@@ -92,7 +105,11 @@ public class MapperUtil {
 
             ListCartItemsResponse listCartItemsResponse = new ListCartItemsResponse();
             listCartItemsResponse.setCartItemId(cartItem.getId());
-            listCartItemsResponse.setProductId(cartItem.getProductId());
+            Long id = cartItem.getProduct().getId();
+            List<ImagesProduct> imagesProductList = imagesProductRepository.findAllByProductId(id);
+            List<ProductSize> productSizeList = productSizeRepository.findAllByProductId(id);
+            ProductDetailsDto productDetailsDto = mapToProductDetailsDto(cartItem.getProduct(), imagesProductList, productSizeList);
+            listCartItemsResponse.setProduct(productDetailsDto);
             listCartItemsResponse.setQuantity(cartItem.getQuantity());
             listCartItemsResponse.setSize(cartItem.getSize());
             listCartItemsResponse.setPlayerName(cartItem.getPlayerName());

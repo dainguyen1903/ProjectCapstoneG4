@@ -26,7 +26,7 @@ public class CartController {
     private ProductService productService;
 
     @PostMapping(CommonConstant.CART_API.ADD_CART_ITEM)
-    public ResponseAPI<Object> addCartItemToCart(@RequestHeader(name = "Authorization", required = false) String token, @PathVariable Long productId, @RequestParam String size, @RequestParam int quantity1) {
+    public ResponseAPI<Object> addCartItemToCart(@RequestHeader(name = "Authorization", required = false) String token, @PathVariable Long productId, @RequestParam String size, @RequestParam int quantity) {
         if (token == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.EMPTY_TOKEN);
         }
@@ -34,8 +34,8 @@ public class CartController {
         if (productDetailsDto == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.PRODUCT_NOT_FOUND);
         }
-        boolean quantity = cartService.checkQuantity(productId, size);
-        if (!quantity) {
+        boolean checkQuantity = cartService.checkQuantity(productId, size);
+        if (!checkQuantity) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.OUT_OF_STOCK);
         }
 //        boolean quantityInStock = cartService.checkQuantityInStock(productId, size, quantity1);
@@ -45,7 +45,7 @@ public class CartController {
         if (size == null || size.isEmpty()) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.SIZE_REQUIRED);
         }
-        boolean check = cartService.addCartItemToCart(token, productId, size, quantity1);
+        boolean check = cartService.addCartItemToCart(token, productId, size, quantity);
         if (!check) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.ADD_CART_ITEM_FAIL);
         }
