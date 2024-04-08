@@ -36,7 +36,6 @@ public class CommonConstant {
     }
 
     public static class COMMON_MESSAGE {
-        public static final String EXCEED_THE_QUANTITY_IN_STOCK = "Vượt quá số lượng sản phẩm trong kho hàng";
         public static String NOT_CONVERT = "CAN_NOT_CONVERT";
         public static String OK = "OK";
         public static String USER_NOT_LOGIN = "USER_NOT_LOGIN";
@@ -142,6 +141,8 @@ public class CommonConstant {
         public static final String CART_ITEM_NOT_FOUND = "Không tìm thấy sản phẩm trong giỏ hàng";
         public static final String QUANTITY_MUST_GREATER_THAN_ZERO = "Số lượng sản phẩm phải lớn hơn 0";
         public static final String SIZE_REQUIRED = "Vui lòng chọn size";
+        public static final String EXCEED_THE_QUANTITY_IN_STOCK = "Vượt quá số lượng sản phẩm cho phép";
+
 
 
         //Message fixtures

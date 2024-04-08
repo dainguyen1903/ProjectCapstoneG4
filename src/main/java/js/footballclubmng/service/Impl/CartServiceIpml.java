@@ -30,6 +30,18 @@ public class CartServiceIpml implements CartService {
     private ProductSizeRepository productSizeRepository;
 
     @Override
+    public List<ListCartItemsResponse> ViewCart(String token) {
+        String jwtToken = token.substring(7);
+        String email = tokenProvider.getUsernameFromJWT(jwtToken);
+        User user = userRepository.findByEmail(email);
+        Cart cart = cartRepository.findByUser(user);
+        List<CartItem> cartItemList = cartItemRepository.findAllByCart(cart);
+        return cartItemList.stream()
+                .map(MapperUtil::mapToListCartItemsResponses)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public boolean addCartItemToCart(String token, long productId, String size, int quantity) {
         try {
             String jwtToken = token.substring(7);
@@ -50,7 +62,7 @@ public class CartServiceIpml implements CartService {
                 cartItem.setQuantity(quantity);
                 cartItemRepository.save(cartItem);
             } else {
-                CartItem cartItem = cartItemRepository.findByProductAndCartAndSize(product, cart, size);
+                CartItem cartItem = cartItemRepository.findByProductAndCartAndSizeAndPlayerNumberAndPlayerName(product, cart, size,null,null);
                 if (cartItem == null) {
                     CartItem cartItem1 = new CartItem();
                     cartItem1.setProductId(productId);
@@ -68,97 +80,6 @@ public class CartServiceIpml implements CartService {
         } catch (Exception e) {
             return false;
         }
-    }
-
-    public boolean checkQuantity(Long productId, String size) {
-        ProductSize productSize = productSizeRepository.findProductSizeByProductIdAndSize(productId, size);
-        if (productSize != null) {
-            if (productSize.getQuantity() >= 1) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean checkQuantityInStock(Long productId, String size, int quantity) {
-        ProductSize productSize = productSizeRepository.findProductSizeByProductIdAndSize(productId, size);
-        if (productSize != null) {
-            if (productSize.getQuantity() > quantity) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public boolean checkQuantityCartItems(String token, Long productId, String size, int quantity) {
-        try {
-            String jwtToken = token.substring(7);
-            String email = tokenProvider.getUsernameFromJWT(jwtToken);
-            User user = userRepository.findByEmail(email);
-            Product product = productRepository.findById(productId).orElse(null);
-
-            Cart cart = cartRepository.findByUser(user);
-
-            CartItem cartItem = cartItemRepository.findByProductAndCartAndSize(product, cart, size);
-
-            if (cartItem == null) {
-                return true;
-            }
-
-            ProductSize productSize = productSizeRepository.findProductSizeByProductIdAndSize(productId, size);
-            if (cartItem != null && cartItem.getSize().equals(size)) {
-                if (cartItem.getQuantity() + quantity <= productSize.getQuantity()) {
-
-                    return true;
-                }
-            }
-        } catch (Exception e) {
-            return false;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean removeCartItemFromCart(long cartItemId) {
-        try {
-            cartItemRepository.deleteById(cartItemId);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    @Override
-    public List<ListCartItemsResponse> ViewCart(String token) {
-        String jwtToken = token.substring(7);
-        String email = tokenProvider.getUsernameFromJWT(jwtToken);
-        User user = userRepository.findByEmail(email);
-        Cart cart = cartRepository.findByUser(user);
-        List<CartItem> cartItemList = cartItemRepository.findAllByCart(cart);
-        return cartItemList.stream()
-                .map(MapperUtil::mapToListCartItemsResponses)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public boolean updateQuantityCartItem(long cartItemId, int quantity) {
-        try {
-            CartItem cartItem = cartItemRepository.findById(cartItemId).orElse(null);
-            if (cartItem != null) {
-                cartItem.setQuantity(quantity);
-                cartItemRepository.save(cartItem);
-                return true;
-            }
-            return false;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    @Override
-    public CartItem getCartItemById(long cartItemId) {
-        return cartItemRepository.findById(cartItemId).orElse(null);
     }
 
     @Override
@@ -203,6 +124,81 @@ public class CartServiceIpml implements CartService {
                 cartItem.setQuantity(cartItem.getQuantity() + customiseProductRequest.getQuantity());
                 cartItemRepository.save(cartItem);
                 return true;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean removeCartItemFromCart(long cartItemId) {
+        try {
+            cartItemRepository.deleteById(cartItemId);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean updateQuantityCartItem(long cartItemId, int quantity) {
+        try {
+            CartItem cartItem = cartItemRepository.findById(cartItemId).orElse(null);
+            if (cartItem != null) {
+                cartItem.setQuantity(quantity);
+                cartItemRepository.save(cartItem);
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public CartItem getCartItemById(long cartItemId) {
+        return cartItemRepository.findById(cartItemId).orElse(null);
+    }
+
+    public boolean checkQuantity(Long productId, String size) {
+        ProductSize productSize = productSizeRepository.findProductSizeByProductIdAndSize(productId, size);
+        if (productSize != null) {
+            if (productSize.getQuantity() >= 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean checkQuantityInStock(Long productId, String size, int quantity) {
+        ProductSize productSize = productSizeRepository.findProductSizeByProductIdAndSize(productId, size);
+        if (productSize != null) {
+            if (productSize.getQuantity() >= quantity) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean checkQuantityCartItems(String token, Long productId, String size, int quantity) {
+        try {
+            String jwtToken = token.substring(7);
+            String email = tokenProvider.getUsernameFromJWT(jwtToken);
+            User user = userRepository.findByEmail(email);
+            Product product = productRepository.findById(productId).orElse(null);
+            Cart cart = cartRepository.findByUser(user);
+            List<CartItem> cartItemList = cartItemRepository.findAllByCartAndSizeAndProduct(cart, size, product);
+            if (cartItemList != null && !cartItemList.isEmpty()) {
+                int totalQuantity = 0;
+                for (CartItem cartItem : cartItemList) {
+                    totalQuantity += cartItem.getQuantity();
+                }
+                ProductSize productSize = productSizeRepository.findProductSizeByProductIdAndSize(productId, size);
+                if (totalQuantity + quantity <= productSize.getQuantity()) {
+                    return true;
+                }
             }
         } catch (Exception e) {
             return false;
