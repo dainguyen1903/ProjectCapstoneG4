@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -40,6 +41,8 @@ public class Fixtures {
     private Double priceOfTicket;
     @Column(name = "status")
     private Boolean status;
+    @OneToMany(mappedBy = "fixtures", fetch = FetchType.EAGER)
+    private List<Ticket> ticket;
 
 
 }

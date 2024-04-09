@@ -153,6 +153,10 @@ public class CommonConstant {
         public static final String UPDATE_FIXTURES_SUCCESS = "Cập nhật trận đấu thành công";
         public static final String DELETE_FIXTURES_FAIL = "Xóa trận đấu thất bại";
         public static final String DELETE_FIXTURES_SUCCESS = "Xóa trận đấu thành công";
+
+        //Message ticket
+        public static final String ADD_TICKET_FAIL = "Thêm vé thất bại";
+        public static final String ADD_TICKET_SUCCESS = "Thêm vé thành công";
     }
 
 
@@ -260,6 +264,14 @@ public class CommonConstant {
         public static final String CREATE_FIXTURES = HEAD_API + FIXTURES + "/create-fixtures";
         public static final String UPDATE_FIXTURES = HEAD_API + FIXTURES + "/update-fixtures/{id}";
         public static final String DELETE_FIXTURES = HEAD_API + FIXTURES + "/delete-fixtures/{id}";
+    }
+
+    public static class TICKET_API {
+        public static final String TICKET = "/ticket";
+        public static final String ADD_TICKET = HEAD_API + TICKET + "/add-ticket";
+        public static final String REMOVE_TICKET = HEAD_API + TICKET + "/remove-ticket/{ticketId}";
+        public static final String VIEW_TICKET = HEAD_API + TICKET + "/view-ticket";
+        public static final String UPDATE_QUANTITY_TICKET = HEAD_API + TICKET + "/update-quantity-ticket/{ticketId}";
     }
 
 }
