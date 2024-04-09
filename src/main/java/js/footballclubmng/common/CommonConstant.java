@@ -282,10 +282,7 @@ public class CommonConstant {
 
     public static class TICKET_API {
         public static final String TICKET = "/ticket";
-        public static final String ADD_TICKET = HEAD_API + TICKET + "/add-ticket";
-        public static final String REMOVE_TICKET = HEAD_API + TICKET + "/remove-ticket/{ticketId}";
-        public static final String VIEW_TICKET = HEAD_API + TICKET + "/view-ticket";
-        public static final String UPDATE_QUANTITY_TICKET = HEAD_API + TICKET + "/update-quantity-ticket/{ticketId}";
+        public static final String ADD_ORDER_TICKET = HEAD_API + TICKET + "/add-ticket";
     }
 
     public static class CART_TICKET_API {

@@ -11,12 +11,12 @@ public class TicketController {
     @Autowired
     private TicketService ticketService;
 
-    @PostMapping(CommonConstant.TICKET_API.ADD_TICKET)
-    public ResponseAPI<Object> addOrderTicket(@RequestParam Long fixturesId, @RequestHeader(name = "Authorization") String token, @RequestParam Integer quantity) {
-        boolean check = ticketService.addTicket(fixturesId, token, quantity);
-        if (!check) {
-            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.ADD_TICKET_FAIL);
-        }
-        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.ADD_TICKET_SUCCESS);
-    }
+//    @PostMapping(CommonConstant.TICKET_API.ADD_ORDER_TICKET)
+//    public ResponseAPI<Object> addOrderTicket(@RequestParam Long fixturesId, @RequestHeader(name = "Authorization") String token, @RequestParam Integer quantity) {
+//        boolean check = ticketService.addTicket(fixturesId, token, quantity);
+//        if (!check) {
+//            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.ADD_TICKET_FAIL);
+//        }
+//        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.ADD_TICKET_SUCCESS);
+//    }
 }
