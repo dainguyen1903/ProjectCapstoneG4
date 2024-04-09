@@ -28,6 +28,9 @@ public class FixturesServiceImpl implements FixturesService {
     @Override
     public FixturesDto getFixturesById(long id) {
         Fixtures fixtures1  = fixtureRepository.findById(id).orElse(null);
+        if (fixtures1 == null) {
+            return null;
+        }
         return mapToFixturesDto(fixtures1);
     }
 

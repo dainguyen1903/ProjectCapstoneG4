@@ -53,4 +53,18 @@ public class CartTicketController {
         }
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, cartTicketItems);
     }
+
+    @DeleteMapping(CommonConstant.CART_TICKET_API.REMOVE_CART_TICKET_ITEM)
+    public ResponseAPI<Object> removeCartTicketItem(@PathVariable long cartTicketItemId) {
+        CartTicketItem cartTicketItem = cartTicketService.getCartTicketItemById(cartTicketItemId);
+        if (cartTicketItem == null) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.NOT_FOUND_CART_TICKET_ITEM);
+        }
+        boolean result = cartTicketService.removeCartTicketItemFromCartTicket(cartTicketItemId);
+        if (result) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.REMOVE_CART_TICKET_ITEM_SUCCESS);
+        }
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.REMOVE_CART_TICKET_ITEM_FAIL);
+    }
+
 }

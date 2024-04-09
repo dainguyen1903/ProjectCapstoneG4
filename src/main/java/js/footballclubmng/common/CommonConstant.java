@@ -167,6 +167,10 @@ public class CommonConstant {
         public static final String NOT_ENOUGH_TICKET = "Số lượng vé không đủ";
         public static final String EMPTY_CART_TICKET = "Giỏ hàng vé trống";
 
+        public static final String NOT_FOUND_CART_TICKET_ITEM = "Không tìm thấy vé trong giỏ hàng";
+        public static final String REMOVE_CART_TICKET_ITEM_SUCCESS = "Xóa vé thành công";
+        public static final String REMOVE_CART_TICKET_ITEM_FAIL = "Xóa vé thất bại";
+
     }
 
 

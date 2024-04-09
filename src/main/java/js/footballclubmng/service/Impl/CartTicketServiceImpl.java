@@ -79,8 +79,18 @@ public class CartTicketServiceImpl implements CartTicketService {
     }
 
     @Override
+    public CartTicketItem getCartTicketItemById(long cartTicketItemId) {
+        return cartTicketItemRepository.findById(cartTicketItemId).orElse(null);
+    }
+
+    @Override
     public boolean removeCartTicketItemFromCartTicket(long cartTicketItemId) {
-        return false;
+        try {
+            cartTicketItemRepository.deleteById(cartTicketItemId);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
