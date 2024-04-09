@@ -46,6 +46,7 @@ public class FixturesServiceImpl implements FixturesService {
             fixtures1.setAwayScore(fixtures.getAwayScore());
             fixtures1.setNumberOfTicket(fixtures.getNumberOfTicket());
             fixtures1.setPriceOfTicket(fixtures.getPriceOfTicket());
+            fixtures1.setNumberOfTicketsSold(0);
             fixtures1.setStatus(true);
             fixtureRepository.save(fixtures1);
             return true;

@@ -154,9 +154,16 @@ public class CommonConstant {
         public static final String DELETE_FIXTURES_FAIL = "Xóa trận đấu thất bại";
         public static final String DELETE_FIXTURES_SUCCESS = "Xóa trận đấu thành công";
 
+
         //Message ticket
-        public static final String ADD_TICKET_FAIL = "Thêm vé thất bại";
-        public static final String ADD_TICKET_SUCCESS = "Thêm vé thành công";
+        public static final String ADD_TICKET_FAIL = "Mua vé thất bại";
+        public static final String ADD_TICKET_SUCCESS = "Mua vé thành công";
+
+        //Message cart ticket
+        public static final String ADD_CART_TICKET_ITEM_FAIL = "Thêm vé vào giỏ hàng thất bại";
+        public static final String ADD_CART_TICKET_ITEM_SUCCESS = "Thêm vé vào giỏ hàng thành công";
+        public static final String QUANTITY_LIMIT = "Tối đa 2 vé mỗi trận";
+        public static final String NOT_ENOUGH_TICKET = "Số lượng vé không đủ";
     }
 
 
@@ -272,6 +279,14 @@ public class CommonConstant {
         public static final String REMOVE_TICKET = HEAD_API + TICKET + "/remove-ticket/{ticketId}";
         public static final String VIEW_TICKET = HEAD_API + TICKET + "/view-ticket";
         public static final String UPDATE_QUANTITY_TICKET = HEAD_API + TICKET + "/update-quantity-ticket/{ticketId}";
+    }
+
+    public static class CART_TICKET_API {
+        public static final String CART_TICKET = "/cart-ticket";
+        public static final String ADD_CART_TICKET_ITEM = HEAD_API + CART_TICKET + "/add-cart-ticket-item/{fixtureId}";
+        public static final String REMOVE_CART_TICKET_ITEM = HEAD_API + CART_TICKET + "/remove-cart-ticket-item/{cartTicketItemId}";
+        public static final String VIEW_CART_TICKET = HEAD_API + CART_TICKET + "/view-cart-ticket";
+        public static final String UPDATE_QUANTITY_CART_TICKET_ITEM = HEAD_API + CART_TICKET + "/update-quantity-cart-ticket-item/{cartTicketItemId}";
     }
 
 }

@@ -41,8 +41,8 @@ public class Fixtures {
     private Double priceOfTicket;
     @Column(name = "status")
     private Boolean status;
-    @OneToMany(mappedBy = "fixtures", fetch = FetchType.EAGER)
-    private List<Ticket> ticket;
+    @Column(name = "number_of_tickets_sold")
+    private Integer numberOfTicketsSold;
 
 
 }

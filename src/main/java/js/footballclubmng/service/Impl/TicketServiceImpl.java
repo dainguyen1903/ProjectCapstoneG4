@@ -39,6 +39,7 @@ public class TicketServiceImpl implements TicketService {
             ticket.setQuantity(quantity);
             ticketRepository.save(ticket);
             fixtures.setNumberOfTicket(fixtures.getNumberOfTicket() - quantity);
+            fixtures.setNumberOfTicketsSold(fixtures.getNumberOfTicketsSold() + quantity);
             fixturesRepository.save(fixtures);
             return true;
         }catch (Exception e){
