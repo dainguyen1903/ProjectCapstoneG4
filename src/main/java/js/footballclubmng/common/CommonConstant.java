@@ -36,6 +36,7 @@ public class CommonConstant {
     }
 
     public static class COMMON_MESSAGE {
+
         public static String NOT_CONVERT = "CAN_NOT_CONVERT";
         public static String OK = "OK";
         public static String USER_NOT_LOGIN = "USER_NOT_LOGIN";
@@ -164,6 +165,8 @@ public class CommonConstant {
         public static final String ADD_CART_TICKET_ITEM_SUCCESS = "Thêm vé vào giỏ hàng thành công";
         public static final String QUANTITY_LIMIT = "Tối đa 2 vé mỗi trận";
         public static final String NOT_ENOUGH_TICKET = "Số lượng vé không đủ";
+        public static final String EMPTY_CART_TICKET = "Giỏ hàng vé trống";
+
     }
 
 

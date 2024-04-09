@@ -3,6 +3,7 @@ package js.footballclubmng.common;
 import js.footballclubmng.entity.*;
 import js.footballclubmng.model.dto.*;
 import js.footballclubmng.model.response.ListCartItemsResponse;
+import js.footballclubmng.model.response.ListCartTicketItemResponse;
 import js.footballclubmng.repository.ImagesProductRepository;
 import js.footballclubmng.repository.ProductSizeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,6 +118,33 @@ public class MapperUtil {
 
             return listCartItemsResponse;
 
+    }
+
+    public static ListCartTicketItemResponse mapToListCartTicketItemsResponses(CartTicketItem cartTicketItem) {
+        ListCartTicketItemResponse listCartTicketItemResponse = new ListCartTicketItemResponse();
+        listCartTicketItemResponse.setCartTicketItemId(cartTicketItem.getId());
+        listCartTicketItemResponse.setQuantity(cartTicketItem.getQuantity());
+        listCartTicketItemResponse.setFixtures(mapToFixturesDto(cartTicketItem.getFixtures()));
+        return listCartTicketItemResponse;
+    }
+
+    private static FixturesDto mapToFixturesDto(Fixtures fixtures) {
+        FixturesDto fixturesDto = new FixturesDto();
+        fixturesDto.setId(fixtures.getId());
+        fixturesDto.setName(fixtures.getName());
+        fixturesDto.setRound(fixtures.getRound());
+        fixturesDto.setHomeTeam(fixtures.getHomeTeam());
+        fixturesDto.setAwayTeam(fixtures.getAwayTeam());
+        fixturesDto.setDateTime(fixtures.getDateTime());
+        fixturesDto.setLocation(fixtures.getLocation());
+        fixturesDto.setStatusMatch(fixtures.getStatusMatch());
+        fixturesDto.setHomeScore(fixtures.getHomeScore());
+        fixturesDto.setAwayScore(fixtures.getAwayScore());
+        fixturesDto.setNumberOfTicket(fixtures.getNumberOfTicket());
+        fixturesDto.setPriceOfTicket(fixtures.getPriceOfTicket());
+        fixturesDto.setNumberOfTicketsSold(fixtures.getNumberOfTicketsSold());
+        fixturesDto.setStatus(fixtures.getStatus());
+        return fixturesDto;
     }
 
 }

@@ -1,7 +1,9 @@
 package js.footballclubmng.service.Impl;
 
+import js.footballclubmng.common.MapperUtil;
 import js.footballclubmng.config.TokenProvider;
 import js.footballclubmng.entity.*;
+import js.footballclubmng.model.response.ListCartTicketItemResponse;
 import js.footballclubmng.repository.CartTicketItemRepository;
 import js.footballclubmng.repository.CartTicketRepository;
 import js.footballclubmng.repository.FixturesRepository;
@@ -10,6 +12,9 @@ import js.footballclubmng.service.CartTicketService;
 import js.footballclubmng.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CartTicketServiceImpl implements CartTicketService {
@@ -62,7 +67,26 @@ public class CartTicketServiceImpl implements CartTicketService {
     }
 
     @Override
+    public List<ListCartTicketItemResponse> viewCartTicket(String token) {
+        String jwtToken = token.substring(7);
+        String email = tokenProvider.getUsernameFromJWT(jwtToken);
+        User user = userRepository.findByEmail(email);
+        CartTicket cartTicket = cartTicketRepository.findByUser(user);
+        List<CartTicketItem> list = cartTicketItemRepository.findAllByCartTicket(cartTicket);
+        return list.stream()
+                .map(MapperUtil::mapToListCartTicketItemsResponses)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public boolean removeCartTicketItemFromCartTicket(long cartTicketItemId) {
         return false;
     }
+
+    @Override
+    public boolean updateQuantityCartTicketItem(long cartTicketItemId, int quantity) {
+        return false;
+    }
+
+
 }

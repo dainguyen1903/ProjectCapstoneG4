@@ -24,5 +24,6 @@ public class FixturesDto {
     private Integer awayScore;
     private Integer numberOfTicket;
     private Double priceOfTicket;
+    private Integer numberOfTicketsSold;
     private Boolean status;
 }
