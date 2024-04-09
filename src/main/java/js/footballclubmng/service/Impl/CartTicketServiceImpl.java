@@ -95,7 +95,17 @@ public class CartTicketServiceImpl implements CartTicketService {
 
     @Override
     public boolean updateQuantityCartTicketItem(long cartTicketItemId, int quantity) {
-        return false;
+        try {
+            CartTicketItem cartTicketItem = cartTicketItemRepository.findById(cartTicketItemId).orElse(null);
+            if (cartTicketItem != null) {
+                cartTicketItem.setQuantity(quantity);
+                cartTicketItemRepository.save(cartTicketItem);
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 

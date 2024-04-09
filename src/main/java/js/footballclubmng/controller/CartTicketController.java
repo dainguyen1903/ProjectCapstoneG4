@@ -67,4 +67,20 @@ public class CartTicketController {
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.REMOVE_CART_TICKET_ITEM_FAIL);
     }
 
+    @PutMapping(CommonConstant.CART_TICKET_API.UPDATE_QUANTITY_CART_TICKET_ITEM)
+    public ResponseAPI<Object> updateQuantityCartTicketItem(@PathVariable long cartTicketItemId, @RequestParam int quantity) {
+        CartTicketItem cartTicketItem = cartTicketService.getCartTicketItemById(cartTicketItemId);
+        if (cartTicketItem == null) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.NOT_FOUND_CART_TICKET_ITEM);
+        }
+        if (quantity > 2){
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.QUANTITY_LIMIT);
+        }
+        boolean result = cartTicketService.updateQuantityCartTicketItem(cartTicketItemId, quantity);
+        if (result) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.UPDATE_QUANTITY_CART_TICKET_ITEM_SUCCESS);
+        }
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.UPDATE_QUANTITY_CART_TICKET_ITEM_FAIL);
+    }
+
 }
