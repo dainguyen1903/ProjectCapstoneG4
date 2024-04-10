@@ -6,10 +6,14 @@ import { setSidebarOn } from '../../store/sidebarSlice';
 import { getAllCategories } from '../../store/categorySlice';
 import { getAllCarts, getCartItemsCount, getCartTotal } from '../../store/cartSlice';
 import CartModal from "../CartModal/CartModal";
+import CartTicketModal from '../CartModal/CartTicketModal';
+import { ShoppingFilled   } from '@ant-design/icons';
 const Navbar = () => {
   const dispatch = useDispatch();
   const categories = useSelector(getAllCategories);
   const carts = useSelector(getAllCarts);
+  const cartsTickket = useSelector(state => state.cartTicket.carts);
+
   const itemsCount = useSelector(getCartItemsCount);
   const [searchTerm, setSearchTerm] = useState("");
   const location = useLocation();
@@ -69,11 +73,27 @@ const Navbar = () => {
         </div>
 
         <div className='navbar-cart flex align-center'>
+          <div style={{display:"flex"}}>
           <Link to = "/cart" className='cart-btn'>
             <i className='fa-solid fa-cart-shopping'></i>
+          
             <div className='cart-items-value'>{itemsCount}</div>
             <CartModal carts = {carts} />
+           
+          </Link>           
+           <div style={{fontSize:13,width:60,marginLeft:10,marginTop:5}}> Sản phẩm</div>
+
+          </div>
+          <div style={{display:"flex"}}>
+          <Link style={{marginLeft:20}} to = "/cart-ticket" className='cart-btn'>
+            {/* <i className='fa-solid fa-cart-shopping'></i> */}
+            <ShoppingFilled style={{fontSize:24}}  />
+            <div className='cart-items-value'>{cartsTickket?.length}</div>          
+           <CartTicketModal carts={cartsTickket} />
+           
           </Link>
+          <div style={{fontSize:13,width:60,marginLeft:10,marginTop:5}}>Vé</div>
+          </div>
         </div>
       </div>
     </nav>

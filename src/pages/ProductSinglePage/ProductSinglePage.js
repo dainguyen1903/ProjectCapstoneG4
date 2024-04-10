@@ -70,6 +70,7 @@ const ProductSinglePage = () => {
     if (product && product?.isCustomise && listImage.length > 0) {
       if (!playerId) {
         setPlayerId(listImage[0].playerId + "");
+        setPlayerName(listImage[0].playerName)
         setCurrentImg(listImage[0].path);
       } else {
         const item = listImage.find((i) => i.playerId == playerId);
@@ -77,11 +78,17 @@ const ProductSinglePage = () => {
           setCurrentImg(item.path);
         }
       }
+      // initSize
       
     }
     else if(product && !product.isCustomise && listImage.length >0){
       setCurrentImg(listImage[0].path);
+      
 
+    }
+    if(!size && product && listSizes.length > 0){
+      console.log(listSizes)
+      setSize(listSizes[0]?.size)
     }
   }, [product, playerId]);
 
@@ -270,8 +277,8 @@ const ProductSinglePage = () => {
                       <div
                         onClick={() => setSize(i.size)}
                         style={{
-                          borderColor: size === i && "rgb(41, 174, 189)",
-                          borderWidth: size === i && 2,
+                          borderColor: size === i.size && "rgb(41, 174, 189)",
+                          borderWidth: size === i.size && 2,
                         }}
                         className="size"
                       >
@@ -304,6 +311,11 @@ const ProductSinglePage = () => {
                         value={playerId}
                         onChange={(v) => {
                           setPlayerId(v);
+                          
+                          const item = listImage.find(i => i.playerId == v);
+                          if(item){
+                            setPlayerName(item.playerName)
+                          }
                         }}
                         style={{ width: 300 }}
                       >

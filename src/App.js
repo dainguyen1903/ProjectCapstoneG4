@@ -44,6 +44,8 @@ import OrderPage from "./pages/order/Order";
 import { getListCart } from "./store/cartSlice";
 import ListTicket from "./pages/ticket/Ticket";
 import Listmatch from "./pages/match/Match";
+import { getListCartTicketAction } from "./store/cartTicketSlice";
+import CartTicketPage from "./pages/CartPage/CartTicketPage";
 function App() {
   const dispatch = useDispatch();
   const user =useSelector(getCurrentUser)
@@ -59,6 +61,7 @@ function App() {
   useEffect(() => {
    if(user){
     dispatch(getListCart())
+    dispatch(getListCartTicketAction())
    }
   },[user])
   return (
@@ -131,6 +134,14 @@ function App() {
               element={
                 <PrivateRouter>
                   <Cart />
+                </PrivateRouter>
+              }
+            />
+            <Route
+              path="/cart-ticket"
+              element={
+                <PrivateRouter>
+                  <CartTicketPage />
                 </PrivateRouter>
               }
             />

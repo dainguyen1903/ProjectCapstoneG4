@@ -26,26 +26,9 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     setCart: (state, { payload }) => {
+      console.log(payload)
       if (payload) {
-        let { cartItems } = payload;
-        cartItems = cartItems.map(({ product, id, quantity }) => {
-          let discountedPrice =
-            product?.price - product?.price * (product?.discount / 100);
-          let totalPrice = quantity * discountedPrice;
-          return {
-            ...product,
-            totalPrice,
-            discountedPrice,
-            price: discountedPrice,
-            title: product.productName,
-            cartItemId: id,
-            quantity,
-          };
-        });
-        state.totalAmount = cartItems.reduce((cartTotal, cartItem) => {
-          return (cartTotal += cartItem.totalPrice);
-        }, 0);
-        state.carts = cartItems;
+        state.carts = payload;
       } else {
         state.carts = [];
       }
@@ -149,7 +132,7 @@ export const getListCart = createAsyncThunk(
     try {
       const res = await cartAPI.getListCart();
       const data = res.data;
-      if (data.status === 200) {
+      if (data.status === 200||data.status === 204) {
         dispatch(setCart(res.data.data));
         return data.data;
       } else {
@@ -208,35 +191,11 @@ export const addCartAction = createAsyncThunk(
       if (item) {
         newQuantity = item.quantity + quantity;
       }
-      const res = await cartAPI.addCartItem(productId, size);
+      const res = await cartAPI.addCartItem(productId, size,quantity);
       await dispatch(getListCart());
-      const newListCartId = getState().cart.carts.map((i) => i.cartItemId);
-      const data = res.data;
-      if (data.status === 200) {
-        if (quantity > 1) {
-          let idCartUpdate;
-          if (item) {
-            idCartUpdate = item.cartItemId;
-          } else {
-            const arr = newListCartId.filter((i) => !prevListId.includes(i));
-            if (arr.length === 1) {
-              idCartUpdate = arr[0];
-            }
-          }
-          if (idCartUpdate) {
-            dispatch(
-              updateQuantity({
-                id: idCartUpdate,
-                quantity: item ? newQuantity : quantity,
-              })
-            );
-          }
-        }
+    
         dispatch(setCartMessageOn());
-        return data.data;
-      } else {
-        return rejectWithValue(res.data.message);
-      }
+       
     } catch (error) {
       return rejectWithValue("Error");
     }
@@ -258,10 +217,12 @@ export const addCartActionCustom = createAsyncThunk(
         playerNumber,
         playerName,
         size,
+        quantity
       });
       const data = res.data;
       if (data.status === 200) {
         dispatch(getListCart());
+        dispatch(setCartMessageOn());
         return data.data;
       } else {
         return rejectWithValue(res.data.message);

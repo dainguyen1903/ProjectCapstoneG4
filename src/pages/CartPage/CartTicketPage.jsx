@@ -17,21 +17,22 @@ import {
 } from "../../store/cartSlice";
 import { Checkbox } from "antd";
 import e from "cors";
+import moment from "moment";
+import { removeCartTicketAction, updateQuantityCartTicket } from "../../store/cartTicketSlice";
 
-const CartPage = () => {
+const CartTicketPage = () => {
   const dispatch = useDispatch();
-  const carts = useSelector(getAllCarts);
-  const disabledCheckout = carts.filter((i) => i.isOrder).length === 0;
+  const cartsTickket = useSelector(state => state.cartTicket.carts);
+  const disabledCheckout = cartsTickket.filter((i) => i.isOrder).length === 0;
   const navigate = useNavigate();
-  console.log(carts);
 
-  if (carts.length === 0) {
+  if (cartsTickket.length === 0) {
     return (
       <div className="container my-5">
         <div className="empty-cart flex justify-center align-center flex-column font-manrope">
           <img src={shopping_cart} alt="" />
           <span className="fw-6 fs-15 text-gray">
-            Your shopping cart is empty.
+            Your tickets cart is empty.
           </span>
           <Link to="/" className="shopping-btn bg-orange text-white fw-5">
             Go shopping Now
@@ -48,12 +49,10 @@ const CartPage = () => {
       })
     );
   };
-  const totalAmount = carts.reduce((total, cart) => {
-    const product = cart?.product || {};
-    const price = product?.price || 0;
-    const discount = product?.discount || 0;
-    const excatPrice = Math.ceil(price - (price / 100) * discount);
-    const totalPrice = excatPrice * cart.quantity;
+  const totalAmount = cartsTickket.reduce((total, cart) => {
+    const match = cart?.fixtures
+    const totalPrice = match?.priceOfTicket * cart.quantity
+
     return total + totalPrice
   }, 0);
   return (
@@ -69,16 +68,16 @@ const CartPage = () => {
                 <span className="cart-ctxt">S.N.</span>
               </div>
               <div className="cart-cth">
-                <span className="cart-ctxt">Product</span>
+                <span className="cart-ctxt">Trận đấu</span>
               </div>
               <div className="cart-cth">
-                <span className="cart-ctxt">Unit Price</span>
+                <span className="cart-ctxt">Giá mỗi vé</span>
               </div>
               <div className="cart-cth">
-                <span className="cart-ctxt">Quantity</span>
+                <span className="cart-ctxt">Số lượng vé</span>
               </div>
               <div className="cart-cth">
-                <span className="cart-ctxt">Total Price</span>
+                <span className="cart-ctxt">Tổng giá</span>
               </div>
               <div className="cart-cth">
                 <span className="cart-ctxt">Actions</span>
@@ -87,12 +86,9 @@ const CartPage = () => {
           </div>
 
           <div className="cart-cbody bg-white">
-            {carts.map((cart, idx) => {
-              const product = cart?.product || {};
-              const price = product?.price || 0;
-              const discount = product?.discount || 0;
-              const excatPrice = Math.ceil(price - (price / 100) * discount);
-              const totalPrice = excatPrice * cart.quantity;
+            {cartsTickket.map((cart, idx) => {
+              const match = cart?.fixtures
+              const totalPrice = match?.priceOfTicket * cart.quantity
 
               return (
                 <div className="cart-ctr py-4" key={cart?.id}>
@@ -104,13 +100,14 @@ const CartPage = () => {
                   </div>
                   <div className="cart-ctd">
                     <span className="cart-ctxt bold">
-                      {product.productName}
+                    {match.homeTeam} - {match.awayTeam}
                     </span>
-                    <div>Size: {cart.size}</div>
-                    {cart?.playerName && <div>{cart?.playerName}</div>}
+                    <div>Giải đấu : {match?.name}</div>
+                    <div>Vòng đấu : {match?.round}</div>
+                    <div>Ngày : {match?.dateTime ? moment(match.dateTime).format("DD-MM-YYYY"):""}</div>
                   </div>
                   <div className="cart-ctd">
-                    <span className="cart-ctxt">{formatPrice(excatPrice)}</span>
+                    <span className="cart-ctxt">{formatPrice(match.priceOfTicket)}</span>
                   </div>
                   <div className="cart-ctd">
                     <div className="qty-change flex align-center">
@@ -119,8 +116,8 @@ const CartPage = () => {
                         className="qty-decrease flex align-center justify-center"
                         onClick={() =>
                           dispatch(
-                            updateQuantity({
-                              id: cart?.cartItemId,
+                            updateQuantityCartTicket({
+                                id: cart?.cartTicketItemId,
                               quantity: cart?.quantity - 1,
                             })
                           )
@@ -138,8 +135,8 @@ const CartPage = () => {
                         className="qty-increase flex align-center justify-center"
                         onClick={() =>
                           dispatch(
-                            updateQuantity({
-                              id: cart?.cartItemId,
+                            updateQuantityCartTicket({
+                              id: cart?.cartTicketItemId,
                               quantity: cart?.quantity + 1,
                             })
                           )
@@ -161,7 +158,7 @@ const CartPage = () => {
                       type="button"
                       className="delete-btn text-dark"
                       onClick={() =>
-                        dispatch(removeCartAction(cart?.cartItemId))
+                        dispatch(removeCartTicketAction(cart?.cartTicketItemId))
                       }
                     >
                       Delete
@@ -189,7 +186,7 @@ const CartPage = () => {
             <div className="cart-cfoot-r flex flex-column justify-end">
               <div className="total-txt flex align-center justify-end">
                 <div className="font-manrope fw-5">
-                  Total ({carts.length}) items:{" "}
+                  Total ({cartsTickket.length}) items:{" "}
                 </div>
                 <span className="text-orange fs-22 mx-2 fw-6">
                   {formatPrice(totalAmount)}
@@ -216,4 +213,4 @@ const CartPage = () => {
   );
 };
 
-export default CartPage;
+export default CartTicketPage;

@@ -1,13 +1,14 @@
 import api from ".";
 const baseURLCart = "api/cart/";
 export const cartAPI = {
-  addCartItem: (productId, size) => {
+  addCartItem: (productId, size,quantity) => {
     return api.post(
       baseURLCart + `add-cart-item/${productId}`,
       {},
       {
         params: {
           size,
+          quantity:quantity
         },
       }
     );
