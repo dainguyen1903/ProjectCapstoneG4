@@ -189,7 +189,13 @@ public class CartServiceIpml implements CartService {
             User user = userRepository.findByEmail(email);
             Product product = productRepository.findById(productId).orElse(null);
             Cart cart = cartRepository.findByUser(user);
+            if(cart == null){
+                return true;
+            }
             List<CartItem> cartItemList = cartItemRepository.findAllByCartAndSizeAndProduct(cart, size, product);
+            if (cartItemList.isEmpty() && cartItemList != null){
+                return true;
+            }
             if (cartItemList != null && !cartItemList.isEmpty()) {
                 int totalQuantity = 0;
                 for (CartItem cartItem : cartItemList) {
