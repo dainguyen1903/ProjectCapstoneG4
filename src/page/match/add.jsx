@@ -48,7 +48,10 @@ const AddMatchForm = () => {
           }
           dataPosst.status = true;
           const res = !id
-            ? await matchApi.creatermatch(dataPosst)
+            ? await matchApi.creatermatch({
+              ...dataPosst,
+             
+            })
             : await matchApi.updatematch(id, dataPosst);
           if (res.data.status === 200 || res.data.status === 204) {
             Modal.success({
@@ -219,6 +222,27 @@ const AddMatchForm = () => {
             </div>
           </>
         )}
+         <div className="inputLabel">Tổng số vé</div>
+        <Form.Item
+          name="numberOfTicket"
+          rules={[{ required: true, message: "Vui lòng nhập tổng số vé!" }]}
+        >
+          <Input type="number" placeholder="Tổng số vé" className="Input" />
+        </Form.Item>
+        <div className="inputLabel">Giá vé</div>
+        <Form.Item
+          name="priceOfTicket"
+          rules={[{ required: true, message: "Vui lòng nhập giá vé!" }]}
+        >
+          <Input type="number" placeholder="Giá vé" className="Input" />
+        </Form.Item>
+        {/* <div className="inputLabel">Số vé đã bán</div>
+        <Form.Item
+          name="numberOfTicketsSold"
+          rules={[{ required: true, message: "Vui lòng nhập số vé đã bán" }]}
+        >
+          <Input type="number" placeholder="Số vé đã bán" className="Input" />
+        </Form.Item> */}
         <Form.Item>
           <button
             style={{

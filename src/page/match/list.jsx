@@ -154,6 +154,15 @@ const ListMatch = () => {
       } 
       
     },
+    {
+      title: "Vé đã bán",
+      dataIndex: "matchResult",
+      key: "matchResult",
+      render:(_,row) => {
+       return <span>{ row.numberOfTicketsSold +" / "+ row.numberOfTicket}</span>
+      } 
+      
+    },
 
     {
       title: "Hành động",
