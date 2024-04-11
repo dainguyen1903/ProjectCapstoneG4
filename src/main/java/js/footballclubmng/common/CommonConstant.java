@@ -36,6 +36,8 @@ public class CommonConstant {
     }
 
     public static class COMMON_MESSAGE {
+
+
         public static String NOT_CONVERT = "CAN_NOT_CONVERT";
         public static String OK = "OK";
         public static String USER_NOT_LOGIN = "USER_NOT_LOGIN";
@@ -158,6 +160,7 @@ public class CommonConstant {
         //Message ticket
         public static final String ADD_TICKET_FAIL = "Mua vé thất bại";
         public static final String ADD_TICKET_SUCCESS = "Mua vé thành công";
+        public static final String EMPTY_TOTAL_PRICE = "Tổng giá trị vé không được trống";
 
         //Message cart ticket
         public static final String ADD_CART_TICKET_ITEM_FAIL = "Thêm vé vào giỏ hàng thất bại";
@@ -282,7 +285,7 @@ public class CommonConstant {
 
     public static class TICKET_API {
         public static final String TICKET = "/ticket";
-        public static final String ADD_ORDER_TICKET = HEAD_API + TICKET + "/add-ticket";
+        public static final String ADD_ORDER_TICKET = HEAD_API + TICKET + "/add-order-ticket";
     }
 
     public static class CART_TICKET_API {

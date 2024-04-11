@@ -13,4 +13,6 @@ public interface CartTicketItemRepository extends JpaRepository<CartTicketItem, 
     CartTicketItem findByCartTicketAndFixtures(CartTicket cartTicket, Fixtures fixtures);
 
     List<CartTicketItem> findAllByCartTicket(CartTicket cartTicket);
+
+    void deleteAllByCartTicket(CartTicket cartTicket);
 }
