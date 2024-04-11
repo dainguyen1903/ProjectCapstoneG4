@@ -157,6 +157,7 @@ public class CommonConstant {
         public static final String DELETE_FIXTURES_SUCCESS = "Xóa trận đấu thành công";
 
 
+
         //Message ticket
         public static final String ADD_TICKET_FAIL = "Mua vé thất bại";
         public static final String ADD_TICKET_SUCCESS = "Mua vé thành công";
@@ -173,6 +174,12 @@ public class CommonConstant {
         public static final String REMOVE_CART_TICKET_ITEM_FAIL = "Xóa vé thất bại";
         public static final String UPDATE_QUANTITY_CART_TICKET_ITEM_SUCCESS = "Cập nhật số lượng vé thành công";
         public static final String UPDATE_QUANTITY_CART_TICKET_ITEM_FAIL = "Cập nhật số lượng vé thất bại";
+
+
+        //Message order
+        public static final String CREATE_ORDER_SUCCESS = "Tạo đơn hàng thành công";
+
+        public static final String CREATE_ORDER_FAIL = "Tạo đơn hàng thất bại";
 
     }
 
@@ -262,6 +269,8 @@ public class CommonConstant {
         public static final String LIST_ORDER = HEAD_API + ORDER + "/list-order";
 
         public static final String VIEW_ORDER_DETAILS = HEAD_API + ORDER_DETAIL + "/{id}";
+
+        public static final String CREATE_ORDER = HEAD_API + ORDER + "/create-order";
 
     }
 

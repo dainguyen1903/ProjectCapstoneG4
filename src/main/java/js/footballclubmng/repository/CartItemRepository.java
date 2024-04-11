@@ -12,7 +12,9 @@ import java.util.List;
 public interface CartItemRepository extends JpaRepository<CartItem, Long> {
     CartItem findByProductAndCartAndSizeAndPlayerNumberAndPlayerName(Product product, Cart cart, String size, Integer playerNumber, String playerName);
 
+
     List<CartItem> findAllByCart(Cart cart);
 
     List<CartItem> findAllByCartAndSizeAndProduct(Cart cart, String size, Product product);
+
 }

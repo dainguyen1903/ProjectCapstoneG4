@@ -68,8 +68,13 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private Cart cart;
 
+
 //    @OneToMany(mappedBy = "user1")
 //    private List<TicketOrder> ticketOrders;
+
+    @OneToMany(mappedBy = "user",  cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Order> orderList;
+
 
     public User(String firstName, String lastName, String email, String password, LocalDateTime createTime, String role, String otp, LocalDateTime otpGenerateTime) {
         this.firstName = firstName;

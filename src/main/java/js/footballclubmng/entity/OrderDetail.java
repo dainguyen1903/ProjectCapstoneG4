@@ -17,17 +17,11 @@ public class OrderDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "product_name")
-    private String productName;
+    @Column(name = "unit_price")
+    private float unitPrice;
 
-    @Column(name = "product_price")
-    private float productPrice;
-
-    @Column(name = "player_number")
-    private Integer playerNumber;
-
-    @Column(name = "player_name")
-    private String playerName;
+    @Column(name = "quantity")
+    private int quantity;
 
     @Column(name = "size")
     private String size;
