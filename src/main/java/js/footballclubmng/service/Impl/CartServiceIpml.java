@@ -14,6 +14,8 @@ import js.footballclubmng.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CartServiceIpml implements CartService {
     @Autowired
@@ -157,4 +159,26 @@ public class CartServiceIpml implements CartService {
             return false;
         }
     }
+
+    @Override
+    public void deleteCartByToken(String token) {
+        // Lấy thông tin người dùng từ token
+        String jwtToken = token.substring(7);
+        String email = tokenProvider.getUsernameFromJWT(jwtToken);
+        User user = userRepository.findByEmail(email);
+
+        // Lấy cart của người dùng từ user
+        Cart cart = cartRepository.findByUser(user);
+
+        // Lấy danh sách cart items
+        List<CartItem> cartItems = cart.getCartItems();
+
+        // Xóa tất cả các cart items
+        cartItemRepository.deleteAll(cartItems);
+
+        // Xóa cart
+        cartRepository.delete(cart);
+    }
+
+
 }

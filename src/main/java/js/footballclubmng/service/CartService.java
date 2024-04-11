@@ -12,4 +12,6 @@ public interface CartService {
     public boolean updateQuantityCartItem(long cartItemId, int quantity);
     public CartItem getCartItemById(long cartItemId);
     public boolean customiseAddCartItemToCart(String token, long productId, CustomiseProductRequest customiseProductRequest);
+
+    public void deleteCartByToken(String token);
 }

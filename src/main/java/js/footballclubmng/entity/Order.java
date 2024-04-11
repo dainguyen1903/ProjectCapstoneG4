@@ -1,6 +1,7 @@
 package js.footballclubmng.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import js.footballclubmng.enums.EOrderStatus;
 import lombok.*;
 
 import javax.persistence.*;
@@ -17,13 +18,17 @@ public class Order {
     @Id
     @Column(name = "order_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     @Column(name = "total_price")
     private float totalPrice;
 
     @Column(name = "order_date")
     private LocalDateTime orderDate;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private EOrderStatus status;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
@@ -34,8 +39,9 @@ public class Order {
     @JoinColumn(name = "shipping_id")
     private Shipping shipping;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "order")
+    @OneToMany(mappedBy = "order",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderDetail> orderDetailList;
+
 
 
 }
