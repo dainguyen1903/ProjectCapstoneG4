@@ -19,8 +19,6 @@ public interface CartService {
     public boolean checkQuantityInStock(Long productId, String size, int quantity);
     public boolean checkQuantityCartItems(String token, Long productId, String size, int quantity);
 
-    public boolean customiseAddCartItemToCart(String token, long productId, CustomiseProductRequest customiseProductRequest);
-
     public void deleteCartByToken(String token);
 
 }

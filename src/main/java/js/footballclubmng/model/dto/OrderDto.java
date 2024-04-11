@@ -20,13 +20,12 @@ public class OrderDto {
 
     private LocalDateTime orderDate;
 
-    private User user;
+    private UserDto user;
 
     private ShippingDto shipping;
 
     private EOrderStatus status;
 
-    private List<OrderDetailDto> orderDetailList;
 
 
 }

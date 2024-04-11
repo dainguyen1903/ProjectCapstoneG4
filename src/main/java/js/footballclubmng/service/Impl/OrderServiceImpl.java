@@ -1,9 +1,11 @@
 package js.footballclubmng.service.Impl;
 
+import js.footballclubmng.common.MapperUtil;
 import js.footballclubmng.config.TokenProvider;
 import js.footballclubmng.entity.*;
 import js.footballclubmng.enums.EOrderStatus;
 import js.footballclubmng.enums.EShipStatus;
+import js.footballclubmng.model.dto.OrderDetailDto;
 import js.footballclubmng.model.dto.OrderDto;
 import js.footballclubmng.model.dto.ShippingDto;
 import js.footballclubmng.model.request.order.CreateOrderRequest;
@@ -17,6 +19,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static js.footballclubmng.common.MapperUtil.mapToOrderDto;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -38,9 +43,14 @@ public class OrderServiceImpl implements OrderService {
     private CartService cartService;
 
     @Override
-    public List<Order> getAllOrder() {
-        List<Order> list = orderRepository.findAll();
-        return list;
+    public List<OrderDto> getAllOrder() {
+        // Lấy danh sách tất cả các đơn hàng từ repository
+        List<Order> listOrder = orderRepository.findAll();
+
+        // Chuyển đổi danh sách đơn hàng thành danh sách DTO bằng cách sử dụng mapper
+        return listOrder.stream()
+                .map(MapperUtil::mapToOrderDto)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -65,7 +75,13 @@ public class OrderServiceImpl implements OrderService {
         shipping.setCreateAt(LocalDateTime.now());
         shipping.setUpdateAt(LocalDateTime.now());
         shipping.setStatus(EShipStatus.PENDING);
+
+        // Tính toán totalPrice
+        float totalPrice = calculateTotalPrice(cartItems);
+        shipping.setTotalPrice(totalPrice);
+
         shipping = shippingRepository.save(shipping);
+
 
         //Tạo order
         Order order = new Order();
@@ -79,38 +95,55 @@ public class OrderServiceImpl implements OrderService {
 
         // Tạo danh sách OrderDetail từ danh sách CartItem và thông tin người dùng từ cart
         List<OrderDetail> orderDetailList = new ArrayList<>();
-        float totalPrice = 0.0f; // Khởi tạo tổng giá tiền của đơn hàng
         for(CartItem cartItem : cartItems) {
             Product product = cartItem.getProduct();
-            float originalPrice = product.getPrice();
-            float discount = product.getDiscount(); // Lấy phần trăm khuyến mãi từ sản phẩm
-            float discountedPrice = originalPrice * (1 - discount); // Áp dụng khuyến mãi vào giá tiền
+//            float originalPrice = product.getPrice();
+//            float discountPercentage = product.getDiscount(); // Lấy phần trăm khuyến mãi từ sản phẩm
+//            float discount = discountPercentage / 100.0f; // Chuyển đổi phần trăm thành số thực
+//            float discountedPrice = originalPrice * (1 - discount); // Áp dụng khuyến mãi vào giá tiền
 
             OrderDetail orderDetail = new OrderDetail();
             orderDetail.setProduct(cartItem.getProduct());
             orderDetail.setQuantity(cartItem.getQuantity());
             orderDetail.setSize(cartItem.getSize());
-            orderDetail.setUnitPrice(discountedPrice);
+            orderDetail.setUnitPrice(totalPrice);
             orderDetail.setOrder(order);
             orderDetailList.add(orderDetail);
 
             // Tính tổng giá tiền cho đơn hàng sau khi áp dụng khuyến mãi
-            totalPrice += discountedPrice * cartItem.getQuantity();
+//            totalPrice += discountedPrice * cartItem.getQuantity();
         }
 
         // Gán tổng giá tiền cho đơn hàng
         order.setTotalPrice(totalPrice);
 
+        // Gán tồng giá tiền cho đơn ship
+        shipping.setTotalPrice(totalPrice);
+
         // Liên kết danh sách OrderDetail với Order
         order.setOrderDetailList(orderDetailList);
 
-        // Lưu Order vào cơ sở dữ liệu
         order = orderRepository.save(order);
+
+
 
         // Xóa cart sau khi tạo đơn hàng thành công
         cartService.deleteCartByToken(token);
 
         return order;
+    }
+
+    private float calculateTotalPrice(List<CartItem> cartItems) {
+        float totalPrice = 0.0f;
+        for (CartItem cartItem : cartItems) {
+            Product product = cartItem.getProduct();
+            float originalPrice = product.getPrice();
+            float discountPercentage = product.getDiscount(); // Lấy phần trăm khuyến mãi từ sản phẩm
+            float discount = discountPercentage / 100.0f; // Chuyển đổi phần trăm thành số thực
+            float discountedPrice = originalPrice * (1 - discount); // Áp dụng khuyến mãi vào giá tiền
+            totalPrice += discountedPrice * cartItem.getQuantity();
+        }
+        return totalPrice;
     }
 
 }

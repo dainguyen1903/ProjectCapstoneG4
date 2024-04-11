@@ -229,7 +229,7 @@ public class CartServiceIpml implements CartService {
         // Lấy danh sách cart items
         List<CartItem> cartItems = cart.getCartItems();
 
-        // Xóa tất cả các cart items
+        // Xóa tất cả các cart items trước
         cartItemRepository.deleteAll(cartItems);
 
         // Xóa cart

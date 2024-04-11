@@ -13,6 +13,5 @@ public class ShippingRequest {
     private String shipName;
     private String phone;
     private String address;
-    private Float totalPrice;
     private String note;
 }

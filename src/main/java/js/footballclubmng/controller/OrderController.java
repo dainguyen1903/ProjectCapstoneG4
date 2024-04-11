@@ -3,6 +3,7 @@ package js.footballclubmng.controller;
 import js.footballclubmng.common.CommonConstant;
 import js.footballclubmng.entity.Order;
 import js.footballclubmng.entity.Product;
+import js.footballclubmng.model.dto.OrderDto;
 import js.footballclubmng.model.request.order.CreateOrderRequest;
 import js.footballclubmng.model.response.ResponseAPI;
 import js.footballclubmng.repository.OrderRepository;
@@ -24,8 +25,8 @@ public class OrderController {
     OrderDetailService orderDetailService;
     @GetMapping(CommonConstant.ORDER_API.LIST_ORDER)
     @PreAuthorize("hasRole('ROLE_Sale')")
-    public ResponseAPI<List<Order>> listProduct() {
-        List<Order> list = orderService.getAllOrder();
+    public ResponseAPI<List<OrderDto>> listProduct() {
+        List<OrderDto> list = orderService.getAllOrder();
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, list);
     }
 

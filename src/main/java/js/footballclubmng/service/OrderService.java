@@ -8,7 +8,7 @@ import js.footballclubmng.model.request.order.CreateOrderRequest;
 import java.util.List;
 
 public interface OrderService {
-    public List<Order> getAllOrder();
+    public List<OrderDto> getAllOrder();
 
     public Order createOrder(CreateOrderRequest createOrderRequest, String token);
 

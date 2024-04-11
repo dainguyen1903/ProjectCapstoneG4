@@ -147,5 +147,59 @@ public class MapperUtil {
         return fixturesDto;
     }
 
+    public static UserDto mapToUserDto(User user) {
+        // Chuyển đổi từ User entity sang UserDto
+        UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
+        userDto.setEmail(user.getEmail());
+        return userDto;
+    }
+
+
+    public static OrderDto mapToOrderDto(Order order) {
+        OrderDto orderDto = new OrderDto();
+        orderDto.setId(order.getId());
+        orderDto.setUser(mapToUserDto(order.getUser()));
+        orderDto.setTotalPrice(order.getTotalPrice());
+        orderDto.setOrderDate(order.getOrderDate());
+        orderDto.setShipping(mapToShippingDto(order.getShipping()));
+
+        orderDto.setStatus(order.getStatus());
+
+        return orderDto;
+    }
+
+    public static ShippingDto mapToShippingDto(Shipping shipping) {
+        ShippingDto shippingDto = new ShippingDto();
+        shippingDto.setName(shipping.getShipName());
+        shippingDto.setPhone(shipping.getPhone());
+        shippingDto.setAddress(shipping.getAddress());
+        shippingDto.setTotalPrice(shipping.getTotalPrice());
+        shippingDto.setNote(shipping.getNote());
+        shippingDto.setCreateAt(shipping.getCreateAt());
+        shippingDto.setUpdatedAt(shipping.getUpdateAt());
+        shippingDto.setStatus(shipping.getStatus());
+
+        return shippingDto;
+    }
+
+    public static List<OrderDetailDto> mapToOrderDetailDtoList(List<OrderDetail> orderDetailList) {
+        List<OrderDetailDto> orderDetailDtoList = new ArrayList<>();
+
+        for (OrderDetail orderDetail : orderDetailList) {
+            OrderDetailDto orderDetailDto = new OrderDetailDto();
+            orderDetailDto.setUnitPrice(orderDetail.getUnitPrice());
+            orderDetailDto.setSize(orderDetail.getSize());
+            orderDetailDto.setQuantity(orderDetail.getQuantity());
+            ProductDto productDto = mapToProductDto(orderDetail.getProduct());
+            orderDetailDto.setProduct(productDto);
+            orderDetailDtoList.add(orderDetailDto);
+        }
+        return orderDetailDtoList;
+    }
+
+
+
+
 }
 
