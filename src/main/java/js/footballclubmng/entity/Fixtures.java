@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -31,10 +32,17 @@ public class Fixtures {
     @Column(name = "status_match")
     private String statusMatch;
     @Column(name = "home_score")
-    private int homeScore;
+    private Integer homeScore;
     @Column(name = "away_score")
-    private int awayScore;
+    private Integer awayScore;
+    @Column(name = "number_of_ticket")
+    private Integer numberOfTicket;
+    @Column(name = "price_of_ticket")
+    private Double priceOfTicket;
+    @Column(name = "number_of_tickets_sold")
+    private Integer numberOfTicketsSold;
     @Column(name = "status")
-    private boolean status;
+    private Boolean status;
+
 
 }

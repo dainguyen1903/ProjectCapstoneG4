@@ -23,8 +23,11 @@ public class CartItem {
     @JsonIgnore
     private Cart cart;
 
+    @Column(name = "product_id", nullable = false)
+    private Long productId;
+
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id",  insertable = false, updatable = false)
     @JsonIgnoreProperties("cartItems")
     private Product product;
 

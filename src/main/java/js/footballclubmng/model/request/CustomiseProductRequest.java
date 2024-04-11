@@ -14,6 +14,7 @@ import javax.validation.constraints.NotBlank;
 public class CustomiseProductRequest {
     @NotBlank(message = "Vui lòng chọn size")
     private String size;
+    private int quantity;
     private String playerName;
     private Integer playerNumber;
 }
