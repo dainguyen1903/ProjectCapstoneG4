@@ -8,6 +8,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.util.regex.Pattern;
 
 @Component
@@ -30,19 +32,19 @@ public class EmailUtil {
 //        javaMailSender.send(simpleMailMessage);
 //    }
 
-//    public void sendReSetPasswordEmail(String email, String link) {
-//        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-//        try {
-//            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-//            helper.setTo(email);
-//            helper.setSubject("Đặt lại mật khẩu ");
-//            String content = "Click <a href='" + link + "'>Đổi mật khẩu tại đây</a> để đặt lại mật khẩu của bạn.";
-//            helper.setText(content, true);
-//            javaMailSender.send(mimeMessage);
-//        } catch (MessagingException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    public void sendInformationTicket(String email, String qrCode) {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+            helper.setTo(email);
+            helper.setSubject("Thông tin mua vé");
+            String content = "Click <a href='" + qrCode + "'>Đổi mật khẩu tại đây</a> để đặt lại mật khẩu của bạn.";
+            helper.setText(content, true);
+            javaMailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
 
 //    public void sendEmail(String email){
 //        SimpleMailMessage simpleMailMessage =new SimpleMailMessage();

@@ -2,6 +2,7 @@ package js.footballclubmng.controller;
 
 import js.footballclubmng.common.CommonConstant;
 import js.footballclubmng.entity.Fixtures;
+import js.footballclubmng.model.dto.FixturesDto;
 import js.footballclubmng.model.response.ResponseAPI;
 import js.footballclubmng.service.FixturesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +17,14 @@ public class FixturesController {
     private FixturesService fixturesService;
 
     @GetMapping(CommonConstant.FIXTURES_API.FIXTURES_LIST)
-    public ResponseAPI<List<Fixtures>> listMatch() {
-        List<Fixtures> list = fixturesService.findAllFixtures();
+    public ResponseAPI<List<FixturesDto>> listMatch() {
+        List<FixturesDto> list = fixturesService.findAllFixtures();
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, list);
     }
 
     @GetMapping(CommonConstant.FIXTURES_API.FIXTURES_DETAIL)
-    public ResponseAPI<Fixtures> fixturesDetail(@PathVariable int id) {
-        Fixtures fixtures = fixturesService.getFixturesById(id);
+    public ResponseAPI<FixturesDto> fixturesDetail(@PathVariable int id) {
+        FixturesDto fixtures = fixturesService.getFixturesById(id);
         if (fixtures == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.NOT_FOUND_FIXTURES, null);
         }
@@ -32,7 +33,7 @@ public class FixturesController {
 
     @PostMapping(CommonConstant.FIXTURES_API.CREATE_FIXTURES)
     @PreAuthorize("hasRole('ROLE_Operator')")
-    public ResponseAPI<Fixtures> createFixtures(@RequestBody Fixtures fixtures) {
+    public ResponseAPI<Fixtures> createFixtures(@RequestBody FixturesDto fixtures) {
         boolean result = fixturesService.addFixtures(fixtures);
         if (!result) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.ADD_FIXTURES_FAIL, null);
@@ -42,8 +43,8 @@ public class FixturesController {
 
     @PutMapping(CommonConstant.FIXTURES_API.UPDATE_FIXTURES)
     @PreAuthorize("hasRole('ROLE_Operator')")
-    public ResponseAPI<Fixtures> updateFixtures(@PathVariable int id, @RequestBody Fixtures fixtures) {
-        Fixtures fixtures1 = fixturesService.getFixturesById(id);
+    public ResponseAPI<Fixtures> updateFixtures(@PathVariable int id, @RequestBody FixturesDto fixtures) {
+        FixturesDto fixtures1 = fixturesService.getFixturesById(id);
         if (fixtures1 == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.NOT_FOUND_FIXTURES, null);
         }
@@ -57,7 +58,7 @@ public class FixturesController {
     @DeleteMapping(CommonConstant.FIXTURES_API.DELETE_FIXTURES)
     @PreAuthorize("hasRole('ROLE_Operator')")
     public ResponseAPI<Fixtures> deleteFixtures(@PathVariable int id) {
-        Fixtures fixtures = fixturesService.getFixturesById(id);
+        FixturesDto fixtures = fixturesService.getFixturesById(id);
         if (fixtures == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.NOT_FOUND_FIXTURES, null);
         }

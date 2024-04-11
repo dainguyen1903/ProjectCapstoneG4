@@ -36,7 +36,8 @@ public class CommonConstant {
     }
 
     public static class COMMON_MESSAGE {
-        public static final String EXCEED_THE_QUANTITY_IN_STOCK = "Vượt quá số lượng sản phẩm trong kho hàng";
+
+
         public static String NOT_CONVERT = "CAN_NOT_CONVERT";
         public static String OK = "OK";
         public static String USER_NOT_LOGIN = "USER_NOT_LOGIN";
@@ -142,6 +143,8 @@ public class CommonConstant {
         public static final String CART_ITEM_NOT_FOUND = "Không tìm thấy sản phẩm trong giỏ hàng";
         public static final String QUANTITY_MUST_GREATER_THAN_ZERO = "Số lượng sản phẩm phải lớn hơn 0";
         public static final String SIZE_REQUIRED = "Vui lòng chọn size";
+        public static final String EXCEED_THE_QUANTITY_IN_STOCK = "Vượt quá số lượng sản phẩm cho phép";
+
 
 
         //Message fixtures
@@ -152,6 +155,25 @@ public class CommonConstant {
         public static final String UPDATE_FIXTURES_SUCCESS = "Cập nhật trận đấu thành công";
         public static final String DELETE_FIXTURES_FAIL = "Xóa trận đấu thất bại";
         public static final String DELETE_FIXTURES_SUCCESS = "Xóa trận đấu thành công";
+
+
+        //Message ticket
+        public static final String ADD_TICKET_FAIL = "Mua vé thất bại";
+        public static final String ADD_TICKET_SUCCESS = "Mua vé thành công";
+        public static final String EMPTY_TOTAL_PRICE = "Tổng giá trị vé không được trống";
+
+        //Message cart ticket
+        public static final String ADD_CART_TICKET_ITEM_FAIL = "Thêm vé vào giỏ hàng thất bại";
+        public static final String ADD_CART_TICKET_ITEM_SUCCESS = "Thêm vé vào giỏ hàng thành công";
+        public static final String QUANTITY_LIMIT = "Tối đa 2 vé mỗi trận";
+        public static final String NOT_ENOUGH_TICKET = "Số lượng vé không đủ";
+        public static final String EMPTY_CART_TICKET = "Giỏ hàng vé trống";
+        public static final String NOT_FOUND_CART_TICKET_ITEM = "Không tìm thấy vé trong giỏ hàng";
+        public static final String REMOVE_CART_TICKET_ITEM_SUCCESS = "Xóa vé thành công";
+        public static final String REMOVE_CART_TICKET_ITEM_FAIL = "Xóa vé thất bại";
+        public static final String UPDATE_QUANTITY_CART_TICKET_ITEM_SUCCESS = "Cập nhật số lượng vé thành công";
+        public static final String UPDATE_QUANTITY_CART_TICKET_ITEM_FAIL = "Cập nhật số lượng vé thất bại";
+
     }
 
 
@@ -259,6 +281,19 @@ public class CommonConstant {
         public static final String CREATE_FIXTURES = HEAD_API + FIXTURES + "/create-fixtures";
         public static final String UPDATE_FIXTURES = HEAD_API + FIXTURES + "/update-fixtures/{id}";
         public static final String DELETE_FIXTURES = HEAD_API + FIXTURES + "/delete-fixtures/{id}";
+    }
+
+    public static class TICKET_API {
+        public static final String TICKET = "/ticket";
+        public static final String ADD_ORDER_TICKET = HEAD_API + TICKET + "/add-order-ticket";
+    }
+
+    public static class CART_TICKET_API {
+        public static final String CART_TICKET = "/cart-ticket";
+        public static final String ADD_CART_TICKET_ITEM = HEAD_API + CART_TICKET + "/add-cart-ticket-item/{fixtureId}";
+        public static final String REMOVE_CART_TICKET_ITEM = HEAD_API + CART_TICKET + "/remove-cart-ticket-item/{cartTicketItemId}";
+        public static final String VIEW_CART_TICKET = HEAD_API + CART_TICKET + "/view-cart-ticket";
+        public static final String UPDATE_QUANTITY_CART_TICKET_ITEM = HEAD_API + CART_TICKET + "/update-quantity-cart-ticket-item/{cartTicketItemId}";
     }
 
 }
