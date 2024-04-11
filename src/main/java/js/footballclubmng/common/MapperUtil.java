@@ -134,7 +134,9 @@ public class MapperUtil {
         fixturesDto.setName(fixtures.getName());
         fixturesDto.setRound(fixtures.getRound());
         fixturesDto.setHomeTeam(fixtures.getHomeTeam());
+        fixturesDto.setImageHomeTeam(fixtures.getImageHomeTeam());
         fixturesDto.setAwayTeam(fixtures.getAwayTeam());
+        fixturesDto.setImageAwayTeam(fixtures.getImageAwayTeam());
         fixturesDto.setDateTime(fixtures.getDateTime());
         fixturesDto.setLocation(fixtures.getLocation());
         fixturesDto.setStatusMatch(fixtures.getStatusMatch());
