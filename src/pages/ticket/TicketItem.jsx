@@ -32,7 +32,10 @@ const TicketItem = ({
   numberOfTicket,
   priceOfTicket,
   numberOfTicketsSold,
-  id
+  id,
+  imageHomeTeam,
+  imageAwayTeam
+
 }) => {
   const MODE = {
     ADD_CART: 1,
@@ -141,7 +144,7 @@ const TicketItem = ({
         }}
       >
         <Row>
-          <Col span={6}>
+          <Col span={5}>
             <div className="bold">{ngay}</div>
             <div>{giaiDau}</div>
             <div>
@@ -163,15 +166,31 @@ const TicketItem = ({
               justifyContent: "center",
               alignItems: "center",
             }}
-            span={12}
+            span={13}
           >
-            <div className="ticket-club">{homeTeam}</div>
+            <div className="ticket-club"><span>
+            {homeTeam}
+            </span>
+            <img style={{
+              width:50,
+              height:50,
+              objectFit:"contain"
+            }} src={imageHomeTeam} />
+            </div>
             <div className="ticket-time">
               {isMatch && statusMatch !== STATUS_MATCH.PENDING
                 ? `${homeScore || 0} - ${awayScore || 0}`
                 : gio}
             </div>
-            <div className="ticket-club">{awayTeam}</div>
+            <div className="ticket-club"> <img style={{
+              width:50,
+              height:50,
+              objectFit:"contain"
+            }} src={imageAwayTeam} /><span>
+            {awayTeam}
+            </span>
+           
+            </div>
           </Col>
           <Col
             style={{

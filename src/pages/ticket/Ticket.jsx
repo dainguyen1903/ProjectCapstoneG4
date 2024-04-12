@@ -4,6 +4,7 @@ import { matchApi } from "../../api/match.api";
 import TicketItem from "../ticket/TicketItem";
 import moment from "moment";
 import { STATUS_MATCH } from "../../constants/common";
+import { listMatchByDate, sortObjtDate } from "../../utils/helpers";
 
 const ListTicket = () => {
   const [listMatch, setListMatch] = useState([]);
@@ -13,8 +14,23 @@ const ListTicket = () => {
       if (res.data.status === 200) {
         setListMatch(res.data.data || []);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
+  //
+  const listByDate = listMatchByDate(listMatch.filter(i => i.statusMatch === STATUS_MATCH.PENDING))
+  const renderlistMatch = (list) => {
+    return list.map((i) => (
+      <TicketItem
+
+        awayScore={i.awayScore}
+        homeScore={i.homeScore}
+        statusMatch={i.statusMatch}
+        ngay={moment(i.dateTime).format("YYYY-MM-DD")}
+        gio={moment(i.dateTime).format("hh:ss")}
+        {...i}
+      />
+    ))
+  }
   useEffect(() => {
     getListMatch();
   }, []);
@@ -26,17 +42,14 @@ const ListTicket = () => {
             <h2>Mua vé các trận đấu sắp diễn ra</h2>
           </div>
           <div class="">
-            {listMatch.filter(i => i.statusMatch === STATUS_MATCH.PENDING).map((i) => (
-              <TicketItem
-             
-                awayScore={i.awayScore}
-                homeScore={i.homeScore}
-                statusMatch={i.statusMatch}
-                ngay={moment(i.dateTime).format("YYYY-MM-DD")}
-                gio={moment(i.dateTime).format("hh:ss")}
-                {...i}
-              />
-            ))}
+            {
+             sortObjtDate(Object.keys(listByDate)).map(key => <div>
+                <h1 style={{color:"rgb(41, 174, 189)"}}>{key}</h1>
+                <div>
+                  {renderlistMatch(listByDate[key])}
+                </div>
+              </div>)
+            }
           </div>
         </div>
       </section>

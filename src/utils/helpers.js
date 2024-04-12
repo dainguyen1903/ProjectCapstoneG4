@@ -1,3 +1,4 @@
+import moment from "moment";
 import { LOCAL_STORAGE_KEY } from "../constants/common";
 export const formatPrice = (price) => {
     return new Intl.NumberFormat('en-US', {
@@ -45,4 +46,29 @@ export const handleLoggout = () => {
   localStorage.removeItem(LOCAL_STORAGE_KEY.user);
   localStorage.removeItem(LOCAL_STORAGE_KEY.userId)
   
+}
+
+//
+export const listMatchByDate = (listMatch) => {
+  let result = {};
+  listMatch.forEach(item =>{
+    const dateTime = item.dateTime;
+    const key = moment(dateTime).format("MM/YYYY");
+    if(key in result){
+      result[key].push(item);
+    }
+    else{
+      result[key] = [item]
+    }
+  })
+  return result;
+}
+
+// 
+export const sortObjtDate = (arr) => {
+  return arr.sort((a,b) => {
+    const date1 = new Date("01/"+a);
+    const date2 = new Date("01/"+b);
+    return date1 - date2;
+  })
 }

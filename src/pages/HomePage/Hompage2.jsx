@@ -103,7 +103,7 @@ const HomePage2 = () => {
   }
 
   // renderListPost
-  const renderListPost = listPost.map((item) => (
+  const renderListPost = listPost?.map((item) => (
     <Col span={12}>
       <BlogItem {...item} />
     </Col>
@@ -156,7 +156,7 @@ const HomePage2 = () => {
                 </button>
               </div>
               <Row gutter={[16,16]}  style={{marginTop:30}}>
-                {listPostter.map(src => (
+                {listPostter?.map(src => (
                     <Col span={8}>
                         <img src={src} style={{
                             width:"100%",
