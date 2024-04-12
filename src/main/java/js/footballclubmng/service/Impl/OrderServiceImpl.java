@@ -85,8 +85,8 @@ public class OrderServiceImpl implements OrderService {
 
         //Tạo order
         Order order = new Order();
-        order.setUser(user);
-        order.setShipping(shipping);
+        order.setShippingId(shipping.getId());
+        order.setUserId(user.getId());
         order.setOrderDate(LocalDateTime.now());
         order.setStatus(EOrderStatus.PENDING);
 
@@ -96,22 +96,15 @@ public class OrderServiceImpl implements OrderService {
         // Tạo danh sách OrderDetail từ danh sách CartItem và thông tin người dùng từ cart
         List<OrderDetail> orderDetailList = new ArrayList<>();
         for(CartItem cartItem : cartItems) {
-            Product product = cartItem.getProduct();
-//            float originalPrice = product.getPrice();
-//            float discountPercentage = product.getDiscount(); // Lấy phần trăm khuyến mãi từ sản phẩm
-//            float discount = discountPercentage / 100.0f; // Chuyển đổi phần trăm thành số thực
-//            float discountedPrice = originalPrice * (1 - discount); // Áp dụng khuyến mãi vào giá tiền
 
             OrderDetail orderDetail = new OrderDetail();
-            orderDetail.setProduct(cartItem.getProduct());
+            orderDetail.setProductId(cartItem.getProductId());
             orderDetail.setQuantity(cartItem.getQuantity());
             orderDetail.setSize(cartItem.getSize());
             orderDetail.setUnitPrice(totalPrice);
             orderDetail.setOrder(order);
             orderDetailList.add(orderDetail);
 
-            // Tính tổng giá tiền cho đơn hàng sau khi áp dụng khuyến mãi
-//            totalPrice += discountedPrice * cartItem.getQuantity();
         }
 
         // Gán tổng giá tiền cho đơn hàng

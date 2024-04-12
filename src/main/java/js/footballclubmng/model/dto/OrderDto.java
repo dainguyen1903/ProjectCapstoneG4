@@ -14,7 +14,7 @@ import java.util.List;
 @Builder
 public class OrderDto {
 
-    private String id;
+    private Long id;
 
     private float totalPrice;
 

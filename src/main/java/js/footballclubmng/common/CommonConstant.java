@@ -181,6 +181,14 @@ public class CommonConstant {
 
         public static final String CREATE_ORDER_FAIL = "Tạo đơn hàng thất bại";
 
+        //Message payment
+
+        public static final String CREATE_PAYMENT_SUCCESS = "Tạo thanh toán thành công";
+
+        public static final String CREATE_PAYMENT_FAIL = "Tạo thanh toán thất bại";
+
+
+
     }
 
 
@@ -272,8 +280,16 @@ public class CommonConstant {
 
         public static final String CREATE_ORDER = HEAD_API + ORDER + "/create-order";
 
+
     }
 
+    public static class PAYMENT_API {
+        public static final String PAYMENT = "/payment";
+
+        public static final String CREATE_PAYMENT = HEAD_API + PAYMENT + "/create-payment";
+
+        public static final String TRANSACTION_PAYMENT = HEAD_API + PAYMENT + "/transaction-payment";
+    }
     public static class CART_API {
         public static final String CART = "/cart";
         public static final String ADD_CART_ITEM = HEAD_API + CART + "/add-cart-item/{productId}";

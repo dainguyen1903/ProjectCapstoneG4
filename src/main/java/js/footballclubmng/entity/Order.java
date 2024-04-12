@@ -18,7 +18,7 @@ public class Order {
     @Id
     @Column(name = "order_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Long id;
 
     @Column(name = "total_price")
     private float totalPrice;
@@ -30,16 +30,22 @@ public class Order {
     @Column(name = "status")
     private EOrderStatus status;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
+    @Column(name = "user_id")
+    private Long userId;
+
+    @Column(name = "shipping_id")
+    private Long ShippingId;
+
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
     @JsonIgnore
     private User user;
 
     @OneToOne
-    @JoinColumn(name = "shipping_id")
+    @JoinColumn(name = "shipping_id", insertable = false, updatable = false)
     private Shipping shipping;
 
-    @OneToMany(mappedBy = "order",cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "order",cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<OrderDetail> orderDetailList;
 
 
