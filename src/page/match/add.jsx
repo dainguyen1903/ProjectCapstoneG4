@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Form,
   Input,
@@ -9,6 +9,7 @@ import {
   Card,
   Row,
   Col,
+  Avatar,
 } from "antd";
 import { useMatch, useMatches, useNavigate, useParams } from "react-router";
 import moment from "moment";
@@ -29,6 +30,10 @@ const AddMatchForm = () => {
   const [homeScore, setHomeScore] = useState("");
   const [awayScore, setAwayScore] = useState("");
   const navigate = useNavigate();
+  const [imageAwayTeam, setImageAwayTeam] = useState("");
+  const [imageHomeTeam, setImageHomeTeam] = useState("");
+  const homeTeamRef = useRef();
+  const awayRef = useRef()
 
   let detail = matches.find((i) => i.id == id) || {};
   const [form] = Form.useForm();
@@ -47,11 +52,12 @@ const AddMatchForm = () => {
             dataPosst.homeScore = homeScore;
           }
           dataPosst.status = true;
+          dataPosst.imageAwayTeam = imageAwayTeam;
+          dataPosst.imageHomeTeam = imageHomeTeam;
           const res = !id
             ? await matchApi.creatermatch({
-              ...dataPosst,
-             
-            })
+                ...dataPosst,
+              })
             : await matchApi.updatematch(id, dataPosst);
           if (res.data.status === 200 || res.data.status === 204) {
             Modal.success({
@@ -84,12 +90,13 @@ const AddMatchForm = () => {
         const detail = res.data.data;
         setStatus(detail.statusMatch);
         setHomeScore(detail?.homeScore);
-        setAwayScore(detail?.awayScore );
+        setAwayScore(detail?.awayScore);
+        setImageAwayTeam(detail?.imageAwayTeam);
+        setImageHomeTeam(detail?.imageHomeTeam)
         detail.dateTime = detail.dateTime ? moment(detail.dateTime) : null;
         form.setFieldsValue(detail);
       }
     } catch (error) {
-      console.log(error);
     } finally {
       setLoading(false);
     }
@@ -99,7 +106,20 @@ const AddMatchForm = () => {
       getDetail();
     }
   }, [id]);
-  console.log(form.getFieldValue("statusMatch"));
+  const handleChangeFile = (type) => e => {
+    let file = e.target.files[0];
+    let reader = new FileReader();
+    reader.onloadend = function () {
+      const url  = reader.result;
+      if(type == 1){
+        setImageHomeTeam(url)
+      }
+      else{
+        setImageAwayTeam(url)
+      }
+    };
+    reader.readAsDataURL(file);
+  }
   return (
     <Card>
       <Form
@@ -125,21 +145,46 @@ const AddMatchForm = () => {
         >
           <Input placeholder="Vòng Đấu" className="Input" />
         </Form.Item>
-        <div className="inputLabel">Đội nhà</div>
+        {/* <div className="inputLabel">Đội nhà</div>
         <Form.Item
           name="homeTeam"
           rules={[{ required: true, message: "Vui lòng nhập tên đội nhà!" }]}
         >
           <Input placeholder="Đội Nhà" className="Input" />
-        </Form.Item>
-        <div className="inputLabel">Đội khách</div>
+        </Form.Item> */}
+        <div style={{width:"calc(50% + 55px)"}} className="flex-start">
+          <div style={{width:"100%"}}>
+            <div className="inputLabel">Đội nhà</div>
 
-        <Form.Item
-          name="awayTeam"
-          rules={[{ required: true, message: "Vui lòng nhập tên đội khách!" }]}
-        >
-          <Input placeholder="Đội Khách" className="Input" />
-        </Form.Item>
+            <Form.Item
+              name="homeTeam"
+              rules={[
+                { required: true, message: "Vui lòng nhập tên đội nhà!" },
+              ]}
+            >
+              <Input  style={{width:"calc(200% + 55px)"}} placeholder="Đội nhà" className="Input" />
+            </Form.Item>
+          </div>
+          <input ref={homeTeamRef} type="file" onChange={handleChangeFile(1)} style={{display:"none"}}  />
+          <Avatar onClick={() => homeTeamRef.current.click()} size={30} style={{marginTop:15,marginLeft:70,width:60,height:50,cursor:"pointer"}} src={imageHomeTeam} />
+        </div>
+        <div style={{width:"calc(50% + 55px)"}} className="flex-start">
+          <div style={{width:"100%"}}>
+            <div className="inputLabel">Đội khách</div>
+
+            <Form.Item
+              name="awayTeam"
+              rules={[
+                { required: true, message: "Vui lòng nhập tên đội khách!" },
+              ]}
+            >
+              <Input  style={{width:"calc(200% + 55px)"}} placeholder="Đội Khách" className="Input" />
+            </Form.Item>
+          </div>
+          <input ref={awayRef} type="file" onChange={handleChangeFile(2)} style={{display:"none"}}  />
+
+          <Avatar onClick={() => awayRef.current.click()} size={30} style={{marginTop:15,marginLeft:70,width:60,height:50,cursor:"pointer"}} src={imageAwayTeam} />
+        </div>
         <div className="inputLabel">Ngày giờ thi đấu</div>
         <Form.Item
           name="dateTime"
@@ -222,7 +267,7 @@ const AddMatchForm = () => {
             </div>
           </>
         )}
-         <div className="inputLabel">Tổng số vé</div>
+        <div className="inputLabel">Tổng số vé</div>
         <Form.Item
           name="numberOfTicket"
           rules={[{ required: true, message: "Vui lòng nhập tổng số vé!" }]}
