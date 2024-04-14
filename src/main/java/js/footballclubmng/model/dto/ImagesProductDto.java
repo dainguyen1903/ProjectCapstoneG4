@@ -13,7 +13,4 @@ public class ImagesProductDto {
 
     private String path;
 
-    private Long playerId;
-
-    private String playerName;
 }

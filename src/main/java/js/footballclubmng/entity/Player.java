@@ -16,9 +16,9 @@ import java.util.List;
 @Entity(name = "player")
 public class Player {
     @Id
-    @Column(name = "player_id")
+    @Column(name = "player_number")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long playerNumber;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -32,11 +32,17 @@ public class Player {
     @Column(name = "weight")
     private Integer weight;
 
+    @Column(name = "image_avatar")
+    private String imageAvatar;
+
+    @Column(name = "image_first_jersey")
+    private String imageFirstJersey;
+
+    @Column(name = "image_second_jersey")
+    private String imageSecondJersey;
+
     @Column(name = "nationality")
     private String nationality;
-
-    @Column(name = "image_url")
-    private String imageUrl;
 
     @Column(name = "position")
     private String position;
@@ -47,15 +53,10 @@ public class Player {
     @Column(name = "join_date")
     private Date joinDate;
 
-    @Column(name = "player_number")
-    private Integer numberPlayer;
-
     @Column(name = "status")
     private Boolean status;
 
 
-    @OneToMany(mappedBy = "player", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<ImagesProduct> imagesProductList;
 }
 
 

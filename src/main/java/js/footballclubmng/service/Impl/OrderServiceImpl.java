@@ -88,6 +88,7 @@ public class OrderServiceImpl implements OrderService {
         order.setShippingId(shipping.getId());
         order.setUserId(user.getId());
         order.setOrderDate(LocalDateTime.now());
+        order.setPaymentMethod(createOrderRequest.getPaymentMethod());
         order.setStatus(EOrderStatus.PENDING);
 
         // Lưu Order vào cơ sở dữ liệu để có ID

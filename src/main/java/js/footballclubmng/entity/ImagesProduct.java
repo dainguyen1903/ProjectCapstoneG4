@@ -25,16 +25,9 @@ public class ImagesProduct {
     @Column(name = "product_id", nullable = false)
     private Long productId;
 
-    @Column(name = "player_id")
-    private Long playerId;
-
     @ManyToOne
     @JoinColumn(name = "product_id", insertable = false, updatable = false)
     @JsonIgnore
     private Product product;
 
-    @ManyToOne
-    @JoinColumn(name = "player_id", insertable = false, updatable = false)
-    @JsonIgnore
-    private Player player;
 }

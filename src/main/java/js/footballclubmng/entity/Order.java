@@ -30,6 +30,9 @@ public class Order {
     @Column(name = "status")
     private EOrderStatus status;
 
+    @Column(name = "payment_method")
+    private String paymentMethod;
+
     @Column(name = "user_id")
     private Long userId;
 

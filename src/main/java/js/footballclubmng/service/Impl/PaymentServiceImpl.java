@@ -40,7 +40,6 @@ public class PaymentServiceImpl implements PaymentService {
 
         Order order = orderRepository.findByIdAndUserId(request.getOrderId(), user.getId());
 
-        String vnp_TxnRef = VNPayConfig.getRandomNumber(8);
 
         String vnp_TmnCode = VNPayConfig.vnp_TmnCode;
 
@@ -49,7 +48,7 @@ public class PaymentServiceImpl implements PaymentService {
 
 
         Map<String, String> VNPAYParams = VNPayConfig.buildParams();
-        VNPAYParams.put("vnp_TxnRef", vnp_TxnRef);
+        VNPAYParams.put("vnp_TxnRef", order.getId().toString());
         VNPAYParams.put("vnp_OrderInfo", "Thanh toán đơn hàng: " + order.getUser().getFirstName() + " " + order.getUser().getLastName()) ;
         VNPAYParams.put("vnp_Amount", String.valueOf(totalPrice));
         VNPAYParams.put("vnp_BankCode", "NCB");//NCB default

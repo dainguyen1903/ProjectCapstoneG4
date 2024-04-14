@@ -17,5 +17,5 @@ public interface ProductService {
     public boolean updateProduct(long id, CreateProductRequest createProductRequest);
     public boolean deleteProduct(long id);
     public List<ProductDto> searchProduct(String productName);
-    public List<String> getImagesByProductIdAndPlayerId(Long productId, Long playerId);
+
 }

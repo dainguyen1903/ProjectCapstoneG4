@@ -18,4 +18,6 @@ public class CreateOrderRequest {
 
     private ShippingRequest shipping;
 
+    private String paymentMethod;
+
 }

@@ -145,7 +145,6 @@ public class ProductServiceImpl implements ProductService {
         if (!CollectionUtils.isEmpty(existingImages)) {
             existingImages.forEach(e -> {
                 e.setProductId(null);
-                e.setPlayerId(null);
             });
             imagesProductRepository.saveAll(existingImages);
             imagesProductRepository.deleteAll(existingImages);
@@ -162,7 +161,6 @@ public class ProductServiceImpl implements ProductService {
                 ImagesProduct img = new ImagesProduct();
                 img.setProductId(productId);
                 img.setPath(i.getPath());
-                img.setPlayerId(i.getPlayerId());
                 saveImgs.add(img);
             });
             imagesProductRepository.saveAll(saveImgs);
@@ -189,9 +187,9 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
     }
 
-    public List<String> getImagesByProductIdAndPlayerId(Long productId, Long playerId) {
-        return imagesProductRepository.findAllByProductIdAndPlayerId(productId, playerId);
-    }
+//    public List<String> getImagesByProductIdAndPlayerId(Long productId, Long playerId) {
+//        return imagesProductRepository.findAllByProductIdAndPlayerId(productId, playerId);
+//    }
 
 
 }
