@@ -22,4 +22,6 @@ public interface PlayerRepository extends JpaRepository<Player,Long> {
 
     @Query(value = "select * from player p where p.status = true", nativeQuery = true)
     List<Player> viewAllPlayer();
+
+    Player findByPlayerNumber(Long playerNumber);
 }

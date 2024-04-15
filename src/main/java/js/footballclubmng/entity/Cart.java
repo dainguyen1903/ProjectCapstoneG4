@@ -19,11 +19,11 @@ public class Cart {
     @Column(name = "cart_id")
     private Long id;
 
-    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @OneToOne( fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
 
-    @OneToMany(mappedBy = "cart", fetch = FetchType.EAGER, cascade = CascadeType.MERGE,  orphanRemoval = true)
+    @OneToMany(mappedBy = "cart", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE,  orphanRemoval = true)
     private List<CartItem> cartItems;
 }

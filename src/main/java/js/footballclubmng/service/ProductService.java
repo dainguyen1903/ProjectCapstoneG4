@@ -11,11 +11,13 @@ import java.util.List;
 
 public interface ProductService {
     List<ProductDto> getAllProduct();
-    Product getProductById(long id);
+    Product getProductById(Long id);
     ProductDetailsDto getProductDetailsById(Long id);
     Product createProduct(CreateProductRequest createProductRequest);
-    public boolean updateProduct(long id, CreateProductRequest createProductRequest);
-    public boolean deleteProduct(long id);
+    public boolean updateProduct(Long id, CreateProductRequest createProductRequest);
+    public boolean deleteProduct(Long id);
     public List<ProductDto> searchProduct(String productName);
+
+    public String getImageProductByPlayer(Long productId, Long playerNumber);
 
 }

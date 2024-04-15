@@ -26,17 +26,16 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    @Autowired
-    private CategoryRepository categoryRepository;
 
     @Autowired
     private ImagesProductRepository imagesProductRepository;
 
     @Autowired
     private ProductSizeRepository productSizeRepository;
-
+    
     @Autowired
     private PlayerRepository playerRepository;
+
 
 
     public List<ProductDto> getAllProduct() {
@@ -56,6 +55,7 @@ public class ProductServiceImpl implements ProductService {
             List<ProductSize> productSizeList = productSizeRepository.findAllByProductId(id);
             product.setImagesProduct(imagesProductList);
             product.setProductSizes(productSizeList);
+            
 
             return MapperUtil.mapToProductDetailsDto(product, imagesProductList, productSizeList);
 
@@ -63,9 +63,22 @@ public class ProductServiceImpl implements ProductService {
 
         return null;
     }
+    
+    public String getImageProductByPlayer(Long productId, Long playerNumber) {
+        Product product = productRepository.findById(productId).orElse(null);
+        Player player = playerRepository.findByPlayerNumber(playerNumber);
+        String image = null;
+        if(product != null && player != null && product.getCategoryId() == 1) {
+            image = player.getImageFirstJersey();
+        }
+        if(product != null && player != null && product.getCategoryId() == 6) {
+            image = player.getImageSecondJersey();
+        }
+        return image;
+    }
 
     @Override
-    public Product getProductById(long id) {
+    public Product getProductById(Long id) {
         Product product = productRepository.findById(id).orElse(null);
         return product;
     }
@@ -92,7 +105,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public boolean updateProduct(long id, CreateProductRequest request) {
+    public boolean updateProduct(Long id, CreateProductRequest request) {
         try {
             Product existingProduct = productRepository.findById(id).orElse(null);
             BeanUtils.copyProperties(request, existingProduct);
@@ -169,7 +182,7 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public boolean deleteProduct(long id) {
+    public boolean deleteProduct(Long id) {
         try {
             Product products = productRepository.findById(id).orElse(null);
             products.setStatus(false);

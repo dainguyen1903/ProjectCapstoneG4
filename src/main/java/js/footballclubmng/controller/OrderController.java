@@ -39,15 +39,11 @@ public class OrderController {
 
     @PostMapping(CommonConstant.ORDER_API.CREATE_ORDER)
     public ResponseAPI<Order> createOrder(@RequestBody CreateOrderRequest createOrderRequest, @RequestHeader(name = "Authorization") String token) {
-        try {
-            // Gọi service để tạo đơn hàng
-            Order order = orderService.createOrder(createOrderRequest, token);
-            // Trả về kết quả thành công và đối tượng đơn hàng đã tạo
-            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.CREATE_ORDER_SUCCESS);
-        } catch (Exception e) {
-            // Trả về thông báo lỗi nếu có bất kỳ ngoại lệ nào xảy ra
+        Order order = orderService.createOrder(createOrderRequest, token);
+        if(order == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.CREATE_ORDER_FAIL);
         }
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.CREATE_ORDER_SUCCESS);
 
     }
 

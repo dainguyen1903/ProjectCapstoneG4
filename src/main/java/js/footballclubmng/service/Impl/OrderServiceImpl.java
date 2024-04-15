@@ -119,8 +119,6 @@ public class OrderServiceImpl implements OrderService {
 
         order = orderRepository.save(order);
 
-
-
         // Xóa cart sau khi tạo đơn hàng thành công
         cartService.deleteCartByToken(token);
 

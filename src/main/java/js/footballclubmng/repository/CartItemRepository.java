@@ -10,8 +10,8 @@ import java.util.List;
 
 @Repository
 public interface CartItemRepository extends JpaRepository<CartItem, Long> {
-    CartItem findByProductAndCartAndSizeAndPlayerNumberAndPlayerName(Product product, Cart cart, String size, Integer playerNumber, String playerName);
-
+    CartItem findByProductAndCartAndSize(Product product, Cart cart, String size);
+    CartItem findByProductAndCartAndSizeAndPlayerNumber(Product product, Cart cart, String size, Long playerNumber);
 
     List<CartItem> findAllByCart(Cart cart);
 

@@ -109,8 +109,7 @@ public class MapperUtil {
             listCartItemsResponse.setProduct(productDetailsDto);
             listCartItemsResponse.setQuantity(cartItem.getQuantity());
             listCartItemsResponse.setSize(cartItem.getSize());
-            listCartItemsResponse.setPlayerName(cartItem.getPlayerName());
-            listCartItemsResponse.setPlayerNumber(cartItem.getPlayerNumber());
+            listCartItemsResponse.setPlayer(cartItem.getPlayer());
 
             return listCartItemsResponse;
 

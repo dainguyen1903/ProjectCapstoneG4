@@ -39,7 +39,7 @@ public class ProductController {
     }
 
     @PutMapping(CommonConstant.PRODUCT_API.UPDATE_PRODUCT)
-    public ResponseAPI<Object> updateProduct(@PathVariable int id, @RequestBody @Valid CreateProductRequest createProductRequest) {
+    public ResponseAPI<Object> updateProduct(@PathVariable Long id, @RequestBody @Valid CreateProductRequest createProductRequest) {
         Product product = productService.getProductById(id);
         if(product==null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.NOT_FOUND_PRODUCT);
@@ -54,7 +54,7 @@ public class ProductController {
 
     @DeleteMapping(CommonConstant.PRODUCT_API.DELETE_PRODUCT)
     @PreAuthorize("hasRole('ROLE_Sale')")
-    public ResponseAPI<Object> deleteProduct(@PathVariable int id) {
+    public ResponseAPI<Object> deleteProduct(@PathVariable Long id) {
         Product productEntity = productService.getProductById(id);
         if (productEntity == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.NOT_FOUND_PRODUCT);
@@ -84,14 +84,14 @@ public class ProductController {
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, productList);
     }
 
-//    @GetMapping(CommonConstant.PRODUCT_API.GET_IMAGE_PRODUCT_BY_PLAYER)
-//    public ResponseAPI<List<String>> getImagesByProductIdAndPlayerId(@PathVariable Long productId, @PathVariable Long playerId) {
-//        List<String> images = productService.getImagesByProductIdAndPlayerId(productId, playerId);
-//        if (images.isEmpty()) {
-//            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.NOT_FOUND_PRODUCT);
-//        }
-//        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, images);
-//    }
+    @GetMapping(CommonConstant.PRODUCT_API.GET_IMAGE_PRODUCT_BY_PLAYER)
+    public ResponseAPI<String> getImagesByProductIdAndPlayerId(@PathVariable Long productId, @RequestParam Long playerNumber) {
+       String image = productService.getImageProductByPlayer(productId, playerNumber);
+       if (image.isEmpty()) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.NOT_FOUND_PRODUCT);
+       }
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, image);
+    }
 
 
 }

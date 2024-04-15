@@ -21,7 +21,7 @@ public class CartTicket {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "cartTicket", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "cartTicket", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<CartTicketItem> cartTicketItems;
 
 }
