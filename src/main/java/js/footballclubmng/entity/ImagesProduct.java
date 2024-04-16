@@ -25,7 +25,7 @@ public class ImagesProduct {
     @Column(name = "product_id", nullable = false)
     private Long productId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id", insertable = false, updatable = false)
     @JsonIgnore
     private Product product;

@@ -4,6 +4,7 @@ import js.footballclubmng.entity.*;
 import js.footballclubmng.model.dto.*;
 import js.footballclubmng.model.response.ListCartItemsResponse;
 import js.footballclubmng.model.response.ListCartTicketItemResponse;
+import js.footballclubmng.model.response.ListShippingResponse;
 import js.footballclubmng.repository.ImagesProductRepository;
 import js.footballclubmng.repository.ProductSizeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -147,6 +148,8 @@ public class MapperUtil {
         UserDto userDto = new UserDto();
         userDto.setId(user.getId());
         userDto.setEmail(user.getEmail());
+        userDto.setFirstName(user.getFirstName());
+        userDto.setLastName(user.getLastName());
         return userDto;
     }
 
@@ -158,8 +161,8 @@ public class MapperUtil {
         orderDto.setTotalPrice(order.getTotalPrice());
         orderDto.setOrderDate(order.getOrderDate());
         orderDto.setShipping(mapToShippingDto(order.getShipping()));
+        orderDto.setOrderStatus(order.getStatus());
 
-        orderDto.setStatus(order.getStatus());
 
         return orderDto;
     }
@@ -173,14 +176,15 @@ public class MapperUtil {
         shippingDto.setNote(shipping.getNote());
         shippingDto.setCreateAt(shipping.getCreateAt());
         shippingDto.setUpdatedAt(shipping.getUpdateAt());
-        shippingDto.setStatus(shipping.getStatus());
+        shippingDto.setShipperName(mapToUserDto(shipping.getShipper()));
+        shippingDto.setShipStatus(shipping.getStatus());
 
         return shippingDto;
     }
 
+
     public static List<OrderDetailDto> mapToOrderDetailDtoList(List<OrderDetail> orderDetailList) {
         List<OrderDetailDto> orderDetailDtoList = new ArrayList<>();
-
         for (OrderDetail orderDetail : orderDetailList) {
             OrderDetailDto orderDetailDto = new OrderDetailDto();
             orderDetailDto.setUnitPrice(orderDetail.getUnitPrice());
@@ -191,6 +195,24 @@ public class MapperUtil {
             orderDetailDtoList.add(orderDetailDto);
         }
         return orderDetailDtoList;
+    }
+
+    public static ListShippingResponse mapToShippingResponse(Shipping shipping) {
+        ListShippingResponse listShippingResponse = new ListShippingResponse();
+        listShippingResponse.setId(shipping.getId());
+        listShippingResponse.setShipName(shipping.getShipName());
+        listShippingResponse.setPhone(shipping.getPhone());
+        listShippingResponse.setAddress(shipping.getAddress());
+        listShippingResponse.setTotalPrice(shipping.getTotalPrice());
+        listShippingResponse.setNote(shipping.getNote());
+        listShippingResponse.setCreateAt(shipping.getCreateAt());
+        listShippingResponse.setUpdateAt(shipping.getUpdateAt());
+
+
+        if(shipping.getShipper() != null && shipping.getShipper().getAuthority().equals("Shipper")) {
+            listShippingResponse.setShipperName(mapToUserDto(shipping.getShipper()));
+        }
+        return listShippingResponse;
     }
 
 

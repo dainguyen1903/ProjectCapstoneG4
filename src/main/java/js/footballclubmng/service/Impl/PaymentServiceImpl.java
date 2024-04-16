@@ -65,8 +65,10 @@ public class PaymentServiceImpl implements PaymentService {
         // Tìm kiếm đơn hàng trong cơ sở dữ liệu bằng orderId
         Order order = orderRepository.findById(orderId).orElseThrow();
         if (isSuccess) {
+
             order.setStatus(EOrderStatus.IN_PROGRESS);
         } else {
+
             order.setStatus(EOrderStatus.FAILED);
         }
         orderRepository.save(order);

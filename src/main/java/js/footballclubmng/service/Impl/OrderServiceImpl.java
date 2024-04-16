@@ -74,6 +74,7 @@ public class OrderServiceImpl implements OrderService {
         shipping.setNote(shippingRequest.getNote());
         shipping.setCreateAt(LocalDateTime.now());
         shipping.setUpdateAt(LocalDateTime.now());
+        shipping.setShipperId(3L);
         shipping.setStatus(EShipStatus.PENDING);
 
         // Tính toán totalPrice
@@ -103,7 +104,7 @@ public class OrderServiceImpl implements OrderService {
             orderDetail.setQuantity(cartItem.getQuantity());
             orderDetail.setSize(cartItem.getSize());
             orderDetail.setUnitPrice(totalPrice);
-            orderDetail.setOrder(order);
+            orderDetail.setOrderId(order.getId());
             orderDetailList.add(orderDetail);
 
         }
@@ -125,6 +126,7 @@ public class OrderServiceImpl implements OrderService {
         return order;
     }
 
+
     private float calculateTotalPrice(List<CartItem> cartItems) {
         float totalPrice = 0.0f;
         for (CartItem cartItem : cartItems) {
@@ -137,5 +139,14 @@ public class OrderServiceImpl implements OrderService {
         }
         return totalPrice;
     }
+
+    @Override
+    public List<OrderDto> getOrderByUserId(Long userId) {
+        List<Order> listOrderByUser = orderRepository.findByUserId(userId);
+        return listOrderByUser.stream()
+                .map(MapperUtil::mapToOrderDto)
+                .collect(Collectors.toList());
+    }
+
 
 }

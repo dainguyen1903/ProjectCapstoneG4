@@ -187,6 +187,11 @@ public class CommonConstant {
 
         public static final String CREATE_PAYMENT_FAIL = "Tạo thanh toán thất bại";
 
+        public static final String ORDER_DETAILS_NOT_FOUND = "Không tìm thấy danh mục đơn hàng";
+
+        //Message shipping
+        public static final String ASSIGN_TO_SHIPPER = "Đã cập nhật shipper cho đơn hàng";
+
 
 
     }
@@ -276,9 +281,13 @@ public class CommonConstant {
 
         public static final String LIST_ORDER = HEAD_API + ORDER + "/list-order";
 
-        public static final String VIEW_ORDER_DETAILS = HEAD_API + ORDER_DETAIL + "/{id}";
+        public static final String VIEW_ORDER_DETAILS = HEAD_API + ORDER_DETAIL + "/{orderId}";
 
         public static final String CREATE_ORDER = HEAD_API + ORDER + "/create-order";
+
+        public static final String ASSIGN_SHIPPER = HEAD_API + ORDER + "/assign-shipper";
+
+        public static final String LIST_ORDER_BY_USER = HEAD_API + ORDER + "/list-order-by-user/{userId}";
 
 
     }
@@ -289,6 +298,14 @@ public class CommonConstant {
         public static final String CREATE_PAYMENT = HEAD_API + PAYMENT + "/create-payment";
 
         public static final String TRANSACTION_PAYMENT = HEAD_API + PAYMENT + "/transaction-payment";
+    }
+
+    public static class SHIP_API {
+        public static final String SHIP = "/ship";
+
+        public static final String LIST_SHIP = HEAD_API + SHIP + "/list-shipping";
+
+        public static final String LIST_SHIP_BY_SHIPPER = HEAD_API + SHIP + "/list-shipping-shipper/{shipperId}";
     }
     public static class CART_API {
         public static final String CART = "/cart";

@@ -9,9 +9,9 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class OrderDetailDto {
-
+    private ProductDto product;
     private float unitPrice;
     private int quantity;
     private String size;
-    private ProductDto product;
+
 }

@@ -24,8 +24,7 @@ public class OrderDto {
 
     private ShippingDto shipping;
 
-    private EOrderStatus status;
-
+    private EOrderStatus orderStatus;
 
 
 }

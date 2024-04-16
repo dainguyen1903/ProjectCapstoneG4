@@ -12,4 +12,6 @@ public interface OrderService {
 
     public Order createOrder(CreateOrderRequest createOrderRequest, String token);
 
+    public List<OrderDto> getOrderByUserId(Long userId);
+
 }

@@ -7,10 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserDto {
+public class ShipStatusDto {
     private Long id;
-    private String email;
-    private String firstName;
-    private String lastName;
-
+    private String shipStatusName;
 }
