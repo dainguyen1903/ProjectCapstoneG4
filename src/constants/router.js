@@ -31,6 +31,7 @@ import AddMatchForm from "../page/match/add";
 import ListMatch from "../page/match/list";
 import NewsCategoryList from "../page/news-category/list";
 import NewsCategoryAdd from "../page/news-category/add";
+import OrderList from "../page/order/list";
 export const router = [
   {
     show: true,
@@ -150,6 +151,16 @@ export const router = [
         role: [ROLE.SALE],
       },
     ]
+  },
+  {
+show:true,
+key:"/order",
+path:"/order",
+icon:MenuFoldOutlined,
+menuName:"Danh sách order",
+role: [ROLE.SALE],
+component: OrderList,
+
   },
   {
     show: true,

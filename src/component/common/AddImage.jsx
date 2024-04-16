@@ -14,7 +14,7 @@ const AddImage = ({ click = () => {}, url, txt = "Thêm ảnh" }) => {
         style={{
           marginBottom: 20,
         }}
-        size={150}
+        size={120}
         src={url}
       />
       <Button onClick={() => click()}>{txt}</Button>

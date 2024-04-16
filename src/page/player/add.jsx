@@ -25,10 +25,16 @@ const AddPlayerForm = () => {
   const { id } = useParams();
   const [url, setUrl] = useState(null);
   const [imageName, setImageName] = useState("");
+  const [imageFirstJersey,setImageFirstJerseyset] = useState();
+  const [imageSecondJersey,setIimageSecondJersey] = useState()
   const players = usePlayerStore((state) => state.players);
   const detail = players.find((i) => i.id == id) || {};
   const [loading, setLoading] = useState(false);
   const fileRef = useRef();
+  const imageFirstRef = useRef()
+  const imageSecondRef = useRef()
+
+
   const navigate = useNavigate();
   // Confirm save
   const confirmSave = (value) => {
@@ -38,7 +44,9 @@ const AddPlayerForm = () => {
     dataPosst.dateOfBirth = moment(birdday).format("YYYY-MM-DD");
     dataPosst.joinDate = moment(joinday).format("YYYY-MM-DD");
     // dataPosst.image_name = imageName;
-    dataPosst.imageUrl = url;
+    dataPosst.imageAvatar = url;
+    dataPosst.imageFirstJersey=imageFirstJersey;
+    dataPosst.imageSecondJersey = imageSecondJersey
 
     Modal.confirm({
       title: "Xác nhận",
@@ -67,6 +75,23 @@ const AddPlayerForm = () => {
     };
     reader.readAsDataURL(file);
   };
+  const handleChangeFileImageFirst = (e) => {
+    let file = e.target.files[0];
+    let reader = new FileReader();
+    reader.onloadend = function () {
+      setImageFirstJerseyset(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
+  const handleChangeFileImageSecond = (e) => {
+    let file = e.target.files[0];
+    let reader = new FileReader();
+    reader.onloadend = function () {
+     
+      setIimageSecondJersey(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
 
   // get dettail
   const getDetailPlayer = async () => {
@@ -74,6 +99,8 @@ const AddPlayerForm = () => {
     const res = await playerApi.getDetailPlayer(id);
     const dataDetail = res.data.data;
     const imgName = detail.image_name;
+    setImageFirstJerseyset(dataDetail.imageFirstJersey);
+    setIimageSecondJersey(dataDetail.imageSecondJersey)
     setImageName(imgName);
     dataDetail.joinDate = dataDetail.joinDate
       ? moment(dataDetail.joinDate)
@@ -81,8 +108,8 @@ const AddPlayerForm = () => {
     dataDetail.dateOfBirth = dataDetail.dateOfBirth
       ? moment(dataDetail.dateOfBirth)
       : null;
-    setUrl(dataDetail.imageUrl);
-    dataDetail.imageUrl = imgName;
+    setUrl(dataDetail.imageAvatar);
+    dataDetail.imageAvatar = imgName;
     delete dataDetail.image_name;
     console.log(dataDetail);
     form.setFieldsValue(dataDetail);
@@ -187,19 +214,39 @@ const AddPlayerForm = () => {
               </Form.Item>
               <div className="inputLabel">Số áo</div>
               <Form.Item
-                name="numberPlayer"
+                name="playerNumber"
                 rules={[{ required: true, message: "Vui lòng nhập số áo!" }]}
               >
                 <Input placeholder="Số áo" type="text" className="Input" />
               </Form.Item>
 
-              <Form.Item name="imageUrl">
+              <Form.Item name="imageAvatar">
                 <input
                   style={{
                     display: "none",
                   }}
                   ref={fileRef}
                   onChange={handleChangeFile}
+                  placeholder="Ảnh"
+                  type="file"
+                  className="Input"
+                />
+                <input
+                  style={{
+                    display: "none",
+                  }}
+                  ref={imageFirstRef}
+                  onChange={handleChangeFileImageFirst}
+                  placeholder="Ảnh"
+                  type="file"
+                  className="Input"
+                />
+                <input
+                  style={{
+                    display: "none",
+                  }}
+                  ref={imageSecondRef}
+                  onChange={handleChangeFileImageSecond}
                   placeholder="Ảnh"
                   type="file"
                   className="Input"
@@ -218,7 +265,22 @@ const AddPlayerForm = () => {
             </Form>
           </Col>
           <Col span={12}>
-            <AddImage url={url} click={() => fileRef.current.click()} />
+            <Row>
+              <Col span={8}>
+              <AddImage txt={" + Ảnh cầu thủ"} url={url} click={() => fileRef.current.click()} />
+
+              </Col>
+              <Col span={8}>
+              <AddImage  txt={" + Ảnh áo sân nhà"} url={imageFirstJersey} click={() => imageFirstRef.current.click()} />
+
+              </Col>
+              <Col span={8}>
+              <AddImage  txt={" + Ảnh áo sân khách"} url={imageSecondJersey} click={() => imageSecondRef.current.click()} />
+
+              </Col>
+            </Row>
+           
+
           </Col>
         </Row>
         <LoadingFull show={loading} />

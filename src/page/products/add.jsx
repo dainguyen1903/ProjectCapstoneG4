@@ -90,7 +90,6 @@ const AddProduct = () => {
           return {
             path: i.image,
 
-            playerId: id,
           };
         });
 
@@ -184,9 +183,9 @@ const AddProduct = () => {
       title: (
         <>
           {" "}
-          {!isCustom && (
+         
             <Button
-              disabled={isCustom && dataImage.length === listPlayer.length}
+            
               onClick={() =>
                 setDataImage([
                   ...dataImage,
@@ -204,7 +203,7 @@ const AddProduct = () => {
             >
               <PlusOutlined />
             </Button>
-          )}
+          
           Ảnh sản phẩm
         </>
       ),
@@ -254,67 +253,7 @@ const AddProduct = () => {
       },
     },
   ];
-  if (isCustom) {
-    columnImage = [
-      {
-        title: (
-          <>
-            {" "}
-            {isCustom && (
-              <Button
-                disabled={isCustom && dataImage.length === listPlayer.length}
-                onClick={() =>
-                  setDataImage([
-                    ...dataImage,
-                    {
-                      id: Date.now(),
-                      image: "",
-                      playerId: "",
-                    },
-                  ])
-                }
-                size="small"
-                style={{
-                  marginRight: 20,
-                }}
-              >
-                <PlusOutlined />
-              </Button>
-            )}
-            Tên cầu thủ và số áo
-          </>
-        ),
-        dataIndex: "playerName",
-        align: "start",
-        render: (value, row) => {
-          return (
-            <Select
-              onChange={(v) => {
-                const index = dataImage.findIndex((i) => i.id === row.id);
-                if (index >= 0) {
-                  const newDataImage = [...dataImage];
-                  dataImage[index].playerId = v;
-                  setDataImage(newDataImage);
-                }
-              }}
-              value={row.playerId}
-              style={{ width: "100%" }}
-            >
-              {listPlayer?.map((i) => (
-                <Option
-                  disabled={dataImage?.map((i) => i.playerId).includes(i.id)}
-                  value={i.id}
-                >
-                  {i.numberPlayer + "." + i.name}
-                </Option>
-              ))}
-            </Select>
-          );
-        },
-      },
-      ...columnImage,
-    ];
-  }
+ 
   useEffect(() => {
     if (isCustom) {
       setInitDataImage(listPlayer);
@@ -332,22 +271,22 @@ const AddProduct = () => {
     }));
     setDataImage(dataImage);
   };
-  // list player
-  const getListPlayer = async () => {
-    const res = await playerApi.searchPlayer({ query: "" });
-    console.log(res);
-    const status = res.data.status;
-    if (status === 200 || status === 204) {
-      const list = res.data.data || [];
-      setListPlayer(list);
-      if (!id) {
-        setInitDataImage(list);
-      }
-    }
-  };
-  useEffect(() => {
-    getListPlayer();
-  }, []);
+  // // list player
+  // const getListPlayer = async () => {
+  //   const res = await playerApi.searchPlayer({ query: "" });
+  //   console.log(res);
+  //   const status = res.data.status;
+  //   if (status === 200 || status === 204) {
+  //     const list = res.data.data || [];
+  //     setListPlayer(list);
+  //     if (!id) {
+  //       setInitDataImage(list);
+  //     }
+  //   }
+  // };
+  // useEffect(() => {
+  //   getListPlayer();
+  // }, []);
   return (
     <Card style={{}}>
       <h2 style={{ marginBottom: 10 }}>
@@ -481,14 +420,14 @@ const AddProduct = () => {
               })}
             </div>
             <Form.Item>
-              <div>
+              {/* <div>
                 <Checkbox
                   checked={isCustom}
                   onChange={(e) => setIsCustom(e.target.checked)}
                 >
                   Sản phẩm gắn liền với cầu thủ
                 </Checkbox>
-              </div>
+              </div> */}
               <button
                 style={{
                   marginTop: 15,
