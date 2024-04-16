@@ -1,5 +1,6 @@
 package js.footballclubmng.service.Impl;
 
+import js.footballclubmng.common.CommonConstant;
 import js.footballclubmng.common.MapperUtil;
 import js.footballclubmng.config.TokenProvider;
 import js.footballclubmng.entity.*;
@@ -10,6 +11,7 @@ import js.footballclubmng.model.dto.OrderDto;
 import js.footballclubmng.model.dto.ShippingDto;
 import js.footballclubmng.model.request.order.CreateOrderRequest;
 import js.footballclubmng.model.request.shipping.ShippingRequest;
+import js.footballclubmng.model.response.ResponseAPI;
 import js.footballclubmng.repository.*;
 import js.footballclubmng.service.CartService;
 import js.footballclubmng.service.OrderService;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import static js.footballclubmng.common.MapperUtil.mapToOrderDto;
@@ -64,6 +67,9 @@ public class OrderServiceImpl implements OrderService {
 
         // Lấy danh sách CartItem của người dùng từ cart
         List<CartItem> cartItems = cart.getCartItems();
+        if(cart == null || cart.getCartItems() == null || cart.getCartItems().isEmpty()) {
+            return null;
+        }
 
         //Tạo shipping từ orderRequest
         ShippingRequest shippingRequest = createOrderRequest.getShipping();

@@ -16,8 +16,11 @@ import java.util.List;
 @Entity(name = "player")
 public class Player {
     @Id
-    @Column(name = "player_number")
+    @Column(name = "player_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "player_number")
     private Long playerNumber;
 
     @Column(name = "name", nullable = false)

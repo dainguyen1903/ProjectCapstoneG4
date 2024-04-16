@@ -44,10 +44,10 @@ public class OrderController {
     @PostMapping(CommonConstant.ORDER_API.CREATE_ORDER)
     public ResponseAPI<Long> createOrder(@RequestBody CreateOrderRequest createOrderRequest, @RequestHeader(name = "Authorization") String token) {
         Order order = orderService.createOrder(createOrderRequest, token);
-        Long orderId = order.getId();
         if(order == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.CREATE_ORDER_FAIL);
         }
+        Long orderId = order.getId();
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.CREATE_ORDER_SUCCESS, orderId);
 
     }
