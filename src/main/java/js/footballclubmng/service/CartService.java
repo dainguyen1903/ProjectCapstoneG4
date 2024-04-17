@@ -8,18 +8,16 @@ import js.footballclubmng.model.response.ListCartItemsResponse;
 import java.util.List;
 
 public interface CartService {
-    public boolean  addCartItemToCart(String token, long productId, String size, int quantity);
-    public boolean customiseAddCartItemToCart(String token, long productId, CustomiseProductRequest customiseProductRequest);
-    public boolean removeCartItemFromCart(long cartItemId);
+    public boolean  addCartItemToCart(String token, Long productId, String size, int quantity);
+    public boolean customiseAddCartItemToCart(String token, Long productId, CustomiseProductRequest customiseProductRequest);
+    public boolean removeCartItemFromCart(Long cartItemId);
     public List<ListCartItemsResponse> ViewCart(String token);
-    public boolean updateQuantityCartItem(long cartItemId, int quantity);
-    public CartItem getCartItemById(long cartItemId);
+    public boolean updateQuantityCartItem(Long cartItemId, int quantity);
+    public CartItem getCartItemById(Long cartItemId);
 
     public boolean checkQuantity(Long productId,String size);
     public boolean checkQuantityInStock(Long productId, String size, int quantity);
     public boolean checkQuantityCartItems(String token, Long productId, String size, int quantity);
-
-    public boolean customiseAddCartItemToCart(String token, long productId, CustomiseProductRequest customiseProductRequest);
 
     public void deleteCartByToken(String token);
 

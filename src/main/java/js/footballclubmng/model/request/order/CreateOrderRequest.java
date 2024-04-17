@@ -17,6 +17,7 @@ import java.util.List;
 public class CreateOrderRequest {
 
     private ShippingRequest shipping;
-    private List<OrderDetail> orderDetails;
+
+    private String paymentMethod;
 
 }

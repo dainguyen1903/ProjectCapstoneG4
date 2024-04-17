@@ -32,6 +32,6 @@ public class TicketOrder {
     @Column(name = "total_price")
     private double totalPrice;
 
-    @OneToMany(mappedBy = "ticketOrders", fetch = FetchType.EAGER)
-    private List<TicketOrderDetail> ticketOrderDetail;
+//    @OneToMany(mappedBy = "ticketOrders", fetch = FetchType.EAGER)
+//    private List<TicketOrderDetail> ticketOrderDetail;
 }

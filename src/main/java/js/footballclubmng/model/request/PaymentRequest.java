@@ -1,4 +1,4 @@
-package js.footballclubmng.model.request.shipping;
+package js.footballclubmng.model.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,10 +11,7 @@ import javax.validation.constraints.NotBlank;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ShippingRequest {
-
-    private String shipName;
-    private String phone;
-    private String address;
-    private String note;
+public class PaymentRequest {
+    @NotBlank(message = "Id không được bỏ trống")
+    private Long orderId;
 }

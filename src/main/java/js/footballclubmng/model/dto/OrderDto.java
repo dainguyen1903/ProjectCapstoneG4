@@ -14,19 +14,17 @@ import java.util.List;
 @Builder
 public class OrderDto {
 
-    private String id;
+    private Long id;
 
     private float totalPrice;
 
     private LocalDateTime orderDate;
 
-    private User user;
+    private UserDto user;
 
     private ShippingDto shipping;
 
-    private EOrderStatus status;
-
-    private List<OrderDetailDto> orderDetailList;
+    private EOrderStatus orderStatus;
 
 
 }

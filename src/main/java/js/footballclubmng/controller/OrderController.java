@@ -3,6 +3,8 @@ package js.footballclubmng.controller;
 import js.footballclubmng.common.CommonConstant;
 import js.footballclubmng.entity.Order;
 import js.footballclubmng.entity.Product;
+import js.footballclubmng.model.dto.OrderDetailDto;
+import js.footballclubmng.model.dto.OrderDto;
 import js.footballclubmng.model.request.order.CreateOrderRequest;
 import js.footballclubmng.model.response.ResponseAPI;
 import js.footballclubmng.repository.OrderRepository;
@@ -24,29 +26,39 @@ public class OrderController {
     OrderDetailService orderDetailService;
     @GetMapping(CommonConstant.ORDER_API.LIST_ORDER)
     @PreAuthorize("hasRole('ROLE_Sale')")
-    public ResponseAPI<List<Order>> listProduct() {
-        List<Order> list = orderService.getAllOrder();
+    public ResponseAPI<List<OrderDto>> listOrder() {
+        List<OrderDto> list = orderService.getAllOrder();
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, list);
     }
 
     @GetMapping(CommonConstant.ORDER_API.VIEW_ORDER_DETAILS)
-    @PreAuthorize("hasRole('ROLE_Sale')")
-    public ResponseAPI<Order> viewOrderDetails(@PathVariable Long id) {
-        Order order = orderDetailService.getOrderById(id);
-        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, order);
+    public ResponseAPI<List<OrderDetailDto>> viewOrderDetails(@PathVariable Long orderId) {
+        List<OrderDetailDto> orderDetailDtoList = orderDetailService.getOrderDetailsByOrderId(orderId);
+        if (orderDetailDtoList.isEmpty()) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_FOUND, CommonConstant.COMMON_MESSAGE.ORDER_DETAILS_NOT_FOUND);
+        }
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, orderDetailDtoList);
     }
+
 
     @PostMapping(CommonConstant.ORDER_API.CREATE_ORDER)
-    public ResponseAPI<Order> createOrder(@RequestBody CreateOrderRequest createOrderRequest, @RequestHeader(name = "Authorization") String token) {
-        try {
-            // Gọi service để tạo đơn hàng
-            Order order = orderService.createOrder(createOrderRequest, token);
-            // Trả về kết quả thành công và đối tượng đơn hàng đã tạo
-            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.CREATE_ORDER_SUCCESS);
-        } catch (Exception e) {
-            // Trả về thông báo lỗi nếu có bất kỳ ngoại lệ nào xảy ra
+    public ResponseAPI<Long> createOrder(@RequestBody CreateOrderRequest createOrderRequest, @RequestHeader(name = "Authorization") String token) {
+        Order order = orderService.createOrder(createOrderRequest, token);
+        if(order == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.CREATE_ORDER_FAIL);
         }
+        Long orderId = order.getId();
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.CREATE_ORDER_SUCCESS, orderId);
 
     }
+
+    @GetMapping(CommonConstant.ORDER_API.LIST_ORDER_BY_USER)
+    public ResponseAPI<List<OrderDto>> listOrderByUser(@PathVariable Long userId) {
+        List<OrderDto> list = orderService.getOrderByUserId(userId);
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, list);
+    }
+
+
+
+
 }

@@ -1,7 +1,10 @@
 package js.footballclubmng.service.Impl;
 
+import js.footballclubmng.common.MapperUtil;
 import js.footballclubmng.entity.Order;
 import js.footballclubmng.entity.OrderDetail;
+import js.footballclubmng.model.dto.OrderDetailDto;
+import js.footballclubmng.repository.OrderDetailRepository;
 import js.footballclubmng.repository.OrderRepository;
 import js.footballclubmng.service.OrderDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +16,12 @@ import java.util.List;
 public class OrderDetailImpl implements OrderDetailService {
     @Autowired
     OrderRepository orderRepository;
+
+    @Autowired
+    OrderDetailRepository orderDetailRepository;
     @Override
-    public Order getOrderById(Long orderId) {
-        Order order = orderRepository.findById(orderId).orElse(null);
-        return order;
-
+    public List<OrderDetailDto> getOrderDetailsByOrderId(Long orderId) {
+        List<OrderDetail> orderDetailList = orderDetailRepository.findByOrderId(orderId);
+        return MapperUtil.mapToOrderDetailDtoList(orderDetailList);
     }
-
-
 }

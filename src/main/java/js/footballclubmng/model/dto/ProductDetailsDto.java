@@ -29,6 +29,8 @@ public class ProductDetailsDto {
 
     private List<ProductSizeDto> productSizeDtoList;
 
+
+
     public ProductDetailsDto(Long id, String productName, float price, float discount, String description, Boolean status, Boolean isCustomise, CategoryDto category, List<ImagesProductDto> imagesProductDtoList, List<ProductSizeDto> productSizeDtoList) {
         this.id = id;
         this.productName = productName;

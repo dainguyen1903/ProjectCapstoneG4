@@ -20,6 +20,9 @@ public class Shipping {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "shipper_id")
+    private Long shipperId;
+
     @Column(name = "name")
     private String shipName;
 
@@ -44,6 +47,12 @@ public class Shipping {
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private EShipStatus status;
+
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "shipper_id",  insertable = false, updatable = false)
+    private User shipper;
+
 
 
 }

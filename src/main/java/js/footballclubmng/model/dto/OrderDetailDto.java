@@ -1,5 +1,6 @@
 package js.footballclubmng.model.dto;
 
+import js.footballclubmng.entity.Product;
 import lombok.*;
 
 @Getter
@@ -8,10 +9,9 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class OrderDetailDto {
-
-    private Long id;
+    private ProductDto product;
     private float unitPrice;
     private int quantity;
     private String size;
-    private Long productId; // ID của sản phẩm liên quan đến chi tiết đơn hàng
+
 }

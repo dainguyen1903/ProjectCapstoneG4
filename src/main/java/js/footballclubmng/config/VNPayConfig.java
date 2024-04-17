@@ -1,23 +1,26 @@
 package js.footballclubmng.config;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 public class VNPayConfig {
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_TmnCode = "SXDYXC4P";
-    public static String secretKey = "NWTBJXFIUACIDHGEISQGINANRCJNSGJV";
-    public static String vnp_ReturnUrl = "";
+    public static String vnp_ReturnUrl = "http://localhost:8080/api/payment/transaction-payment";
+    public static String vnp_TmnCode = "23FKKV0F";
     public static String vnp_Version = "2.1.0";
     public static String vnp_Command = "pay";
     public static String orderType = "other";
+    public static String secretKey = "QMUCFVXCJDUQBMCYCLEJHPHMMACKWNSQ";
+    public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
 
-    //Util for VNPAY
     public static String hashAllFields(Map<String, String> fields) {
         List<String> fieldNames = new ArrayList<>(fields.keySet());
         Collections.sort(fieldNames);

@@ -9,9 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ListPlayerResponse {
-    private Long playerNumber;
-    private String name;
-    private String nationality;
-    private String position;
+public class PaymentResponse {
+    private String status;
+    private String message;
+    private String paymentUrl;
 }

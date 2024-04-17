@@ -1,5 +1,6 @@
 package js.footballclubmng.model.response;
 
+import js.footballclubmng.model.dto.ProductDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,9 +10,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ListPlayerResponse {
-    private Long playerNumber;
-    private String name;
-    private String nationality;
-    private String position;
+public class OrderDetailResponse {
+    private ProductDto productDto;
+    private float unitPrice;
+    private String size;
+    private int quantity;
 }

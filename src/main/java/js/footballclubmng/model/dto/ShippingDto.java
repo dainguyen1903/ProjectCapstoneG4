@@ -18,6 +18,7 @@ public class ShippingDto {
     private String note;
     private LocalDateTime createAt;
     private LocalDateTime updatedAt;
-    private EShipStatus status;
+    private UserDto shipperName;
+    private EShipStatus shipStatus;
 
 }
