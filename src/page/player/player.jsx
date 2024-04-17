@@ -51,7 +51,7 @@ const ManagePlayer = () => {
       dataIndex: "name",
       key: "name",
       render: (value, row) => (
-        <Link to={`/player/detail/` + row.playerNumber}>{value}</Link>
+        <Link to={`/player/detail/` + row.id}>{value}</Link>
       ),
     },
     {
@@ -68,7 +68,7 @@ const ManagePlayer = () => {
       render: (text, record) => (
         <Space size="middle">
           <Space size="middle">
-            <Button onClick={() => navigate("/player/edit/" + record.playerNumber)}>
+            <Button onClick={() => navigate("/player/edit/" + record.id)}>
               <EditOutlined style={{ fontSize: "16px" }} />
             </Button>
             <Button onClick={() => handleDelete(record.id)}>
