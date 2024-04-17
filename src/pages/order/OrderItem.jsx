@@ -52,7 +52,7 @@ const OrderItem = ({ item }) => {
       <div style={{
         textAlign:"end",
         padding:"20px 0",
-        fontSize:20,
+        fontSize:18,
         fontWeight:"bold"
       }}>
        Thành tiền : <span  style={{
