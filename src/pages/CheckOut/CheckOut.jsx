@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./../CartPage/CartPage.scss";
 import { useSelector, useDispatch } from "react-redux";
 import { shopping_cart } from "../../utils/images";
@@ -11,29 +11,98 @@ import {
   clearCart,
   getCartTotal,
 } from "../../store/cartSlice";
+import CartPage from "../CartPage/CartPage";
+import { orrderApi } from "../../api/order.api";
+import { Button, Input, Modal } from "antd";
+import ModalInfoShip from "./ModalInfoShip";
+import { set } from "date-fns";
+import { EditOutlined } from '@ant-design/icons';
+import { paymentApi } from "../../api/payment.api.";
 
 const CheckOutPage = () => {
+ const {currentUser} = useSelector(state => state.auth);
+ console.log(currentUser)
+  const [visible,setVisiable] = useState(false);
+  const [shipData,setShipData] = useState({
+    receiverName:currentUser?.fullname || "",
+    receiverPhone:"",
+    receiverAddress:currentUser?.address||"",
+    note:"",
+  })
+
+  useEffect(() => {
+  setShipData({
+    ...shipData,
+    receiverName:currentUser?.fullname || "",
+    receiverAddress:currentUser?.address||"",
+  })
+  },[currentUser])
+
   const paymentMethods = [
     {
       id: 1,
-      name: "Thanhh toán khi nhận hàng",
+      name: "Thanh toán VNPAY",
     },
     {
       id: 2,
-      name: "Ví momo",
+      name: "Thanhh toán khi nhận hàng",
+
     },
   ];
   const dispatch = useDispatch();
-  const orders = useSelector(getAllCarts).filter((i) => i.isOrder);
-  const { itemsCount, totalAmount } = useSelector((state) => state.cart);
+  const orders = useSelector(getAllCarts)
   const [method,setMethod] = useState(1)
-  const total = orders.reduce((cartTotal, cartItem) => {
-    return (cartTotal += cartItem.totalPrice);
-  }, 0);
-  if (orders.length === 0) {
-    return <Navigate to={"/cart"} />;
-  }
 
+  
+  const totalAmount = orders.reduce((total, cart) => {
+    const product = cart?.product || {};
+    const price = product?.price || 0;
+    const discount = product?.discount || 0;
+    const excatPrice = Math.ceil(price - (price / 100) * discount);
+    const totalPrice = excatPrice * cart.quantity;
+    return total + totalPrice;
+  }, 0);
+
+  // 
+  const onClose = () => setVisiable(false)
+  // ADD ORDER
+  const handleAddOrder = async()=>{
+    try {
+      const dataPost = {
+        shipping:{
+          shipName:shipData.receiverName,
+          phone:shipData.receiverPhone,
+          note:shipData.note,
+          address:shipData.receiverAddress
+        },
+        paymentMethod:"Thanh toán vnpay"
+      }
+      const res = await orrderApi.addOrder(dataPost)
+      if(res.data.status === 200 ||res.data.status === 204 ){
+        const orderId = res.data.data;
+        const pay = await paymentApi.createpayment({orderId})
+        const url = pay?.data?.data?.paymentUrl;
+        if(url){
+          window.location.href = url;
+        }
+      }
+      else{
+        Modal.error({
+          title:"Lỗi",
+          content:"Thanh toán thất bại",
+          centered:true
+        })
+      }
+
+    } catch (error) {
+      Modal.error({
+        title:"Lỗi",
+        content:"Thanh toán thất bại",
+        centered:true
+      })
+      console.log(error)
+    }
+  }
   return (
     <div className="cart bg-whitesmoke">
       <div className="container">
@@ -45,83 +114,32 @@ const CheckOutPage = () => {
             className="cart-chead bg-white"
           >
             <div className="fw-6">Địa chỉ nhận hàng</div>
+            <div style={{
+              display:"flex",
+              justifyContent:'space-between',
+              alignItems:"center"
+            }}>
             <div>
-              Kim Anh (+84) 348638763 7 Ngách 38 - Ngõ 20 Hồ Tùng Mạu, Phường
-              Mai Dịch, Quận Cầu Giấy, Hà Nội
+              <div>
+                
+              </div>
+             <div>
+             {shipData.receiverName} {shipData.receiverPhone || " "} {shipData.receiverAddress}
+             </div>
+             {shipData.note && <div>
+              Note : {shipData.note}
+              </div>}
+            </div>
+           <Button onClick={() => setVisiable(true)}>
+           <EditOutlined /> Chỉnh sửa
+           </Button>
             </div>
           </div>
-          <div className="cart-chead bg-white">
-            <div className="cart-ctr-or fw-6 font-manrope fs-15">
-              <div className="cart-cth">
-                <span className="cart-ctxt">S.N.</span>
-              </div>
-              <div className="cart-cth">
-                <span className="cart-ctxt">Product</span>
-              </div>
-              <div className="cart-cth">
-                <span className="cart-ctxt">Unit Price</span>
-              </div>
-              <div className="cart-cth">
-                <span className="cart-ctxt">Quantity</span>
-              </div>
-              <div className="cart-cth">
-                <span className="cart-ctxt">Total Price</span>
-              </div>
-            </div>
+          <div>
+            <CartPage isCheckout />
           </div>
-
-          <div className="cart-cbody bg-white">
-            {orders.map((cart, idx) => {
-              return (
-                <div className="cart-ctr-or py-4" key={cart?.id}>
-                  <div className="cart-ctd-or">
-                    <span className="cart-ctxt">{idx + 1}</span>
-                  </div>
-                  <div className="cart-ctd-or">
-                    <span className="cart-ctxt">{cart?.productName}</span>
-                  </div>
-                  <div className="cart-ctd-or">
-                    <span className="cart-ctxt">
-                      {formatPrice(cart?.discountedPrice)}
-                    </span>
-                  </div>
-                  <div className="cart-ctd-or">
-                    <div className="qty-change flex align-center">
-                      <button
-                        type="button"
-                        className="qty-decrease flex align-center justify-center"
-                        onClick={() =>
-                          dispatch(toggleCartQty({ id: cart?.id, type: "DEC" }))
-                        }
-                      >
-                        <i className="fas fa-minus"></i>
-                      </button>
-
-                      <div className="qty-value flex align-center justify-center">
-                        {cart?.quantity}
-                      </div>
-
-                      <button
-                        type="button"
-                        className="qty-increase flex align-center justify-center"
-                        onClick={() =>
-                          dispatch(toggleCartQty({ id: cart?.id, type: "INC" }))
-                        }
-                      >
-                        <i className="fas fa-plus"></i>
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="cart-ctd-or">
-                    <span className="cart-ctxt text-orange fw-5">
-                      {formatPrice(cart?.totalPrice)}
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+         
+         
           <div
             style={{
               padding: 30,
@@ -148,11 +166,12 @@ const CheckOutPage = () => {
               <div className="total-txt flex align-center justify-end">
                 <div className="font-manrope fw-5">Total:</div>
                 <span className="text-orange fs-22 mx-2 fw-6">
-                  {formatPrice(total)}
+                  {formatPrice(totalAmount || 0)}
                 </span>
               </div>
 
               <button
+              onClick={() => handleAddOrder()}
                 type="button"
                 className="checkout-btn text-white bg-orange fs-16"
               >
@@ -162,6 +181,50 @@ const CheckOutPage = () => {
           </div>
         </div>
       </div>
+      <ModalInfoShip onClose={onClose} visible={visible} shipData={shipData} setShipData={setShipData} />
+      {/* <Modal
+      title="Thông tin người nhận"
+      open={visible}
+      onCancel={onClose}
+      footer={null}
+      destroyOnClose={true}
+    >
+      <div>
+        <label>Tên người nhận:</label>
+        <Input
+          value={receiverName}
+          onChange={e => setReceiverName(e.target.value)}
+          placeholder="Nhập tên người nhận"
+        />
+      </div>
+      <div style={{ marginTop: 16 }}>
+        <label>Số điện thoại người nhận:</label>
+        <Input
+          value={receiverPhone}
+          onChange={e => setReceiverPhone(e.target.value)}
+          placeholder="Nhập số điện thoại người nhận"
+        />
+      </div>
+      <div style={{ marginTop: 16 }}>
+        <label>Địa chỉ:</label>
+        <Input
+          value={receiverAddress}
+          onChange={e => setReceiverAddress(e.target.value)}
+          placeholder="Nhập địa chỉ người nhận"
+        />
+      </div>
+      <div style={{ marginTop: 24 }}>
+        <Button type="primary" >
+          Xác nhận
+        </Button>
+        <Button
+          style={{ marginLeft: '8px' }}
+          onClick={onClose}
+        >
+          Hủy
+        </Button>
+      </div>
+    </Modal> */}
     </div>
   );
 };
