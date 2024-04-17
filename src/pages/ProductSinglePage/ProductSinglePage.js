@@ -24,6 +24,7 @@ import "./ProductSinglePage.scss";
 import { Select } from "antd";
 import { userApi } from "../../api/user.api";
 import { LOCAL_STORAGE_KEY } from "../../constants/common";
+import { playerApi } from "../../api/player.api";
 const ProductSinglePage = () => {
   const currentUser = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY.user));
   const navigate = useNavigate();
@@ -50,14 +51,24 @@ const ProductSinglePage = () => {
       sizeMap.set(sizeArr[0], sizeArr[1]);
     }
   });
-  const listSizes = product?.productSizeDtoList || []
+  const listSizes = product?.productSizeDtoList || [];
   const getQuantity = (size) => {
-   const item = listSizes.find(i => i.size == size);
-   if(item){
-    return item.quantity
-   }
-   return 0
-  }
+    const item = listSizes.find((i) => i.size == size);
+    if (item) {
+      return item.quantity;
+    }
+    return 0;
+  };
+
+  // custom
+  const isCustomise =
+    product?.category?.id == 1 ||
+    product?.category?.id == 6 ||
+    product?.category?.name == "Áo Sân Nhà" ||
+    product?.category?.name == "Áo Sân Khách";
+  const isHome =
+    product?.category?.id == 1 || product?.category?.name == "Áo Sân Nhà";
+
   const listPlayerid = product?.imagesProductList
     ? product.imagesProductList
         ?.map((i) => i.path)
@@ -67,11 +78,8 @@ const ProductSinglePage = () => {
   const listImage = product?.imagesProductDtoList || [];
   // list player
   useEffect(() => {
-    if (product && product?.isCustomise && listImage.length > 0) {
+    if (product && isCustomise && listImage.length > 0) {
       if (!playerId) {
-        setPlayerId(listImage[0].playerId + "");
-        setPlayerName(listImage[0].playerName)
-        setCurrentImg(listImage[0].path);
       } else {
         const item = listImage.find((i) => i.playerId == playerId);
         if (item) {
@@ -79,16 +87,12 @@ const ProductSinglePage = () => {
         }
       }
       // initSize
-      
-    }
-    else if(product && !product.isCustomise && listImage.length >0){
+    } else if (product && !isCustomise && listImage.length > 0) {
       setCurrentImg(listImage[0].path);
-      
-
     }
-    if(!size && product && listSizes.length > 0){
-      console.log(listSizes)
-      setSize(listSizes[0]?.size)
+    if (!size && product && listSizes.length > 0) {
+      console.log(listSizes);
+      setSize(listSizes[0]?.size);
     }
   }, [product, playerId]);
 
@@ -112,6 +116,30 @@ const ProductSinglePage = () => {
       }
     }
   }, [product]);
+
+  //
+  const getlistPlayer = async () => {
+    try {
+      const res = await playerApi.searchPlayer({ query: "" });
+      const data = res?.data?.data || [];
+
+      setListPlayer(data);
+      if (data.length > 0) {
+        setPlayerId(data[0].playerNumber + "");
+        setPlayerName(data[0].name);
+        if (isHome) {
+          setCurrentImg(data[0]?.imageFirstJersey);
+        } else {
+          setCurrentImg(data[0]?.imageSecondJersey);
+        }
+      }
+    } catch (error) {}
+  };
+  useEffect(() => {
+    if (isCustomise) {
+      getlistPlayer();
+    }
+  }, [isCustomise]);
   let discountedPrice = Math.ceil(
     product?.price - product?.price * (product?.discount / 100)
   );
@@ -137,14 +165,14 @@ const ProductSinglePage = () => {
 
   const addToCartHandler = async ({ id }) => {
     try {
-      if (product?.isCustomise) {
+      if (isCustomise) {
         dispatch(
           addCartActionCustom({
             productId: id,
             quantity,
             size,
             playerName,
-            playerNumber:playerId,
+            playerNumber: playerId,
           })
         );
       } else {
@@ -161,6 +189,7 @@ const ProductSinglePage = () => {
     }
   };
 
+  console.log(playerName);
   return (
     <main className="py-5 bg-whitesmoke">
       <FacebookProvider appId="959380638706569" chatSupport>
@@ -180,7 +209,7 @@ const ProductSinglePage = () => {
                   />
                 </div>
 
-                {!product?.isCustomise && (
+                {!isCustomise && (
                   <div className="product-img-thumbs flex align-center my-2">
                     {listImage.map((i) => (
                       <div
@@ -304,24 +333,30 @@ const ProductSinglePage = () => {
                   }}
                   className=""
                 >
-                  {product?.isCustomise && (
+                  {isCustomise && (
                     <div className="wrap-custom">
                       <span className="txt-custom">Tên cầu thủ và số áo</span>
                       <Select
                         value={playerId}
                         onChange={(v) => {
                           setPlayerId(v);
-                          
-                          const item = listImage.find(i => i.playerId == v);
-                          if(item){
-                            setPlayerName(item.playerName)
+                          const item = listPlayer.find(
+                            (i) => i.playerNumber == v
+                          );
+                          if (item) {
+                            setPlayerName(item.name);
+                            if (isHome) {
+                              setCurrentImg(item.imageFirstJersey);
+                            } else {
+                              setCurrentImg(item.imageSecondJersey);
+                            }
                           }
                         }}
                         style={{ width: 300 }}
                       >
-                        {listImage.map((i) => (
-                          <Select.Option value={i.playerId + ""}>
-                            {i.playerId + "." + i.playerName}
+                        {listPlayer.map((i) => (
+                          <Select.Option key={i.playerNumber} value={i.playerNumber + ""}>
+                            {i.playerNumber + "." + i.name}
                           </Select.Option>
                         ))}
                       </Select>
@@ -344,9 +379,9 @@ const ProductSinglePage = () => {
                     <i className="fas fa-shopping-cart"></i>
                     <span className="btn-text mx-2">add to cart</span>
                   </button>
-                  <button type="button" className="buy-now btn mx-3">
+                  {/* <button type="button" className="buy-now btn mx-3">
                     <span className="btn-text">buy now</span>
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </div>

@@ -109,7 +109,7 @@ const CartPage = ({ isCheckout }) => {
                       {product.productName}
                     </span>
                     <div>Size: {cart.size}</div>
-                    {cart?.playerName && <div>{cart?.playerName}</div>}
+                    {cart?.player?.playerNumber && <div>{cart?.player?.playerNumber}.{cart?.player?.name}</div>}
                   </div>
                   <div className="cart-ctd">
                     <span className="cart-ctxt">{formatPrice(excatPrice)}</span>

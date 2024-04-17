@@ -7,6 +7,9 @@ export const orrderApi = {
   },
  getListOrderByUserId : (userId) => {
     return api.get(baseURLOrder + `list-order-by-user/${userId}`)
+ },
+ getOrderDetailById:(id) => {
+    return api.get("api/" + `order-details/${id}`)
  }
   
 };

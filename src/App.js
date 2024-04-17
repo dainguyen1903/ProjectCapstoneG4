@@ -46,9 +46,10 @@ import ListTicket from "./pages/ticket/Ticket";
 import Listmatch from "./pages/match/Match";
 import { getListCartTicketAction } from "./store/cartTicketSlice";
 import CartTicketPage from "./pages/CartPage/CartTicketPage";
+import OrderDetail from "./pages/order/OrderDetail";
 function App() {
   const dispatch = useDispatch();
-  const user =useSelector(getCurrentUser)
+  const user = useSelector(getCurrentUser)
   useEffect(() => {
     const user = localStorage.getItem(LOCAL_STORAGE_KEY.user);
     if (user) {
@@ -59,11 +60,11 @@ function App() {
   }, []);
 
   useEffect(() => {
-   if(user){
-    dispatch(getListCart())
-    dispatch(getListCartTicketAction())
-   }
-  },[user])
+    if (user) {
+      dispatch(getListCart())
+      dispatch(getListCartTicketAction())
+    }
+  }, [user])
   return (
     <div className="App">
       <BrowserRouter>
@@ -101,7 +102,7 @@ function App() {
                 </>
               }
             />
-             <Route
+            <Route
               path="/ticket"
               element={
                 <>
@@ -109,7 +110,7 @@ function App() {
                 </>
               }
             />
-              <Route
+            <Route
               path="/match"
               element={
                 <>
@@ -145,12 +146,21 @@ function App() {
                 </PrivateRouter>
               }
             />
-              <Route
+            <Route
               path="/order"
               element={
-               
-                  <OrderPage />
-                
+
+                <OrderPage />
+
+
+              }
+
+            />
+            <Route
+              path="/order-detail/:id"
+              element={
+
+                <OrderDetail />
               }
             />
             {/* Cart */}
@@ -183,7 +193,7 @@ function App() {
                 </>
               }
             />
-             <Route
+            <Route
               path="/blog/:id"
               element={
                 <>

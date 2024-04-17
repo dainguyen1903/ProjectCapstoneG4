@@ -4,9 +4,11 @@ import { STATUS_ORDER } from "../../constants/common";
 import "./order.scss";
 import { format } from "date-fns";
 import { formatPrice } from "../../utils/helpers";
+import { useNavigate } from "react-router-dom";
 const OrderItem = ({ item }) => {
+    const navigate = useNavigate()
   return (
-    <div className=" order-item">
+    <div onClick={() => navigate("/order-detail/"+item.id)} className=" order-item">
       <div
         style={{
           textAlign: "end",
