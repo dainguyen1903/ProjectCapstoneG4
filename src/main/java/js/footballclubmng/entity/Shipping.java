@@ -32,6 +32,15 @@ public class Shipping {
     @Column(name = "address")
     private String address;
 
+    @Column(name = "district")
+    private String district;
+
+    @Column(name = "ward")
+    private String ward;
+
+    @Column(name = "province")
+    private String province;
+
     @Column(name = "total_price")
     private Float totalPrice;
 

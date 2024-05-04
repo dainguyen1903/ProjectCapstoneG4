@@ -76,6 +76,9 @@ public class OrderServiceImpl implements OrderService {
         Shipping shipping = new Shipping();
         shipping.setShipName(shippingRequest.getShipName());
         shipping.setPhone(shippingRequest.getPhone());
+        shipping.setDistrict(shippingRequest.getDistrict());
+        shipping.setWard(shippingRequest.getWard());
+        shipping.setProvince(shipping.getProvince());
         shipping.setAddress(shippingRequest.getAddress());
         shipping.setNote(shippingRequest.getNote());
         shipping.setCreateAt(LocalDateTime.now());
