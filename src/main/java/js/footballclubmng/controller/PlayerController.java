@@ -38,6 +38,10 @@ public class PlayerController {
     @PostMapping(CommonConstant.PLAYER_API.CREATE_PLAYER)
     @PreAuthorize("hasRole('ROLE_Operator')")
     public ResponseAPI<Object> createPlayer(@RequestBody Player player) {
+        boolean checkNumber = playerService.checkPlayerNumberExist(player.getNumberPlayer());
+        if (!checkNumber) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.PLAYER_NUMBER_EXIST);
+        }
         boolean check = playerService.createPlayer(player);
         if (!check) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.CREATE_PLAYER_FAIL);
@@ -81,4 +85,5 @@ public class PlayerController {
         }
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, playerList);
     }
+
 }

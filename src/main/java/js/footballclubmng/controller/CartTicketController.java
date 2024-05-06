@@ -35,6 +35,10 @@ public class CartTicketController {
         if (fixtures.getNumberOfTicket() < quantity){
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.NOT_ENOUGH_TICKET);
         }
+        boolean checkQuantity = cartTicketService.checkQuantityCartTicketItems(token, fixtureId, quantity);
+        if (!checkQuantity){
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.QUANTITY_LIMIT_CART_TICKET_ITEM);
+        }
         boolean result = cartTicketService.addCartTicketItemToCartTicket(token, quantity, fixtureId);
         if (result) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.ADD_CART_TICKET_ITEM_SUCCESS);

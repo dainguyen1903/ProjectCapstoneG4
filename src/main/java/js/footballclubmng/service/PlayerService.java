@@ -12,4 +12,5 @@ public interface PlayerService {
     public boolean updatePlayer(long id, Player player);
     public boolean deletePlayer(long id);
     public List<Player> searchPlayer(String search);
+    public boolean checkPlayerNumberExist(Integer number);
 }
