@@ -36,8 +36,6 @@ public class CommonConstant {
     }
 
     public static class COMMON_MESSAGE {
-
-
         public static String NOT_CONVERT = "CAN_NOT_CONVERT";
         public static String OK = "OK";
         public static String USER_NOT_LOGIN = "USER_NOT_LOGIN";
@@ -145,6 +143,7 @@ public class CommonConstant {
         public static final String SIZE_REQUIRED = "Vui lòng chọn size";
         public static final String EXCEED_THE_QUANTITY_IN_STOCK = "Vượt quá số lượng sản phẩm cho phép";
 
+        public static final String EXCEED_THE_QUANTITY_IN_STOCK_IN_CART = "Vượt quá số lượng sản phẩm cho phép! Kiểm tra giỏ hàng và thử lại";
 
 
         //Message fixtures
@@ -174,6 +173,9 @@ public class CommonConstant {
         public static final String REMOVE_CART_TICKET_ITEM_FAIL = "Xóa vé thất bại";
         public static final String UPDATE_QUANTITY_CART_TICKET_ITEM_SUCCESS = "Cập nhật số lượng vé thành công";
         public static final String UPDATE_QUANTITY_CART_TICKET_ITEM_FAIL = "Cập nhật số lượng vé thất bại";
+        public static final String QUANTITY_LIMIT_CART_TICKET_ITEM = "Số lượng vé vượt quá giới hạn! Kiểm tra giỏ hàng và thử lại";
+        public static final String PLAYER_NUMBER_EXIST = "Số áo cầu thủ đã tồn tại";
+
 
 
         //Message order

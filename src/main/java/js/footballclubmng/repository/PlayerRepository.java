@@ -24,4 +24,7 @@ public interface PlayerRepository extends JpaRepository<Player,Long> {
     List<Player> viewAllPlayer();
 
     Player findByPlayerNumber(Long playerNumber);
+
+    Player findByNumberPlayer(Integer numberPlayer);
+
 }

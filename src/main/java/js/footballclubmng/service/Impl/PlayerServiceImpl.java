@@ -99,6 +99,15 @@ public class PlayerServiceImpl implements PlayerService {
         return playerRepository.searchPlayer(search);
     }
 
+    @Override
+    public boolean checkPlayerNumberExist(Integer number) {
+        Player player = playerRepository.findByNumberPlayer(number);
+        if (player == null) {
+            return true;
+        }
+        return false;
+    }
+
 
     private ListPlayerResponse mapToPlayerDto(Player player) {
         ListPlayerResponse listPlayerResponse = new ListPlayerResponse();

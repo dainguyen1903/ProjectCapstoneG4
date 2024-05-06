@@ -56,7 +56,7 @@ public class CartController {
         }
         boolean checkQuantityCartItem = cartService.checkQuantityCartItems(token, productId, size, quantity);
         if (!checkQuantityCartItem) {
-            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.EXCEED_THE_QUANTITY_IN_STOCK);
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.EXCEED_THE_QUANTITY_IN_STOCK_IN_CART);
         }
         if (size == null || size.isEmpty()) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.SIZE_REQUIRED);
@@ -88,7 +88,7 @@ public class CartController {
         }
         boolean checkQuantityCartItem = cartService.checkQuantityCartItems(token, productId, customiseProductRequest.getSize(), customiseProductRequest.getQuantity());
         if(!checkQuantityCartItem) {
-            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.EXCEED_THE_QUANTITY_IN_STOCK);
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.EXCEED_THE_QUANTITY_IN_STOCK_IN_CART);
         }
         boolean check = cartService.customiseAddCartItemToCart(token, productId, customiseProductRequest);
 
@@ -128,7 +128,10 @@ public class CartController {
             }
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.REMOVE_CART_ITEM_SUCCESS);
         }
-
+        boolean quantityInStock = cartService.checkQuantityInStock(cartItem.getProduct().getId(), cartItem.getSize(), quantity);
+        if (!quantityInStock) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.EXCEED_THE_QUANTITY_IN_STOCK);
+        }
         boolean check = cartService.updateQuantityCartItem(cartItemId, quantity);
         if (!check) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.UPDATE_QUANTITY_CART_ITEM_FAIL);

@@ -16,7 +16,9 @@ public class FixturesDto {
     private String name;
     private String round;
     private String homeTeam;
+    private String imageHomeTeam;
     private String awayTeam;
+    private String imageAwayTeam;
     private LocalDateTime dateTime;
     private String location;
     private String statusMatch;
