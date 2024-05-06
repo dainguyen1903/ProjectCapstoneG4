@@ -18,29 +18,32 @@ public class CartItem {
     @Column(name = "cart_item_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "cart_id")
-    @JsonIgnore
-    private Cart cart;
-
-    @Column(name = "product_id", nullable = false)
-    private Long productId;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "product_id",  insertable = false, updatable = false)
-    @JsonIgnoreProperties("cartItems")
-    private Product product;
-
     @Column(name = "quantity")
     private int quantity;
 
     @Column(name = "size")
     private String size;
 
-    @Column(name = "player_name")
-    private String playerName;
+    @Column(name = "cart_id", nullable = false)
+    private Long cartId;
+
+    @Column(name = "product_id", nullable = false)
+    private Long productId;
 
     @Column(name = "player_number")
-    private Integer playerNumber;
+    private Long playerNumber;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "cart_id", insertable = false, updatable = false)
+    @JsonIgnore
+    private Cart cart;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "player_number", insertable = false, updatable = false)
+    private Player player;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "product_id",  insertable = false, updatable = false)
+    @JsonIgnoreProperties("cartItems")
+    private Product product;
 }

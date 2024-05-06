@@ -156,6 +156,7 @@ public class CommonConstant {
         public static final String DELETE_FIXTURES_SUCCESS = "Xóa trận đấu thành công";
 
 
+
         //Message ticket
         public static final String ADD_TICKET_FAIL = "Mua vé thất bại";
         public static final String ADD_TICKET_SUCCESS = "Mua vé thành công";
@@ -174,6 +175,25 @@ public class CommonConstant {
         public static final String UPDATE_QUANTITY_CART_TICKET_ITEM_FAIL = "Cập nhật số lượng vé thất bại";
         public static final String QUANTITY_LIMIT_CART_TICKET_ITEM = "Số lượng vé vượt quá giới hạn! Kiểm tra giỏ hàng và thử lại";
         public static final String PLAYER_NUMBER_EXIST = "Số áo cầu thủ đã tồn tại";
+
+
+
+        //Message order
+        public static final String CREATE_ORDER_SUCCESS = "Tạo đơn hàng thành công";
+
+        public static final String CREATE_ORDER_FAIL = "Tạo đơn hàng thất bại";
+
+        //Message payment
+
+        public static final String CREATE_PAYMENT_SUCCESS = "Tạo thanh toán thành công";
+
+        public static final String CREATE_PAYMENT_FAIL = "Tạo thanh toán thất bại";
+
+        public static final String ORDER_DETAILS_NOT_FOUND = "Không tìm thấy danh mục đơn hàng";
+
+        //Message shipping
+        public static final String ASSIGN_TO_SHIPPER = "Đã cập nhật shipper cho đơn hàng";
+
 
 
     }
@@ -252,7 +272,7 @@ public class CommonConstant {
 
         public static final String SEARCH_PRODUCT = HEAD_API + PRODUCT + "/search-product";
 
-        public static final String GET_IMAGE_PRODUCT_BY_PLAYER = HEAD_API + PRODUCT + "/product-with/{productId}/{playerId}";
+        public static final String GET_IMAGE_PRODUCT_BY_PLAYER = HEAD_API + PRODUCT + "/product-with/{productId}";
     }
 
     public static class ORDER_API {
@@ -263,10 +283,32 @@ public class CommonConstant {
 
         public static final String LIST_ORDER = HEAD_API + ORDER + "/list-order";
 
-        public static final String VIEW_ORDER_DETAILS = HEAD_API + ORDER_DETAIL + "/{id}";
+        public static final String VIEW_ORDER_DETAILS = HEAD_API + ORDER_DETAIL + "/{orderId}";
+
+        public static final String CREATE_ORDER = HEAD_API + ORDER + "/create-order";
+
+        public static final String ASSIGN_SHIPPER = HEAD_API + ORDER + "/assign-shipper";
+
+        public static final String LIST_ORDER_BY_USER = HEAD_API + ORDER + "/list-order-by-user/{userId}";
+
 
     }
 
+    public static class PAYMENT_API {
+        public static final String PAYMENT = "/payment";
+
+        public static final String CREATE_PAYMENT = HEAD_API + PAYMENT + "/create-payment";
+
+        public static final String TRANSACTION_PAYMENT = HEAD_API + PAYMENT + "/transaction-payment";
+    }
+
+    public static class SHIP_API {
+        public static final String SHIP = "/ship";
+
+        public static final String LIST_SHIP = HEAD_API + SHIP + "/list-shipping";
+
+        public static final String LIST_SHIP_BY_SHIPPER = HEAD_API + SHIP + "/list-shipping-shipper/{shipperId}";
+    }
     public static class CART_API {
         public static final String CART = "/cart";
         public static final String ADD_CART_ITEM = HEAD_API + CART + "/add-cart-item/{productId}";

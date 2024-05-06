@@ -100,7 +100,7 @@ public class CartController {
 
 
     @DeleteMapping(CommonConstant.CART_API.REMOVE_CART_ITEM)
-    public ResponseAPI<Object> removeCartItemFromCart(@PathVariable int cartItemId) {
+    public ResponseAPI<Object> removeCartItemFromCart(@PathVariable Long cartItemId) {
         CartItem cartItem = cartService.getCartItemById(cartItemId);
         if (cartItem == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.CART_ITEM_NOT_FOUND);
@@ -113,7 +113,7 @@ public class CartController {
     }
 
     @PutMapping(CommonConstant.CART_API.UPDATE_QUANTITY_CART_ITEM)
-    public ResponseAPI<Object> updateQuantityCartItem(@PathVariable int cartItemId, @RequestParam int quantity) {
+    public ResponseAPI<Object> updateQuantityCartItem(@PathVariable Long cartItemId, @RequestParam int quantity) {
         CartItem cartItem = cartService.getCartItemById(cartItemId);
         if (cartItem == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.CART_ITEM_NOT_FOUND);

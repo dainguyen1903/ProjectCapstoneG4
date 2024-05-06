@@ -10,9 +10,13 @@ import js.footballclubmng.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import java.util.List;
+
 
 @Service
 public class CartServiceIpml implements CartService {
@@ -35,6 +39,9 @@ public class CartServiceIpml implements CartService {
         String email = tokenProvider.getUsernameFromJWT(jwtToken);
         User user = userRepository.findByEmail(email);
         Cart cart = cartRepository.findByUser(user);
+        if(cart==null) {
+            return null;
+        }
         List<CartItem> cartItemList = cartItemRepository.findAllByCart(cart);
         return cartItemList.stream()
                 .map(MapperUtil::mapToListCartItemsResponses)
@@ -42,7 +49,7 @@ public class CartServiceIpml implements CartService {
     }
 
     @Override
-    public boolean addCartItemToCart(String token, long productId, String size, int quantity) {
+    public boolean addCartItemToCart(String token, Long productId, String size, int quantity) {
         try {
             String jwtToken = token.substring(7);
             String email = tokenProvider.getUsernameFromJWT(jwtToken);
@@ -57,17 +64,17 @@ public class CartServiceIpml implements CartService {
                 CartItem cartItem = new CartItem();
                 cartItem.setProductId(productId);
                 cartItem.setQuantity(1);
-                cartItem.setCart(cart1);
+                cartItem.setCartId(cart1.getId());
                 cartItem.setSize(size);
                 cartItem.setQuantity(quantity);
                 cartItemRepository.save(cartItem);
             } else {
-                CartItem cartItem = cartItemRepository.findByProductAndCartAndSizeAndPlayerNumberAndPlayerName(product, cart, size,null,null);
+                CartItem cartItem = cartItemRepository.findByProductAndCartAndSizeAndPlayerNumber(product, cart, size, null);
                 if (cartItem == null) {
                     CartItem cartItem1 = new CartItem();
                     cartItem1.setProductId(productId);
                     cartItem1.setQuantity(1);
-                    cartItem1.setCart(cart);
+                    cartItem1.setCartId(cart.getId());
                     cartItem1.setSize(size);
                     cartItem1.setQuantity(quantity);
                     cartItemRepository.save(cartItem1);
@@ -83,7 +90,7 @@ public class CartServiceIpml implements CartService {
     }
 
     @Override
-    public boolean customiseAddCartItemToCart(String token, long productId, CustomiseProductRequest customiseProductRequest) {
+    public boolean customiseAddCartItemToCart(String token, Long productId, CustomiseProductRequest customiseProductRequest) {
         try {
             String jwtToken = token.substring(7);
             String email = tokenProvider.getUsernameFromJWT(jwtToken);
@@ -99,23 +106,22 @@ public class CartServiceIpml implements CartService {
                 CartItem cartItem = new CartItem();
                 cartItem.setProductId(productId);
                 cartItem.setQuantity(1);
-                cartItem.setCart(cart1);
+                cartItem.setId(cart1.getId());
                 cartItem.setSize(customiseProductRequest.getSize());
                 cartItem.setQuantity(customiseProductRequest.getQuantity());
-                cartItem.setPlayerName(customiseProductRequest.getPlayerName());
                 cartItem.setPlayerNumber(customiseProductRequest.getPlayerNumber());
                 cartItemRepository.save(cartItem);
                 return true;
             }
-            CartItem cartItem = cartItemRepository.findByProductAndCartAndSizeAndPlayerNumberAndPlayerName(product, cart, customiseProductRequest.getSize(), customiseProductRequest.getPlayerNumber(), customiseProductRequest.getPlayerName());
+
+            CartItem cartItem = cartItemRepository.findByProductAndCartAndSizeAndPlayerNumber(product, cart, customiseProductRequest.getSize(), customiseProductRequest.getPlayerNumber());
             if (cartItem == null) {
                 CartItem cartItem1 = new CartItem();
                 cartItem1.setProductId(productId);
                 cartItem1.setQuantity(1);
-                cartItem1.setCart(cart);
+                cartItem1.setCartId(cart.getId());
                 cartItem1.setSize(customiseProductRequest.getSize());
                 cartItem1.setQuantity(customiseProductRequest.getQuantity());
-                cartItem1.setPlayerName(customiseProductRequest.getPlayerName());
                 cartItem1.setPlayerNumber(customiseProductRequest.getPlayerNumber());
                 cartItemRepository.save(cartItem1);
                 return true;
@@ -132,7 +138,7 @@ public class CartServiceIpml implements CartService {
     }
 
     @Override
-    public boolean removeCartItemFromCart(long cartItemId) {
+    public boolean removeCartItemFromCart(Long cartItemId) {
         try {
             cartItemRepository.deleteById(cartItemId);
             return true;
@@ -142,7 +148,7 @@ public class CartServiceIpml implements CartService {
     }
 
     @Override
-    public boolean updateQuantityCartItem(long cartItemId, int quantity) {
+    public boolean updateQuantityCartItem(Long cartItemId, int quantity) {
         try {
             CartItem cartItem = cartItemRepository.findById(cartItemId).orElse(null);
             if (cartItem != null) {
@@ -157,7 +163,8 @@ public class CartServiceIpml implements CartService {
     }
 
     @Override
-    public CartItem getCartItemById(long cartItemId) {
+    public CartItem getCartItemById(Long cartItemId) {
+
         return cartItemRepository.findById(cartItemId).orElse(null);
     }
 
@@ -211,4 +218,21 @@ public class CartServiceIpml implements CartService {
         }
         return false;
     }
+
+    @Override
+    public void deleteCartByToken(String token) {
+        // Lấy thông tin người dùng từ token
+        String jwtToken = token.substring(7);
+        String email = tokenProvider.getUsernameFromJWT(jwtToken);
+        User user = userRepository.findByEmail(email);
+
+        // Lấy cart của người dùng từ user
+        Cart cart = cartRepository.findByUser(user);
+
+        // Xóa cart
+        cartRepository.delete(cart);
+
+    }
+
+
 }

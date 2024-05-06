@@ -10,7 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ListPlayerResponse {
-    private Long id;
+    private Long playerNumber;
     private String name;
     private String nationality;
     private String position;

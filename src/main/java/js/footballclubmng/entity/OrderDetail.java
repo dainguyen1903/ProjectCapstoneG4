@@ -17,28 +17,28 @@ public class OrderDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "product_name")
-    private String productName;
+    @Column(name = "unit_price")
+    private float unitPrice;
 
-    @Column(name = "product_price")
-    private float productPrice;
-
-    @Column(name = "player_number")
-    private Integer playerNumber;
-
-    @Column(name = "player_name")
-    private String playerName;
+    @Column(name = "quantity")
+    private int quantity;
 
     @Column(name = "size")
     private String size;
 
+    @Column(name = "order_id")
+    private Long orderId;
+
+    @Column(name = "product_id")
+    private Long productId;
+
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id", insertable = false, updatable = false)
     @JsonIgnore
     private Product product;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "order_id")
+    @JoinColumn(name = "order_id", insertable = false, updatable = false)
     @JsonIgnore
     private Order order;
 
