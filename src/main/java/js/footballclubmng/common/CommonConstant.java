@@ -78,8 +78,8 @@ public class CommonConstant {
         //Message Player
         public static String NOT_FOUND_PLAYER = "Không tìm thấy cầu thủ";
         public static String NOT_FOUND_NEWS = "Không tìm thấy tin tức";
-        public static String UPDATE_PROFILE_SUCCESS = "Cập nhật thông tin cá nhân thành công";
-        public static String UPDATE_PROFILE_FAIL = "Cập nhật thông tin cá nhân thất bại";
+        public static String UPDATE_PROFILE_SUCCESS = "Cập nhật thành công";
+        public static String UPDATE_PROFILE_FAIL = "Cập nhật thất bại";
         public static String EMPTY_TOKEN = "Đăng nhập để thực hiện chức năng này";
         public static String CREATE_PLAYER_SUCCESS = "Tạo cầu thủ thành công";
         public static String CREATE_PLAYER_FAIL = "Tạo cầu thủ thất bại";
