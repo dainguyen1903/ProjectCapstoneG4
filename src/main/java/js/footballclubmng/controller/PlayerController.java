@@ -3,6 +3,7 @@ package js.footballclubmng.controller;
 import js.footballclubmng.common.CommonConstant;
 
 import js.footballclubmng.entity.Player;
+import js.footballclubmng.model.dto.PlayerDto;
 import js.footballclubmng.model.response.ListPlayerResponse;
 import js.footballclubmng.model.response.ResponseAPI;
 import js.footballclubmng.service.PlayerService;
@@ -37,8 +38,8 @@ public class PlayerController {
 
     @PostMapping(CommonConstant.PLAYER_API.CREATE_PLAYER)
     @PreAuthorize("hasRole('ROLE_Operator')")
-    public ResponseAPI<Object> createPlayer(@RequestBody Player player) {
-        boolean checkNumber = playerService.checkPlayerNumberExist(player.getNumberPlayer());
+    public ResponseAPI<Object> createPlayer(@RequestBody @Valid PlayerDto player) {
+        boolean checkNumber = playerService.checkPlayerNumberExist(player.getPlayerNumber());
         if (!checkNumber) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.PLAYER_NUMBER_EXIST);
         }
@@ -51,10 +52,16 @@ public class PlayerController {
 
     @PutMapping(CommonConstant.PLAYER_API.UPDATE_PLAYER)
     @PreAuthorize("hasRole('ROLE_Operator')")
-    public ResponseAPI<Object> updatePlayer(@PathVariable int id, @RequestBody Player player) {
+    public ResponseAPI<Object> updatePlayer(@PathVariable int id, @RequestBody @Valid PlayerDto player) {
         Player p = playerService.getPlayerById(id);
         if (p == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.NOT_FOUND_PLAYER);
+        }
+        if (p.getPlayerNumber() != player.getPlayerNumber()) {
+            boolean checkNumber = playerService.checkPlayerNumberExist(player.getPlayerNumber());
+            if (!checkNumber) {
+                return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.PLAYER_NUMBER_EXIST);
+            }
         }
         boolean check = playerService.updatePlayer(id, player);
         if (!check) {
