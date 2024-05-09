@@ -213,7 +213,7 @@ public class UserController extends BaseController{
     }
 
     @PutMapping(CommonConstant.USER_API.UPDATE_PROFILE)
-    public ResponseAPI<Object> updateProfile(@RequestBody UserProfileDto userProfileDto, @RequestHeader(name = "Authorization") String token) {
+    public ResponseAPI<Object> updateProfile(@RequestBody @Valid UserProfileDto userProfileDto, @RequestHeader(name = "Authorization") String token) {
         if (token == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.EMPTY_TOKEN);
         }

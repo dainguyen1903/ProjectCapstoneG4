@@ -360,6 +360,9 @@ public class UserServiceImpl implements UserService {
                 userProfileDto.setDateOfBirth(user.getDateOfBirth());
                 userProfileDto.setGender(user.getGender());
                 userProfileDto.setImage(user.getImageUrl());
+                userProfileDto.setDistrict(user.getDistrict());
+                userProfileDto.setWard(user.getWard());
+                userProfileDto.setProvince(user.getProvince());
                 return userProfileDto;
             }
         } catch (Exception e) {
@@ -377,10 +380,14 @@ public class UserServiceImpl implements UserService {
             if (user != null) {
                 user.setFirstName(userProfileDto.getFirstName());
                 user.setLastName(userProfileDto.getLastName());
+                user.setEmail(userProfileDto.getEmail());
                 user.setAddress(userProfileDto.getAddress());
                 user.setDateOfBirth(userProfileDto.getDateOfBirth());
                 user.setGender(userProfileDto.getGender());
                 user.setImageUrl(userProfileDto.getImage());
+                user.setDistrict(userProfileDto.getDistrict());
+                user.setWard(userProfileDto.getWard());
+                user.setProvince(userProfileDto.getProvince());
                 userRepository.save(user);
                 return true;
             }
