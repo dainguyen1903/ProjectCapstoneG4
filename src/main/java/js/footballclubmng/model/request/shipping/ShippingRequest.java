@@ -19,5 +19,6 @@ public class ShippingRequest {
     private String ward;
     private String province;
     private String address;
+    private Boolean desiredDeliveryTime;
     private String note;
 }

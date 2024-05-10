@@ -23,6 +23,7 @@ public class Shipping {
     @Column(name = "shipper_id")
     private Long shipperId;
 
+
     @Column(name = "name")
     private String shipName;
 
@@ -43,6 +44,12 @@ public class Shipping {
 
     @Column(name = "total_price")
     private Float totalPrice;
+
+    @Column(name = "shipping_cost")
+    private Float shippingCost;
+
+    @Column(name = "desired_delivery_time")
+    private Boolean desiredDeliveryTime;
 
     @Column(name = "note")
     private String note;

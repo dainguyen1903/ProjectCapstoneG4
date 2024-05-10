@@ -181,6 +181,7 @@ public class CommonConstant {
 
         public static final String CREATE_ORDER_FAIL = "Tạo đơn hàng thất bại";
 
+
         //Message payment
 
         public static final String CREATE_PAYMENT_SUCCESS = "Tạo thanh toán thành công";
@@ -287,7 +288,7 @@ public class CommonConstant {
 
         public static final String ASSIGN_SHIPPER = HEAD_API + ORDER + "/assign-shipper";
 
-        public static final String LIST_ORDER_BY_USER = HEAD_API + ORDER + "/list-order-by-user/{userId}";
+        public static final String HISTORY_ORDER = HEAD_API + ORDER + "/history-order";
 
 
     }

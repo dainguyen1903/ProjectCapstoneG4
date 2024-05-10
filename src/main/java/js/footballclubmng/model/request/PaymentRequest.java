@@ -12,6 +12,6 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PaymentRequest {
-    @NotBlank(message = "Id không được bỏ trống")
+
     private Long orderId;
 }

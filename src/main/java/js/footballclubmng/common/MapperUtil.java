@@ -167,6 +167,20 @@ public class MapperUtil {
         return orderDto;
     }
 
+    public static OrderHistoryDto mapToOrderHistoryDto(Order order, List<OrderDetail> orderDetailList) {
+        OrderHistoryDto orderHistoryDto = new OrderHistoryDto();
+        orderHistoryDto.setOrderCode(order.getOrderCode());
+        orderHistoryDto.setTotalPrice(order.getTotalPrice());
+        orderHistoryDto.setOrderDate(order.getOrderDate());
+        orderHistoryDto.setPaymentMethod(order.getPaymentMethod());
+        orderHistoryDto.setOrderStatus(order.getStatus());
+
+        List<OrderDetailDto> orderDetailDtoList = mapToOrderDetailDtoList(orderDetailList);
+        orderHistoryDto.setOrderDetailDtoList(orderDetailDtoList);
+
+        return orderHistoryDto;
+    }
+
     public static ShippingDto mapToShippingDto(Shipping shipping) {
         ShippingDto shippingDto = new ShippingDto();
         shippingDto.setName(shipping.getShipName());
