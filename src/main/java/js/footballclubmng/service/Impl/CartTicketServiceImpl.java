@@ -84,6 +84,30 @@ public class CartTicketServiceImpl implements CartTicketService {
     }
 
     @Override
+    public boolean checkQuantityCartTicketItems(String token, Long fixtureId, int quantity) {
+        try{
+            String jwtToken = token.substring(7);
+            String email = tokenProvider.getUsernameFromJWT(jwtToken);
+            User user = userRepository.findByEmail(email);
+            Fixtures fixtures = fixturesRepository.findById(fixtureId).orElse(null);
+            CartTicket cartTicket = cartTicketRepository.findByUser(user);
+            if (cartTicket == null) {
+                return true;
+            }
+            CartTicketItem cartTicketItem = cartTicketItemRepository.findByCartTicketAndFixtures(cartTicket, fixtures);
+            if (cartTicketItem == null) {
+                return true;
+            }
+            if (cartTicketItem.getQuantity() + quantity <= 2) {
+                return true;
+            }
+            return false;
+        }catch (Exception e){
+            return false;
+        }
+    }
+
+    @Override
     public boolean removeCartTicketItemFromCartTicket(long cartTicketItemId) {
         try {
             cartTicketItemRepository.deleteById(cartTicketItemId);

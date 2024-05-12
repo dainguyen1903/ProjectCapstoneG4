@@ -23,8 +23,12 @@ public class Fixtures {
     private String round;
     @Column(name = "home_team")
     private String homeTeam;
+    @Column(name = "image_home_team")
+    private String imageHomeTeam;
     @Column(name = "away_team")
     private String awayTeam;
+    @Column(name = "image_away_team")
+    private String imageAwayTeam;
     @Column(name = "date_time")
     private LocalDateTime dateTime;
     @Column(name = "location")

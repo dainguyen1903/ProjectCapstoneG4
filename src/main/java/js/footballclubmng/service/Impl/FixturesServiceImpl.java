@@ -41,7 +41,9 @@ public class FixturesServiceImpl implements FixturesService {
             fixtures1.setName(fixtures.getName());
             fixtures1.setRound(fixtures.getRound());
             fixtures1.setHomeTeam(fixtures.getHomeTeam());
+            fixtures1.setImageHomeTeam(fixtures.getImageHomeTeam());
             fixtures1.setAwayTeam(fixtures.getAwayTeam());
+            fixtures1.setImageAwayTeam(fixtures.getImageAwayTeam());
             fixtures1.setDateTime(fixtures.getDateTime());
             fixtures1.setLocation(fixtures.getLocation());
             fixtures1.setStatusMatch(fixtures.getStatusMatch());
@@ -68,7 +70,9 @@ public class FixturesServiceImpl implements FixturesService {
             fixtures1.setName(fixtures.getName());
             fixtures1.setRound(fixtures.getRound());
             fixtures1.setHomeTeam(fixtures.getHomeTeam());
+            fixtures1.setImageHomeTeam(fixtures.getImageHomeTeam());
             fixtures1.setAwayTeam(fixtures.getAwayTeam());
+            fixtures1.setImageAwayTeam(fixtures.getImageAwayTeam());
             fixtures1.setDateTime(fixtures.getDateTime());
             fixtures1.setLocation(fixtures.getLocation());
             fixtures1.setStatusMatch(fixtures.getStatusMatch());
@@ -101,7 +105,9 @@ public class FixturesServiceImpl implements FixturesService {
         fixturesDto.setName(fixtures.getName());
         fixturesDto.setRound(fixtures.getRound());
         fixturesDto.setHomeTeam(fixtures.getHomeTeam());
+        fixturesDto.setImageHomeTeam(fixtures.getImageHomeTeam());
         fixturesDto.setAwayTeam(fixtures.getAwayTeam());
+        fixturesDto.setImageAwayTeam(fixtures.getImageAwayTeam());
         fixturesDto.setDateTime(fixtures.getDateTime());
         fixturesDto.setLocation(fixtures.getLocation());
         fixturesDto.setStatusMatch(fixtures.getStatusMatch());

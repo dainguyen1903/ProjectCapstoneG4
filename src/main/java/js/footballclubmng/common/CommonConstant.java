@@ -36,8 +36,6 @@ public class CommonConstant {
     }
 
     public static class COMMON_MESSAGE {
-
-
         public static String NOT_CONVERT = "CAN_NOT_CONVERT";
         public static String OK = "OK";
         public static String USER_NOT_LOGIN = "USER_NOT_LOGIN";
@@ -80,8 +78,8 @@ public class CommonConstant {
         //Message Player
         public static String NOT_FOUND_PLAYER = "Không tìm thấy cầu thủ";
         public static String NOT_FOUND_NEWS = "Không tìm thấy tin tức";
-        public static String UPDATE_PROFILE_SUCCESS = "Cập nhật thông tin cá nhân thành công";
-        public static String UPDATE_PROFILE_FAIL = "Cập nhật thông tin cá nhân thất bại";
+        public static String UPDATE_PROFILE_SUCCESS = "Cập nhật thành công";
+        public static String UPDATE_PROFILE_FAIL = "Cập nhật thất bại";
         public static String EMPTY_TOKEN = "Đăng nhập để thực hiện chức năng này";
         public static String CREATE_PLAYER_SUCCESS = "Tạo cầu thủ thành công";
         public static String CREATE_PLAYER_FAIL = "Tạo cầu thủ thất bại";
@@ -145,6 +143,7 @@ public class CommonConstant {
         public static final String SIZE_REQUIRED = "Vui lòng chọn size";
         public static final String EXCEED_THE_QUANTITY_IN_STOCK = "Vượt quá số lượng sản phẩm cho phép";
 
+        public static final String EXCEED_THE_QUANTITY_IN_STOCK_IN_CART = "Vượt quá số lượng sản phẩm cho phép! Kiểm tra giỏ hàng và thử lại";
 
 
         //Message fixtures
@@ -174,6 +173,9 @@ public class CommonConstant {
         public static final String REMOVE_CART_TICKET_ITEM_FAIL = "Xóa vé thất bại";
         public static final String UPDATE_QUANTITY_CART_TICKET_ITEM_SUCCESS = "Cập nhật số lượng vé thành công";
         public static final String UPDATE_QUANTITY_CART_TICKET_ITEM_FAIL = "Cập nhật số lượng vé thất bại";
+        public static final String QUANTITY_LIMIT_CART_TICKET_ITEM = "Số lượng vé vượt quá giới hạn! Kiểm tra giỏ hàng và thử lại";
+        public static final String PLAYER_NUMBER_EXIST = "Số áo cầu thủ đã tồn tại";
+
 
 
         //Message order

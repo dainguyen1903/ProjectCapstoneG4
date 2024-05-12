@@ -12,5 +12,6 @@ public interface CartTicketService {
     public boolean updateQuantityCartTicketItem(long cartTicketItemId, int quantity);
     public List<ListCartTicketItemResponse> viewCartTicket(String token);
     CartTicketItem getCartTicketItemById(long cartTicketItemId);
+    public boolean checkQuantityCartTicketItems(String token,Long fixtureId, int quantity);
 
 }

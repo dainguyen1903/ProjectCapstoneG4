@@ -1,5 +1,6 @@
 package js.footballclubmng.service.Impl;
 
+import js.footballclubmng.model.dto.PlayerDto;
 import js.footballclubmng.model.response.ListPlayerResponse;
 import js.footballclubmng.entity.Player;
 import js.footballclubmng.repository.PlayerRepository;
@@ -32,7 +33,7 @@ public class PlayerServiceImpl implements PlayerService {
         return playerList.stream().map((player) -> mapToPlayerDto(player)).collect(Collectors.toList());
     }
     @Override
-    public boolean createPlayer(Player player) {
+    public boolean createPlayer(PlayerDto player) {
         try {
             Player p = new Player();
             p.setPlayerNumber(player.getPlayerNumber());
@@ -56,7 +57,7 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public boolean updatePlayer(long id, Player player) {
+    public boolean updatePlayer(long id, PlayerDto player) {
         try {
             Player p = playerRepository.findById(id).orElse(null);
             if (p != null) {
@@ -72,7 +73,6 @@ public class PlayerServiceImpl implements PlayerService {
                 p.setPosition(player.getPosition());
                 p.setBio(player.getBio());
                 p.setJoinDate(player.getJoinDate());
-                p.setStatus(player.getStatus());
                 playerRepository.save(p);
                 return true;
             }
@@ -97,6 +97,15 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public List<Player> searchPlayer(String search) {
         return playerRepository.searchPlayer(search);
+    }
+
+    @Override
+    public boolean checkPlayerNumberExist(Long number) {
+        Player player = playerRepository.findByPlayerNumber(number);
+        if (player == null) {
+            return true;
+        }
+        return false;
     }
 
 
