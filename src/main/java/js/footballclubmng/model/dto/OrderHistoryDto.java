@@ -18,5 +18,6 @@ public class OrderHistoryDto {
     private LocalDateTime orderDate;
     private EOrderMethod paymentMethod;
     private EOrderStatus orderStatus;
+    private ShippingDto shipping;
     private List<OrderDetailDto> orderDetailDtoList;
 }

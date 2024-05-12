@@ -15,4 +15,6 @@ public interface OrderService {
 
     public List<OrderHistoryDto> getHistoryOrder(String token);
 
+    public void cancelOrder(Long orderId);
+
 }

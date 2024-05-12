@@ -20,6 +20,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,7 +44,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderDto> getAllOrder() {
         // Lấy danh sách tất cả các đơn hàng từ repository
-        List<Order> listOrder = orderRepository.findAll();
+        List<Order> listOrder = orderRepository.findAllByOrderByOrderDateDesc();
 
         // Chuyển đổi danh sách đơn hàng thành danh sách DTO bằng cách sử dụng mapper
         return listOrder.stream()
@@ -77,7 +78,7 @@ public class OrderServiceImpl implements OrderService {
         } else if (createOrderRequest.getPaymentMethod() == EOrderMethod.COD) {
             order.setPaymentMethod(EOrderMethod.COD);
         }
-        order.setStatus(EOrderStatus.PENDING);
+        order.setStatus(EOrderStatus.PENDING_CONFIRMATION);
 
         // Lưu Order vào cơ sở dữ liệu để có ID
         order = orderRepository.save(order);
@@ -130,8 +131,8 @@ public class OrderServiceImpl implements OrderService {
         shipping.setNote(shippingRequest.getNote());
         shipping.setCreateAt(LocalDateTime.now());
         shipping.setUpdateAt(LocalDateTime.now());
-        shipping.setShipperId(3L);
-        shipping.setStatus(EShipStatus.PENDING);
+//        shipping.setShipperId(0L);
+        shipping.setStatus(EShipStatus.PENDING_ASSIGN_TO_SHIPPER);
         return shippingRepository.save(shipping);
     }
 
@@ -164,6 +165,23 @@ public class OrderServiceImpl implements OrderService {
         return listOrderByUser.stream()
                 .map(order -> MapperUtil.mapToOrderHistoryDto(order, order.getOrderDetailList()))
                 .collect(Collectors.toList());
+    }
+
+    public void cancelOrder(Long orderId) {
+        Optional<Order> orderOptional = orderRepository.findById(orderId);
+        if(orderOptional.isPresent()) {
+            Order order = orderOptional.get();
+            EOrderStatus status = order.getStatus();
+            if(status == EOrderStatus.PENDING_CONFIRMATION) {
+                order.setStatus(EOrderStatus.CANCELLED);
+                orderRepository.save(order);
+            } else {
+                throw new RuntimeException("Cannot cancel order with status: " + status);
+            }
+        } else {
+            throw new RuntimeException("Order not found with ID: " + orderId);
+        }
+
     }
 
 
