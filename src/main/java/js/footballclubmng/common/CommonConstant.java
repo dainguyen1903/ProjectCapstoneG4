@@ -193,6 +193,10 @@ public class CommonConstant {
         //Message shipping
         public static final String ASSIGN_TO_SHIPPER = "Đã cập nhật shipper cho đơn hàng";
 
+        public static final String ASSIGN_TO_SHIPPER_FAIL = "Shipper này đã có nhiều hơn 10 đơn hàng! Hãy cập nhật cho shipper khác";
+
+
+
 
 
     }
@@ -301,12 +305,16 @@ public class CommonConstant {
         public static final String TRANSACTION_PAYMENT = HEAD_API + PAYMENT + "/transaction-payment";
     }
 
-    public static class SHIP_API {
-        public static final String SHIP = "/ship";
+    public static class SHIPPING_API {
+        public static final String SHIPPING = "/shiping";
 
-        public static final String LIST_SHIP = HEAD_API + SHIP + "/list-shipping";
+        public static final String LIST_SHIP = HEAD_API + SHIPPING + "/list-shipping";
 
-        public static final String LIST_SHIP_BY_SHIPPER = HEAD_API + SHIP + "/list-shipping-shipper/{shipperId}";
+        public static final String LIST_SHIP_BY_SHIPPER = HEAD_API + SHIPPING + "/list-shipping-shipper";
+
+        public static final String LIST_SHIPPER_BY_DISTRICT = HEAD_API + SHIPPING + "/{shippingId}/shippers";
+
+        public static final String ASSIGN_SHIPPER = HEAD_API + SHIPPING + "/assign-shipper/{shippingId}/{shipperId}";
     }
     public static class CART_API {
         public static final String CART = "/cart";
