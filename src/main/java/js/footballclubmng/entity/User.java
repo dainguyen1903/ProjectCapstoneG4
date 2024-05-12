@@ -38,11 +38,11 @@ public class User {
     @Column(name = "address")
     private String address;
 
-    @Column(name = "district")
-    private String district;
-
     @Column(name = "ward")
     private String ward;
+
+    @Column(name = "district")
+    private String district;
 
     @Column(name = "province")
     private String province;
