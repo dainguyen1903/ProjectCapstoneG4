@@ -15,9 +15,10 @@ public class ShippingRequest {
 
     private String shipName;
     private String phone;
-    private String district;
     private String ward;
+    private String district;
     private String province;
     private String address;
+    private Boolean desiredDeliveryTime;
     private String note;
 }

@@ -1,6 +1,7 @@
 package js.footballclubmng.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import js.footballclubmng.enums.EOrderMethod;
 import js.footballclubmng.enums.EOrderStatus;
 import lombok.*;
 
@@ -20,6 +21,9 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "order_code")
+    private String orderCode;
+
     @Column(name = "total_price")
     private float totalPrice;
 
@@ -30,8 +34,9 @@ public class Order {
     @Column(name = "status")
     private EOrderStatus status;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "payment_method")
-    private String paymentMethod;
+    private EOrderMethod paymentMethod;
 
     @Column(name = "user_id")
     private Long userId;

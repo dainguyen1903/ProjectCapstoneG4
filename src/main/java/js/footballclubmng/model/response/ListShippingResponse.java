@@ -15,18 +15,20 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ListShippingResponse {
-
     private Long id;
     private UserDto shipperName;
     private String shipName;
     private String phone;
+    private String district;
+    private String ward;
+    private String province;
     private String address;
     private Float totalPrice;
+    private Float shippingCost;
+    private Boolean desiredDeliveryTime;
     private String note;
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
     private EShipStatus status;
-
-
 
 }
