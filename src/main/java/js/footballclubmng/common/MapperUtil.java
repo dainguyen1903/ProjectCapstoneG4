@@ -34,7 +34,8 @@ public class MapperUtil {
         productDto.setDescription(product.getDescription());
         productDto.setStatus(product.getStatus());
         productDto.setIsCustomise(product.getIsCustomise());
-
+        List<ImagesProduct> imagesProductList = imagesProductRepository.findAllByProductId(product.getId());
+        productDto.setImagesProductList(imagesProductList);
         if (product.getCategory() != null) {
             productDto.setCategory(mapToCategoryDto(product.getCategory()));
         }
