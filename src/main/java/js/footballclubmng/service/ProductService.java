@@ -20,4 +20,6 @@ public interface ProductService {
 
     public String getImageProductByPlayer(Long productId, Long playerNumber);
 
+    public List<ProductDto> getFilterProducts(String categoryName, Float minPrice, Float maxPrice, String sortType);
+
 }

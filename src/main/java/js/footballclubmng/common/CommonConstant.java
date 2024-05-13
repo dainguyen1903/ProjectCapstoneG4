@@ -278,6 +278,7 @@ public class CommonConstant {
         public static final String SEARCH_PRODUCT = HEAD_API + PRODUCT + "/search-product";
 
         public static final String GET_IMAGE_PRODUCT_BY_PLAYER = HEAD_API + PRODUCT + "/product-with/{productId}";
+        public static final String FILTER_PRODUCT_BY_CATEGORY = HEAD_API + PRODUCT + "/filter-product";
     }
 
     public static class ORDER_API {
