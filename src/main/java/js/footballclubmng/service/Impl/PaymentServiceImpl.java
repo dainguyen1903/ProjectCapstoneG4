@@ -66,7 +66,7 @@ public class PaymentServiceImpl implements PaymentService {
         Order order = orderRepository.findById(orderId).orElseThrow();
         if (isSuccess) {
 
-            order.setStatus(EOrderStatus.IN_PROGRESS);
+            order.setStatus(EOrderStatus.PENDING_CONFIRMATION);
         } else {
 
             order.setStatus(EOrderStatus.FAILED);

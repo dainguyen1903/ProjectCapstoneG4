@@ -20,4 +20,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "SELECT * FROM product p WHERE lower(p.product_name) LIKE lower(concat('%', :productName, '%'))", nativeQuery = true)
     List<Product> searchProductByName(String productName);
 
+    @Query(value = "UPDATE product_size pz SET pz.quantity = :quantity WHERE pz.productId = :productId AND pz.size = :size", nativeQuery = true)
+    void updateProductQuantity(@Param("productId") Long productId, @Param("size") String size, @Param("quantity") int quantity);
+
 }

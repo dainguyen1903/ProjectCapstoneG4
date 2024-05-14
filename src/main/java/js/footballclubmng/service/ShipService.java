@@ -15,9 +15,5 @@ public interface ShipService {
 
     List<UserDto> getShipperByShippingId(Long shippingId);
 
-    public void updateShippingStatus(Long shippingId, String updateStatus);
-
-    public List<String> getShippingStatusOptions();
-
     public int countOrderByShipper(Long shipperId);
 }

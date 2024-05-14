@@ -1,6 +1,7 @@
 package js.footballclubmng.service;
 
 import js.footballclubmng.entity.Order;
+import js.footballclubmng.enums.EOrderStatus;
 import js.footballclubmng.model.dto.OrderDto;
 import js.footballclubmng.model.dto.OrderHistoryDto;
 import js.footballclubmng.model.dto.ShippingDto;
@@ -16,5 +17,11 @@ public interface OrderService {
     public List<OrderHistoryDto> getHistoryOrder(String token);
 
     public void cancelOrder(Long orderId);
+
+    public void confirmOrder(Long orderId);
+
+    public void updateStatusOrderByShipepr(Long orderId, EOrderStatus status);
+
+    public List<OrderDto> listOrderByShipper(String token);
 
 }
