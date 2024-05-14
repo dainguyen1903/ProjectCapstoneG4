@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -75,6 +76,50 @@ public class ProductServiceImpl implements ProductService {
             image = player.getImageSecondJersey();
         }
         return image;
+    }
+
+    @Override
+    public List<ProductDto> getFilterProducts(String categoryName, Float minPrice, Float maxPrice, String sortType) {
+        List<Product> listProducts ;
+        //Lọc sản phẩm theo tên danh mục
+        if (categoryName != null && !categoryName.isEmpty()) {
+            listProducts = productRepository.filterProductByCategoryName(categoryName);
+        } else {
+            listProducts = productRepository.findAll();
+        }
+//        if (minPrice !=null && maxPrice == null) {
+//            listProducts = productRepository.findAllByPriceBetween(minPrice, Float.MAX_VALUE);
+//        }
+//        if (minPrice == null && maxPrice != null) {
+//            listProducts = productRepository.findAllByPriceBetween(0f, maxPrice);
+//        }
+//        if (minPrice != null && maxPrice != null) {
+//            listProducts = productRepository.findAllByPriceBetween(minPrice, maxPrice);
+//        }
+        if (minPrice != null && maxPrice != null) {
+            listProducts = listProducts.stream()
+                    .filter(product -> product.getPrice() >= minPrice && product.getPrice() <= maxPrice)
+                    .collect(Collectors.toList());
+        } else if (minPrice != null) {
+            listProducts = listProducts.stream()
+                    .filter(product -> product.getPrice() >= minPrice)
+                    .collect(Collectors.toList());
+        } else if (maxPrice != null) {
+            listProducts = listProducts.stream()
+                    .filter(product -> product.getPrice() <= maxPrice)
+                    .collect(Collectors.toList());
+        }
+        //Sắp xếp
+        if (sortType != null && !sortType.isEmpty()) {
+            if (sortType.equals("Tăng dần")) {
+                listProducts.sort(Comparator.comparing(Product::getPrice));
+            } else if (sortType.equals("Giảm dần")) {
+                listProducts.sort(Comparator.comparing(Product::getPrice).reversed());
+            }
+        }
+        return listProducts.stream()
+                .map(MapperUtil::mapToProductDto)
+                .collect(Collectors.toList());
     }
 
     @Override

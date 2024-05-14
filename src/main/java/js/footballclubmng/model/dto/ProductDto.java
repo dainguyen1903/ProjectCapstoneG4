@@ -29,4 +29,6 @@ public class ProductDto {
 
     private CategoryDto category;
 
+    private List<ImagesProduct> imagesProductList;
+
 }
