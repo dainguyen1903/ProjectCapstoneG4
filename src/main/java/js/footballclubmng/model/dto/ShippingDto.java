@@ -1,6 +1,5 @@
 package js.footballclubmng.model.dto;
 
-import js.footballclubmng.enums.EShipStatus;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -11,14 +10,17 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class ShippingDto {
-    private String name;
-    private String phone;
-    private String address;
-    private Float totalPrice;
-    private String note;
-    private LocalDateTime createAt;
-    private LocalDateTime updatedAt;
+    private Long id;
     private UserDto shipperName;
-    private EShipStatus shipStatus;
+    private String shipName;
+    private String phone;
+    private String district;
+    private String ward;
+    private String province;
+    private String address;
+    private Float productPrice;
+    private Float shippingFee;
+    private Boolean desiredDeliveryTime;
+    private String note;
 
 }

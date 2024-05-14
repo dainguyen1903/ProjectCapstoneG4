@@ -187,17 +187,23 @@ public class MapperUtil {
 
     public static ShippingDto mapToShippingDto(Shipping shipping) {
         ShippingDto shippingDto = new ShippingDto();
-        shippingDto.setName(shipping.getShipName());
+        shippingDto.setId(shipping.getId());
+        shippingDto.setShipName(shipping.getShipName());
         shippingDto.setPhone(shipping.getPhone());
+        shippingDto.setDistrict(shipping.getDistrict());
+        shippingDto.setWard(shipping.getWard());
+        shippingDto.setProvince(shipping.getProvince());
         shippingDto.setAddress(shipping.getAddress());
-        shippingDto.setTotalPrice(shipping.getTotalPrice());
+        shippingDto.setProductPrice(shipping.getProductPrice());
+        shippingDto.setShippingFee(shipping.getShippingFee());
+        shippingDto.setDesiredDeliveryTime(shipping.getDesiredDeliveryTime());
         shippingDto.setNote(shipping.getNote());
-        shippingDto.setCreateAt(shipping.getCreateAt());
-        shippingDto.setUpdatedAt(shipping.getUpdateAt());
-        if(shipping.getShipperId() != null) {
+
+
+        if(shipping.getShipper() != null && shipping.getShipper().getAuthority().equals("Shipper")) {
             shippingDto.setShipperName(mapToUserDto(shipping.getShipper()));
         }
-        shippingDto.setShipStatus(shipping.getStatus());
+
 
         return shippingDto;
     }
@@ -226,20 +232,17 @@ public class MapperUtil {
         listShippingResponse.setWard(shipping.getWard());
         listShippingResponse.setProvince(shipping.getProvince());
         listShippingResponse.setAddress(shipping.getAddress());
-        listShippingResponse.setTotalPrice(shipping.getTotalPrice());
-        listShippingResponse.setShippingCost(shipping.getShippingCost());
+        listShippingResponse.setProductPrice(shipping.getProductPrice());
+        listShippingResponse.setShippingFee(shipping.getShippingFee());
         listShippingResponse.setDesiredDeliveryTime(shipping.getDesiredDeliveryTime());
         listShippingResponse.setNote(shipping.getNote());
-        listShippingResponse.setCreateAt(shipping.getCreateAt());
-        listShippingResponse.setUpdateAt(shipping.getUpdateAt());
-        listShippingResponse.setStatus(shipping.getStatus());
+
 
         if(shipping.getShipper() != null && shipping.getShipper().getAuthority().equals("Shipper")) {
             listShippingResponse.setShipperName(mapToUserDto(shipping.getShipper()));
         }
         return listShippingResponse;
     }
-
 
 
 

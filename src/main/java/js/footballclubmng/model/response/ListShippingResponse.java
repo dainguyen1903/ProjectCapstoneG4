@@ -1,7 +1,5 @@
 package js.footballclubmng.model.response;
 
-import js.footballclubmng.entity.User;
-import js.footballclubmng.enums.EShipStatus;
 import js.footballclubmng.model.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,12 +21,9 @@ public class ListShippingResponse {
     private String ward;
     private String province;
     private String address;
-    private Float totalPrice;
-    private Float shippingCost;
+    private Float productPrice;
+    private Float shippingFee;
     private Boolean desiredDeliveryTime;
     private String note;
-    private LocalDateTime createAt;
-    private LocalDateTime updateAt;
-    private EShipStatus status;
 
 }

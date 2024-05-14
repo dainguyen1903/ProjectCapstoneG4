@@ -5,7 +5,6 @@ import js.footballclubmng.config.TokenProvider;
 import js.footballclubmng.entity.*;
 import js.footballclubmng.enums.EOrderMethod;
 import js.footballclubmng.enums.EOrderStatus;
-import js.footballclubmng.enums.EShipStatus;
 import js.footballclubmng.model.dto.OrderDto;
 import js.footballclubmng.model.dto.OrderHistoryDto;
 import js.footballclubmng.model.request.order.CreateOrderRequest;
@@ -40,6 +39,10 @@ public class OrderServiceImpl implements OrderService {
     private ShippingRepository shippingRepository;
     @Autowired
     private CartService cartService;
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private ProductSizeRepository productSizeRepository;
 
     @Override
     public List<OrderDto> getAllOrder() {
@@ -86,7 +89,7 @@ public class OrderServiceImpl implements OrderService {
         List<OrderDetail> orderDetailList = createOrderDetailList(cart.getCartItems(), order.getId());
 
 //      Gán tổng giá trị cho đơn hàng
-        order.setTotalPrice(shipping.getTotalPrice() + shipping.getShippingCost());
+        order.setTotalPrice(shipping.getProductPrice() + shipping.getShippingFee());
 //        Liên kết danh sách OrderDetail với Order
         order.setOrderDetailList(orderDetailList);
 //
@@ -119,20 +122,16 @@ public class OrderServiceImpl implements OrderService {
         shipping.setDistrict(shippingRequest.getDistrict());
         shipping.setWard(shippingRequest.getWard());
         shipping.setProvince(shippingRequest.getProvince());
-        shipping.setTotalPrice(calculateTotalPrice(cart.getCartItems()));
+        shipping.setProductPrice(calculateTotalPrice(cart.getCartItems()));
         if (createOrderRequest.getShipping().getDesiredDeliveryTime()) {
             shipping.setDesiredDeliveryTime(true);
-            shipping.setShippingCost((float) 15000);
+            shipping.setShippingFee((float) 15000);
         } else {
             shipping.setDesiredDeliveryTime(false);
-            shipping.setShippingCost((float) 25000);
+            shipping.setShippingFee((float) 25000);
         }
         shipping.setAddress(shippingRequest.getAddress());
         shipping.setNote(shippingRequest.getNote());
-        shipping.setCreateAt(LocalDateTime.now());
-        shipping.setUpdateAt(LocalDateTime.now());
-//        shipping.setShipperId(0L);
-        shipping.setStatus(EShipStatus.PENDING_ASSIGN_TO_SHIPPER);
         return shippingRepository.save(shipping);
     }
 
@@ -167,20 +166,83 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList());
     }
 
-    public void cancelOrder(Long orderId) {
+    @Override
+    public void confirmOrder(Long orderId) {
         Optional<Order> orderOptional = orderRepository.findById(orderId);
-        if(orderOptional.isPresent()) {
+        if (orderOptional.isPresent()) {
             Order order = orderOptional.get();
             EOrderStatus status = order.getStatus();
-            if(status == EOrderStatus.PENDING_CONFIRMATION) {
+            if (status == EOrderStatus.PENDING_CONFIRMATION) {
+                order.setStatus(EOrderStatus.CONFIRMED);
+                orderRepository.save(order);
+            } else {
+                throw new RuntimeException("Chỉ có thể xác nhận đơn hàng đang chờ, không thể xác nhận đơn hàng với trạng thái " + status);
+            }
+        }
+    }
+
+    @Override
+    public void cancelOrder(Long orderId) {
+        Optional<Order> orderOptional = orderRepository.findById(orderId);
+        if (orderOptional.isPresent()) {
+            Order order = orderOptional.get();
+            EOrderStatus status = order.getStatus();
+            if (status == EOrderStatus.PENDING_CONFIRMATION) {
                 order.setStatus(EOrderStatus.CANCELLED);
                 orderRepository.save(order);
             } else {
-                throw new RuntimeException("Cannot cancel order with status: " + status);
+                throw new RuntimeException("Chỉ có thể hủy đơn hàng đang chờ, không thể hủy đơn hàng với trạng thái " + status);
             }
-        } else {
-            throw new RuntimeException("Order not found with ID: " + orderId);
         }
+
+    }
+
+    @Override
+    public void updateStatusOrderByShipepr(Long orderId, EOrderStatus status) {
+        Order order = orderRepository.findById(orderId).orElse(null);
+        if ((status == EOrderStatus.IN_PROGRESS
+                || status == EOrderStatus.RETURNED
+                || status == EOrderStatus.DELIVERED) && order != null) {
+            if (status == EOrderStatus.DELIVERED && order.getStatus() == EOrderStatus.DELIVERED) {
+                // Đã giao hàng thành công rồi, không cần phải cập nhật lại
+                throw new RuntimeException("Không thể cập nhật trạng thái vì đơn hàng đã giao thành công!!!");
+            }
+
+            orderRepository.updateOrderStatus(orderId, status.name());
+
+            if (status == EOrderStatus.DELIVERED) {
+
+                for (OrderDetail orderDetail : order.getOrderDetailList()) {
+                    Long productId = orderDetail.getProductId();
+                    int orderQuantity = orderDetail.getQuantity();
+                    String size = orderDetail.getSize();
+                    if (productId != null && orderQuantity > 0 && size != null && !size.isEmpty()) {
+                        //Lấy thông tin product size
+                        ProductSize productSize = productSizeRepository.findProductSizeByProductIdAndSize(productId, size);
+                        if (productSize != null) {
+                            int productSizeQuantity = productSize.getQuantity() - orderQuantity;
+                            if (productSizeQuantity >= 0) {
+                                productSize.setQuantity(productSizeQuantity);
+                                productSizeRepository.save(productSize);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+    }
+
+    @Override
+    public List<OrderDto> listOrderByShipper(String token) {
+        String jwtToken = token.substring(7);
+        String email = tokenProvider.getUsernameFromJWT(jwtToken);
+        User user = userRepository.findByEmail(email);
+        List<Order> listOrderByShipper = orderRepository.listOrderByShipper(user.getId());
+        return listOrderByShipper.stream()
+                .map(MapperUtil::mapToOrderDto)
+                .collect(Collectors.toList());
 
     }
 
