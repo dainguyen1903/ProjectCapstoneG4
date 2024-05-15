@@ -20,14 +20,32 @@ const OrderPage = () => {
     },
     {
       id: 1,
-      name: "Đang giao",
+      name: "Chờ xác nhận",
     },
     {
       id: 2,
+      name: "Đã xác nhận",
+    },
+    
+    {
+      id: 3,
+      name: "Đang giao",
+    },
+    
+    {
+      id: 4,
       name: "Đã giao",
     },
     {
-      id: 3,
+      id: 5,
+      name: "Hoàn trả",
+    },
+    {
+      id: 6,
+      name: "Giao thất bại",
+    },
+    {
+      id: 7,
       name: "Đã hủy",
     },
   ];
@@ -43,7 +61,7 @@ const OrderPage = () => {
 
   const getLisOrder = async () => {
     try {
-      const res = await orrderApi.getListOrderByUserId(currentUser.id);
+      const res = await orrderApi.getHistoryOrder();
       setListOrder(res.data.data || []);
     } catch (error) {}
   };
@@ -53,9 +71,13 @@ const OrderPage = () => {
     }
   }, [currentUser]);
 
-  const listPending = listOrder.filter(
+  const listPendingConfirm = listOrder.filter(
     (i) => i.orderStatus === STATUS_ORDER.pending
   );
+  const listConfirmed = listOrder.filter(
+    (i) => i.orderStatus === STATUS_ORDER.confirmed
+  );
+
   const listInprogress = listOrder.filter(
     (i) => i.orderStatus === STATUS_ORDER.inprogress
   );
@@ -65,6 +87,13 @@ const OrderPage = () => {
   const listCancel = listOrder.filter(
     (i) => i.orderStatus === STATUS_ORDER.cancel
   );
+  const listReturn = listOrder.filter(
+    (i) => i.orderStatus === STATUS_ORDER.returned
+  );
+  const listFail = listOrder.filter(
+    (i) => i.orderStatus === STATUS_ORDER.FAILED
+  );
+
 
   return (
     <div className="cart bg-whitesmoke">
@@ -90,9 +119,13 @@ const OrderPage = () => {
           </div>
           <div>
             {value === 0 && <ListShipping list={listOrder} />}
-            {value === 1 && <ListShipping list={listPending} />}
-            {value === 2 && <ListShipping list={listComplete} />}
-            {value === 3 && <ListShipping list={listCancel} />}
+            {value === 1 && <ListShipping list={listPendingConfirm} />}
+            {value === 2 && <ListShipping list={listConfirmed} />}
+            {value === 3 && <ListShipping list={listInprogress} />}
+            {value === 4 && <ListShipping list={listComplete} />}
+            {value === 5 && <ListShipping list={listReturn} />}
+            {value === 6 && <ListShipping list={listFail} />}
+            {value === 7 && <ListShipping list={listCancel} />}
           </div>
         </div>
       </div>

@@ -14,14 +14,18 @@ export const STATUS_MATCH = {
 }
 export const STATUS_ORDER= {
     
-    "PENDING" :"Chờ xác nhận", // Đơn hàng chờ xác nhận
+    "PENDING_CONFIRMATION" :"Chờ xác nhận", // Đơn hàng chờ xác nhận
     "CANCELLED":"Đã hủy",
     "IN_PROGRESS":"Đang giao", // Đơn hàng đang vận chuyển
-    "COMPLETE":"Đã giao",
+    "DELIVERED":"Đã giao",
     "FAILED":"Giao thất bại",
-    pending:"PENDING",
+    "CONFIRMED":"Đã xác nhận", // chờ shipper lấy hàng,
+    "RETURNED":"Đơn hoàn trả",
+    pending:"PENDING_CONFIRMATION",
     cancel:"CANCELLED",
     inprogress:"IN_PROGRESS",
-    complete:"COMPLETE",
-    fail:"FAILED"
+    complete:"DELIVERED",
+    fail:"FAILED",
+    returned:"RETURNED",
+    confirmed:"CONFIRMED"
 }

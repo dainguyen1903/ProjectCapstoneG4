@@ -42,16 +42,18 @@ const CheckOutPage = () => {
     {
       id: 1,
       name: "Thanh toán VNPAY",
+      key:"VNPAY",
     },
     {
       id: 2,
-      name: "Thanhh toán khi nhận hàng",
+      name: "Thanh toán khi nhận hàng",
+      key:"COD"
 
     },
   ];
   const dispatch = useDispatch();
   const orders = useSelector(getAllCarts)
-  const [method,setMethod] = useState(1)
+  const [method,setMethod] = useState(paymentMethods[0])
 
   
   const totalAmount = orders.reduce((total, cart) => {
@@ -73,9 +75,15 @@ const CheckOutPage = () => {
           shipName:shipData.receiverName,
           phone:shipData.receiverPhone,
           note:shipData.note,
-          address:shipData.receiverAddress
+          address:shipData.receiverAddress,
+          ward:"a",
+          district:"b",
+          province:"c",
+          desiredDeliveryTime:true,
+
         },
-        paymentMethod:"Thanh toán vnpay"
+        paymentMethod:method.key,
+
       }
       const res = await orrderApi.addOrder(dataPost)
       if(res.data.status === 200 ||res.data.status === 204 ){
@@ -151,9 +159,9 @@ const CheckOutPage = () => {
           <div className="wrap-method">
           {paymentMethods.map((item) => (
             <div style={{
-                border:item.id === method ? "2px solid rgb(41, 174, 189)":"",
-                color:item.id === method ? "rgb(41, 174, 189)":""
-            }} onClick={() => setMethod(item.id)} className="method">
+                border:item.id === method.id ? "2px solid rgb(41, 174, 189)":"",
+                color:item.id === method.id ? "rgb(41, 174, 189)":""
+            }} onClick={() => setMethod(item)} className="method">
                 {item.name}
             </div>
            ))}

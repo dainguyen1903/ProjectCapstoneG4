@@ -10,6 +10,9 @@ export const orrderApi = {
  },
  getOrderDetailById:(id) => {
     return api.get("api/" + `order-details/${id}`)
+ },
+ getHistoryOrder : () => {
+   return api.get("api/" + "order/history-order")
  }
   
 };
