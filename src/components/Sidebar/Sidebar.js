@@ -18,7 +18,6 @@ const Sidebar = () => {
       
     }
   }, [dispatch])
-console.log(categories)
   return (
     <aside className={`sidebar ${isSidebarOn ? 'hide-sidebar' : ""}`}>
       <button type = "button" className='sidebar-hide-btn' onClick={() => dispatch(setSidebarOff())}>
