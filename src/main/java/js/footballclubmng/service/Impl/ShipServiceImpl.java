@@ -1,10 +1,9 @@
 package js.footballclubmng.service.Impl;
 
-import js.footballclubmng.common.MapperUtil;
+import js.footballclubmng.util.MapperUtil;
 import js.footballclubmng.config.TokenProvider;
 import js.footballclubmng.entity.Shipping;
 import js.footballclubmng.entity.User;
-import js.footballclubmng.enums.EShipStatus;
 import js.footballclubmng.model.dto.UserDto;
 import js.footballclubmng.model.response.ListShippingResponse;
 import js.footballclubmng.repository.ShippingRepository;
@@ -13,8 +12,6 @@ import js.footballclubmng.service.ShipService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 

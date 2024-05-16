@@ -1,6 +1,6 @@
 package js.footballclubmng.service.Impl;
 
-import js.footballclubmng.common.MapperUtil;
+import js.footballclubmng.util.MapperUtil;
 import js.footballclubmng.entity.*;
 import js.footballclubmng.model.dto.*;
 import js.footballclubmng.model.request.CreateProductRequest;
