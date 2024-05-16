@@ -1,4 +1,4 @@
-package js.footballclubmng.util;
+package js.footballclubmng.common;
 
 import js.footballclubmng.entity.*;
 import js.footballclubmng.model.dto.*;

@@ -1,6 +1,6 @@
 package js.footballclubmng.service.Impl;
 
-import js.footballclubmng.util.MapperUtil;
+import js.footballclubmng.common.MapperUtil;
 import js.footballclubmng.config.TokenProvider;
 import js.footballclubmng.entity.*;
 import js.footballclubmng.enums.EOrderMethod;
