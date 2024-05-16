@@ -10,7 +10,6 @@ import java.util.List;
 @Repository
 public interface ShippingRepository extends JpaRepository<Shipping,Long> {
 
-    List<Shipping> findAllByOrderByCreateAtDesc();
 
     @Query(value = "SELECT * FROM orders o JOIN shipping s ON o.shipping_id = s.shipping_id WHERE s.shipper_id = ?1", nativeQuery = true)
     List<Shipping> listShippingForShipper(Long shipperId);

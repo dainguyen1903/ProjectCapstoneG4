@@ -184,6 +184,12 @@ public class CommonConstant {
 
         public static final String CREATE_ORDER_FAIL = "Tạo đơn hàng thất bại";
 
+        public static final String CANCEL_ORDER = "Hủy đơn hàng thành công";
+
+        public static final String CONFIRM_ORDER = "Xác nhận đơn hàng thành công";
+
+        public static final String UPDATE_STATUS_ORDER_SUCCESS = "Cập nhật trạng thái đơn hàng thành công";
+
 
         //Message payment
 
@@ -299,6 +305,17 @@ public class CommonConstant {
         public static final String ASSIGN_SHIPPER = HEAD_API + ORDER + "/assign-shipper";
 
         public static final String HISTORY_ORDER = HEAD_API + ORDER + "/history-order";
+
+        public static final String CANCEL_ORDER = HEAD_API + ORDER + "/cancel-order/{orderId}";
+
+        public static final String CONFIRM_ORDER = HEAD_API + ORDER + "/confirm-order/{orderId}";
+
+        public static final String LIST_ORDER_BY_SHIPPER = HEAD_API + ORDER + "/list-order-by-shipper";
+
+        public static final String UPDATE_STATUS_ORDER_BY_SHIPPER = HEAD_API + ORDER + "/update-status-order-by-shipper/{orderId}";
+
+
+
 
 
     }

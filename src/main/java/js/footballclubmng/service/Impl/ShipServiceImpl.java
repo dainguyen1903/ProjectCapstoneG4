@@ -30,7 +30,7 @@ public class ShipServiceImpl implements ShipService {
     private UserRepository userRepository;
     @Override
     public List<ListShippingResponse> getAllShipping() {
-        List<Shipping> shippingList = shippingRepository.findAllByOrderByCreateAtDesc();
+        List<Shipping> shippingList = shippingRepository.findAll();
         return shippingList.stream()
                 .map(MapperUtil::mapToShippingResponse)
                 .collect(Collectors.toList());
@@ -41,8 +41,6 @@ public class ShipServiceImpl implements ShipService {
         Shipping shipping = shippingRepository.findById(shippingId).orElse(null);
         if(shipping != null) {
             shipping.setShipperId(shipperId);
-            shipping.setStatus(EShipStatus.AWAITING_PICK_UP_BY_SHIPPER);
-            shipping.setUpdateAt(LocalDateTime.now());
             shippingRepository.save(shipping);
         }
     }
@@ -74,31 +72,9 @@ public class ShipServiceImpl implements ShipService {
                 .collect(Collectors.toList());
     }
 
-    public void updateShippingStatus(Long shippingId, String updateStatus) {
-        // Kiểm tra xem newStatus có tồn tại trong enum EShipStatus không
-        boolean isValidStatus = Arrays.stream(EShipStatus.values())
-                .map(Enum::name)
-                .anyMatch(status -> status.equals(updateStatus));
-        if (!isValidStatus) {
-            throw new IllegalArgumentException("Invalid shipping status");
-        }
-
-
-        Shipping shipping = shippingRepository.findById(shippingId).orElse(null);
-//        shipping.setStatus(EShipStatus.valueOf(updateStatus));
 
 
 
-        // Lưu thay đổi vào cơ sở dữ liệu
-        shippingRepository.save(shipping);
-
-    }
-
-    public List<String> getShippingStatusOptions() {
-        return Arrays.stream(EShipStatus.values())
-                .map(Enum::name)
-                .collect(Collectors.toList());
-    }
 
 
 }
