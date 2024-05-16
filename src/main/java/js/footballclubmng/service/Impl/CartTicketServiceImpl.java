@@ -9,7 +9,6 @@ import js.footballclubmng.repository.CartTicketRepository;
 import js.footballclubmng.repository.FixturesRepository;
 import js.footballclubmng.repository.UserRepository;
 import js.footballclubmng.service.CartTicketService;
-import js.footballclubmng.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

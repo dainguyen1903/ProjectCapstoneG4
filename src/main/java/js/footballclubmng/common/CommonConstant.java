@@ -162,6 +162,7 @@ public class CommonConstant {
         public static final String ADD_TICKET_SUCCESS = "Mua vé thành công";
         public static final String EMPTY_TOTAL_PRICE = "Tổng giá trị vé không được trống";
 
+
         //Message cart ticket
         public static final String ADD_CART_TICKET_ITEM_FAIL = "Thêm vé vào giỏ hàng thất bại";
         public static final String ADD_CART_TICKET_ITEM_SUCCESS = "Thêm vé vào giỏ hàng thành công";
@@ -197,6 +198,7 @@ public class CommonConstant {
         public static final String CREATE_PAYMENT_FAIL = "Tạo thanh toán thất bại";
 
         public static final String ORDER_DETAILS_NOT_FOUND = "Không tìm thấy danh mục đơn hàng";
+
 
         //Message shipping
         public static final String ASSIGN_TO_SHIPPER = "Đã cập nhật shipper cho đơn hàng";
@@ -284,6 +286,7 @@ public class CommonConstant {
         public static final String SEARCH_PRODUCT = HEAD_API + PRODUCT + "/search-product";
 
         public static final String GET_IMAGE_PRODUCT_BY_PLAYER = HEAD_API + PRODUCT + "/product-with/{productId}";
+
         public static final String FILTER_PRODUCT_BY_CATEGORY = HEAD_API + PRODUCT + "/filter-product";
     }
 
