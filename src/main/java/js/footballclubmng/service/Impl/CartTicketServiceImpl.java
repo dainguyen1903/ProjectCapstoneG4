@@ -1,6 +1,6 @@
 package js.footballclubmng.service.Impl;
 
-import js.footballclubmng.common.MapperUtil;
+import js.footballclubmng.util.MapperUtil;
 import js.footballclubmng.config.TokenProvider;
 import js.footballclubmng.entity.*;
 import js.footballclubmng.model.response.ListCartTicketItemResponse;
@@ -9,7 +9,6 @@ import js.footballclubmng.repository.CartTicketRepository;
 import js.footballclubmng.repository.FixturesRepository;
 import js.footballclubmng.repository.UserRepository;
 import js.footballclubmng.service.CartTicketService;
-import js.footballclubmng.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

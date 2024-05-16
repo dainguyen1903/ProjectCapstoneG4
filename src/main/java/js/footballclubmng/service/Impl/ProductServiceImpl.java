@@ -1,15 +1,11 @@
 package js.footballclubmng.service.Impl;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import js.footballclubmng.common.MapperUtil;
+import js.footballclubmng.util.MapperUtil;
 import js.footballclubmng.entity.*;
 import js.footballclubmng.model.dto.*;
 import js.footballclubmng.model.request.CreateProductRequest;
-import js.footballclubmng.model.response.ListPlayerResponse;
 import js.footballclubmng.repository.*;
 import js.footballclubmng.service.ProductService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

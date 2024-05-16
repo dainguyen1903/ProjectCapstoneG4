@@ -1,11 +1,9 @@
 package js.footballclubmng.service.Impl;
 
-import jakarta.persistence.EntityNotFoundException;
-import js.footballclubmng.common.MapperUtil;
+import js.footballclubmng.util.MapperUtil;
 import js.footballclubmng.config.TokenProvider;
 import js.footballclubmng.entity.Shipping;
 import js.footballclubmng.entity.User;
-import js.footballclubmng.enums.EOrderStatus;
 import js.footballclubmng.enums.EShipStatus;
 import js.footballclubmng.model.dto.UserDto;
 import js.footballclubmng.model.response.ListShippingResponse;

@@ -35,6 +35,9 @@ public class News {
     @Column(name = "date_create", nullable = false)
     private LocalDateTime dateCreate;
 
+    @Column(name = "date_update")
+    private LocalDateTime dateUpdate;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "news_type_id")
     @JsonIgnoreProperties({"newsList"})

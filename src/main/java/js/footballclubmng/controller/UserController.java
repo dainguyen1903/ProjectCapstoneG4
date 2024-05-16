@@ -35,7 +35,7 @@ public class UserController extends BaseController{
     UserService userService;
 
     @PostMapping(CommonConstant.USER_API.LOGIN)
-    public ResponseAPI<Object> login(@RequestBody LoginRequest request) {
+    public ResponseAPI<Object> login(@RequestBody @Valid LoginRequest request) {
         ResponseAPI<Object> result = new ResponseAPI<Object>();
         if (request.isValid()) {
             try {
@@ -74,7 +74,6 @@ public class UserController extends BaseController{
             return userService.createUser(request, file, getSiteURL(requestHttp));
         }
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_VALID, CommonConstant.COMMON_MESSAGE.INVALID_PARAMETER);
-
     }
 
     @PostMapping(value = CommonConstant.USER_API.UPDATE_USER,
@@ -110,6 +109,7 @@ public class UserController extends BaseController{
         }
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_VALID, CommonConstant.COMMON_MESSAGE.INVALID_PARAMETER);
     }
+
     @PostMapping(CommonConstant.USER_API.REGISTER)
     public ResponseAPI<Object> register(@RequestBody @Valid UserRegisterRequest userRegisterRequest) {
         User user = userService.findUserByEmailForRegister(userRegisterRequest.getEmail());
