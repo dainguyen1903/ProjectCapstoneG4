@@ -241,6 +241,7 @@ const AddUserForm = () => {
                       <Option value="Admin">Admin</Option>
                       <Option value="Operator">Operator</Option>
                       <Option value="Sale">Sale </Option>
+                      <Option value="Shipper">Shipper </Option>
                     </Select>
                   </Form.Item>
                 </>

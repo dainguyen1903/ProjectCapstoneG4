@@ -158,7 +158,7 @@ key:"/order",
 path:"/order",
 icon:MenuFoldOutlined,
 menuName:"Danh sách order",
-role: [ROLE.SALE],
+role: [ROLE.SALE,ROLE.SHIPPER],
 component: OrderList,
 
   },

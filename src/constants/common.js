@@ -22,3 +22,19 @@ export const POSITION_PLAYER = [
     "Tiền đạo cánh phải",
     "Tiền đạo trung tâm"
 ];
+export const STATUS_ORDER= {
+    "PENDING_CONFIRMATION" :"Chờ xác nhận", // Đơn hàng chờ xác nhận
+    "CANCELLED":"Đã hủy",
+    "IN_PROGRESS":"Đang giao", // Đơn hàng đang vận chuyển
+    "DELIVERED":"Đã giao",
+    "FAILED":"Giao thất bại",
+    "CONFIRMED":"Đã xác nhận", // chờ shipper lấy hàng,
+    "RETURNED":"Đơn hoàn trả",
+    pending:"PENDING_CONFIRMATION",
+    cancel:"CANCELLED",
+    inprogress:"IN_PROGRESS",
+    complete:"DELIVERED",
+    fail:"FAILED",
+    returned:"RETURNED",
+    confirmed:"CONFIRMED"
+}
