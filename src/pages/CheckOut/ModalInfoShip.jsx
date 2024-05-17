@@ -1,5 +1,5 @@
 import { Button, Checkbox, Input, Modal } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Province from "../components/common/Province";
 
 const ModalInfoShip = ({
@@ -12,8 +12,8 @@ const ModalInfoShip = ({
 }) => {
   const [data, setdata] = useState(shipData);
   const [dataProvince,setDataPro] = useState(pro)
+  console.log(dataProvince)
 
-console.log(dataProvince)
   return (
     <div>
       <Modal

@@ -91,6 +91,11 @@ message.error(mess || "Có lỗi xảy ra")
 export const handleError = (error, isshowToast = true) => {
   let mess = "";
   if (axios.isAxiosError(error)) {
+    const dataValidate = error.response?.data || null;
+    if(isObject(dataValidate)){
+      Object.values(dataValidate).forEach(v => message.error(v))
+      return ;
+    }
     mess = error.response?.data?.Message || "Có lỗi xảy ra";
     const errorObj = error.response?.data?.errors;
     if (errorObj) {
@@ -110,3 +115,8 @@ export const handleError = (error, isshowToast = true) => {
   }
   return mess;
 };
+
+//
+function isObject(value) {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+}

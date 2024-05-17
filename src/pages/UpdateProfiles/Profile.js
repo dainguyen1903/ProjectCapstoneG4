@@ -8,12 +8,15 @@ import {
   Row,
   Select,
   Spin,
+  message,
 } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useParams } from "react-router";
 import "./Profile.scss";
 import moment from "moment";
 import { userApi } from "../../api/user.api";
+import { handleError } from "../../utils/helpers";
+import Province from "../components/common/Province";
 const { Option } = Select;
 const ProfileUser = () => {
   const [form] = Form.useForm();
@@ -23,6 +26,12 @@ const ProfileUser = () => {
   const [url, setUrl] = useState(null);
   const fileRef = useRef();
   const [loading, setLoading] = useState(false);
+  
+  const [dataProvince, setDataProvince] = useState({
+    province: "",
+    district: "",
+    ward: "",
+  });
 
   const handleChangeFile = (e) => {
     let file = e.target.files[0];
@@ -34,19 +43,30 @@ const ProfileUser = () => {
   };
 
   const onSave = async () => {
+  try {
     setLoading(true)
     const objPost = form.getFieldsValue();
     const date = form.getFieldValue("dateOfBirth");
     const dateString = date ? moment(date).format("YYYY-MM-DD"):null;
     objPost.dateOfBirth = dateString;
     objPost.image = url;
+    objPost.province = dataProvince.province;
+    objPost.district = dataProvince.district;
+    objPost.ward = dataProvince.ward
     const res = await userApi.udpateProfileUser(objPost);
     setLoading(false)
+    message.success("Lưu thành công")
+  } catch (error) {
+    setLoading(false)
+    handleError(error)
+    console.log(error.response.data)
+  }
   };
 
   // getDetail
   const getDetail = async () => {
-    setLoading(true);
+    try {
+      setLoading(true);
 
     const res = await userApi.getProfileUser();
     const dataDetail = res.data.data;
@@ -58,7 +78,17 @@ const ProfileUser = () => {
     delete dataDetail.image_name;
     setUrl(dataDetail.image);
     form.setFieldsValue(dataDetail);
+    setDataProvince({
+      province:dataDetail.province,
+      district:dataDetail.district,
+      ward:dataDetail.ward
+    })
     setLoading(false);
+    } catch (error) {
+      console.log(error)
+      handleError(error)
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -91,7 +121,7 @@ const ProfileUser = () => {
             layout="vertical"
           >
             <Form.Item label={<span className="bold">Email</span>} name="email">
-              <Input placeholder="Email" />
+              <Input disabled placeholder="Email" />
             </Form.Item>
 
             <Form.Item
@@ -111,6 +141,15 @@ const ProfileUser = () => {
               name="lastName"
             >
               <Input placeholder="Tên" />
+            </Form.Item>
+            <Form.Item
+              style={{
+                marginTop: -15,
+              }}
+              // label={<span className="bold">Địa chỉ</span>}
+              name="address"
+            >
+             <Province state={dataProvince} setStateData={setDataProvince} bold={true} width={"100%"} />
             </Form.Item>
             <Form.Item
               style={{

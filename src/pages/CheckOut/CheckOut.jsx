@@ -1,28 +1,23 @@
+import { EditOutlined } from "@ant-design/icons";
+import { Button, Modal, message } from "antd";
 import React, { useEffect, useState } from "react";
-import "./../CartPage/CartPage.scss";
-import { useSelector, useDispatch } from "react-redux";
-import { shopping_cart } from "../../utils/images";
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import { formatPrice } from "../../utils/helpers";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { orrderApi } from "../../api/order.api";
+import { userApi } from "../../api/user.api";
 import {
   getAllCarts,
-  removeFromCart,
-  toggleCartQty,
-  clearCart,
-  getCartTotal,
-  getListCart,
+  getListCart
 } from "../../store/cartSlice";
+import { formatPrice } from "../../utils/helpers";
 import CartPage from "../CartPage/CartPage";
-import { orrderApi } from "../../api/order.api";
-import { Button, Input, Modal, message } from "antd";
+import "./../CartPage/CartPage.scss";
 import ModalInfoShip from "./ModalInfoShip";
-import { set } from "date-fns";
-import { EditOutlined } from "@ant-design/icons";
-import { paymentApi } from "../../api/payment.api.";
 
 const CheckOutPage = () => {
   const { currentUser } = useSelector((state) => state.auth);
-  const navigate = useNavigate()
+  console.log(currentUser);
+  const navigate = useNavigate();
   const [visible, setVisiable] = useState(false);
   const [shipData, setShipData] = useState({
     receiverName: currentUser?.fullname || "",
@@ -45,6 +40,23 @@ const CheckOutPage = () => {
       receiverAddress: currentUser?.address || "",
     });
   }, [currentUser]);
+
+  // getDetail
+  const getProfileUser = async () => {
+    try {
+      const res = await userApi.getProfileUser();
+      const dataDetail = res.data.data;
+      setDataProvince({
+        province: dataDetail.province,
+        district: dataDetail.district,
+        ward: dataDetail.ward,
+      });
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    getProfileUser();
+  }, []);
 
   const paymentMethods = [
     {
@@ -114,11 +126,10 @@ const CheckOutPage = () => {
               centered: true,
             });
           }
-        }
-        else{
-          message.success("Đặt hàng thành công")
+        } else {
+          message.success("Đặt hàng thành công");
           navigate("/order");
-          dispatch(getListCart())
+          dispatch(getListCart());
         }
       }
     } catch (error) {
@@ -150,16 +161,15 @@ const CheckOutPage = () => {
             >
               <div>
                 <div></div>
-                <div>
-                  Tên người nhận : {shipData.receiverName}{" "}
-               
-                </div>
+                <div>Tên người nhận : {shipData.receiverName} </div>
                 <div>Số điện thoại : {shipData.receiverPhone || " "}</div>
                 <div>
                   Địa chỉ : {shipData.receiverAddress}{" "}
-                  {dataProvince.ward ?(dataProvince.ward):"" }
-                   {dataProvince.district ?(" - " + dataProvince.district):"" } {" "}{dataProvince.province ?(" - " + dataProvince.province):"" } 
-                  
+                  {dataProvince.ward ? dataProvince.ward : ""}
+                  {dataProvince.district
+                    ? " - " + dataProvince.district
+                    : ""}{" "}
+                  {dataProvince.province ? " - " + dataProvince.province : ""}
                 </div>
                 {shipData.note && <div>Note : {shipData.note}</div>}
               </div>
@@ -220,14 +230,16 @@ const CheckOutPage = () => {
           </div>
         </div>
       </div>
-      <ModalInfoShip
-        setDataPro={setDataProvince}
-        dataProvince={dataProvince}
-        onClose={onClose}
-        visible={visible}
-        shipData={shipData}
-        setShipData={setShipData}
-      />
+    {
+      visible &&   <ModalInfoShip
+      setDataPro={setDataProvince}
+      dataProvince={dataProvince}
+      onClose={onClose}
+      visible={visible}
+      shipData={shipData}
+      setShipData={setShipData}
+    />
+    }
       {/* <Modal
       title="Thông tin người nhận"
       open={visible}
