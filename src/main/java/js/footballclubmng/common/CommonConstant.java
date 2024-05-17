@@ -50,6 +50,8 @@ public class CommonConstant {
         public static String EMPTY = "EMPTY";
         public static String EXCEPTION = "EXCEPTION";
 
+        public static final String NOT_FOUND_USER = "Không tìm thấy người dùng";
+
 
         //Message Register
         public static String EXIST_EMAIL = "Email đã tồn tại";
@@ -87,6 +89,7 @@ public class CommonConstant {
         public static final String UPDATE_PLAYER_FAIL = "Cập nhật cầu thủ thất bại";
         public static final String DELETE_PLAYER_SUCCESS = "Xóa cầu thủ thành công";
         public static final String DELETE_PLAYER_FAIL = "Xóa cầu thủ thất bại";
+        public static final String DATE_IN_THE_PAST = "Ngày sinh phải là một ngày trong quá khứ";
 
 
         //Message category

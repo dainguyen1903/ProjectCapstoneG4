@@ -39,7 +39,11 @@ public class PlayerController {
     @PostMapping(CommonConstant.PLAYER_API.CREATE_PLAYER)
     @PreAuthorize("hasRole('ROLE_Operator')")
     public ResponseAPI<Object> createPlayer(@RequestBody @Valid PlayerDto player) {
-        boolean checkNumber = playerService.checkPlayerNumberExist(player.getPlayerNumber());
+        boolean checkDate = playerService.isDateInThePast(player.getDateOfBirth());
+        if (!checkDate) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.DATE_IN_THE_PAST);
+        }
+        boolean checkNumber = playerService.checkPlayerNumberExist(Long.valueOf(player.getPlayerNumber()));
         if (!checkNumber) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.PLAYER_NUMBER_EXIST);
         }
@@ -57,8 +61,12 @@ public class PlayerController {
         if (p == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.NOT_FOUND_PLAYER);
         }
-        if (p.getPlayerNumber() != player.getPlayerNumber()) {
-            boolean checkNumber = playerService.checkPlayerNumberExist(player.getPlayerNumber());
+        boolean checkDate = playerService.isDateInThePast(player.getDateOfBirth());
+        if (!checkDate) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.DATE_IN_THE_PAST);
+        }
+        if (p.getPlayerNumber() != Long.valueOf(player.getPlayerNumber())) {
+            boolean checkNumber = playerService.checkPlayerNumberExist(Long.valueOf(player.getPlayerNumber()));
             if (!checkNumber) {
                 return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.PLAYER_NUMBER_EXIST);
             }

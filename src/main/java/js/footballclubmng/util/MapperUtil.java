@@ -134,13 +134,13 @@ public class MapperUtil {
         fixturesDto.setImageHomeTeam(fixtures.getImageHomeTeam());
         fixturesDto.setAwayTeam(fixtures.getAwayTeam());
         fixturesDto.setImageAwayTeam(fixtures.getImageAwayTeam());
-        fixturesDto.setDateTime(fixtures.getDateTime());
+        fixturesDto.setDateTime(String.valueOf(fixtures.getDateTime()));
         fixturesDto.setLocation(fixtures.getLocation());
         fixturesDto.setStatusMatch(fixtures.getStatusMatch());
-        fixturesDto.setHomeScore(fixtures.getHomeScore());
-        fixturesDto.setAwayScore(fixtures.getAwayScore());
-        fixturesDto.setNumberOfTicket(fixtures.getNumberOfTicket());
-        fixturesDto.setPriceOfTicket(fixtures.getPriceOfTicket());
+        fixturesDto.setHomeScore(String.valueOf(fixtures.getHomeScore()));
+        fixturesDto.setAwayScore(String.valueOf(fixtures.getAwayScore()));
+        fixturesDto.setNumberOfTicket(String.valueOf(fixtures.getNumberOfTicket()));
+        fixturesDto.setPriceOfTicket(String.valueOf(fixtures.getPriceOfTicket()));
         fixturesDto.setNumberOfTicketsSold(fixtures.getNumberOfTicketsSold());
         fixturesDto.setStatus(fixtures.getStatus());
         return fixturesDto;

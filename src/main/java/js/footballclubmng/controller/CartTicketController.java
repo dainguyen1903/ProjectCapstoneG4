@@ -32,7 +32,7 @@ public class CartTicketController {
         if (quantity > 2){
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.QUANTITY_LIMIT);
         }
-        if (fixtures.getNumberOfTicket() < quantity){
+        if (Integer.parseInt(fixtures.getNumberOfTicket()) < quantity){
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.NOT_ENOUGH_TICKET);
         }
         boolean checkQuantity = cartTicketService.checkQuantityCartTicketItems(token, fixtureId, quantity);

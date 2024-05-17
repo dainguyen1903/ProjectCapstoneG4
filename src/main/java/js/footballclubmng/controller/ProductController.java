@@ -30,7 +30,7 @@ public class ProductController {
 
     @PostMapping(CommonConstant.PRODUCT_API.CREATE_PRODUCT)
     @PreAuthorize("hasRole('ROLE_Sale')")
-    public ResponseAPI<Product> createProduct(@RequestBody CreateProductRequest request) {
+    public ResponseAPI<Product> createProduct(@RequestBody @Valid CreateProductRequest request) {
         Product createProduct = productService.createProduct(request);
         if(createProduct == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.CREATE_PRODUCT_FAIL);

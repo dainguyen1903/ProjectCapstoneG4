@@ -8,6 +8,11 @@ import js.footballclubmng.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -36,18 +41,21 @@ public class PlayerServiceImpl implements PlayerService {
     public boolean createPlayer(PlayerDto player) {
         try {
             Player p = new Player();
-            p.setPlayerNumber(player.getPlayerNumber());
+            p.setPlayerNumber(Long.valueOf(player.getPlayerNumber()));
             p.setName(player.getName());
-            p.setDateOfBirth(player.getDateOfBirth());
-            p.setHeight(player.getHeight());
-            p.setWeight(player.getWeight());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = sdf.parse(player.getDateOfBirth());
+            p.setDateOfBirth(date);
+            p.setHeight(Integer.valueOf(player.getHeight()));
+            p.setWeight(Integer.valueOf(player.getWeight()));
             p.setImageAvatar(player.getImageAvatar());
             p.setImageFirstJersey(player.getImageFirstJersey());
             p.setImageSecondJersey(player.getImageSecondJersey());
             p.setNationality(player.getNationality());
             p.setPosition(player.getPosition());
             p.setBio(player.getBio());
-            p.setJoinDate(player.getJoinDate());
+            Date joinDate = sdf.parse(player.getJoinDate());
+            p.setJoinDate(joinDate);
             p.setStatus(true);
             playerRepository.save(p);
             return true;
@@ -61,18 +69,21 @@ public class PlayerServiceImpl implements PlayerService {
         try {
             Player p = playerRepository.findById(id).orElse(null);
             if (p != null) {
-                p.setPlayerNumber(player.getPlayerNumber());
+                p.setPlayerNumber(Long.valueOf(player.getPlayerNumber()));
                 p.setName(player.getName());
-                p.setDateOfBirth(player.getDateOfBirth());
-                p.setHeight(player.getHeight());
-                p.setWeight(player.getWeight());
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                Date date = sdf.parse(player.getDateOfBirth());
+                p.setDateOfBirth(date);
+                p.setHeight(Integer.valueOf(player.getHeight()));
+                p.setWeight(Integer.valueOf(player.getWeight()));
                 p.setImageAvatar(player.getImageAvatar());
                 p.setImageFirstJersey(player.getImageFirstJersey());
                 p.setImageSecondJersey(player.getImageSecondJersey());
                 p.setNationality(player.getNationality());
                 p.setPosition(player.getPosition());
                 p.setBio(player.getBio());
-                p.setJoinDate(player.getJoinDate());
+                Date joinDate = sdf.parse(player.getJoinDate());
+                p.setJoinDate(joinDate);
                 playerRepository.save(p);
                 return true;
             }
@@ -118,5 +129,25 @@ public class PlayerServiceImpl implements PlayerService {
         return listPlayerResponse;
     }
 
+    public static Date getPreviousDate(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date); // Đặt ngày muốn xem
+        calendar.add(Calendar.DAY_OF_MONTH, -1); // Trừ một ngày
+        return calendar.getTime(); // Trả về ngày trước đó
+    }
+    public boolean isDateInThePast(String date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date d = sdf.parse(date);
+            Date currentDate = new Date();
+            Date previousDate = getPreviousDate(currentDate);
+            if (d.before(previousDate)) {
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
 }
