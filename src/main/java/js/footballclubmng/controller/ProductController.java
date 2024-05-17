@@ -95,10 +95,11 @@ public class ProductController {
 
     @GetMapping(CommonConstant.PRODUCT_API.FILTER_PRODUCT_BY_CATEGORY)
     public ResponseAPI<List<ProductDto>> filterProductByCategory(@RequestParam(required = false) String categoryName,
+                                                                 @RequestParam(required = false) String keyword,
                                                                  @RequestParam(required = false) Float minPrice,
                                                                  @RequestParam(required = false) Float maxPrice,
                                                                  @RequestParam(required = false) String sortType) {
-        List<ProductDto> productList = productService.getFilterProducts(categoryName, minPrice, maxPrice, sortType);
+        List<ProductDto> productList = productService.getFilterProducts(categoryName, keyword, minPrice, maxPrice, sortType);
         if(productList.isEmpty()) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.NOT_FOUND_PRODUCT);
         }
