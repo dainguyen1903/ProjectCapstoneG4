@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -33,7 +34,7 @@ public class FixturesController {
 
     @PostMapping(CommonConstant.FIXTURES_API.CREATE_FIXTURES)
     @PreAuthorize("hasRole('ROLE_Operator')")
-    public ResponseAPI<Fixtures> createFixtures(@RequestBody FixturesDto fixtures) {
+    public ResponseAPI<Fixtures> createFixtures(@RequestBody @Valid FixturesDto fixtures) {
         boolean result = fixturesService.addFixtures(fixtures);
         if (!result) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.ADD_FIXTURES_FAIL, null);
@@ -43,7 +44,7 @@ public class FixturesController {
 
     @PutMapping(CommonConstant.FIXTURES_API.UPDATE_FIXTURES)
     @PreAuthorize("hasRole('ROLE_Operator')")
-    public ResponseAPI<Fixtures> updateFixtures(@PathVariable int id, @RequestBody FixturesDto fixtures) {
+    public ResponseAPI<Fixtures> updateFixtures(@PathVariable int id, @RequestBody @Valid FixturesDto fixtures) {
         FixturesDto fixtures1 = fixturesService.getFixturesById(id);
         if (fixtures1 == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.NOT_FOUND_FIXTURES, null);

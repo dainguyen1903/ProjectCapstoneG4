@@ -9,6 +9,7 @@ import js.footballclubmng.service.FixturesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,17 +18,18 @@ public class FixturesServiceImpl implements FixturesService {
 
     @Autowired
     private FixturesRepository fixtureRepository;
+
     @Override
     public List<FixturesDto> findAllFixtures() {
         List<Fixtures> matchList = fixtureRepository.viewAllFixtures();
         return matchList.stream()
-                .map((fixtures) -> mapToFixturesDto (fixtures))
+                .map((fixtures) -> mapToFixturesDto(fixtures))
                 .collect(Collectors.toList());
     }
 
     @Override
     public FixturesDto getFixturesById(long id) {
-        Fixtures fixtures1  = fixtureRepository.findById(id).orElse(null);
+        Fixtures fixtures1 = fixtureRepository.findById(id).orElse(null);
         if (fixtures1 == null) {
             return null;
         }
@@ -44,13 +46,17 @@ public class FixturesServiceImpl implements FixturesService {
             fixtures1.setImageHomeTeam(fixtures.getImageHomeTeam());
             fixtures1.setAwayTeam(fixtures.getAwayTeam());
             fixtures1.setImageAwayTeam(fixtures.getImageAwayTeam());
-            fixtures1.setDateTime(fixtures.getDateTime());
+            fixtures1.setDateTime(LocalDateTime.parse(fixtures.getDateTime()));
             fixtures1.setLocation(fixtures.getLocation());
             fixtures1.setStatusMatch(fixtures.getStatusMatch());
-            fixtures1.setHomeScore(fixtures.getHomeScore());
-            fixtures1.setAwayScore(fixtures.getAwayScore());
-            fixtures1.setNumberOfTicket(fixtures.getNumberOfTicket());
-            fixtures1.setPriceOfTicket(fixtures.getPriceOfTicket());
+            if (fixtures.getHomeScore() != null && !fixtures.getHomeScore().isEmpty()) {
+                fixtures1.setHomeScore(Integer.valueOf(fixtures.getHomeScore()));
+            }
+            if (fixtures.getAwayScore() != null && !fixtures.getAwayScore().isEmpty()) {
+                fixtures1.setAwayScore(Integer.valueOf(fixtures.getAwayScore()));
+            }
+            fixtures1.setNumberOfTicket(Integer.valueOf(fixtures.getNumberOfTicket()));
+            fixtures1.setPriceOfTicket(Double.valueOf(fixtures.getPriceOfTicket()));
             fixtures1.setNumberOfTicketsSold(0);
             fixtures1.setStatus(true);
             fixtureRepository.save(fixtures1);
@@ -73,13 +79,17 @@ public class FixturesServiceImpl implements FixturesService {
             fixtures1.setImageHomeTeam(fixtures.getImageHomeTeam());
             fixtures1.setAwayTeam(fixtures.getAwayTeam());
             fixtures1.setImageAwayTeam(fixtures.getImageAwayTeam());
-            fixtures1.setDateTime(fixtures.getDateTime());
+            fixtures1.setDateTime(LocalDateTime.parse(fixtures.getDateTime()));
             fixtures1.setLocation(fixtures.getLocation());
             fixtures1.setStatusMatch(fixtures.getStatusMatch());
-            fixtures1.setHomeScore(fixtures.getHomeScore());
-            fixtures1.setAwayScore(fixtures.getAwayScore());
-            fixtures1.setNumberOfTicket(fixtures.getNumberOfTicket());
-            fixtures1.setPriceOfTicket(fixtures.getPriceOfTicket());
+            if (fixtures.getHomeScore() != null && !fixtures.getHomeScore().isEmpty()) {
+                fixtures1.setHomeScore(Integer.valueOf(fixtures.getHomeScore()));
+            }
+            if (fixtures.getAwayScore() != null && !fixtures.getAwayScore().isEmpty()) {
+                fixtures1.setAwayScore(Integer.valueOf(fixtures.getAwayScore()));
+            }
+            fixtures1.setNumberOfTicket(Integer.valueOf(fixtures.getNumberOfTicket()));
+            fixtures1.setPriceOfTicket(Double.valueOf(fixtures.getPriceOfTicket()));
             fixtureRepository.save(fixtures1);
             return true;
         } catch (Exception e) {
@@ -108,13 +118,13 @@ public class FixturesServiceImpl implements FixturesService {
         fixturesDto.setImageHomeTeam(fixtures.getImageHomeTeam());
         fixturesDto.setAwayTeam(fixtures.getAwayTeam());
         fixturesDto.setImageAwayTeam(fixtures.getImageAwayTeam());
-        fixturesDto.setDateTime(fixtures.getDateTime());
+        fixturesDto.setDateTime(String.valueOf(fixtures.getDateTime()));
         fixturesDto.setLocation(fixtures.getLocation());
         fixturesDto.setStatusMatch(fixtures.getStatusMatch());
-        fixturesDto.setHomeScore(fixtures.getHomeScore());
-        fixturesDto.setAwayScore(fixtures.getAwayScore());
-        fixturesDto.setNumberOfTicket(fixtures.getNumberOfTicket());
-        fixturesDto.setPriceOfTicket(fixtures.getPriceOfTicket());
+        fixturesDto.setHomeScore(String.valueOf(fixtures.getHomeScore()));
+        fixturesDto.setAwayScore(String.valueOf(fixtures.getAwayScore()));
+        fixturesDto.setNumberOfTicket(String.valueOf(fixtures.getNumberOfTicket()));
+        fixturesDto.setPriceOfTicket(String.valueOf(fixtures.getPriceOfTicket()));
         fixturesDto.setNumberOfTicketsSold(fixtures.getNumberOfTicketsSold());
         fixturesDto.setStatus(fixtures.getStatus());
         return fixturesDto;

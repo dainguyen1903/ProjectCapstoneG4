@@ -119,6 +119,12 @@ public class NewsController {
         if(newsTypeCheck==null){
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY,CommonConstant.COMMON_MESSAGE.NOT_FOUND_NEWS_TYPE);
         }
+        if (!newsTypeCheck.getName().equals(newsType.getName())){
+            NewsType checkName = newsService.getNewsTypeByName(newsType.getName());
+            if(checkName!=null){
+                return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST,CommonConstant.COMMON_MESSAGE.EXIST_NEWS_TYPE);
+            }
+        }
         boolean check = newsService.updateNewsType(id, newsType);
         if(!check){
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST,CommonConstant.COMMON_MESSAGE.UPDATE_NEWS_TYPE_FAIL);

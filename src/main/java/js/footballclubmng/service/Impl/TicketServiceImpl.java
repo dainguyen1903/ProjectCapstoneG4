@@ -55,7 +55,7 @@ public class TicketServiceImpl implements TicketService {
             ticketOrderRepository.save(ticketOrder);
             for (ListCartTicketItemResponse item : listTicket) {
                 TicketOrderDetail ticketOrderDetail = new TicketOrderDetail();
-                ticketOrderDetail.setTicketPrice(item.getFixtures().getPriceOfTicket());
+                ticketOrderDetail.setTicketPrice(Double.parseDouble(item.getFixtures().getPriceOfTicket()));
                 ticketOrderDetail.setQuantity(item.getQuantity());
                 ticketOrderDetail.setTicketOrders(ticketOrder);
                 FixturesDto fixturesDto = item.getFixtures();

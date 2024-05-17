@@ -11,9 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 
@@ -29,10 +31,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductSizeRepository productSizeRepository;
-    
+
     @Autowired
     private PlayerRepository playerRepository;
-
 
 
     public List<ProductDto> getAllProduct() {
@@ -52,7 +53,7 @@ public class ProductServiceImpl implements ProductService {
             List<ProductSize> productSizeList = productSizeRepository.findAllByProductId(id);
             product.setImagesProduct(imagesProductList);
             product.setProductSizes(productSizeList);
-            
+
 
             return MapperUtil.mapToProductDetailsDto(product, imagesProductList, productSizeList);
 
@@ -60,38 +61,38 @@ public class ProductServiceImpl implements ProductService {
 
         return null;
     }
-    
+
     public String getImageProductByPlayer(Long productId, Long playerNumber) {
         Product product = productRepository.findById(productId).orElse(null);
         Player player = playerRepository.findByPlayerNumber(playerNumber);
         String image = null;
-        if(product != null && player != null && product.getCategoryId() == 1) {
+        if (product != null && player != null && product.getCategoryId() == 1) {
             image = player.getImageFirstJersey();
         }
-        if(product != null && player != null && product.getCategoryId() == 6) {
+        if (product != null && player != null && product.getCategoryId() == 6) {
             image = player.getImageSecondJersey();
         }
         return image;
     }
 
     @Override
-    public List<ProductDto> getFilterProducts(String categoryName, Float minPrice, Float maxPrice, String sortType) {
-        List<Product> listProducts ;
+    public List<ProductDto> getFilterProducts(String categoryName, String keyword, Float minPrice, Float maxPrice, String sortType) {
+        List<Product> listProducts;
         //Lọc sản phẩm theo tên danh mục
         if (categoryName != null && !categoryName.isEmpty()) {
             listProducts = productRepository.filterProductByCategoryName(categoryName);
         } else {
             listProducts = productRepository.findAll();
         }
-//        if (minPrice !=null && maxPrice == null) {
-//            listProducts = productRepository.findAllByPriceBetween(minPrice, Float.MAX_VALUE);
-//        }
-//        if (minPrice == null && maxPrice != null) {
-//            listProducts = productRepository.findAllByPriceBetween(0f, maxPrice);
-//        }
-//        if (minPrice != null && maxPrice != null) {
-//            listProducts = productRepository.findAllByPriceBetween(minPrice, maxPrice);
-//        }
+
+        //Search
+        if (keyword != null && !keyword.isEmpty()) {
+            String lower = keyword.toLowerCase();
+            listProducts = listProducts.stream()
+                    .filter(product -> product.getProductName().toLowerCase().contains(lower))
+                    .collect(Collectors.toList());
+        }
+
         if (minPrice != null && maxPrice != null) {
             listProducts = listProducts.stream()
                     .filter(product -> product.getPrice() >= minPrice && product.getPrice() <= maxPrice)
@@ -117,6 +118,12 @@ public class ProductServiceImpl implements ProductService {
                 .map(MapperUtil::mapToProductDto)
                 .collect(Collectors.toList());
     }
+
+//    public static String removeDiacritics(String str) {
+//        String nfdNormalizedString = Normalizer.normalize(str, Normalizer.Form.NFD);
+//        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+//        return pattern.matcher(nfdNormalizedString).replaceAll("");
+//    }
 
     @Override
     public Product getProductById(Long id) {
@@ -168,7 +175,7 @@ public class ProductServiceImpl implements ProductService {
 
         List<ProductSize> existingSizes = productSizeRepository.findAllByProductId((existingProduct.getId()));
 
-        if(!CollectionUtils.isEmpty(existingSizes)) {
+        if (!CollectionUtils.isEmpty(existingSizes)) {
             existingSizes.forEach(e -> {
                 e.setProductId(null);
             });

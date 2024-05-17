@@ -207,7 +207,7 @@ public class UserController extends BaseController{
         }
         UserProfileDto userProfileDto = userService.userProfile(token);
         if (userProfileDto == null) {
-            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.EMPTY);
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.NOT_FOUND_USER);
         }
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.OK, userProfileDto);
     }
@@ -216,6 +216,10 @@ public class UserController extends BaseController{
     public ResponseAPI<Object> updateProfile(@RequestBody @Valid UserProfileDto userProfileDto, @RequestHeader(name = "Authorization") String token) {
         if (token == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.EMPTY_TOKEN);
+        }
+        boolean check = userService.isDateInThePast(userProfileDto.getDateOfBirth());
+        if (!check) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.DATE_IN_THE_PAST);
         }
         boolean result = userService.updateProfile(userProfileDto, token);
         if (!result) {
