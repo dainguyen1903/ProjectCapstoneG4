@@ -1,5 +1,7 @@
 import moment from "moment";
 import { LOCAL_STORAGE_KEY } from "../constants/common";
+import { message } from "antd";
+import axios from "axios";
 export const formatPrice = (price) => {
     return new Intl.NumberFormat('en-US', {
         style: 'currency',
@@ -72,3 +74,39 @@ export const sortObjtDate = (arr) => {
     return date1 - date2;
   })
 }
+
+// Show messs error
+export const showMessErr = (res) => {
+  let mess = "";
+  const messErr = res?.data?.message
+if(messErr){
+  if(typeof messErr === "string"){
+    mess= messErr
+  }
+}
+message.error(mess || "Có lỗi xảy ra")
+}
+
+// handleErr
+export const handleError = (error, isshowToast = true) => {
+  let mess = "";
+  if (axios.isAxiosError(error)) {
+    mess = error.response?.data?.Message || "Có lỗi xảy ra";
+    const errorObj = error.response?.data?.errors;
+    if (errorObj) {
+      const listKey = Object.keys(errorObj);
+      const key = listKey.find((i) => !i.includes("$"));
+
+      if (key) {
+        const listErr = errorObj[key];
+        mess = listErr.join("\n");
+      }
+    }
+  } else {
+    mess = error.message || "Có lỗi xảy ra";
+  }
+  if (isshowToast) {
+    message.error("Có lỗi xảy ra");
+  }
+  return mess;
+};

@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { cartAPI } from "../api/cart.api";
+import { showMessErr } from "../utils/helpers";
 
 const fetchFromLocalStorage = () => {
   let cart = localStorage.getItem("cart");
@@ -170,6 +171,7 @@ export const updateQuantity = createAsyncThunk(
         dispatch(getListCart());
         return data.data;
       } else {
+        showMessErr(res)
         return rejectWithValue(res.data.message);
       }
     } catch (error) {
@@ -192,6 +194,10 @@ export const addCartAction = createAsyncThunk(
         newQuantity = item.quantity + quantity;
       }
       const res = await cartAPI.addCartItem(productId, size,quantity);
+      if(res?.data?.status !== 200 && res?.data?.status !==204){
+        showMessErr(res)
+
+      }
       await dispatch(getListCart());
     
         dispatch(setCartMessageOn());
@@ -225,6 +231,7 @@ export const addCartActionCustom = createAsyncThunk(
         dispatch(setCartMessageOn());
         return data.data;
       } else {
+        showMessErr(res)
         return rejectWithValue(res.data.message);
       }
     } catch (error) {
