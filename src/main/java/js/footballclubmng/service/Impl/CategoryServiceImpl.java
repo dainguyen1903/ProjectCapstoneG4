@@ -78,9 +78,12 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category getCategoryById(long id) {
+    public CategoryDto getCategoryById(long id) {
         Category category = categoryRepository.findById(id).orElse(null);
-        return category;
+        if (category != null) {
+            return MapperUtil.mapToCategoryDto(category);
+        }
+        return null;
     }
 
 }

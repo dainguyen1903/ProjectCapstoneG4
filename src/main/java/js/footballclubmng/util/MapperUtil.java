@@ -48,8 +48,22 @@ public class MapperUtil {
 
         categoryDto.setId(category.getId());
         categoryDto.setName(category.getName());
-
-
+        categoryDto.setStatus(category.getStatus());
+        List<ProductDto> listProducts = new ArrayList<>();
+        for (Product product : category.getListProducts()) {
+            ProductDto productDto = new ProductDto();
+            productDto.setId(product.getId());
+            productDto.setProductName(product.getProductName());
+            productDto.setPrice(product.getPrice());
+            productDto.setDiscount(product.getDiscount());
+            productDto.setDescription(product.getDescription());
+            productDto.setStatus(product.getStatus());
+            productDto.setIsCustomise(product.getIsCustomise());
+            List<ImagesProduct> imagesProductList = imagesProductRepository.findAllByProductId(product.getId());
+            productDto.setImagesProductList(imagesProductList);
+            listProducts.add(productDto);
+        }
+        categoryDto.setListProducts(listProducts);
         return categoryDto;
     }
 
