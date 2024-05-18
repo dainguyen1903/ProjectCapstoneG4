@@ -1,5 +1,6 @@
 package js.footballclubmng.service.Impl;
 
+import jakarta.persistence.Tuple;
 import js.footballclubmng.common.MapperUtil;
 import js.footballclubmng.config.TokenProvider;
 import js.footballclubmng.entity.*;
@@ -9,6 +10,8 @@ import js.footballclubmng.model.dto.OrderDto;
 import js.footballclubmng.model.dto.OrderHistoryDto;
 import js.footballclubmng.model.request.order.CreateOrderRequest;
 import js.footballclubmng.model.request.shipping.ShippingRequest;
+import js.footballclubmng.model.response.OrderDetailResponse;
+import js.footballclubmng.model.response.QuantityProductSalesResponse;
 import js.footballclubmng.repository.*;
 import js.footballclubmng.service.CartService;
 import js.footballclubmng.service.OrderService;
@@ -16,7 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.apache.commons.lang3.RandomStringUtils;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -94,6 +100,8 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderDetailList(orderDetailList);
 //
         order = orderRepository.save(order);
+        //Thay đổi số lượng hàng trong kho sau khi tạo đơn hàng
+        updateProductInventory(order.getOrderDetailList(), true);
         // Xóa cart sau khi tạo đơn hàng thành công
         cartService.deleteCartByToken(token);
         return order;
@@ -167,6 +175,17 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public OrderDetailResponse getOrderDetail(Long orderId) {
+        Order order = orderRepository.findById(orderId).orElse(null);
+        if(order != null) {
+            return MapperUtil.mapToOrderDetailResponse(order, order.getOrderDetailList());
+        } else {
+            throw new RuntimeException("Thông tin order không tồn tại");
+        }
+
+    }
+
+    @Override
     public void confirmOrder(Long orderId) {
         Optional<Order> orderOptional = orderRepository.findById(orderId);
         if (orderOptional.isPresent()) {
@@ -189,6 +208,7 @@ public class OrderServiceImpl implements OrderService {
             EOrderStatus status = order.getStatus();
             if (status == EOrderStatus.PENDING_CONFIRMATION) {
                 order.setStatus(EOrderStatus.CANCELLED);
+                updateProductInventory(order.getOrderDetailList(), false);
                 orderRepository.save(order);
             } else {
                 throw new RuntimeException("Chỉ có thể hủy đơn hàng đang chờ, không thể hủy đơn hàng với trạng thái " + status);
@@ -203,35 +223,41 @@ public class OrderServiceImpl implements OrderService {
         if ((status == EOrderStatus.IN_PROGRESS
                 || status == EOrderStatus.RETURNED
                 || status == EOrderStatus.DELIVERED) && order != null) {
-            if (status == EOrderStatus.DELIVERED && order.getStatus() == EOrderStatus.DELIVERED) {
+            if (order.getStatus() == EOrderStatus.DELIVERED) {
                 // Đã giao hàng thành công rồi, không cần phải cập nhật lại
                 throw new RuntimeException("Không thể cập nhật trạng thái vì đơn hàng đã giao thành công!!!");
             }
-
             orderRepository.updateOrderStatus(orderId, status.name());
+            if (status == EOrderStatus.RETURNED) {
+                updateProductInventory(order.getOrderDetailList(), false);
+            }
+        } else {
+            throw new RuntimeException("Shipper chỉ có thể cập nhật trạng thái đơn hàng với 3 trạng thái IN_PROGRESS, RETURNED, DELIVERED");
+        }
 
-            if (status == EOrderStatus.DELIVERED) {
 
-                for (OrderDetail orderDetail : order.getOrderDetailList()) {
-                    Long productId = orderDetail.getProductId();
-                    int orderQuantity = orderDetail.getQuantity();
-                    String size = orderDetail.getSize();
-                    if (productId != null && orderQuantity > 0 && size != null && !size.isEmpty()) {
-                        //Lấy thông tin product size
-                        ProductSize productSize = productSizeRepository.findProductSizeByProductIdAndSize(productId, size);
-                        if (productSize != null) {
-                            int productSizeQuantity = productSize.getQuantity() - orderQuantity;
-                            if (productSizeQuantity >= 0) {
-                                productSize.setQuantity(productSizeQuantity);
-                                productSizeRepository.save(productSize);
-                            }
-                        }
+    }
+
+    private void updateProductInventory(List<OrderDetail> orderDetailList, boolean isDecrement) {
+        for (OrderDetail orderDetail : orderDetailList) {
+            Long productId = orderDetail.getProductId();
+            int orderQuantity = orderDetail.getQuantity();
+            String size = orderDetail.getSize();
+
+            if (productId != null && orderQuantity > 0 && size != null && !size.isEmpty()) {
+                ProductSize productSize = productSizeRepository.findProductSizeByProductIdAndSize(productId, size);
+                if (productSize != null ) {
+                    int updatedQuantity = isDecrement ? productSize.getQuantity() - orderQuantity : productSize.getQuantity() + orderQuantity;
+                    if (updatedQuantity >= 0) {
+                        productSize.setQuantity(updatedQuantity);
+                        productSizeRepository.save(productSize);
+                    } else {
+                        // Handle case where there's not enough stock
+                        throw new RuntimeException("Không đủ số lượng sản phẩm trong kho cho sản phẩm ID: " + productId + " và size: " + size);
                     }
                 }
             }
         }
-
-
     }
 
     @Override

@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class OrderHistoryDto {
+    private Long orderId;
     private String orderCode;
     private float totalPrice;
     private LocalDateTime orderDate;

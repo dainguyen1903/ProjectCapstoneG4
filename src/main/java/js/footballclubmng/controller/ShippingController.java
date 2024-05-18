@@ -34,8 +34,13 @@ public class ShippingController {
 
     @GetMapping(CommonConstant.SHIPPING_API.LIST_SHIPPER_BY_DISTRICT)
     public ResponseAPI<List<UserDto>> getShipperByShippingId(@PathVariable Long shippingId) {
-        List<UserDto> listShipperByShipping = shipService.getShipperByShippingId(shippingId);
-        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, listShipperByShipping);
+        try {
+            List<UserDto> listShipperByShipping = shipService.getShipperByShippingId(shippingId);
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, listShipperByShipping);
+        } catch (Exception e) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, e.getMessage());
+        }
+
     }
 
     @PostMapping(CommonConstant.SHIPPING_API.ASSIGN_SHIPPER)

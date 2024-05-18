@@ -10,6 +10,7 @@ import js.footballclubmng.model.dto.OrderHistoryDto;
 import js.footballclubmng.model.request.PaymentRequest;
 import js.footballclubmng.model.request.order.CreateOrderRequest;
 import js.footballclubmng.model.response.ListShippingResponse;
+import js.footballclubmng.model.response.OrderDetailResponse;
 import js.footballclubmng.model.response.PaymentResponse;
 import js.footballclubmng.model.response.ResponseAPI;
 import js.footballclubmng.service.OrderDetailService;
@@ -42,18 +43,18 @@ public class OrderController {
     }
 
     @GetMapping(CommonConstant.ORDER_API.VIEW_ORDER_DETAILS)
-    @PreAuthorize("hasRole('ROLE_Sale')")
-    public ResponseAPI<List<OrderDetailDto>> viewOrderDetails(@PathVariable Long orderId) {
-        List<OrderDetailDto> orderDetailDtoList = orderDetailService.getOrderDetailsByOrderId(orderId);
-        if (orderDetailDtoList.isEmpty()) {
-            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_FOUND, CommonConstant.COMMON_MESSAGE.ORDER_DETAILS_NOT_FOUND);
+    public ResponseAPI<OrderDetailResponse> viewOrderDetails(@PathVariable Long orderId) {
+        try {
+            OrderDetailResponse orderDetailResponse = orderService.getOrderDetail(orderId);
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, orderDetailResponse);
+        } catch (Exception e) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, e.getMessage());
         }
-        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, null, orderDetailDtoList);
     }
 
 
     @PostMapping(CommonConstant.ORDER_API.CREATE_ORDER)
-    @PreAuthorize("hasRole('ROLE_Sale')")
+    @PreAuthorize("hasRole('ROLE_User')")
     public ResponseAPI<?> createOrder(@RequestBody CreateOrderRequest createOrderRequest, @RequestHeader(name = "Authorization") String token) {
         try {
             Order order = orderService.createOrder(createOrderRequest, token);
@@ -94,6 +95,7 @@ public class OrderController {
 
     }
 
+
     @PostMapping(CommonConstant.ORDER_API.CONFIRM_ORDER)
     public ResponseAPI<Void> confirmOrder(@PathVariable Long orderId) {
         try {
@@ -121,14 +123,6 @@ public class OrderController {
         }
 
     }
-
-
-
-
-
-
-
-
 
 
 }

@@ -2,9 +2,7 @@ package js.footballclubmng.common;
 
 import js.footballclubmng.entity.*;
 import js.footballclubmng.model.dto.*;
-import js.footballclubmng.model.response.ListCartItemsResponse;
-import js.footballclubmng.model.response.ListCartTicketItemResponse;
-import js.footballclubmng.model.response.ListShippingResponse;
+import js.footballclubmng.model.response.*;
 import js.footballclubmng.repository.ImagesProductRepository;
 import js.footballclubmng.repository.ProductSizeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -172,6 +170,7 @@ public class MapperUtil {
 
     public static OrderHistoryDto mapToOrderHistoryDto(Order order, List<OrderDetail> orderDetailList) {
         OrderHistoryDto orderHistoryDto = new OrderHistoryDto();
+        orderHistoryDto.setOrderId(order.getId());
         orderHistoryDto.setOrderCode(order.getOrderCode());
         orderHistoryDto.setTotalPrice(order.getTotalPrice());
         orderHistoryDto.setOrderDate(order.getOrderDate());
@@ -183,6 +182,22 @@ public class MapperUtil {
         orderHistoryDto.setOrderDetailDtoList(orderDetailDtoList);
 
         return orderHistoryDto;
+    }
+
+    public static OrderDetailResponse mapToOrderDetailResponse(Order order, List<OrderDetail> orderDetailList) {
+        OrderDetailResponse orderDetailResponse = new OrderDetailResponse();
+        orderDetailResponse.setOrderId(order.getId());
+        orderDetailResponse.setOrderCode(order.getOrderCode());
+        orderDetailResponse.setTotalPrice(order.getTotalPrice());
+        orderDetailResponse.setOrderDate(order.getOrderDate());
+        orderDetailResponse.setPaymentMethod(order.getPaymentMethod());
+        orderDetailResponse.setOrderStatus(order.getStatus());
+        orderDetailResponse.setShipping(mapToShippingDto(order.getShipping()));
+
+        List<OrderDetailDto> orderDetailDtoList = mapToOrderDetailDtoList(orderDetailList);
+        orderDetailResponse.setOrderDetailDtoList(orderDetailDtoList);
+
+        return orderDetailResponse;
     }
 
     public static ShippingDto mapToShippingDto(Shipping shipping) {

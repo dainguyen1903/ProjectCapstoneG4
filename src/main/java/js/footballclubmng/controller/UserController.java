@@ -71,7 +71,7 @@ public class UserController extends BaseController{
     @PreAuthorize("hasRole('ROLE_Admin')")
     public ResponseAPI<Object> createUser(HttpServletRequest requestHttp, @RequestPart("request") CreateUserRequest request, @RequestPart(value = "file", required = false) MultipartFile file) {
         if (request.isValid()) {
-            return userService.createUser(request, file, getSiteURL(requestHttp));
+            return userService.createUser(request, getSiteURL(requestHttp));
         }
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_VALID, CommonConstant.COMMON_MESSAGE.INVALID_PARAMETER);
 

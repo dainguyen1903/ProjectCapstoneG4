@@ -189,6 +189,8 @@ public class CommonConstant {
 
         public static final String UPDATE_STATUS_ORDER_SUCCESS = "Cập nhật trạng thái đơn hàng thành công";
 
+        public static final String NOT_FOUND_ORDER_DETAILS = "Không tìm thấy chi tiết đơn hàng";
+
 
         //Message payment
 
@@ -202,6 +204,15 @@ public class CommonConstant {
         public static final String ASSIGN_TO_SHIPPER = "Đã cập nhật shipper cho đơn hàng";
 
         public static final String ASSIGN_TO_SHIPPER_FAIL = "Shipper này đã có nhiều hơn 10 đơn hàng! Hãy cập nhật cho shipper khác";
+
+        //Message statistic
+        public static final String STATISTIC_QUANTITY_PRODUCT_SALE = "Số lượng sản phẩm bán ra trong thời gian này";
+
+        public static final String STATISTIC_QUANTITY_BUYER = "Số lượng người mua trong thời gian này";
+
+        public static final String STATISTIC_REVENUE = "Thống kê doanh thu trong thời gian này";
+
+        public static final String STATISTIC_TOP_5_PRODUCT_SALES = "Top 5 sản phẩm bản chạy nhất";
 
 
 
@@ -311,10 +322,6 @@ public class CommonConstant {
 
         public static final String UPDATE_STATUS_ORDER_BY_SHIPPER = HEAD_API + ORDER + "/update-status-order-by-shipper/{orderId}";
 
-
-
-
-
     }
 
     public static class PAYMENT_API {
@@ -326,7 +333,7 @@ public class CommonConstant {
     }
 
     public static class SHIPPING_API {
-        public static final String SHIPPING = "/shiping";
+        public static final String SHIPPING = "/shipping";
 
         public static final String LIST_SHIP = HEAD_API + SHIPPING + "/list-shipping";
 
@@ -335,6 +342,18 @@ public class CommonConstant {
         public static final String LIST_SHIPPER_BY_DISTRICT = HEAD_API + SHIPPING + "/{shippingId}/shippers";
 
         public static final String ASSIGN_SHIPPER = HEAD_API + SHIPPING + "/assign-shipper/{shippingId}/{shipperId}";
+    }
+
+    public static class STATISTICS_API {
+        public static final String STATISTIC = "/statistic";
+
+        public static final String  STATISTIC_QUANTITY_PRODUCT_SALES = HEAD_API + STATISTIC + "/statistic-quantity-product";
+
+        public static final String STATISTIC_QUANTITY_BUYER = HEAD_API + STATISTIC + "/statistic-buyer";
+
+        public static final String STATISTIC_REVENUE = HEAD_API + STATISTIC + "/statistic-revenue";
+
+        public static final String STATISTIC_TOP_5_PRODUCT_SALES = HEAD_API + STATISTIC + "top-5-product-sales";
     }
     public static class CART_API {
         public static final String CART = "/cart";

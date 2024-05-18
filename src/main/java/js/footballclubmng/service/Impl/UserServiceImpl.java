@@ -109,15 +109,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseAPI<Object> createUser(CreateUserRequest request, MultipartFile file, String getSiteUrl) {
+    public ResponseAPI<Object> createUser(CreateUserRequest request, String getSiteUrl) {
         try {
             if (userRepository.existsByEmail(request.getEmail())) {
                 return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_VALID, "EMAIL EXISTED");
             } else {
                 User userEntity = new User();
-                if (file.getSize() > 0) {
-                    userEntity.setImageUrl(FootballclubmngUtils.handleAvatar(file));
-                }
+
                 userEntity.setEmail(request.getEmail());
                 userEntity.setFirstName(request.getFirstName());
                 userEntity.setLastName(request.getLastName());
