@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 public interface UserService {
     public User getUserByEmail(String email);
     public LoginResponse handleLogin(String username, String password);
-    public ResponseAPI<Object> createUser(CreateUserRequest request, MultipartFile file, String getSiteUrl);
+    public ResponseAPI<Object> createUser(CreateUserRequest request, String getSiteUrl);
     public ResponseAPI<Object> updateUser(CreateUserRequest request, MultipartFile file);
     public ResponseAPI<Object> activeThroughEmail(String verificationCode, String email);
     public ResponseAPI<Object> getListSearch(String name);

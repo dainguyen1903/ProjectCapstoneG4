@@ -6,6 +6,8 @@ import js.footballclubmng.model.dto.OrderDto;
 import js.footballclubmng.model.dto.OrderHistoryDto;
 import js.footballclubmng.model.dto.ShippingDto;
 import js.footballclubmng.model.request.order.CreateOrderRequest;
+import js.footballclubmng.model.response.OrderDetailResponse;
+import js.footballclubmng.model.response.QuantityProductSalesResponse;
 
 import java.util.List;
 
@@ -16,6 +18,8 @@ public interface OrderService {
 
     public List<OrderHistoryDto> getHistoryOrder(String token);
 
+    public OrderDetailResponse getOrderDetail(Long orderId);
+
     public void cancelOrder(Long orderId);
 
     public void confirmOrder(Long orderId);
@@ -23,5 +27,7 @@ public interface OrderService {
     public void updateStatusOrderByShipepr(Long orderId, EOrderStatus status);
 
     public List<OrderDto> listOrderByShipper(String token);
+
+
 
 }
