@@ -6,6 +6,7 @@ import org.springframework.util.StringUtils;
 @Data
 public class CreateUserRequest {
     private long id;
+
     private String email;
 
     private String password;
@@ -16,9 +17,17 @@ public class CreateUserRequest {
 
     private String address;
 
+    private String ward;
+
+    private String district;
+
+    private String province;
+
     private String gender;
 
     private String dateOfBirth;
+
+    private String imageUrl;
 
     private String authority;
 

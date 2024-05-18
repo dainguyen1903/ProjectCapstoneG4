@@ -48,13 +48,15 @@ public class ShipServiceImpl implements ShipService {
 
     public List<UserDto> getShipperByShippingId(Long shippingId) {
         Shipping shipping = shippingRepository.findById(shippingId).orElse(null);
-        if(shipping != null) {
+        if(shipping != null && shipping.getDistrict() != null) {
             List<User> listShipper = userRepository.findByDistrict(shipping.getDistrict());
             return listShipper.stream()
+                    .filter(user -> user.getDistrict() != null)
                     .map(MapperUtil::mapToUserDto)
                     .collect(Collectors.toList());
+        } else {
+            throw new RuntimeException("Không có shipper phù hợp cho đơn hàng này");
         }
-        return null;
     }
 
 

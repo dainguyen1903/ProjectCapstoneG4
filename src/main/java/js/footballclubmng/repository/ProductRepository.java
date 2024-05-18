@@ -35,6 +35,17 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "UPDATE product_size pz SET pz.quantity = :quantity WHERE pz.productId = :productId AND pz.size = :size", nativeQuery = true)
     void updateProductQuantity(@Param("productId") Long productId, @Param("size") String size, @Param("quantity") int quantity);
 
+    @Query(value = "SELECT p.*\n" +
+            "FROM product p\n" +
+            "JOIN (\n" +
+            "    SELECT od.product_id\n" +
+            "    FROM order_detail od\n" +
+            "    GROUP BY od.product_id\n" +
+            "    ORDER BY COUNT(*) DESC\n" +
+            "    LIMIT 5\n" +
+            ") top_products ON p.product_id = top_products.product_id;", nativeQuery = true)
+    List<Product> listTop5ProductSales();
+
 
 }
 
