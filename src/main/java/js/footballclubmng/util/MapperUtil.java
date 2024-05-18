@@ -160,15 +160,6 @@ public class MapperUtil {
         fixturesDto.setAwayScore(String.valueOf(fixtures.getAwayScore()));
         fixturesDto.setNumberOfTicket(String.valueOf(fixtures.getNumberOfTicket()));
         fixturesDto.setPriceOfTicket(String.valueOf(fixtures.getPriceOfTicket()));
-
-        fixturesDto.setDateTime(fixtures.getDateTime());
-        fixturesDto.setLocation(fixtures.getLocation());
-        fixturesDto.setStatusMatch(fixtures.getStatusMatch());
-        fixturesDto.setHomeScore(fixtures.getHomeScore());
-        fixturesDto.setAwayScore(fixtures.getAwayScore());
-        fixturesDto.setNumberOfTicket(fixtures.getNumberOfTicket());
-        fixturesDto.setPriceOfTicket(fixtures.getPriceOfTicket());
-
         fixturesDto.setNumberOfTicketsSold(fixtures.getNumberOfTicketsSold());
         fixturesDto.setStatus(fixtures.getStatus());
         return fixturesDto;
