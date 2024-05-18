@@ -11,5 +11,5 @@ public interface CategoryService {
     public boolean updateCategory(long id, Category category);
     public List<CategoryDto> searchCategory(String search);
     public Category getCategoryByName(String name);
-    public Category getCategoryById(long id);
+    public CategoryDto getCategoryById(long id);
 }

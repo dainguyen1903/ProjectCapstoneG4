@@ -41,7 +41,7 @@ public class CategoryController {
     @PutMapping(CommonConstant.CATEGORY_API.UPDATE_CATEGORY)
     @PreAuthorize("hasRole('ROLE_Sale')")
     public ResponseAPI<Object> updatePlayer(@PathVariable int id, @RequestBody @Valid Category category) {
-        Category category1 = categoryService.getCategoryById(id);
+        CategoryDto category1 = categoryService.getCategoryById(id);
         if (category1 == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_FOUND, CommonConstant.COMMON_MESSAGE.NOT_FOUND_CATEGORY);
         }
@@ -69,8 +69,8 @@ public class CategoryController {
 
 
     @GetMapping(CommonConstant.CATEGORY_API.DETAIL_CATEGORY)
-    public ResponseAPI<Category> detailCategory(@PathVariable int id) {
-        Category category = categoryService.getCategoryById(id);
+    public ResponseAPI<CategoryDto> detailCategory(@PathVariable int id) {
+        CategoryDto category = categoryService.getCategoryById(id);
         if (category == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_FOUND, CommonConstant.COMMON_MESSAGE.NOT_FOUND_CATEGORY);
         }

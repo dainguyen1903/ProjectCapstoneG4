@@ -23,15 +23,13 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
     @Autowired
     OrderDetailRepository orderDetailRepository;
-    @Override
 
-    public List<OrderDetailDto> getOrderDetailsByOrderId(Long orderId) {
-        List<OrderDetail> orderDetailList = orderDetailRepository.findByOrderId(orderId);
-        return MapperUtil.mapToOrderDetailDtoList(orderDetailList);
+
 
     public List<OrderDetailResponse> getOrderDetailsByOrderId(Long orderId) {
         List<OrderDetail> orderDetailList = orderDetailRepository.findByOrderId(orderId);
         return null;
 
     }
+
 }
