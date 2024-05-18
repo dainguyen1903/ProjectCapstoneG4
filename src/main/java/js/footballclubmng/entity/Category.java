@@ -24,7 +24,7 @@ public class Category {
     private String name;
 
     @Column(name = "status")
-    private boolean status;
+    private Boolean status;
 
     @OneToMany(mappedBy = "category",fetch = FetchType.EAGER)
     private List<Product> listProducts;
