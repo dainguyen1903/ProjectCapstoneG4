@@ -45,9 +45,9 @@ const productSlice = createSlice({
 });
 
 // for getting the products list with limited numbers
-export const fetchAsyncProducts = createAsyncThunk('products/fetch', async(search,{rejectWithValue}) => {
-    const response = await productApi.searchProduct({productName:search});
-    if(response.data.status === 200){
+export const fetchAsyncProducts = createAsyncThunk('products/fetch', async(filter,{rejectWithValue}) => {
+    const response = await productApi.filterProduct(filter);
+    if(response.data.status === 200 || response.data.status === 204){
         return response.data.data ? response.data.data.reverse() :[]
     }
    else{

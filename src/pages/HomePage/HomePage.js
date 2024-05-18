@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./HomePage.scss";
 import HeaderSlider from "../../components/Slider/HeaderSlider";
 import { useSelector, useDispatch } from "react-redux";
@@ -14,14 +14,25 @@ import { STATUS } from "../../utils/status";
 import { sliderImgs } from "../../utils/images";
 import { getQueryParams } from "../../utils/helpers";
 import { useLocation } from "react-router";
+import ProductFilter from "../../components/ProductList/FilterProduct";
 
 const HomePage = () => {
   const dispatch = useDispatch();
   const {search} = getQueryParams();
  const location = useLocation()
+ const [filter,setFillter] = useState({
+  categoryName:"",
+  categoryName:"",
+  maxPrice:"",
+  minPrice:"",
+  sortType:""
+ })
   const categories = useSelector(getAllCategories);
+  const getListProductByFilter = (filter) => {
+    dispatch(fetchAsyncProducts({...filter,keyword:search ||""}));
+  }
   useEffect(() => {
-    dispatch(fetchAsyncProducts(search ||""));
+    getListProductByFilter()
   }, [location.search]);
   const products = useSelector(getAllProducts);
   const productStatus = useSelector(getAllProductsStatus);
@@ -39,19 +50,6 @@ const HomePage = () => {
     }
   }
 
-  let catProductsOne = products.filter(
-    (product) => product.category === categories[0]
-  );
-  let catProductsTwo = products.filter(
-    (product) => product.category === categories[1]
-  );
-  let catProductsThree = products.filter(
-    (product) => product.category === categories[2]
-  );
-  let catProductsFour = products.filter(
-    (product) => product.category === categories[3]
-  );
-
   return (
     <main>
       <div className="slider-wrapper">
@@ -64,6 +62,7 @@ const HomePage = () => {
               <div className="title-md">
                 <h3>Tất cả sản phẩm</h3>
               </div>
+              <ProductFilter filter={filter} setFillter={setFillter} onFilter={getListProductByFilter}  />
               {productStatus === STATUS.LOADING && products.length==0 ? (
                 <Loader />
               ) : (

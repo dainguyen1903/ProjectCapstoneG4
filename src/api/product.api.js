@@ -24,4 +24,9 @@ export const productApi = {
   getListCategory: () => {
     return api.get(  "api/category/list-category");
   },
+  filterProduct: (params) => {
+    return api.get(baseURLProduct + "filter-product", {
+      params,
+    });
+  },
 };
