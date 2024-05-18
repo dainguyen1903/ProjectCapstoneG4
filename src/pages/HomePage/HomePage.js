@@ -12,27 +12,40 @@ import {
 import Loader from "../../components/Loader/Loader";
 import { STATUS } from "../../utils/status";
 import { sliderImgs } from "../../utils/images";
-import { getQueryParams } from "../../utils/helpers";
+import { getQueryParams, objectToQueryParams, queryParamsToObject } from "../../utils/helpers";
 import { useLocation } from "react-router";
 import ProductFilter from "../../components/ProductList/FilterProduct";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
   const dispatch = useDispatch();
-  const {search} = getQueryParams();
+  const {search,categoryName,maxPrice,minPrice,sortType} = getQueryParams();
+  console.log()
  const location = useLocation()
+ const navigate = useNavigate()
  const [filter,setFillter] = useState({
-  categoryName:"",
-  categoryName:"",
-  maxPrice:"",
-  minPrice:"",
-  sortType:""
+  categoryName:categoryName ||"",
+  maxPrice:maxPrice || "",
+  minPrice:minPrice || "",
+  sortType:sortType || ""
  })
   const categories = useSelector(getAllCategories);
   const getListProductByFilter = (filter) => {
+    const obj = queryParamsToObject(location.search)
+    const queryString = objectToQueryParams({...obj,...filter})
+    navigate(location.pathname +"?"  +  queryString,{
+      replace:true
+    })
     dispatch(fetchAsyncProducts({...filter,keyword:search ||""}));
   }
+  const getListProductByFilter1 = (filter) => {
+    const queryString = objectToQueryParams({...filter})
+
+    dispatch(fetchAsyncProducts({...filter,keyword:search ||""}));
+
+  }
   useEffect(() => {
-    getListProductByFilter()
+    getListProductByFilter1(filter)
   }, [location.search]);
   const products = useSelector(getAllProducts);
   const productStatus = useSelector(getAllProductsStatus);

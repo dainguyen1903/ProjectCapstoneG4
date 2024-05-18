@@ -137,3 +137,33 @@ export const dateFormat2 = (date) =>
   
     return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
   };
+  export function objectToQueryParams(obj) {
+    return Object.keys(obj)
+      .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]))
+      .join('&');
+  }
+  export  function queryParamsToObject(queryString) {
+    // Xóa dấu hỏi (?) ở đầu chuỗi nếu có
+    if (queryString.startsWith('?')) {
+      queryString = queryString.slice(1);
+    }
+  
+    const params = new URLSearchParams(queryString);
+    const result = {};
+  
+    for (const [key, value] of params.entries()) {
+      // Nếu key đã tồn tại trong object và là một mảng, thêm giá trị vào mảng
+      if (result[key]) {
+        if (Array.isArray(result[key])) {
+          result[key].push(value);
+        } else {
+          result[key] = [result[key], value];
+        }
+      } else {
+        result[key] = value;
+      }
+    }
+  
+    return result;
+  }
+  

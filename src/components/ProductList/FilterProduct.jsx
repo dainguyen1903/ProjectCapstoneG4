@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Form, Select, InputNumber, Button, message } from "antd";
 import { FilterOutlined } from "@ant-design/icons";
 import { productApi } from "../../api/product.api";
-
+import "./ProductList.scss"
 const { Option } = Select;
 
 const categories = ["Electronics", "Clothing", "Books"];
@@ -48,7 +48,7 @@ const ProductFilter = ({
     getListCategoryProduct();
   }, []);
   return (
-    <Form layout="inline" onFinish={handleSubmit}>
+    <Form className="filter-wrap" layout="inline" onFinish={handleSubmit}>
       <Form.Item label="Danh mục sản phẩm">
         <Select
           placeholder="Chọn danh mục sản phẩm"
@@ -105,7 +105,10 @@ const ProductFilter = ({
         </Select>
       </Form.Item>
       <Form.Item>
-        <Button type="primary" htmlType="submit" icon={<FilterOutlined />}>
+        <Button style={{
+            background:"rgb(41, 174, 189)"
+        }
+        } type="primary" htmlType="submit" icon={<FilterOutlined />}>
           Lọc
         </Button>
       </Form.Item>
