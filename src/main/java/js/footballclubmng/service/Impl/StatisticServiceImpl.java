@@ -1,7 +1,7 @@
 package js.footballclubmng.service.Impl;
 
 import js.footballclubmng.entity.Product;
-import js.footballclubmng.common.MapperUtil;
+import js.footballclubmng.util.MapperUtil;
 import js.footballclubmng.model.dto.ProductDto;
 import js.footballclubmng.model.response.CalculateRevenueResponse;
 import js.footballclubmng.model.response.QuantityBuyerResponse;
