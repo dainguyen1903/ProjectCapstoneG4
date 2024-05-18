@@ -18,7 +18,7 @@ import { categoryApi } from "../../api/category.api";
 import { playerApi } from "../../api/player.api";
 import { productApi } from "../../api/product.api";
 import LoadingFull from "../../component/loading/loadingFull";
-import { showMessErr } from "../../ultis/helper";
+import { handleError, showMessErr, showMessErr400 } from "../../ultis/helper";
 import useProductStore from "../../zustand/productStore";
 import "./../login/login.css";
 
@@ -57,18 +57,12 @@ const AddProduct = () => {
   };
   // Confirm save
   const confirmSave = (value) => {
-    // if (url.length === 0) {
-    //   settxterr("Vui lòng chọn ảnh");
-    //   return;
-    // } else {
-    //   settxterr("");
-    // }
-
     Modal.confirm({
       title: "Xác nhận",
       content: !id ? "Thêm sản phẩm" : "Cập nhật sản phẩm",
       onOk: async () => {
-        const dataPosst = JSON.parse(JSON.stringify(value));
+        try {
+          const dataPosst = JSON.parse(JSON.stringify(value));
         let categoryName = "abc";
         const item = categories.find((i) => i.id === dataPosst.categoryId);
         if (item) {
@@ -103,7 +97,11 @@ const AddProduct = () => {
           });
           navigate(-1);
         } else {
-          showMessErr(res.data);
+          showMessErr400(res.data);
+        }
+        } catch (error) {
+          console.log(error)
+          handleError(error)
         }
       },
     });

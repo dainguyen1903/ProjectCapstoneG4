@@ -5,7 +5,7 @@ import {
   HomeOutlined,
   DribbbleOutlined,
   BorderOuterOutlined,
-  MenuFoldOutlined
+  MenuFoldOutlined,
 } from "@ant-design/icons";
 import Home from "../page/home/home";
 import ManageUser from "../page/manage-user";
@@ -32,6 +32,7 @@ import ListMatch from "../page/match/list";
 import NewsCategoryList from "../page/news-category/list";
 import NewsCategoryAdd from "../page/news-category/add";
 import OrderList from "../page/order/list";
+import OrderDetail from "../page/order/detail";
 export const router = [
   {
     show: true,
@@ -94,16 +95,16 @@ export const router = [
     key: "/player",
     role: [ROLE.OPERATOR],
   },
-  
+
   {
     show: true,
     // component: NewsCategoryList,
     // path: "/category-news/list",
     key: "/manage-product",
-    icon:MenuFoldOutlined,
-    menuName:"Quản lí sản phẩm",
+    icon: MenuFoldOutlined,
+    menuName: "Quản lí sản phẩm",
     role: [ROLE.SALE],
-    children:[
+    children: [
       {
         show: true,
         component: ProductList,
@@ -132,8 +133,8 @@ export const router = [
         component: ProductCategoryList,
         path: "/category-product/list",
         key: "/category-product",
-        icon:BorderOuterOutlined,
-        menuName:"Danh mục sản phẩm",
+        icon: BorderOuterOutlined,
+        menuName: "Danh mục sản phẩm",
         role: [ROLE.SALE],
       },
       {
@@ -150,27 +151,35 @@ export const router = [
         key: "/category-product",
         role: [ROLE.SALE],
       },
-    ]
+    ],
   },
   {
-show:true,
-key:"/order",
-path:"/order",
-icon:MenuFoldOutlined,
-menuName:"Danh sách order",
-role: [ROLE.SALE,ROLE.SHIPPER],
-component: OrderList,
-
+    show: true,
+    key: "/order",
+    path: "/order",
+    icon: MenuFoldOutlined,
+    menuName: "Danh sách đơn hàng",
+    role: [ROLE.SALE, ROLE.SHIPPER],
+    component: OrderList,
+  },
+  {
+    show: false,
+    key: "/order",
+    path: "/order-detail/:id",
+    icon: MenuFoldOutlined,
+    menuName: "Danh sách order",
+    role: [ROLE.SALE, ROLE.SHIPPER],
+    component: OrderDetail,
   },
   {
     show: true,
     // component: NewsCategoryList,
     // path: "/category-news/list",
     key: "/manage-news",
-    icon:MenuFoldOutlined,
-    menuName:"Quản lí bài viết",
+    icon: MenuFoldOutlined,
+    menuName: "Quản lí bài viết",
     role: [ROLE.OPERATOR],
-    children:[
+    children: [
       {
         show: true,
         component: PostManage,
@@ -179,15 +188,14 @@ component: OrderList,
         menuName: "Danh sách bài viết",
         key: "/news",
         role: [ROLE.OPERATOR],
-    
       },
       {
         show: true,
         component: NewsCategoryList,
         path: "/category-news/list",
         key: "/category-news",
-        icon:MenuFoldOutlined,
-        menuName:"Danh mục bài viết",
+        icon: MenuFoldOutlined,
+        menuName: "Danh mục bài viết",
         role: [ROLE.OPERATOR],
       },
       {
@@ -204,7 +212,7 @@ component: OrderList,
         key: "/category-news",
         role: [ROLE.OPERATOR],
       },
-      
+
       {
         show: false,
         component: AddNewsForm,
@@ -226,12 +234,9 @@ component: OrderList,
         key: "/news",
         role: [ROLE.OPERATOR],
       },
-    
-    ]
+    ],
   },
 
-      
-  
   // {
   //   show: true,
   //   component: ProductList,
@@ -338,7 +343,6 @@ component: OrderList,
     path: "/match/list",
     menuName: "Lịch thi đấu",
     key: "/match",
-    role: [ROLE.OPERATOR]
-    },
-  
+    role: [ROLE.OPERATOR],
+  },
 ];

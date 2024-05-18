@@ -1,4 +1,5 @@
-import { Modal } from "antd";
+import { Modal, message } from "antd";
+import axios from "axios";
 import moment from "moment";
 
 export const showMessErr = (data) => {
@@ -26,3 +27,55 @@ export const dateFormat2 = (date) =>
   
     return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
   };
+
+  // Show messs error
+export const showMessErr400 = (res) => {
+  let mess = "";
+  const messErr = res?.data?.message
+if(messErr){
+  if(typeof messErr === "string"){
+    mess= messErr
+  }
+}
+message.error(mess || "Có lỗi xảy ra")
+}
+
+// handleErr
+export const handleError = (error, isshowToast = true) => {
+  let mess = "";
+  if (axios.isAxiosError(error)) {
+    const dataValidate = error.response?.data || null;
+    if(isObject(dataValidate)){
+      Object.values(dataValidate).forEach(v => message.error(v))
+      return ;
+    }
+    mess = error.response?.data?.Message || "Có lỗi xảy ra";
+    const errorObj = error.response?.data?.errors;
+    if (errorObj) {
+      const listKey = Object.keys(errorObj);
+      const key = listKey.find((i) => !i.includes("$"));
+
+      if (key) {
+        const listErr = errorObj[key];
+        mess = listErr.join("\n");
+      }
+    }
+  } else {
+    mess = error.message || "Có lỗi xảy ra";
+  }
+  if (isshowToast) {
+    message.error("Có lỗi xảy ra");
+  }
+  return mess;
+};
+
+//
+function isObject(value) {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+export const formatPrice = (price) => {
+  return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: "VND"
+  }).format(price);
+}

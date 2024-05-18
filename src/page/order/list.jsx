@@ -133,7 +133,12 @@ const OrderList = () => {
       title: "Người đặt",
       dataIndex: ["user", "firstName"],
       key: "user",
-      render: (_, { user }) => `${user.firstName} ${user.lastName}`,
+      render: (_, { user,id }) => <span onClick={() => navigate("/order-detail/"+id)} style={{
+        cursor:"pointer",
+
+      }}>
+        {user.firstName} {user.lastName}
+      </span>,
     },
     {
       title: "Ngày đặt",
@@ -218,7 +223,7 @@ const OrderList = () => {
       <Card style={{ marginBottom: 20 }}>
         <Form form={form} onFinish={handleSearch} layout="vertical">
           <Form.Item
-            label={<span className="bold">Ngày order</span>}
+            label={<span className="bold">Ngày đặt</span>}
             name="dateRange"
           >
             <Row>

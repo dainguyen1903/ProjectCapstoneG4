@@ -18,6 +18,7 @@ import LoadingFull from "../../component/loading/loadingFull";
 import { playerApi } from "../../api/player.api";
 import AddImage from "../../component/common/AddImage";
 import { POSITION_PLAYER } from "../../constants/common";
+import { handleError, showMessErr400 } from "../../ultis/helper";
 const { Option } = Select;
 
 const AddPlayerForm = () => {
@@ -52,16 +53,24 @@ const AddPlayerForm = () => {
       title: "Xác nhận",
       content: !id ? "Thêm cầu thủ" : "Cập nhật cầu thủ",
       onOk: async () => {
+       try {
         const res = !id
-          ? await playerApi.createrPlayer(dataPosst)
-          : await playerApi.updatePalyer(id, dataPosst);
-        if (res.data.status === 200 || res.data.status === 204) {
-          Modal.success({
-            title: "Thành công",
-            content: !id ? "Thêm thành công" : "Cập nhật thành công",
-          });
-          navigate(-1);
-        }
+        ? await playerApi.createrPlayer(dataPosst)
+        : await playerApi.updatePalyer(id, dataPosst);
+      if (res.data.status === 200 || res.data.status === 204) {
+        Modal.success({
+          title: "Thành công",
+          content: !id ? "Thêm thành công" : "Cập nhật thành công",
+        });
+        navigate(-1);
+      }
+      else{
+        showMessErr400(res)
+      }
+       } catch (error) {
+        console.log(error)
+        handleError(error)
+       }
       },
     });
   };

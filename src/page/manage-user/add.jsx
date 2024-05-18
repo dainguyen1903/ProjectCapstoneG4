@@ -136,6 +136,7 @@ const AddUserForm = () => {
         : null;
       dataDetail.role = dataDetail.authority;
       setUrl(isEditProfile ? dataDetail.image : dataDetail.imageUrl);
+      
       dataDetail.image = imgName;
       delete dataDetail.image_name;
       console.log(dataDetail);
@@ -201,6 +202,7 @@ const AddUserForm = () => {
               >
                 <Input placeholder="Tên" className="Input" />
               </Form.Item>
+              
               <div className="inputLabel">Địa chỉ</div>
               <Form.Item name="address">
                 <Input placeholder="Địa chỉ" className="Input" />
