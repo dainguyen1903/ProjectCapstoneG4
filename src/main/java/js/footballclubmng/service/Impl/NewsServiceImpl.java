@@ -79,6 +79,7 @@ public class NewsServiceImpl implements NewsService {
                 news.setDescription(createNewsRequest.getDescription());
                 news.setNewsType(newsType);
                 news.setImageUrl(createNewsRequest.getImageUrl());
+                news.setDateUpdate(LocalDateTime.now());
                 newsRepository.save(news);
             }
             return true;

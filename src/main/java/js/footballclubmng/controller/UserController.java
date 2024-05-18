@@ -35,7 +35,7 @@ public class UserController extends BaseController{
     UserService userService;
 
     @PostMapping(CommonConstant.USER_API.LOGIN)
-    public ResponseAPI<Object> login(@RequestBody LoginRequest request) {
+    public ResponseAPI<Object> login(@RequestBody @Valid LoginRequest request) {
         ResponseAPI<Object> result = new ResponseAPI<Object>();
         if (request.isValid()) {
             try {
@@ -74,7 +74,6 @@ public class UserController extends BaseController{
             return userService.createUser(request, getSiteURL(requestHttp));
         }
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_VALID, CommonConstant.COMMON_MESSAGE.INVALID_PARAMETER);
-
     }
 
     @PostMapping(value = CommonConstant.USER_API.UPDATE_USER,
@@ -110,6 +109,7 @@ public class UserController extends BaseController{
         }
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_VALID, CommonConstant.COMMON_MESSAGE.INVALID_PARAMETER);
     }
+
     @PostMapping(CommonConstant.USER_API.REGISTER)
     public ResponseAPI<Object> register(@RequestBody @Valid UserRegisterRequest userRegisterRequest) {
         User user = userService.findUserByEmailForRegister(userRegisterRequest.getEmail());
@@ -207,7 +207,7 @@ public class UserController extends BaseController{
         }
         UserProfileDto userProfileDto = userService.userProfile(token);
         if (userProfileDto == null) {
-            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.EMPTY);
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EMPTY, CommonConstant.COMMON_MESSAGE.NOT_FOUND_USER);
         }
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.OK, userProfileDto);
     }
@@ -216,6 +216,10 @@ public class UserController extends BaseController{
     public ResponseAPI<Object> updateProfile(@RequestBody @Valid UserProfileDto userProfileDto, @RequestHeader(name = "Authorization") String token) {
         if (token == null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.EMPTY_TOKEN);
+        }
+        boolean check = userService.isDateInThePast(userProfileDto.getDateOfBirth());
+        if (!check) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.DATE_IN_THE_PAST);
         }
         boolean result = userService.updateProfile(userProfileDto, token);
         if (!result) {

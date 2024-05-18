@@ -38,6 +38,8 @@ import java.time.LocalDateTime;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -223,6 +225,7 @@ public class UserServiceImpl implements UserService {
             account.setPassword(passwordEncoder.encode(userRegisterRequest.getPassword()));
             account.setAuthority("User");
             account.setIsActive(false);
+            account.setDeleteFlg("1");
             account.setCreateTime(LocalDateTime.now());
             account.setOtp(otp);
             account.setOtpGenerateTime(LocalDateTime.now());
@@ -355,7 +358,11 @@ public class UserServiceImpl implements UserService {
                 userProfileDto.setLastName(user.getLastName());
                 userProfileDto.setEmail(user.getEmail());
                 userProfileDto.setAddress(user.getAddress());
-                userProfileDto.setDateOfBirth(user.getDateOfBirth());
+                if (user.getDateOfBirth() != null) {
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    String dateString = sdf.format(user.getDateOfBirth());
+                    userProfileDto.setDateOfBirth(dateString);
+                }
                 userProfileDto.setGender(user.getGender());
                 userProfileDto.setImage(user.getImageUrl());
                 userProfileDto.setDistrict(user.getDistrict());
@@ -380,7 +387,11 @@ public class UserServiceImpl implements UserService {
                 user.setLastName(userProfileDto.getLastName());
                 user.setEmail(userProfileDto.getEmail());
                 user.setAddress(userProfileDto.getAddress());
-                user.setDateOfBirth(userProfileDto.getDateOfBirth());
+                if (userProfileDto.getDateOfBirth() != null && !userProfileDto.getDateOfBirth().isEmpty()){
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    Date date = sdf.parse(userProfileDto.getDateOfBirth());
+                    user.setDateOfBirth(date);
+                }
                 user.setGender(userProfileDto.getGender());
                 user.setImageUrl(userProfileDto.getImage());
                 user.setDistrict(userProfileDto.getDistrict());
@@ -395,6 +406,26 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
+    public static Date getPreviousDate(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date); // Đặt ngày muốn xem
+        calendar.add(Calendar.DAY_OF_MONTH, -1); // Trừ một ngày
+        return calendar.getTime(); // Trả về ngày trước đó
+    }
+    public boolean isDateInThePast(String date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date d = sdf.parse(date);
+            Date currentDate = new Date();
+            Date previousDate = getPreviousDate(currentDate);
+            if (d.before(previousDate)) {
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
+    }
     @Override
     public boolean changePassword(String token, UpdatePasswordRequest updatePasswordRequest) {
         try {

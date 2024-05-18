@@ -31,16 +31,19 @@ public class CreateProductRequest {
     private float price;
 
     @NotNull(message = "Chiết khấu không được trống")
-    @Min(value = 0, message = "chiết khẩu sản phẩm phải lớn hơn hoặc bằng 0")
-    @Max(value = 100, message = "chiết khẩu sản phẩm phải nhỏ hơn hoặc bằng 100")
+    @Min(value = 0, message = "Giá khuyến mãi phải lớn hơn hoặc bằng 0")
+    @Max(value = 100, message = "Giá khuyến mãi phải nhỏ hơn hoặc bằng 100")
     private float discount;
 
     private Boolean isCustomise;
 
+    @NotBlank(message = "Mô tả sản phẩm không được để trống")
     private String description;
 
+    @NotBlank(message = "Ảnh không được để trống")
     private List<ImagesProductDto> ImagesProductList;
 
+    @NotBlank(message = "Size không được để trống")
     private List<ProductSizeDto> productSizeList;
 
 }

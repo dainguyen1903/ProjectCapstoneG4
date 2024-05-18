@@ -31,4 +31,5 @@ public interface UserService {
     public boolean updateProfile(UserProfileDto userProfileDto, String token);
     public boolean changePassword(String token, UpdatePasswordRequest updatePasswordRequest);
     public ResponseAPI<Object> detailUser(long id);
+    public boolean isDateInThePast(String date);
 }

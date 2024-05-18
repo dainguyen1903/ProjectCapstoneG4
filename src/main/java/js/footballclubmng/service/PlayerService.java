@@ -14,4 +14,5 @@ public interface PlayerService {
     public boolean deletePlayer(long id);
     public List<Player> searchPlayer(String search);
     public boolean checkPlayerNumberExist(Long number);
+    public boolean isDateInThePast(String date);
 }

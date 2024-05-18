@@ -2,7 +2,13 @@ package js.footballclubmng.util;
 
 import js.footballclubmng.entity.*;
 import js.footballclubmng.model.dto.*;
+
+import js.footballclubmng.model.response.ListCartItemsResponse;
+import js.footballclubmng.model.response.ListCartTicketItemResponse;
+import js.footballclubmng.model.response.ListShippingResponse;
+
 import js.footballclubmng.model.response.*;
+
 import js.footballclubmng.repository.ImagesProductRepository;
 import js.footballclubmng.repository.ProductSizeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -132,6 +138,15 @@ public class MapperUtil {
         fixturesDto.setImageHomeTeam(fixtures.getImageHomeTeam());
         fixturesDto.setAwayTeam(fixtures.getAwayTeam());
         fixturesDto.setImageAwayTeam(fixtures.getImageAwayTeam());
+
+        fixturesDto.setDateTime(String.valueOf(fixtures.getDateTime()));
+        fixturesDto.setLocation(fixtures.getLocation());
+        fixturesDto.setStatusMatch(fixtures.getStatusMatch());
+        fixturesDto.setHomeScore(String.valueOf(fixtures.getHomeScore()));
+        fixturesDto.setAwayScore(String.valueOf(fixtures.getAwayScore()));
+        fixturesDto.setNumberOfTicket(String.valueOf(fixtures.getNumberOfTicket()));
+        fixturesDto.setPriceOfTicket(String.valueOf(fixtures.getPriceOfTicket()));
+
         fixturesDto.setDateTime(fixtures.getDateTime());
         fixturesDto.setLocation(fixtures.getLocation());
         fixturesDto.setStatusMatch(fixtures.getStatusMatch());
@@ -139,6 +154,7 @@ public class MapperUtil {
         fixturesDto.setAwayScore(fixtures.getAwayScore());
         fixturesDto.setNumberOfTicket(fixtures.getNumberOfTicket());
         fixturesDto.setPriceOfTicket(fixtures.getPriceOfTicket());
+
         fixturesDto.setNumberOfTicketsSold(fixtures.getNumberOfTicketsSold());
         fixturesDto.setStatus(fixtures.getStatus());
         return fixturesDto;
@@ -170,7 +186,10 @@ public class MapperUtil {
 
     public static OrderHistoryDto mapToOrderHistoryDto(Order order, List<OrderDetail> orderDetailList) {
         OrderHistoryDto orderHistoryDto = new OrderHistoryDto();
+
+
         orderHistoryDto.setOrderId(order.getId());
+
         orderHistoryDto.setOrderCode(order.getOrderCode());
         orderHistoryDto.setTotalPrice(order.getTotalPrice());
         orderHistoryDto.setOrderDate(order.getOrderDate());
@@ -183,6 +202,7 @@ public class MapperUtil {
 
         return orderHistoryDto;
     }
+
 
     public static OrderDetailResponse mapToOrderDetailResponse(Order order, List<OrderDetail> orderDetailList) {
         OrderDetailResponse orderDetailResponse = new OrderDetailResponse();
