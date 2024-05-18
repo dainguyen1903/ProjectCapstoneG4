@@ -73,6 +73,7 @@ console.log(state)
           onChange={(v) => setStateData({ ...state, province: v.target.value,district:"",ward:""})}
           style={{ width }}
         >
+            <option value={null}>{""}</option>
           {renderListOption(listProvince)}
         </select>
       </div>

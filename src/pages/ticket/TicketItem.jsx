@@ -207,7 +207,7 @@ const TicketItem = ({
             ) : (
               <div style={{ marginTop: 20 }}>
                 <div>
-                  <Button
+                  {/* <Button
                     onClick={() => {
                       setMode(MODE.BUY);
                       openModal();
@@ -218,7 +218,7 @@ const TicketItem = ({
                     }}
                   >
                     Mua ngay
-                  </Button>
+                  </Button> */}
                   <Button
                     onClick={() => {
                       setMode(MODE.ADD_CART);

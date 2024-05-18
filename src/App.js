@@ -149,10 +149,7 @@ function App() {
             <Route
               path="/order"
               element={
-
                 <OrderPage />
-
-
               }
 
             />

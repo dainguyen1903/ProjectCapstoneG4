@@ -73,7 +73,7 @@ const OrderItem = ({ item }) => {
   return (
     <div
       onClick={() => navigate("/order-detail/" + item.id)}
-      className=" order-item"
+      className="order-item"
     >
       <div
         style={{

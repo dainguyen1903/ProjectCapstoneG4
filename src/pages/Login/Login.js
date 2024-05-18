@@ -79,16 +79,16 @@ function Login() {
         repassword: rePasswordReg,
       };
       const res = await userApi.register(dataPost);
-      if (res.data.status === 200) {
+      if (res?.data.status === 200) {
         setIsOtp(true);
       } else {
-        setErrReg(res.data.message);
+        setErrReg(res?.data.message);
       }
       setLoading(false);
     } catch (error) {
       setLoading(false);
       console.log(error.response);
-      const errObj = error.response.data;
+      const errObj = error?.response?.data;
       const messArr = Object.values(errObj);
       setErrReg(messArr[0]);
     }

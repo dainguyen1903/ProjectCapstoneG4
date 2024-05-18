@@ -5,9 +5,8 @@ import { formatPrice } from "../../utils/helpers";
 import OrderItem from "./OrderItem";
 const ListShipping = ({list}) => {
 
-
   return (
-    <div>
+    <div className="container">
     
 
       <div className="cart-cbody">
