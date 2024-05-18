@@ -6,7 +6,7 @@ import useNewsStore from "../../zustand/newsStore";
 import LoadingFull from "../../component/loading/loadingFull";
 import useNewsCategoryStore from "../../zustand/newsCategoryStore";
 import { newsApi } from "../../api/news.api";
-import { showMessErr } from "../../ultis/helper";
+import { handleError, showMessErr, showMessErr400 } from "../../ultis/helper";
 import { Card } from "antd";
 const { Option } = Select;
 
@@ -21,8 +21,9 @@ const NewsCategoryAdd = () => {
       title: "Xác nhận",
       content: !id ? "Thêm danh mục bài viết" : "Cập nhật danh mục bài viết",
       onOk: async () => {
+       try {
         const dataPost = {
-          name,
+          name : name?.trim(),
           description: "description",
         };
         const res = !id
@@ -37,8 +38,11 @@ const NewsCategoryAdd = () => {
             },
           });
         } else {
-          showMessErr(res.data);
+          showMessErr400(res);
         }
+       } catch (error) {
+        handleError(error)
+       }
       },
     });
   };

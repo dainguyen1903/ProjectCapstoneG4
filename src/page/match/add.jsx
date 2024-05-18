@@ -16,6 +16,7 @@ import moment from "moment";
 import useMatchStore from "../../zustand/matchStore";
 import LoadingFull from "../../component/loading/loadingFull";
 import { matchApi } from "../../api/match.api";
+import { handleError, showMessErr400 } from "../../ultis/helper";
 const { Option } = Select;
 
 const AddMatchForm = () => {
@@ -46,7 +47,7 @@ const AddMatchForm = () => {
         try {
           const dataPosst = JSON.parse(JSON.stringify(values));
           const birdday = dataPosst.dateTime;
-          dataPosst.dateTime = moment(birdday).format("YYYY-MM-DDTHH:mm");
+          dataPosst.dateTime = moment(birdday).format("YYYY-MM-DDTHH:mm:ss");
           if (status != "0") {
             dataPosst.awayScore = awayScore;
             dataPosst.homeScore = homeScore;
@@ -66,16 +67,11 @@ const AddMatchForm = () => {
             });
             navigate(-1);
           } else {
-            Modal.error({
-              title: "Thất bại",
-              content: !id ? "Thêm thất bại" : "Cập nhật thất bại",
-            });
+          showMessErr400(res)
           }
         } catch (error) {
-          Modal.error({
-            title: "Thất bại",
-            content: !id ? "Thêm thất bại" : "Cập nhật thất bại",
-          });
+          console.log(error)
+         handleError(error)
         }
       },
     });
@@ -94,7 +90,7 @@ const AddMatchForm = () => {
         setImageAwayTeam(detail?.imageAwayTeam);
         setImageHomeTeam(detail?.imageHomeTeam)
         detail.dateTime = detail.dateTime ? moment(detail.dateTime) : null;
-        form.setFieldsValue(detail);
+        form.setFieldsValue({...detail,priceOfTicket:Math.ceil(Number(detail.priceOfTicket))});
       }
     } catch (error) {
     } finally {

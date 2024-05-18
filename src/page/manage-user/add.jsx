@@ -19,6 +19,7 @@ import LoadingFull from "../../component/loading/loadingFull";
 import useAuthStore from "../../zustand/authStore";
 import { userApi } from "../../api/user.api";
 import AddImage from "../../component/common/AddImage";
+import { handleError, showMessErr400 } from "../../ultis/helper";
 const { Option } = Select;
 
 const AddUserForm = () => {
@@ -48,56 +49,67 @@ const AddUserForm = () => {
         ? "Thêm người dùng"
         : "Cập nhật người dùng",
       onOk: async () => {
-        const dataPosst = JSON.parse(JSON.stringify(value));
-        const birdday = dataPosst.dateOfBirth;
-        dataPosst.dateOfBirth = birdday
-          ? moment(birdday).format("YYYY-MM-DD")
-          : null;
-        dataPosst.image_name = imageName;
-        dataPosst.image = url;
-        if (isEditProfile) {
-          await userApi.udpateProfileUser(dataPosst);
-          setUser({
-            ...user,
-            ...dataPosst,
-            fullname: dataPosst.firstName + "" + dataPosst.lastName,
-          });
-        } else if (id) {
-          console.log(dataPosst);
-          delete dataPosst.image;
-          dataPosst.authority = dataPosst.role;
-          delete dataPosst.role;
-          delete dataPosst.image_name;
-          const formData = new FormData();
-          for (let key in dataPosst) {
-            if (dataPosst.hasOwnProperty(key)) {
-              formData.append(key, dataPosst[key]);
+        try {
+          let res;
+          const dataPosst = JSON.parse(JSON.stringify(value));
+          const birdday = dataPosst.dateOfBirth;
+          dataPosst.dateOfBirth = birdday
+            ? moment(birdday).format("YYYY-MM-DD")
+            : null;
+          dataPosst.image_name = imageName;
+          dataPosst.image = url;
+          if (isEditProfile) {
+            res = await userApi.udpateProfileUser(dataPosst);
+            setUser({
+              ...user,
+              ...dataPosst,
+              fullname: dataPosst.firstName + "" + dataPosst.lastName,
+            });
+          } else if (id) {
+            console.log(dataPosst);
+            delete dataPosst.image;
+            dataPosst.authority = dataPosst.role;
+            delete dataPosst.role;
+            delete dataPosst.image_name;
+            const formData = new FormData();
+            for (let key in dataPosst) {
+              if (dataPosst.hasOwnProperty(key)) {
+                formData.append(key, dataPosst[key]);
+              }
             }
-          }
-          formData.append("file", file);
+            formData.append("file", file);
 
-          await userApi.updateUser(formData);
-        } else {
-          delete dataPosst.image;
-          dataPosst.authority = dataPosst.role;
-          delete dataPosst.role;
-          delete dataPosst.image_name;
-          const formData = new FormData();
-          for (let key in dataPosst) {
-            if (dataPosst.hasOwnProperty(key)) {
-              formData.append(key, dataPosst[key]);
+            res = await userApi.updateUser(formData);
+          } else {
+            delete dataPosst.image;
+            dataPosst.authority = dataPosst.role;
+            delete dataPosst.role;
+            delete dataPosst.image_name;
+            const formData = new FormData();
+            for (let key in dataPosst) {
+              if (dataPosst.hasOwnProperty(key)) {
+                formData.append(key, dataPosst[key]);
+              }
             }
+            formData.append("file", file);
+            res = await userApi.createrUser(formData);
           }
-          formData.append("file", file);
-          await userApi.createrUser(formData);
-        }
-        Modal.success({
-          title: "Thành công",
-          content:
-            !id && !isEditProfile ? "Thêm thành công" : "Cập nhật thành công",
-        });
-        if (!id && !isEditProfile) {
-          form.resetFields();
+          if (res?.data?.status === 200 || res?.data?.status === 204) {
+            Modal.success({
+              title: "Thành công",
+              content:
+                !id && !isEditProfile
+                  ? "Thêm thành công"
+                  : "Cập nhật thành công",
+            });
+            if (!id && !isEditProfile) {
+              form.resetFields();
+            }
+          } else {
+            showMessErr400(res);
+          }
+        } catch (error) {
+          handleError(error);
         }
       },
     });
@@ -136,7 +148,7 @@ const AddUserForm = () => {
         : null;
       dataDetail.role = dataDetail.authority;
       setUrl(isEditProfile ? dataDetail.image : dataDetail.imageUrl);
-      
+
       dataDetail.image = imgName;
       delete dataDetail.image_name;
       console.log(dataDetail);
@@ -202,7 +214,7 @@ const AddUserForm = () => {
               >
                 <Input placeholder="Tên" className="Input" />
               </Form.Item>
-              
+
               <div className="inputLabel">Địa chỉ</div>
               <Form.Item name="address">
                 <Input placeholder="Địa chỉ" className="Input" />

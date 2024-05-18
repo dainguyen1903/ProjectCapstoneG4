@@ -6,6 +6,7 @@ import useNewsStore from "../../zustand/newsStore";
 import LoadingFull from "../../component/loading/loadingFull";
 import useCategoryStore from "../../zustand/productCategoryStore";
 import { categoryApi } from "../../api/category.api";
+import { handleError, showMessErr400 } from "../../ultis/helper";
 const { Option } = Select;
 
 const AddProductCategory = () => {
@@ -20,13 +21,20 @@ const AddProductCategory = () => {
       title: "Xác nhận",
       content: !id ? "Thêm danh mục sản phẩm" : "Cập nhật danh mục sản phẩm",
       onOk: async () => {
-        const res = !id ? await categoryApi.createrCategory({ name }) : await categoryApi.updateCategory(id,{ name });
+        try {
+          const res = !id ? await categoryApi.createrCategory({ name:name?.trim() }) : await categoryApi.updateCategory(id,{ name });
         if (res.data.status === 200 || res.data.status === 204) {
           Modal.success({
             title: "Thành công",
             content: !id ? "Thêm thành công" : "Cập nhật thành công",
           });
           navigate(-1);
+        }
+        else{
+          showMessErr400(res)
+        }
+        } catch (error) {
+          handleError(error)
         }
       },
     });
