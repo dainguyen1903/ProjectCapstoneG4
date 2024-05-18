@@ -213,7 +213,7 @@ const CheckOutPage = () => {
 
             <div className="cart-cfoot-r flex flex-column justify-end">
               <div className="total-txt flex align-center justify-end">
-                <div className="font-manrope fw-5">Total:</div>
+                <div className="font-manrope fw-5">Tổng:</div>
                 <span className="text-orange fs-22 mx-2 fw-6">
                   {formatPrice(totalAmount || 0)}
                 </span>

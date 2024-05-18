@@ -69,20 +69,20 @@ const CartPage = ({ isCheckout }) => {
                 <span className="cart-ctxt">S.N.</span>
               </div>
               <div className="cart-cth">
-                <span className="cart-ctxt">Product</span>
+                <span className="cart-ctxt">Sản phẩm</span>
               </div>
               <div className="cart-cth">
-                <span className="cart-ctxt">Unit Price</span>
+                <span className="cart-ctxt">Giá</span>
               </div>
               <div className="cart-cth">
-                <span className="cart-ctxt">Quantity</span>
+                <span className="cart-ctxt">Số lượng</span>
               </div>
               <div className="cart-cth">
-                <span className="cart-ctxt">Total Price</span>
+                <span className="cart-ctxt">Tổng giá</span>
               </div>
               {!isCheckout && (
                 <div className="cart-cth">
-                  <span className="cart-ctxt">Actions</span>
+                  <span className="cart-ctxt">Hành động</span>
                 </div>
               )}
             </div>
@@ -174,7 +174,7 @@ const CartPage = ({ isCheckout }) => {
                           dispatch(removeCartAction(cart?.cartItemId))
                         }
                       >
-                        Delete
+                        Xóa
                       </button>
                     </div>
                   )}
@@ -201,7 +201,7 @@ const CartPage = ({ isCheckout }) => {
               <div className="cart-cfoot-r flex flex-column justify-end">
                 <div className="total-txt flex align-center justify-end">
                   <div className="font-manrope fw-5">
-                    Total ({carts.length}) items:{" "}
+                    Tổng ({carts.length}) sản phẩm:{" "}
                   </div>
                   <span className="text-orange fs-22 mx-2 fw-6">
                     {formatPrice(totalAmount)}
@@ -211,14 +211,14 @@ const CartPage = ({ isCheckout }) => {
                 <button
                   onClick={() => navigate("/checkout")}
                   style={{
-                    background: disabledCheckout && "gray",
+                   
                     cursor: "pointer",
                   }}
                   // disabled={disabledCheckout}
                   type="button"
                   className="checkout-btn text-white bg-orange fs-16"
                 >
-                  Check Out
+                  Thanh toán
                 </button>
               </div>
             </div>
