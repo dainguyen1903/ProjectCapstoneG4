@@ -38,6 +38,7 @@ public class CommonConstant {
     public static class COMMON_MESSAGE {
         public static String NOT_CONVERT = "CAN_NOT_CONVERT";
         public static String OK = "OK";
+        public static String LOGIN_SUCCESSFULL = "Đăng nhập thành công";
         public static String USER_NOT_LOGIN = "USER_NOT_LOGIN";
         public static String USER_NOT_LOGIN_OR_QUALIFIED = "USER NOT QUALIFIED TO STAMP";
         public static String PASSWORD_INCORRECT = "Tài khoản hoặc mật khẩu không chính xác";
@@ -193,7 +194,7 @@ public class CommonConstant {
 
         public static final String UPDATE_STATUS_ORDER_SUCCESS = "Cập nhật trạng thái đơn hàng thành công";
 
-        public static final String NOT_FOUND_ORDER_DETAILS = "Không tìm thấy chi tiết đơn hàng";
+        public static final String ca = "Không tìm thấy chi tiết đơn hàng";
 
 
         //Message payment
@@ -236,7 +237,7 @@ public class CommonConstant {
         public static final String UPDATE_PASSWORD = HEAD_API + USER + "/update-password";
         public static final String LOGIN = HEAD_API + USER + "/login";
         public static final String CREATE_USER = HEAD_API + USER + "/create-user";
-        public static final String UPDATE_USER = HEAD_API + USER + "/update-user";
+        public static final String UPDATE_USER = HEAD_API + USER + "/update-user/{id}";
         public static final String ACTIVE_USER = HEAD_API + USER + "/active-through-email";
         public static final String GET_LIST_USER = HEAD_API + USER + "/list-user";
         public static final String DELETE_USER = HEAD_API + USER + "/delete-user";
@@ -244,6 +245,7 @@ public class CommonConstant {
         public static final String DETAIL_USER = HEAD_API + USER + "/detail-user";
         public static final String PROFILE_USER = HEAD_API + USER + "/profile-user";
         public static final String UPDATE_PROFILE = HEAD_API + USER + "/update-profile-user";
+        public static final String LOGOUT = HEAD_API + USER + "/logout";
 
     }
 
@@ -315,8 +317,6 @@ public class CommonConstant {
         public static final String VIEW_ORDER_DETAILS = HEAD_API + ORDER_DETAIL + "/{orderId}";
 
         public static final String CREATE_ORDER = HEAD_API + ORDER + "/create-order";
-
-        public static final String ASSIGN_SHIPPER = HEAD_API + ORDER + "/assign-shipper";
 
         public static final String HISTORY_ORDER = HEAD_API + ORDER + "/history-order";
 
