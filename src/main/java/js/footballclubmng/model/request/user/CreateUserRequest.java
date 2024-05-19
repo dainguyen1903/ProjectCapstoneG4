@@ -5,7 +5,6 @@ import org.springframework.util.StringUtils;
 
 @Data
 public class CreateUserRequest {
-    private long id;
 
     private String email;
 
@@ -29,10 +28,12 @@ public class CreateUserRequest {
 
     private String imageUrl;
 
+    private String deleteFlg;
+
     private String authority;
 
 
-    public boolean isValid(){
+    public boolean isValid() {
         return StringUtils.hasLength(email)
                 && StringUtils.hasLength(firstName)
                 && StringUtils.hasLength(lastName)
@@ -44,13 +45,13 @@ public class CreateUserRequest {
 
     }
 
-    public boolean isValidUpdate() {
-        return  id > 0
-                && StringUtils.hasLength(firstName)
-                && StringUtils.hasLength(lastName)
-                && null != dateOfBirth
-                && StringUtils.hasLength(authority)
-                && StringUtils.hasLength(address)
-                && StringUtils.hasLength(gender);
-    }
+//    public boolean isValidUpdate() {
+//        return id > 0
+//                && StringUtils.hasLength(firstName)
+//                && StringUtils.hasLength(lastName)
+//                && null != dateOfBirth
+//                && StringUtils.hasLength(authority)
+//                && StringUtils.hasLength(address)
+//                && StringUtils.hasLength(gender);
+//    }
 }

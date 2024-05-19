@@ -41,10 +41,20 @@ public class MapperUtil {
         List<ImagesProduct> imagesProductList = imagesProductRepository.findAllByProductId(product.getId());
         productDto.setImagesProductList(imagesProductList);
         if (product.getCategory() != null) {
-            productDto.setCategory(mapToCategoryDto(product.getCategory()));
+            productDto.setCategory(mapToCategoryDtoWithoutProduct(product.getCategory()));
         }
 
         return productDto;
+    }
+
+    public static CategoryDto mapToCategoryDtoWithoutProduct(Category category) {
+        CategoryDto categoryDto = new CategoryDto();
+
+        categoryDto.setId(category.getId());
+        categoryDto.setName(category.getName());
+        categoryDto.setStatus(category.getStatus());
+
+        return categoryDto;
     }
 
     public static CategoryDto mapToCategoryDto(Category category) {

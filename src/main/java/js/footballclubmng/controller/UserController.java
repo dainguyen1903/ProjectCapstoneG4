@@ -13,15 +13,17 @@ import js.footballclubmng.service.UserService;
 import js.footballclubmng.util.EmailUtil;
 import js.footballclubmng.util.HelperUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -40,7 +42,7 @@ public class UserController extends BaseController{
         if (request.isValid()) {
             try {
                 result.setStatus(CommonConstant.COMMON_RESPONSE.OK);
-                result.setMessage(CommonConstant.COMMON_MESSAGE.OK);
+                result.setMessage(CommonConstant.COMMON_MESSAGE.LOGIN_SUCCESSFULL);
                 result.setData(userService.handleLogin(request.getEmail(), request.getPassword()));
             } catch (BadCredentialsException ex) {
                 result.setStatus(CommonConstant.COMMON_RESPONSE.EXCEPTION);
@@ -57,8 +59,20 @@ public class UserController extends BaseController{
         } else {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_VALID, CommonConstant.COMMON_MESSAGE.INVALID_PARAMETER);
         }
-
     }
+
+    @RequestMapping(CommonConstant.USER_API.LOGOUT)
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+        // Xóa thông tin phiên đăng nhập
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null) {
+            new SecurityContextLogoutHandler().logout(request, response, auth);
+        }
+
+        // Chuyển hướng về trang đăng nhập
+        return "http://localhost:3000/login";
+    }
+
 
     @GetMapping(value = CommonConstant.USER_API.GET_LIST_USER)
     @PreAuthorize("hasRole('ROLE_Admin')")
@@ -66,22 +80,20 @@ public class UserController extends BaseController{
         return userService.getListSearch(name);
     }
 
-    @PostMapping(value = CommonConstant.USER_API.CREATE_USER,
-            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = CommonConstant.USER_API.CREATE_USER)
     @PreAuthorize("hasRole('ROLE_Admin')")
-    public ResponseAPI<Object> createUser(HttpServletRequest requestHttp, @RequestPart("request") CreateUserRequest request, @RequestPart(value = "file", required = false) MultipartFile file) {
+    public ResponseAPI<Object> createUser(@RequestBody @Valid CreateUserRequest request) {
         if (request.isValid()) {
-            return userService.createUser(request, getSiteURL(requestHttp));
+            return userService.createUser(request);
         }
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_VALID, CommonConstant.COMMON_MESSAGE.INVALID_PARAMETER);
     }
 
-    @PostMapping(value = CommonConstant.USER_API.UPDATE_USER,
-            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = CommonConstant.USER_API.UPDATE_USER)
     @PreAuthorize("hasRole('ROLE_Admin')")
-    public ResponseAPI<Object> updateUser(@RequestPart("request") CreateUserRequest request, @RequestPart(value = "file", required = false) MultipartFile file) {
-        if (request.isValidUpdate()) {
-            return userService.updateUser(request, file);
+    public ResponseAPI<Object> updateUser(@RequestBody @Valid CreateUserRequest request, @PathVariable Long id) {
+        if (request != null) {
+            return userService.updateUser(request, id);
         }
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_VALID, CommonConstant.COMMON_MESSAGE.INVALID_PARAMETER);
 
@@ -103,7 +115,7 @@ public class UserController extends BaseController{
     }
 
     @GetMapping(value = CommonConstant.USER_API.DETAIL_USER)
-    public ResponseAPI<Object> detailUser(@RequestParam(value = "id") long id) {
+    public ResponseAPI<Object> detailUser(@RequestParam(value = "id") Long id) {
         if (id > 0) {
             return userService.detailUser(id);
         }
