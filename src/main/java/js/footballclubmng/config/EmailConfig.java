@@ -18,6 +18,7 @@ public class EmailConfig {
         mailSender.setDefaultEncoding("UTF-8");
 
         Properties props = mailSender.getJavaMailProperties();
+        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
         props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
