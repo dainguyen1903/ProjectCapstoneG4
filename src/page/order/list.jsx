@@ -18,13 +18,18 @@ import { orrderApi } from "../../api/order.api";
 import { productApi } from "../../api/product.api";
 import { STATUS_ORDER } from "../../constants/common";
 import { ROLE } from "../../constants/role";
-import { dateFormat, showMessErr } from "../../ultis/helper";
+import { dateFormat, handleError, showMessErr, showMessErr400 } from "../../ultis/helper";
 import useAuthStore from "../../zustand/authStore";
 import useNewsStore from "../../zustand/newsStore";
 import useProductStore from "../../zustand/productStore";
 const { RangePicker } = DatePicker;
 
 const listStatusOrderOption = [
+  { key: "IN_PROGRESS", value: "Đang giao" },
+  { key: "DELIVERED", value: "Đã giao" },
+  { key: "RETURNED", value: "Đơn hoàn trả" },
+];
+const listStatusOrderOptionFull = [
   { key: "PENDING_CONFIRMATION", value: "Chờ xác nhận" },
   { key: "CONFIRMED", value: "Đã xác nhận" },
   { key: "IN_PROGRESS", value: "Đang giao" },
@@ -102,10 +107,7 @@ const OrderList = () => {
       console.log(error);
     }
   };
-  // useEffect(() => {
-  //   handleSearch();
-  // },[])
-
+  
   /// get list order
   const getListOrder = async () => {
     try {
@@ -122,8 +124,16 @@ const OrderList = () => {
 
   // CHange Status
   const handleChangeStatus = async (id, v) => {
+   
     try {
-      await orrderApi.changStatusOrder(id, v);
+     const res =   await orrderApi.changStatusOrder(id, v);
+      if(res?.data?.status === 200 ||res?.data?.status === 204 ){
+         message.success(`Đã chuyển trạng thái đơn hàng thành ${listStatusOrderOptionFull.find(i => i.key === v)?.value}`)
+         getListOrder()
+      }
+      else{
+        showMessErr400(res)
+      }
     } catch (error) {
       console.log(error);
     }
@@ -160,9 +170,6 @@ const OrderList = () => {
       title: "Người ship",
       dataIndex: "shipping",
       render: (row, value) => {
-        console.log(row);
-        console.log(value);
-
         return (
           <div>
             <span>
@@ -192,13 +199,17 @@ const OrderList = () => {
       dataIndex: "orderStatus",
       key: "orderStatus",
       render: (row, value) => {
+        const isOption = listStatusOrderOption.find(i => i.key === value.orderStatus)
         return (
           <div>
-            {isShipper ? (
+            {isShipper  ? (
               <Select
+            
+              style={{width:"200px"}}
                 onChange={(v) => handleChangeStatus(value.id, v)}
-                value={value.orderStatus}
+                value={isOption?value.orderStatus :""}
               >
+                  <Select.Option style={{display:"none"}} disabled value={""}>{listStatusOrderOptionFull?.find(i => i.key === value.orderStatus)?.value}</Select.Option>
                 {listStatusOrderOption.map((i) => (
                   <Select.Option value={i.key}>{i.value}</Select.Option>
                 ))}
@@ -282,16 +293,22 @@ const OrderList = () => {
             </Select.Option>
           ))}
         </Select>
-
+         <div style={{
+          marginBlock:5,
+          color:"gray"
+         }}>{listShipperDistric.length === 0 ?"Không có shipper nào phù hợp" :""}</div>
         <Button
-          style={{ background: "rgb(31, 167, 167)", marginLeft: 10 }}
+
+        disabled={!listShipperDistric.length}
+          style={{ background: "rgb(31, 167, 167)", marginLeft: 10,color:"white" }}
           type="primary"
           onClick={async() => {
             if(currentIdShipper === originIdShipper){
               closeModal()
               return;
             }
-           const res =   await orrderApi.assignShipper(currentShippingId,currentIdShipper);
+           try {
+            const res =   await orrderApi.assignShipper(currentShippingId,currentIdShipper);
            if(res.data.status === 200 || res.data.status === 204){
             message.success("Assign thành công");
             closeModal();
@@ -299,6 +316,9 @@ const OrderList = () => {
            if(res.data.status === 400){
             const mes  = res?.data.message || "Thất bại"
             message.error(mes);
+           }
+           } catch (error) {
+            handleError(error)
            }
           }}
         >

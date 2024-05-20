@@ -11,19 +11,22 @@ export const orrderApi = {
   },
   getListShipperDistrict: (shippingId) => {
     return api.get(
-      `api/shiping/${shippingId}/shippers`)
+      `api/shipping/${shippingId}/shippers`)
   },
   assignShipper: (shippingId,shipperId) => {
     return api.post(
-      `api/shiping/assign-shipper/${shippingId}/${shipperId}`)
+      `api/shipping/assign-shipper/${shippingId}/${shipperId}`)
   },
   changStatusOrder:(orderid,status) =>{
     return api.put(
-      baseURLOrder + `update-status-order-by-shipper/${orderid}`,{
+      baseURLOrder + `update-status-order-by-shipper/${orderid}`,{},{
         params:{
           status
         }
       })
   },
+  getOrderDetailById:(id) => {
+    return api.get("api/" + `order-details/${id}`)
+ },
   
 };

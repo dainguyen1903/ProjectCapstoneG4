@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { formatPrice } from "../../ultis/helper";
 import { STATUS_ORDER } from "../../constants/common";
 const ProductItem = ({ productItem }) => {
+  console.log(productItem)
   return (
     <>
       <div
@@ -12,7 +13,9 @@ const ProductItem = ({ productItem }) => {
           display: "flex",
           padding: 15,
           borderBottom: "1px solid lightgray",
-          position:"relative"
+          position:"relative",
+          color:"black",
+          alignItems:"center"
         }}
       >
         <div>
