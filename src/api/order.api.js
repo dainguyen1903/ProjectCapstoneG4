@@ -13,6 +13,9 @@ export const orrderApi = {
  },
  getHistoryOrder : () => {
    return api.get("api/" + "order/history-order")
- }
+ },
+ cancelOder : (id) => {
+  return api.post("api/" + "order/cancel-order/"+id)
+}
   
 };

@@ -3,8 +3,10 @@ import React from "react";
 import { STATUS_ORDER } from "../../constants/common";
 import "./order.scss";
 import { format } from "date-fns";
-import { formatPrice } from "../../utils/helpers";
-import { useNavigate } from "react-router-dom";
+import { formatPrice, handleError } from "../../utils/helpers";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Button, Modal, message } from "antd";
+import { orrderApi } from "../../api/order.api";
 const ProductItem = ({ productItem }) => {
   return (
     <>
@@ -67,12 +69,34 @@ const ProductItem = ({ productItem }) => {
     </>
   );
 };
-const OrderItem = ({ item }) => {
+
+const OrderItem = ({ item ,getList}) => {
+  const location = useLocation()
   const navigate = useNavigate();
   const listProduct = item?.orderDetailDtoList || [];
+  const handleCancel  = (e) => {
+    e.stopPropagation()
+    Modal.confirm({
+      title: "Xác nhận",
+      content: "Xác nhận hủy đơn hàng",
+      onOk: async () => {
+        try {
+          const res = await orrderApi.cancelOder(item.orderId)
+          if(res?.data?.status === 200 ||res?.data?.status === 204 ){
+            message.success("Đã hủy đơn hàng")
+            getList()
+          }
+        } catch (error) {
+          message.error("Thất bại")
+        }
+      },
+      centered:true
+  
+    })
+  }
   return (
     <div
-      onClick={() => navigate("/order-detail/" + item.id)}
+      onClick={() => navigate("/order-detail/" + item.orderId)}
       className="order-item"
     >
       <div
@@ -140,6 +164,13 @@ const OrderItem = ({ item }) => {
           {formatPrice(item.totalPrice)}
         </span>
       </div>
+   {(item.orderStatus === STATUS_ORDER.pending ||item.orderStatus === STATUS_ORDER.confirmed ) && location.pathname === "/order" &&    <div style={{
+        display:"flex",
+        justifyContent:"flex-end",
+        paddingBottom:10
+      }}>
+        <Button onClick={handleCancel}>Hủy đơn</Button>
+      </div>}
     </div>
   );
 };

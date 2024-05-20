@@ -118,14 +118,14 @@ const OrderPage = () => {
             <div></div>
           </div>
           <div>
-            {value === 0 && <ListShipping list={listOrder} />}
-            {value === 1 && <ListShipping list={listPendingConfirm} />}
-            {value === 2 && <ListShipping list={listConfirmed} />}
-            {value === 3 && <ListShipping list={listInprogress} />}
-            {value === 4 && <ListShipping list={listComplete} />}
-            {value === 5 && <ListShipping list={listReturn} />}
-            {value === 6 && <ListShipping list={listFail} />}
-            {value === 7 && <ListShipping list={listCancel} />}
+            {value === 0 && <ListShipping getList={getLisOrder} list={listOrder} />}
+            {value === 1 && <ListShipping  getList={getLisOrder} list={listPendingConfirm} />}
+            {value === 2 && <ListShipping  getList={getLisOrder} list={listConfirmed} />}
+            {value === 3 && <ListShipping  getList={getLisOrder} list={listInprogress} />}
+            {value === 4 && <ListShipping  getList={getLisOrder} list={listComplete} />}
+            {value === 5 && <ListShipping  getList={getLisOrder} list={listReturn} />}
+            {value === 6 && <ListShipping  getList={getLisOrder} list={listFail} />}
+            {value === 7 && <ListShipping  getList={getLisOrder} list={listCancel} />}
           </div>
         </div>
       </div>

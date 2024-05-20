@@ -15,7 +15,7 @@ import { useLocation, useParams } from "react-router";
 import "./Profile.scss";
 import moment from "moment";
 import { userApi } from "../../api/user.api";
-import { handleError } from "../../utils/helpers";
+import { dateFormat, dateFormat4, handleError, showMessErr400 } from "../../utils/helpers";
 import Province from "../components/common/Province";
 const { Option } = Select;
 const ProfileUser = () => {
@@ -45,17 +45,23 @@ const ProfileUser = () => {
   const onSave = async () => {
   try {
     setLoading(true)
-    const objPost = form.getFieldsValue();
-    const date = form.getFieldValue("dateOfBirth");
-    const dateString = date ? moment(date).format("YYYY-MM-DD"):null;
-    objPost.dateOfBirth = dateString;
+    const objPost1 = form.getFieldsValue();
+    const objPost = JSON.parse(JSON.stringify(objPost1));
+
+    const dateString = dateFormat4(objPost.dateOfBirth);
     objPost.image = url;
     objPost.province = dataProvince.province;
     objPost.district = dataProvince.district;
     objPost.ward = dataProvince.ward
-    const res = await userApi.udpateProfileUser(objPost);
+    const res = await userApi.udpateProfileUser({...objPost,dateOfBirth:dateString});
+    if(res?.data?.status === 200||res?.data?.status === 204 ){
+      message.success("Lưu thành công")
+
+    }
+    else{
+      showMessErr400(res)
+    }
     setLoading(false)
-    message.success("Lưu thành công")
   } catch (error) {
     setLoading(false)
     handleError(error)

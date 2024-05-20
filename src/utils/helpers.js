@@ -122,6 +122,8 @@ function isObject(value) {
 }
 export const dateFormat = (date) =>
   date ? moment(date).format("DD/MM/YYYY") : "";
+export const dateFormat4 = (date) =>
+  date ? moment(date).format("YYYY-MM-DD") : "";
 export const dateFormat2 = (date) =>
   date ? moment(date).format("YYYY-MM-DD") : "";
   export const dateFormat3 = (date) => {
@@ -167,3 +169,14 @@ export const dateFormat2 = (date) =>
     return result;
   }
   
+  // Show messs error
+export const showMessErr400 = (res) => {
+  let mess = "";
+  const messErr = res?.data?.message
+if(messErr){
+  if(typeof messErr === "string"){
+    mess= messErr
+  }
+}
+message.error(mess || "Có lỗi xảy ra")
+}

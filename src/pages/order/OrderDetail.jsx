@@ -55,11 +55,14 @@ const orderItemFake =  {
   ]
 }
 const OrderDetail = () => {
-  const [oriderDetail, setOrderDetail] = useState({});
+  const [orderItemFake, setOrderDetail] = useState({});
   const { id } = useParams();
   const getOrderDetail = async () => {
     try {
       const res = await orrderApi.getOrderDetailById(id);
+      if(res?.data?.status === 200 || res?.data?.status === 204){
+        setOrderDetail(res?.data?.data || {})
+      }
     } catch (error) {
       console.log(error);
     }
