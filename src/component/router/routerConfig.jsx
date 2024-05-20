@@ -21,12 +21,27 @@ import { router } from "../../constants/router";
 import ConfirmOTP from "../../page/resetpassword/confirmOtp";
 import ResetPassword from "../../page/resetpassword/resetPass";
 import ResetSendOTP from "../../page/resetpassword/resetSendOtp";
+import { ROLE } from "../../constants/role";
 
 const RouterConfig = () => {
   const isLogin = useAuthStore(state => state.isAuthenticated)
   const user = useAuthStore(state => state.user)
   const [routesWithLayout,setrousWithLayout] = useState([]);
   const [normalLayout,setnormalLayout] = useState([]);
+  let path = "/home"
+  console.log(user)
+  if(user?.authority === "Sale"){
+    path="/home"
+  }
+  if(user?.authority === ROLE.OPERATOR){
+    path="/player/list"
+  }
+  if(user?.authority === ROLE.SHIPPER){
+    path="/order"
+  }
+  if(user?.authority === ROLE.ADMIN){
+    path="/user/list"
+  }
   useEffect(() => {
  if(user){
   const listRouteLayout = router.filter(i => ((!i.role ||  i.role.includes(user.authority)) && i.isProtected!==false ));
@@ -52,7 +67,7 @@ const RouterConfig = () => {
   return (
     <>
       <Routes>
-      <Route path="/" element={<Navigate to={isLogin ? "/home":"/login"}  />} />
+      <Route path="/" element={<Navigate to={isLogin ? path:"/login"}  />} />
         <Route path="/" element={<LayOutPage />}>
           {routesWithLayout.map(i => (
              <Route path={i.path} element={<i.component />} />

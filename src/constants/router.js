@@ -6,6 +6,7 @@ import {
   DribbbleOutlined,
   BorderOuterOutlined,
   MenuFoldOutlined,
+  SkinOutlined
 } from "@ant-design/icons";
 import Home from "../page/home/home";
 import ManageUser from "../page/manage-user";
@@ -41,6 +42,7 @@ export const router = [
     path: "/home",
     menuName: "Trang chủ",
     key: "/home",
+    role: [ ROLE.SALE],
   },
   {
     show: true,
@@ -157,7 +159,7 @@ export const router = [
     show: true,
     key: "/order",
     path: "/order",
-    icon: MenuFoldOutlined,
+    icon: SkinOutlined,
     menuName: "Danh sách đơn hàng",
     role: [ROLE.SALE, ROLE.SHIPPER],
     component: OrderList,

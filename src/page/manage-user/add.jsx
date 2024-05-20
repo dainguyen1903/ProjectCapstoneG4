@@ -11,7 +11,7 @@ import {
   Col,
 } from "antd";
 import { FileImageOutlined } from "@ant-design/icons";
-import { useLocation, useParams } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import "./../login/login.css";
 import useUserStore from "../../zustand/userStore";
 import moment from "moment";
@@ -20,6 +20,7 @@ import useAuthStore from "../../zustand/authStore";
 import { userApi } from "../../api/user.api";
 import AddImage from "../../component/common/AddImage";
 import { handleError, showMessErr400 } from "../../ultis/helper";
+import Province from "../../component/common/Province";
 const { Option } = Select;
 
 const AddUserForm = () => {
@@ -38,7 +39,12 @@ const AddUserForm = () => {
   const setUser = useAuthStore((state) => state.setUser);
   const [file, setFile] = useState(null);
   let detail = isEditProfile ? user : users.find((i) => i.id == id) || {};
-
+  const navigate = useNavigate()
+  const [dataProvince, setDataProvince] = useState({
+    province: "",
+    district: "",
+    ward: "",
+  });
   // Confirm save
   const confirmSave = (value) => {
     Modal.confirm({
@@ -58,6 +64,9 @@ const AddUserForm = () => {
             : null;
           dataPosst.image_name = imageName;
           dataPosst.image = url;
+          dataPosst.province = dataProvince.province;
+          dataPosst.district = dataProvince.district;
+          dataPosst.ward = dataProvince.ward;
           if (isEditProfile) {
             res = await userApi.udpateProfileUser(dataPosst);
             setUser({
@@ -66,33 +75,19 @@ const AddUserForm = () => {
               fullname: dataPosst.firstName + "" + dataPosst.lastName,
             });
           } else if (id) {
-            console.log(dataPosst);
             delete dataPosst.image;
             dataPosst.authority = dataPosst.role;
             delete dataPosst.role;
             delete dataPosst.image_name;
-            const formData = new FormData();
-            for (let key in dataPosst) {
-              if (dataPosst.hasOwnProperty(key)) {
-                formData.append(key, dataPosst[key]);
-              }
-            }
-            formData.append("file", file);
-
-            res = await userApi.updateUser(formData);
+            dataPosst.imageUrl = url
+            res = await userApi.updateUser(dataPosst,id);
           } else {
             delete dataPosst.image;
             dataPosst.authority = dataPosst.role;
             delete dataPosst.role;
             delete dataPosst.image_name;
-            const formData = new FormData();
-            for (let key in dataPosst) {
-              if (dataPosst.hasOwnProperty(key)) {
-                formData.append(key, dataPosst[key]);
-              }
-            }
-            formData.append("file", file);
-            res = await userApi.createrUser(formData);
+            dataPosst.imageUrl = url
+            res = await userApi.createrUser(dataPosst);
           }
           if (res?.data?.status === 200 || res?.data?.status === 204) {
             Modal.success({
@@ -104,6 +99,7 @@ const AddUserForm = () => {
             });
             if (!id && !isEditProfile) {
               form.resetFields();
+              navigate(-1)
             }
           } else {
             showMessErr400(res);
@@ -214,7 +210,12 @@ const AddUserForm = () => {
               >
                 <Input placeholder="Tên" className="Input" />
               </Form.Item>
-
+              <Province
+                state={dataProvince}
+                setStateData={setDataProvince}
+                bold
+                width={"100%"}
+              />
               <div className="inputLabel">Địa chỉ</div>
               <Form.Item name="address">
                 <Input placeholder="Địa chỉ" className="Input" />

@@ -9,16 +9,11 @@ export const userApi = {
   },
   createrUser: (data) => {
     return api.post(baseURLUser + "create-user", data, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
     });
   },
-  updateUser: (data) => {
-    return api.post(baseURLUser + "update-user", data, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
+  updateUser: (data,id) => {
+    return api.post(baseURLUser + "update-user/"+id, data, {
+      
     });
   },
   deleteUser: (data) => {
