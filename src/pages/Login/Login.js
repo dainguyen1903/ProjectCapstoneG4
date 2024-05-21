@@ -140,18 +140,18 @@ function Login() {
         <Components.SignUpContainer signinIn={signIn}>
           {!isOpt && (
             <Components.Form>
-              <Components.Title>Create Account</Components.Title>
+              <Components.Title>Tạo tài khoản</Components.Title>
               <Components.Input
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 type="text"
-                placeholder="FirstName"
+                placeholder="Họ và tên đệm"
               />
               <Components.Input
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 type="text"
-                placeholder="Last Name"
+                placeholder="Tên"
               />
               <Components.Input
                 value={emailReg}
@@ -163,18 +163,20 @@ function Login() {
                 value={passwordReg}
                 onChange={(e) => setPasswordReg(e.target.value)}
                 type="password"
-                placeholder="Password"
+                placeholder="Mật khẩu"
               />
               <Components.Input
                 value={rePasswordReg}
                 onChange={(e) => setrePasswordReg(e.target.value)}
                 type="password"
-                placeholder="Confirm Password"
+                placeholder="Xác nhận mật khẩu"
               />
               <TxtErr txt={errReg} />
               <Components.Button
                 disabled={loading}
                 style={{
+                  marginTop:5,
+                  marginBottom:5,
                   background: loading && "gray",
                 }}
                 onClick={(e) => {
@@ -190,7 +192,7 @@ function Login() {
                     }}
                   />
                 )}{" "}
-                Sign Up
+               Đăng ký
               </Components.Button>
             </Components.Form>
           )}
@@ -255,7 +257,7 @@ function Login() {
 
         <Components.SignInContainer signinIn={signIn}>
           <Components.Form>
-            <Components.Title>Sign in</Components.Title>
+            <Components.Title>Đăng nhập</Components.Title>
             <Components.Input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -284,7 +286,7 @@ function Login() {
                 navigate("/send-otp");
               }}
             >
-              Forgot your password?
+             Quên mật khẩu?
             </Components.Anchor>
 
             <Components.Button
@@ -305,7 +307,7 @@ function Login() {
                   }}
                 />
               )}{" "}
-              Sigin In
+              Đăng nhập
             </Components.Button>
           </Components.Form>
         </Components.SignInContainer>
@@ -313,9 +315,9 @@ function Login() {
         <Components.OverlayContainer signinIn={signIn}>
           <Components.Overlay signinIn={signIn}>
             <Components.LeftOverlayPanel signinIn={signIn}>
-              <Components.Title>Welcome Back!</Components.Title>
+              <Components.Title>Mừng trở lại!</Components.Title>
               <Components.Paragraph>
-                To keep connected with us please login with your personal info
+              Để duy trì kết nối với chúng tôi, vui lòng đăng nhập bằng thông tin cá nhân của bạn.
               </Components.Paragraph>
               <Components.GhostButton
                 onClick={(e) => {
@@ -324,17 +326,17 @@ function Login() {
                   toggle(true);
                 }}
               >
-                Sign In
+                Đăng nhập
               </Components.GhostButton>
             </Components.LeftOverlayPanel>
 
             <Components.RightOverlayPanel signinIn={signIn}>
-              <Components.Title>Hello, Friend!</Components.Title>
+              <Components.Title>Chào bạn!</Components.Title>
               <Components.Paragraph>
-                Enter Your personal details and start journey with us
+              Nhập thông tin cá nhân của bạn và bắt đầu hành trình cùng chúng tôi.
               </Components.Paragraph>
               <Components.GhostButton onClick={() => toggle(false)}>
-                Sigin Up
+                Đăng ký
               </Components.GhostButton>
             </Components.RightOverlayPanel>
           </Components.Overlay>

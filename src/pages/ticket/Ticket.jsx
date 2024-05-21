@@ -14,14 +14,15 @@ const ListTicket = () => {
       if (res.data.status === 200) {
         setListMatch(res.data.data || []);
       }
-    } catch (error) { }
+    } catch (error) {}
   };
   //
-  const listByDate = listMatchByDate(listMatch.filter(i => i.statusMatch === STATUS_MATCH.PENDING))
+  const listByDate = listMatchByDate(
+    listMatch.filter((i) => i.statusMatch === STATUS_MATCH.PENDING)
+  );
   const renderlistMatch = (list) => {
     return list.map((i) => (
       <TicketItem
-
         awayScore={i.awayScore}
         homeScore={i.homeScore}
         statusMatch={i.statusMatch}
@@ -29,11 +30,12 @@ const ListTicket = () => {
         gio={moment(i.dateTime).format("hh:ss")}
         {...i}
       />
-    ))
-  }
+    ));
+  };
   useEffect(() => {
     getListMatch();
   }, []);
+  console.log(listByDate)
   return (
     <div class="container bootstrap snippets bootdeys">
       <section class="blog" id="blog">
@@ -41,15 +43,23 @@ const ListTicket = () => {
           <div class="title">
             <h2>Mua vé các trận đấu sắp diễn ra</h2>
           </div>
+          {Object.keys(listByDate)?.length === 0 && (
+            <div style={{
+              height:300,
+              display:"flex",
+              justifyContent:"center",
+              alignItems:"center",
+              color:"gray"
+            }}>Hiện chưa có trận đấu nào săp diễn ra</div>
+          )}
+          
           <div class="">
-            {
-             sortObjtDate(Object.keys(listByDate)).map(key => <div>
-                <h1 style={{color:"rgb(41, 174, 189)"}}>{key}</h1>
-                <div>
-                  {renderlistMatch(listByDate[key])}
-                </div>
-              </div>)
-            }
+            {sortObjtDate(Object.keys(listByDate)).map((key) => (
+              <div>
+                <h1 style={{ color: "rgb(41, 174, 189)" }}>{key}</h1>
+                <div>{renderlistMatch(listByDate[key])}</div>
+              </div>
+            ))}
           </div>
         </div>
       </section>

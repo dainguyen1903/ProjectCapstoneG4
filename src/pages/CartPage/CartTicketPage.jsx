@@ -32,10 +32,10 @@ const CartTicketPage = () => {
         <div className="empty-cart flex justify-center align-center flex-column font-manrope">
           <img src={shopping_cart} alt="" />
           <span className="fw-6 fs-15 text-gray">
-            Your tickets cart is empty.
+            Chưa có vé nào
           </span>
-          <Link to="/" className="shopping-btn bg-orange text-white fw-5">
-            Go shopping Now
+          <Link to="/ticket" className="shopping-btn bg-orange text-white fw-5">
+            Mua vé ngay
           </Link>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { cartAPI } from "../api/cart.api";
 import { showMessErr } from "../utils/helpers";
+import { message } from "antd";
 
 const fetchFromLocalStorage = () => {
   let cart = localStorage.getItem("cart");
@@ -203,6 +204,8 @@ export const addCartAction = createAsyncThunk(
         dispatch(setCartMessageOn());
        
     } catch (error) {
+      message.error("Thêm thất bại")
+
       return rejectWithValue("Error");
     }
   }
@@ -235,6 +238,7 @@ export const addCartActionCustom = createAsyncThunk(
         return rejectWithValue(res.data.message);
       }
     } catch (error) {
+      message.error("Thêm thất bại")
       return rejectWithValue("Error");
     }
   }

@@ -59,7 +59,7 @@ height: 100%;
 text-align: center;
 `;
 
-export const Title = styled.h1`
+export const Title = styled.h2`
 font-weight: bold;
 margin: 0;
 `;

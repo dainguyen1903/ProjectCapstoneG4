@@ -10,10 +10,14 @@ const Blog = () => {
   const [listBlog, setListBlog] = useState([]);
   const {search} = getQueryParams();
   const getListBlog = async () => {
+   try {
     const res = await newsApi.searchNews({search:search||""});
     if (res.data.status === 200 || res.data.status === 204) {
-      setListBlog(res.data.data.reverse() || []);
+      setListBlog(res?.data?.data?.reverse() || []);
     }
+   } catch (error) {
+    console.log(error)
+   }
   };
   useEffect(() => {
     
@@ -24,9 +28,21 @@ const Blog = () => {
       <section class="blog" id="blog">
         <div class="container">
           <div class="title">
-            <h2>Latest Blog</h2>
+            <h2>Danh sách bài viết</h2>
           </div>
+          {
+              listBlog?.length === 0 &&<div style={{
+                height:300,
+                display:"flex",
+                justifyContent:"center",
+                alignItems:"center",
+                color:"gray"
+              }}>
+                Chưa có bài viết nào
+              </div>
+            }
           <div class="blog-content">
+           
             {listBlog.map((i, index) => (
               <BlogItem
                 key={index}

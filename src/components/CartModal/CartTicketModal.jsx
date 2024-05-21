@@ -44,7 +44,7 @@ const CartTicketModal = ({carts}) => {
           </div>) : (
           <div className = "flex flex-column align-center justify-center cart-modal-empty">
             <img src = {shopping_cart} alt = "" className='' />
-            <h6 className='text-dark fw-4'>No tickets yet</h6>
+            <h6 className='text-dark fw-4'>Chưa có vé nào</h6>
           </div>
         )
       }
