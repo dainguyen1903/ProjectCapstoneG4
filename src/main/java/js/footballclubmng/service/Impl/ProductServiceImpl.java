@@ -161,7 +161,12 @@ public class ProductServiceImpl implements ProductService {
     public boolean updateProduct(Long id, CreateProductRequest request) {
         try {
             Product existingProduct = productRepository.findById(id).orElse(null);
-            BeanUtils.copyProperties(request, existingProduct);
+            existingProduct.setProductName(request.getProductName());
+            existingProduct.setCategoryId(Long.valueOf(request.getCategoryId()));
+            existingProduct.setPrice(Float.parseFloat(request.getPrice()));
+            existingProduct.setDiscount(Float.parseFloat(request.getDiscount()));
+            existingProduct.setIsCustomise(request.getIsCustomise());
+            existingProduct.setDescription(request.getDescription());
             productRepository.save(existingProduct);
 
             // Xử lý danh sách hình ảnh

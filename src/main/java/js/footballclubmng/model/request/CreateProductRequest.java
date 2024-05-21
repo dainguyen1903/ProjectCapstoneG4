@@ -36,10 +36,8 @@ public class CreateProductRequest {
     @NotBlank(message = "Mô tả sản phẩm không được để trống")
     private String description;
 
-    @NotEmpty(message = "Ảnh của sản phẩm không được để trống")
     private List<ImagesProductDto> ImagesProductList;
 
-    @NotEmpty(message = "Size sản phẩm không được để trống")
     private List<ProductSizeDto> productSizeList;
 
 }

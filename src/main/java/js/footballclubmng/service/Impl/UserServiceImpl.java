@@ -23,6 +23,7 @@ import js.footballclubmng.util.MapperUtil;
 import js.footballclubmng.util.OtpUtil;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -122,19 +123,44 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    private String generatePassword() {
+        String UPPERCASE_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String LOWERCASE_LETTERS = "abcdefghijklmnopqrstuvwxyz";
+        String NUMBERS = "0123456789";
+
+        StringBuilder randomPassword = new StringBuilder();
+        // Chọn một chữ cái viết hoa ngẫu nhiên
+        Random random = new Random();
+        char uppercaseLetter = UPPERCASE_LETTERS.charAt(random.nextInt(UPPERCASE_LETTERS.length()));
+        randomPassword.append(uppercaseLetter);
+
+        // Chọn một số ngẫu nhiên
+        char number = NUMBERS.charAt(random.nextInt(NUMBERS.length()));
+        randomPassword.append(number);
+
+        // Chọn các ký tự còn lại ngẫu nhiên
+        String availableChars = LOWERCASE_LETTERS + NUMBERS;
+        for (int i = 0; i < 6; i++) {
+            char randomChar = availableChars.charAt(random.nextInt(availableChars.length()));
+            randomPassword.append(randomChar);
+        }
+
+        return randomPassword.toString();
+    }
 
     @Override
     public ResponseAPI<Object> createUser(CreateUserRequest request) {
         String otp = otpUtil.generateOtp();
         try {
+            String randomPass = generatePassword();
 
             if (userRepository.existsByEmail(request.getEmail())) {
                 return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_VALID, "Email đã tồn tại trong hệ thống");
             } else {
                 try {
-                    emailUtil.sendOtpEmail(request.getEmail(), otp);
+                    emailUtil.sendPassWordUser(request.getEmail(), randomPass);
                 } catch (Exception e) {
-                    throw new RuntimeException("Không thể gửi OTP vui lòng thử lại!");
+                    throw new RuntimeException("Không thể gửi Email vui lòng thử lại!");
                 }
 
                 User userEntity = new User();
@@ -144,7 +170,7 @@ public class UserServiceImpl implements UserService {
                 userEntity.setLastName(request.getLastName());
                 userEntity.setAuthority(request.getAuthority());
                 userEntity.setDateOfBirth(new SimpleDateFormat("yyyy-MM-dd").parse(request.getDateOfBirth()));
-                userEntity.setPassword(passwordEncoder.encode(request.getPassword()));
+                userEntity.setPassword(passwordEncoder.encode(randomPass));
                 userEntity.setIsActive(false);
                 userEntity.setDeleteFlg("0");
                 userEntity.setCreateTime(LocalDateTime.now());
@@ -153,6 +179,7 @@ public class UserServiceImpl implements UserService {
                 userEntity.setWard(request.getWard());
                 userEntity.setDistrict(request.getDistrict());
                 userEntity.setProvince(request.getProvince());
+                userEntity.setIsActive(true);
                 String resetCode = RandomString.make(64);
                 userEntity.setVerificationCode(resetCode);
 
