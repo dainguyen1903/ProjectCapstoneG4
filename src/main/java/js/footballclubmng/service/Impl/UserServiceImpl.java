@@ -12,11 +12,14 @@ import js.footballclubmng.model.request.UserRegisterRequest;
 import js.footballclubmng.model.bean.UserBean;
 import js.footballclubmng.model.request.user.CreateUserRequest;
 import js.footballclubmng.model.request.user.DeleteUserRequest;
+import js.footballclubmng.model.request.user.UpdateUserRequest;
 import js.footballclubmng.model.response.LoginResponse;
 import js.footballclubmng.model.response.ResponseAPI;
+import js.footballclubmng.model.response.UserDetailResponse;
 import js.footballclubmng.repository.UserRepository;
 import js.footballclubmng.service.UserService;
 import js.footballclubmng.util.EmailUtil;
+import js.footballclubmng.util.MapperUtil;
 import js.footballclubmng.util.OtpUtil;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +42,7 @@ import java.time.LocalDateTime;
 
 import java.text.SimpleDateFormat;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Transactional
@@ -165,11 +165,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseAPI<Object> updateUser(CreateUserRequest request, Long id) {
+    public ResponseAPI<Object> updateUser(UpdateUserRequest request, Long id) {
         try {
 
             User userUpdate = userRepository.findByIdAndIsActive(id, true);
             if (null != userUpdate) {
+                userUpdate.setPassword(passwordEncoder.encode(request.getPassword()));
                 userUpdate.setFirstName(request.getFirstName());
                 userUpdate.setLastName(request.getLastName());
                 userUpdate.setAuthority(request.getAuthority());
@@ -331,13 +332,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseAPI<Object> detailUser(Long id) {
+    public ResponseAPI<UserDetailResponse> detailUser(Long id) {
         try {
-            User detailUser =  userRepository.findByIdAndDeleteFlgAndAndIsActive(id, "0", true);
-            if (null != detailUser ) {
-                return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.OK, FootballclubmngUtils.convertUserToBeans(detailUser));
+            Optional<User> optionalUser = userRepository.findById(id);
+            if (optionalUser.isPresent()) {
+                User detailUser = optionalUser.get();
+                UserDetailResponse userDetailResponse = MapperUtil.mapToUserDetailResponse(detailUser);
+                return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.OK, userDetailResponse);
             }
-            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_VALID, "NOT_FIND_USER");
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_VALID, "Không tìm thấy user tương ứng với id");
         } catch (Exception e) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EXCEPTION, CommonConstant.COMMON_MESSAGE.EXCEPTION);
         }

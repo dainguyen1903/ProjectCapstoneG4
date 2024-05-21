@@ -135,7 +135,12 @@ public class ProductServiceImpl implements ProductService {
     public Product createProduct(CreateProductRequest request) {
         try {
             Product product = new Product();
-            BeanUtils.copyProperties(request, product);
+            product.setProductName(request.getProductName());
+            product.setCategoryId(Long.valueOf(request.getCategoryId()));
+            product.setPrice(Float.parseFloat(request.getPrice()));
+            product.setDiscount(Float.parseFloat(request.getDiscount()));
+            product.setIsCustomise(request.getIsCustomise());
+            product.setDescription(request.getDescription());
             product.setStatus(true);
             // Lưu sản phẩm vào cơ sở dữ liệu
             Product savedProduct = productRepository.save(product);
@@ -193,7 +198,7 @@ public class ProductServiceImpl implements ProductService {
                 ProductSize sizes = new ProductSize();
                 sizes.setProductId(productId);
                 sizes.setSize(i.getSize());
-                sizes.setQuantity(i.getQuantity());
+                sizes.setQuantity(Integer.parseInt(i.getQuantity()));
                 saveSizes.add(sizes);
             });
             productSizeRepository.saveAll(saveSizes);

@@ -121,7 +121,7 @@ public class MapperUtil {
         for (ProductSize productSize : productSizeList) {
             ProductSizeDto productSizeDto = new ProductSizeDto();
             productSizeDto.setSize(productSize.getSize());
-            productSizeDto.setQuantity(productSize.getQuantity());
+            productSizeDto.setQuantity(String.valueOf(productSize.getQuantity()));
             productSizeDtoList.add(productSizeDto);
         }
 
@@ -292,6 +292,30 @@ public class MapperUtil {
             listShippingResponse.setShipperName(mapToUserDto(shipping.getShipper()));
         }
         return listShippingResponse;
+    }
+
+    public static UserDetailResponse mapToUserDetailResponse(User user) {
+        UserDetailResponse userDetailResponse = new UserDetailResponse();
+        userDetailResponse.setId(user.getId());
+        userDetailResponse.setEmail(user.getEmail());
+        userDetailResponse.setFirstName(user.getFirstName());
+        userDetailResponse.setLastName(user.getLastName());
+        userDetailResponse.setAuthority(user.getAuthority());
+        userDetailResponse.setAddress(user.getAddress());
+        userDetailResponse.setWard(user.getWard());
+        userDetailResponse.setDistrict(user.getDistrict());
+        userDetailResponse.setProvince(user.getProvince());
+        userDetailResponse.setDateOfBirth(user.getDateOfBirth());
+        userDetailResponse.setGender(user.getGender());
+        userDetailResponse.setImageUrl(user.getImageUrl());
+        userDetailResponse.setOtpGenerateTime(user.getOtpGenerateTime());
+        userDetailResponse.setCreateTime(user.getCreateTime());
+        userDetailResponse.setOtp(user.getOtp());
+        userDetailResponse.setVerificationCode(user.getVerificationCode());
+        userDetailResponse.setIsActive(user.getIsActive());
+        userDetailResponse.setDeleteFlg(user.getDeleteFlg());
+
+        return userDetailResponse;
     }
 
 

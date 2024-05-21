@@ -8,7 +8,9 @@ import js.footballclubmng.model.request.UserRegisterRequest;
 import js.footballclubmng.model.request.LoginRequest;
 import js.footballclubmng.model.request.user.CreateUserRequest;
 import js.footballclubmng.model.request.user.DeleteUserRequest;
+import js.footballclubmng.model.request.user.UpdateUserRequest;
 import js.footballclubmng.model.response.ResponseAPI;
+import js.footballclubmng.model.response.UserDetailResponse;
 import js.footballclubmng.service.UserService;
 import js.footballclubmng.util.EmailUtil;
 import js.footballclubmng.util.HelperUtil;
@@ -91,7 +93,7 @@ public class UserController extends BaseController{
 
     @PostMapping(value = CommonConstant.USER_API.UPDATE_USER)
     @PreAuthorize("hasRole('ROLE_Admin')")
-    public ResponseAPI<Object> updateUser(@RequestBody @Valid CreateUserRequest request, @PathVariable Long id) {
+    public ResponseAPI<Object> updateUser(@RequestBody @Valid UpdateUserRequest request, @PathVariable Long id) {
         if (request != null) {
             return userService.updateUser(request, id);
         }
@@ -115,7 +117,7 @@ public class UserController extends BaseController{
     }
 
     @GetMapping(value = CommonConstant.USER_API.DETAIL_USER)
-    public ResponseAPI<Object> detailUser(@RequestParam(value = "id") Long id) {
+    public ResponseAPI<UserDetailResponse> detailUser(@RequestParam(value = "id") Long id) {
         if (id > 0) {
             return userService.detailUser(id);
         }

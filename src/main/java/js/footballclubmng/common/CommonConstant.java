@@ -105,6 +105,8 @@ public class CommonConstant {
         //Message product
         public static final String CREATE_PRODUCT_SUCCESS = "Thêm sản phẩm thành công";
         public static final String CREATE_PRODUCT_FAIL = "Thêm sản phẩm thất bại";
+        public static final String VALID_NUMBER_PRICE = "Giá của sản phẩm phải là số";
+        public static final String VALID_NUMBER_DISCOUNT = "Chiết khấu của sản phẩm phải là số";
         public static String NOT_FOUND_PRODUCT = "Không tìm thấy sản phẩm";
         public static final String UPDATE_PRODUCT_SUCCESS = "Cập nhật sản phẩm thành công";
         public static final String UPDATE_PRODUCT_FAIL = "Cập nhật sản phẩm thất bại";
