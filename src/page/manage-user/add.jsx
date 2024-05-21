@@ -36,6 +36,7 @@ const AddUserForm = () => {
   const [loading, setLoading] = useState(false);
   const users = useUserStore((state) => state.users);
   const user = useAuthStore((state) => state.user);
+  const setuser =  useAuthStore((state) => state.setuser);
   const setUser = useAuthStore((state) => state.setUser);
   const [file, setFile] = useState(null);
   let detail = isEditProfile ? user : users.find((i) => i.id == id) || {};
@@ -97,10 +98,14 @@ const AddUserForm = () => {
                   ? "Thêm thành công"
                   : "Cập nhật thành công",
             });
-            if (!id && !isEditProfile) {
+            
               form.resetFields();
+              if(isEditProfile){
+                console.log(dataPosst)
+                setUser({...user,...dataPosst})
+              }
               navigate(-1)
-            }
+            
           } else {
             showMessErr400(res);
           }
@@ -133,7 +138,8 @@ const AddUserForm = () => {
 
       const dataDetail = res.data.data;
       if (id) {
-        const nameArr = dataDetail.fullname.split(" ");
+        const fullname = dataDetail?.firstName + " " +  dataDetail?.lastName
+        const nameArr = fullname?.split(" ");
         dataDetail.firstName = nameArr[0];
         dataDetail.lastName = nameArr[1];
       }
@@ -148,6 +154,11 @@ const AddUserForm = () => {
       dataDetail.image = imgName;
       delete dataDetail.image_name;
       console.log(dataDetail);
+      setDataProvince({
+        province:dataDetail.province,
+        district:dataDetail.district,
+        ward:dataDetail.ward
+      })
       form.setFieldsValue(dataDetail);
     }
     setLoading(false);
@@ -176,10 +187,11 @@ const AddUserForm = () => {
             >
               <div className="inputLabel">Email</div>
               <Form.Item
+                
                 name="email"
                 rules={[{ required: true, message: "Vui lòng nhập email!" }]}
               >
-                <Input placeholder="Email" className="Input" />
+                <Input disabled={id || isEditProfile} placeholder="Email" className="Input" />
               </Form.Item>
               {!isEditProfile && !id && (
                 <>

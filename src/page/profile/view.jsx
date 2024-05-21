@@ -26,8 +26,13 @@ const ViewProfile = () => {
   return (
     <div>
       <Row gutter={[8, 8]}>
-        <Col offset={6} span={8}>
-          <Card className="Shadow">
+        <Col offset={2} span={20}>
+          <div style={{
+            background:"white",
+            color:"black",
+            padding:30,
+            borderRadius:5,
+          }} className="">
             <div
               style={{
                 textAlign: "center",
@@ -53,6 +58,30 @@ const ViewProfile = () => {
                   marginBottom: 10,
                 }}
               >
+                <span style={{ fontWeight: "bold" }}>Tỉnh/Thành phố : </span>
+                <span>{detaiData.province}</span>
+              </div>
+              <div
+                style={{
+                  marginBottom: 10,
+                }}
+              >
+                <span style={{ fontWeight: "bold" }}>Quận/Huyện : </span>
+                <span>{detaiData.district}</span>
+              </div>
+              <div
+                style={{
+                  marginBottom: 10,
+                }}
+              >
+                <span style={{ fontWeight: "bold" }}>Phường/Xã : </span>
+                <span>{detaiData.ward}</span>
+              </div>
+              <div
+                style={{
+                  marginBottom: 10,
+                }}
+              >
                 <span style={{ fontWeight: "bold" }}>Địa chỉ : </span>
                 <span>{detaiData.address}</span>
               </div>
@@ -71,7 +100,7 @@ const ViewProfile = () => {
                   marginBottom: 10,
                 }}
               >
-                <span style={{ fontWeight: "bold" }}>Giới tính </span>
+                <span style={{ fontWeight: "bold" }}>Giới tính:  </span>
                 <span>{detaiData.gender === "M" ? "Nam" : "Nữ"}</span>
               </div>
               <div
@@ -89,7 +118,7 @@ const ViewProfile = () => {
             >
               Chỉnh sửa thông tin cá nhân
             </button>
-          </Card>
+          </div>
         </Col>
       </Row>
       <LoadingFull show={loading} />

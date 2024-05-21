@@ -36,8 +36,8 @@ const HeaderPage = () => {
       <Col>
      
       <Popover content={content}  trigger="hover">
-      <Avatar style={{marginRight:10}} src={user.imageUrl}>{user.fullname.toUpperCase()}</Avatar>
-      {user.fullname}
+      <Avatar style={{marginRight:10}} src={ user?.image || user?.imageUrl}>{user?.firstName[0]?.toUpperCase()}</Avatar>
+      {user?.firstName + " " + user?.lastName}
   </Popover>
       </Col>
      <Col style={{marginLeft:15}}></Col>

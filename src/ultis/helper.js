@@ -46,7 +46,8 @@ export const handleError = (error, isshowToast = true) => {
   if (axios.isAxiosError(error)) {
     const dataValidate = error.response?.data || null;
     if(isObject(dataValidate)){
-      Object.values(dataValidate).forEach(v => message.error(v))
+      // Object.values(dataValidate).forEach(v => message.error(v))
+      message.error(Object.values(dataValidate)?.length > 0?  Object.values(dataValidate)[0] : "Thất bại")
       return ;
     }
     mess = error.response?.data?.Message || "Có lỗi xảy ra";

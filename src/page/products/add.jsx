@@ -11,6 +11,7 @@ import {
   Row,
   Select,
   Table,
+  message,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
@@ -100,8 +101,10 @@ const AddProduct = () => {
           showMessErr400(res.data);
         }
         } catch (error) {
-          console.log(error)
-          handleError(error)
+          if(error?.response?.status === 500){
+            message.error("Thất bại")
+          }
+         else handleError(error)
         }
       },
     });
@@ -396,6 +399,7 @@ const AddProduct = () => {
                     <div>
                       <div style={{ marginBottom: -10 }}>Số lượng</div>
                       <Input
+                      type="number"
                         style={{
                           width: 200,
                           marginTop: 10,

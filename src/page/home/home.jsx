@@ -3,12 +3,20 @@ import { Link, useNavigate } from "react-router-dom";
 import useAuthStore from "../../zustand/authStore";
 import Title from "antd/es/skeleton/Title";
 import DashBoardItem from "./DashboardItem";
-import { formatPrice, handleError, showMessErr } from "../../ultis/helper";
+import { formatPrice, handleError, showMessErr, showMessErr400 } from "../../ultis/helper";
 import { productApi } from "../../api/product.api";
 import { useEffect, useState } from "react";
 import {MoneyCollectOutlined,UserOutlined,SkinOutlined } from "@ant-design/icons";
 
 const Home = () => {
+  // Lấy ngày hiện tại
+var currentDate = new Date();
+
+// Lấy năm hiện tại
+var currentYear = currentDate.getFullYear();
+
+// Lấy tháng hiện tại (từ 0 đến 11)
+var currentMonth = currentDate.getMonth() + 1; // Phải cộng thêm 1 vì tháng bắt đầu từ 0
     const {user} = useAuthStore()
     const [product, setproduct] = useState([]);
     const [buyer,setBuyer] = useState(0);
@@ -67,9 +75,15 @@ const Home = () => {
     const getBuyer1 = async() => {
       try {
         const res = await productApi.getBuyer({
-          year:2024,
-          month:5
+          year:currentYear,
+          month:currentMonth
         })
+        if(res?.data?.status === 200 ||res?.data?.status === 204 ){
+          setBuyer(res?.data?.data?.sum || 0)
+        }
+        else{
+          showMessErr400(res)
+        }
       } catch (error) {
         handleError(error)
       }
@@ -81,9 +95,15 @@ const Home = () => {
     const getDoanhthu1 = async() => {
       try {
         const res = await productApi.getDoanhthu({
-          year:2024,
-          month:5
+          year:currentYear,
+          month:currentMonth
         })
+        if(res?.data?.status === 200 ||res?.data?.status === 204 ){
+          setDoanhthu(res?.data?.data?.sum || 0)
+        }
+        else{
+          showMessErr400(res)
+        }
       } catch (error) {
         handleError(error)
       }
@@ -94,9 +114,15 @@ const Home = () => {
     const getCountProduct = async() => {
       try {
         const res = await productApi.getQuantityProduct({
-          year:2024,
-          month:5
+          year:currentYear,
+          month:currentMonth
         })
+        if(res?.data?.status === 200 ||res?.data?.status === 204 ){
+          setCountProduct(res?.data?.data?.sum || 0)
+        }
+        else{
+          showMessErr400(res)
+        }
       } catch (error) {
         handleError(error)
       }
@@ -128,7 +154,7 @@ const Home = () => {
    <Col span={24}>
    <h3>Thống kê tháng này</h3></Col>
       <Col span={8}>
-         <DashBoardItem title={"Sản phẩm bán được"} content={100} color={"green"} icon={<SkinOutlined style={{
+         <DashBoardItem title={"Sản phẩm bán được"} content={countProduct} color={"green"} icon={<SkinOutlined style={{
             color: "gray",
             fontSize: 20,
             marginTop:5,
@@ -136,7 +162,7 @@ const Home = () => {
           }} />} />
       </Col>
       <Col span={8}>
-      <DashBoardItem title={"Số lượng người mua"} content={30} color={"red"} icon={<UserOutlined style={{
+      <DashBoardItem title={"Số lượng người mua"} content={buyer} color={"red"} icon={<UserOutlined style={{
             color: "gray",
             fontSize: 20,
             marginTop:5,
@@ -144,7 +170,7 @@ const Home = () => {
           }} />}/>
       </Col>
       <Col span={8}>
-      <DashBoardItem title={"Doanh thu"} content={formatPrice(30000000)} color={"rgb(31, 167, 167)"} icon={<MoneyCollectOutlined style={{
+      <DashBoardItem title={"Doanh thu"} content={formatPrice(doanhthu)} color={"rgb(31, 167, 167)"} icon={<MoneyCollectOutlined style={{
             color: "gray",
             fontSize: 20,
             marginTop:5,
