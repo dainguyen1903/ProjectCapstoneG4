@@ -1,4 +1,4 @@
-import { Form, Input, Modal, Select, Button, Card, Col, Row } from "antd";
+import { Form, Input, Modal, Select, Button, Card, Col, Row, message } from "antd";
 import React, { useEffect, useState, useRef } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router";
 import { newsApi } from "../../api/news.api";
 import LoadingFull from "../../component/loading/loadingFull";
 import AddImage from "../../component/common/AddImage";
+import { handleError, showMessErr400 } from "../../ultis/helper";
 const { Option } = Select;
 const modules = {
   toolbar: [
@@ -65,22 +66,29 @@ const AddNewsForm = () => {
       title,
       newsType: typeNews,
       description: value,
-      imagesNewsList: [url],
+      imageUrl: url,
     };
     Modal.confirm({
       title: "Xác nhận",
       content: !id ? "Thêm bài viết" : "Cập nhật bài viết",
       onOk: async () => {
+       try {
         const res = !id
-          ? await newsApi.createrNews(dataPost)
-          : await newsApi.updateNews(id, dataPost);
-        if (res.data.status === 200 || res.data.status === 204) {
-          Modal.success({
-            title: "Thành công",
-            content: !id ? "Thêm thành công" : "Cập nhật thành công",
-          });
-          navigate(-1);
-        }
+        ? await newsApi.createrNews(dataPost)
+        : await newsApi.updateNews(id, dataPost);
+      if (res.data.status === 200 || res.data.status === 204) {
+        Modal.success({
+          title: "Thành công",
+          content: !id ? "Thêm thành công" : "Cập nhật thành công",
+        });
+        navigate(-1);
+      }
+      else{
+        showMessErr400(res)
+      }
+       } catch (error) {
+        handleError(error)
+       }
       },
     });
   };
@@ -93,7 +101,7 @@ const AddNewsForm = () => {
       const newsDetail = res.data.data;
       setValue(newsDetail.description);
       newsDetail.typeNews = newsDetail?.newsType?.name;
-      setUrl(newsDetail.imagesNewsList[0]?.path);
+      setUrl(newsDetail.imageUrl);
       form.setFieldsValue(newsDetail);
     }
     setLoading(false);

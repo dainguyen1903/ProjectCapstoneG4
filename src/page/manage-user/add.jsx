@@ -193,7 +193,7 @@ const AddUserForm = () => {
               >
                 <Input disabled={id || isEditProfile} placeholder="Email" className="Input" />
               </Form.Item>
-              {!isEditProfile && !id && (
+              {/* {!isEditProfile && !id && (
                 <>
                   <div className="inputLabel">Mật khẩu</div>
                   <Form.Item
@@ -205,7 +205,7 @@ const AddUserForm = () => {
                     <Input.Password placeholder="Password" className="Input" />
                   </Form.Item>
                 </>
-              )}
+              )} */}
               <div className="inputLabel">Họ và tên đệm</div>
               <Form.Item
                 name="firstName"

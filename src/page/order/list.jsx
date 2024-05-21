@@ -18,7 +18,12 @@ import { orrderApi } from "../../api/order.api";
 import { productApi } from "../../api/product.api";
 import { STATUS_ORDER } from "../../constants/common";
 import { ROLE } from "../../constants/role";
-import { dateFormat, handleError, showMessErr, showMessErr400 } from "../../ultis/helper";
+import {
+  dateFormat,
+  handleError,
+  showMessErr,
+  showMessErr400,
+} from "../../ultis/helper";
 import useAuthStore from "../../zustand/authStore";
 import useNewsStore from "../../zustand/newsStore";
 import useProductStore from "../../zustand/productStore";
@@ -53,11 +58,9 @@ const OrderList = () => {
   const [listShipperDistric, setListShipperDistrict] = useState([]);
   const { user } = useAuthStore();
   const isShipper = user.authority === ROLE.SHIPPER;
-  const [currentIdShipper,setCurrentIdShipper] = useState(null);
-  const [currentShippingId,setCurrentShippingId] = useState(null)
-  const [originIdShipper,setOriginIdShipper] = useState(null);
-
-  
+  const [currentIdShipper, setCurrentIdShipper] = useState(null);
+  const [currentShippingId, setCurrentShippingId] = useState(null);
+  const [originIdShipper, setOriginIdShipper] = useState(null);
 
   // Function to handle search
   const handleSearch = async (value) => {
@@ -107,7 +110,7 @@ const OrderList = () => {
       console.log(error);
     }
   };
-  
+
   /// get list order
   const getListOrder = async () => {
     try {
@@ -124,15 +127,17 @@ const OrderList = () => {
 
   // CHange Status
   const handleChangeStatus = async (id, v) => {
-   
     try {
-     const res =   await orrderApi.changStatusOrder(id, v);
-      if(res?.data?.status === 200 ||res?.data?.status === 204 ){
-         message.success(`Đã chuyển trạng thái đơn hàng thành ${listStatusOrderOptionFull.find(i => i.key === v)?.value}`)
-         getListOrder()
-      }
-      else{
-        showMessErr400(res)
+      const res = await orrderApi.changStatusOrder(id, v);
+      if (res?.data?.status === 200 || res?.data?.status === 204) {
+        message.success(
+          `Đã chuyển trạng thái đơn hàng thành ${
+            listStatusOrderOptionFull.find((i) => i.key === v)?.value
+          }`
+        );
+        getListOrder();
+      } else {
+        showMessErr400(res);
       }
     } catch (error) {
       console.log(error);
@@ -143,12 +148,16 @@ const OrderList = () => {
       title: "Người đặt",
       dataIndex: ["user", "firstName"],
       key: "user",
-      render: (_, { user,id }) => <span onClick={() => navigate("/order-detail/"+id)} style={{
-        cursor:"pointer",
-
-      }}>
-        {user.firstName} {user.lastName}
-      </span>,
+      render: (_, { user, id }) => (
+        <span
+          onClick={() => navigate("/order-detail/" + id)}
+          style={{
+            cursor: "pointer",
+          }}
+        >
+          {user.firstName} {user.lastName}
+        </span>
+      ),
     },
     {
       title: "Ngày đặt",
@@ -184,8 +193,8 @@ const OrderList = () => {
                 }}
                 onClick={() => {
                   setCurrentIdShipper(row?.shipperName?.id);
-                  setCurrentShippingId(value?.shipping?.id)
-                  setOriginIdShipper(row?.shipperName?.id)
+                  setCurrentShippingId(value?.shipping?.id);
+                  setOriginIdShipper(row?.shipperName?.id);
                   getListShipperDistric(row?.id);
                 }}
               />
@@ -199,17 +208,24 @@ const OrderList = () => {
       dataIndex: "orderStatus",
       key: "orderStatus",
       render: (row, value) => {
-        const isOption = listStatusOrderOption.find(i => i.key === value.orderStatus)
+        const isOption = listStatusOrderOption.find(
+          (i) => i.key === value.orderStatus
+        );
         return (
           <div>
-            {isShipper  ? (
+            {isShipper ? (
               <Select
-            
-              style={{width:"200px"}}
+                style={{ width: "200px" }}
                 onChange={(v) => handleChangeStatus(value.id, v)}
-                value={isOption?value.orderStatus :""}
+                value={isOption ? value.orderStatus : ""}
               >
-                  <Select.Option style={{display:"none"}} disabled value={""}>{listStatusOrderOptionFull?.find(i => i.key === value.orderStatus)?.value}</Select.Option>
+                <Select.Option style={{ display: "none" }} disabled value={""}>
+                  {
+                    listStatusOrderOptionFull?.find(
+                      (i) => i.key === value.orderStatus
+                    )?.value
+                  }
+                </Select.Option>
                 {listStatusOrderOption.map((i) => (
                   <Select.Option value={i.key}>{i.value}</Select.Option>
                 ))}
@@ -221,13 +237,45 @@ const OrderList = () => {
         );
       },
     },
+    
   ];
+  if(user.authority === ROLE.SALE){
+    columns.push({
+      title: "Xác nhận đơn hàng",
+      render: (value, row) => {
+        return (
+          
+            row.orderStatus === STATUS_ORDER.pending ? <div>
+            <Button
+            onClick={async () => {
+              try {
+                const res = await orrderApi.confirmOrder(row.id);
+                if (res?.data?.status === 200 || res?.data?.status === 204) {
+                  message.success("Đã xác nhận đơn hàng");
+                  getListOrder()
+                } else {
+                  message.error("Có lỗi xảy ra");
+                }
+              } catch (error) {
+                message.error("Có lỗi xảy ra");
+              }
+            }}
+          >
+            Xác nhận
+          </Button></div>:<></>
+            
+            
+          
+        );
+      },
+    },)
+  }
 
   const closeModal = () => {
     setIsOpenModalShipper(false);
     setCurrentIdShipper(null);
-    setCurrentShippingId(null)
-  }
+    setCurrentShippingId(null);
+  };
 
   return (
     <div>
@@ -280,9 +328,9 @@ const OrderList = () => {
         centered={true}
         footer={[]}
       >
-        <Select 
+        <Select
           value={currentIdShipper}
-          onChange={(v) => setCurrentIdShipper(v) }
+          onChange={(v) => setCurrentIdShipper(v)}
           style={{
             width: 400,
           }}
@@ -293,33 +341,46 @@ const OrderList = () => {
             </Select.Option>
           ))}
         </Select>
-         <div style={{
-          marginBlock:5,
-          color:"gray"
-         }}>{listShipperDistric.length === 0 ?"Không có shipper nào phù hợp" :""}</div>
+        <div
+          style={{
+            marginBlock: 5,
+            color: "gray",
+          }}
+        >
+          {listShipperDistric.length === 0
+            ? "Không có shipper nào phù hợp"
+            : ""}
+        </div>
         <Button
-
-        disabled={!listShipperDistric.length}
-          style={{ background: "rgb(31, 167, 167)", marginLeft: 10,color:"white" }}
+          disabled={!listShipperDistric.length}
+          style={{
+            background: "rgb(31, 167, 167)",
+            marginLeft: 10,
+            color: "white",
+          }}
           type="primary"
-          onClick={async() => {
-            if(currentIdShipper === originIdShipper){
-              closeModal()
+          onClick={async () => {
+            if (currentIdShipper === originIdShipper) {
+              closeModal();
               return;
             }
-           try {
-            const res =   await orrderApi.assignShipper(currentShippingId,currentIdShipper);
-           if(res.data.status === 200 || res.data.status === 204){
-            message.success("Assign thành công");
-            closeModal();
-           }
-           if(res.data.status === 400){
-            const mes  = res?.data.message || "Thất bại"
-            message.error(mes);
-           }
-           } catch (error) {
-            handleError(error)
-           }
+            try {
+              const res = await orrderApi.assignShipper(
+                currentShippingId,
+                currentIdShipper
+              );
+              if (res.data.status === 200 || res.data.status === 204) {
+                message.success("Assign thành công");
+                getListOrder()
+                closeModal();
+              }
+              if (res.data.status === 400) {
+                const mes = res?.data.message || "Thất bại";
+                message.error(mes);
+              }
+            } catch (error) {
+              handleError(error);
+            }
           }}
         >
           Lưu

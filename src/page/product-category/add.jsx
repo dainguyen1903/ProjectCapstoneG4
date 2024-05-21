@@ -42,7 +42,7 @@ const AddProductCategory = () => {
 
   const getDetail = async() =>{
     const res = await categoryApi.getDetailCategory(id);
-    const data = res.data.data?.listProducts[0]?.categoryId?.name;
+    const data = res.data.data?.name;
     form.setFieldValue("name",data)
     console.log(res);
   }

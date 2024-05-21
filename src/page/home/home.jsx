@@ -82,7 +82,7 @@ var currentMonth = currentDate.getMonth() + 1; // Phải cộng thêm 1 vì thá
           setBuyer(res?.data?.data?.sum || 0)
         }
         else{
-          showMessErr400(res)
+          // showMessErr400(res)
         }
       } catch (error) {
         handleError(error)
@@ -102,7 +102,7 @@ var currentMonth = currentDate.getMonth() + 1; // Phải cộng thêm 1 vì thá
           setDoanhthu(res?.data?.data?.sum || 0)
         }
         else{
-          showMessErr400(res)
+          // showMessErr400(res)
         }
       } catch (error) {
         handleError(error)
@@ -121,7 +121,7 @@ var currentMonth = currentDate.getMonth() + 1; // Phải cộng thêm 1 vì thá
           setCountProduct(res?.data?.data?.sum || 0)
         }
         else{
-          showMessErr400(res)
+          // showMessErr400(res)
         }
       } catch (error) {
         handleError(error)

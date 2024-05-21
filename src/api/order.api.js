@@ -28,5 +28,9 @@ export const orrderApi = {
   getOrderDetailById:(id) => {
     return api.get("api/" + `order-details/${id}`)
  },
+ confirmOrder:(id) => {
+  return api.post("api/" + `order/confirm-order/${id}`)
+},
+
   
 };

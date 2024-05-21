@@ -23,13 +23,12 @@ const PostManage = () => {
       search: title,
     });
     if (res.data.status === 200 || res.data.status === 204 ||res.data.status === 204 ) {
-      setPosts(res.data.data ? res.data.data: []);
+      setPosts(res.data.data ? res.data.data.filter(i => i.status): []);
     }
     else{
       setPosts([])
     }
   };
-console.log(posts)
   useEffect(() => {
   handleSearch()
   },[])
