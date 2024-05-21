@@ -80,7 +80,7 @@ const CartTicketPage = () => {
                 <span className="cart-ctxt">Tổng giá</span>
               </div>
               <div className="cart-cth">
-                <span className="cart-ctxt">Actions</span>
+                <span className="cart-ctxt">Hành động</span>
               </div>
             </div>
           </div>
@@ -93,7 +93,7 @@ const CartTicketPage = () => {
               return (
                 <div className="cart-ctr py-4" key={cart?.id}>
                   <div className="cart-ctd">
-                    <Checkbox onChange={changeSlectOrder(cart)} />
+                   
                   </div>
                   <div className="cart-ctd">
                     <span className="cart-ctxt">{idx + 1}</span>
@@ -111,39 +111,13 @@ const CartTicketPage = () => {
                   </div>
                   <div className="cart-ctd">
                     <div className="qty-change flex align-center">
-                      <button
-                        type="button"
-                        className="qty-decrease flex align-center justify-center"
-                        onClick={() =>
-                          dispatch(
-                            updateQuantityCartTicket({
-                                id: cart?.cartTicketItemId,
-                              quantity: cart?.quantity - 1,
-                            })
-                          )
-                        }
-                      >
-                        <i className="fas fa-minus"></i>
-                      </button>
+                     
 
-                      <div className="qty-value flex align-center justify-center">
+                      <div className="">
                         {cart?.quantity}
                       </div>
 
-                      <button
-                        type="button"
-                        className="qty-increase flex align-center justify-center"
-                        onClick={() =>
-                          dispatch(
-                            updateQuantityCartTicket({
-                              id: cart?.cartTicketItemId,
-                              quantity: cart?.quantity + 1,
-                            })
-                          )
-                        }
-                      >
-                        <i className="fas fa-plus"></i>
-                      </button>
+                    
                     </div>
                   </div>
 
@@ -161,7 +135,7 @@ const CartTicketPage = () => {
                         dispatch(removeCartTicketAction(cart?.cartTicketItemId))
                       }
                     >
-                      Delete
+                     Xóa
                     </button>
                   </div>
                 </div>
@@ -186,7 +160,7 @@ const CartTicketPage = () => {
             <div className="cart-cfoot-r flex flex-column justify-end">
               <div className="total-txt flex align-center justify-end">
                 <div className="font-manrope fw-5">
-                  Total ({cartsTickket.length}) items:{" "}
+                  Tổng ({cartsTickket.length}) vé:{" "}
                 </div>
                 <span className="text-orange fs-22 mx-2 fw-6">
                   {formatPrice(totalAmount)}
@@ -203,7 +177,7 @@ const CartTicketPage = () => {
                 type="button"
                 className="checkout-btn text-white bg-orange fs-16"
               >
-                Check Out
+                Thanh toán
               </button>
             </div>
           </div>

@@ -9,6 +9,7 @@ const BlogItem = ({
   description,
   id,
   imagesNewsList,
+  imageUrl
 }) => {
   const navigate = useNavigate();
   return (
@@ -19,7 +20,7 @@ const BlogItem = ({
             height: 200,
             objectFit: "cover",
           }}
-          src={imagesNewsList && imagesNewsList[0]?.path}
+          src={imageUrl}
           alt=""
         />
         <span>

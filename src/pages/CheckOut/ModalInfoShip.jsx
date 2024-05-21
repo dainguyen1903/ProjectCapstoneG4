@@ -77,7 +77,7 @@ const ModalInfoShip = ({
             Nhận hàng ngoài giờ hành chính <span style={{
               color:"gray",
               fontStyle:"italic"
-            }}>{!data.desiredDeliveryTime ? " ( Miễn phí ship)" :" ( Phí ship 15.000.000 VND)"}</span>
+            }}>{!data.desiredDeliveryTime ? " (Phí ship 15.000 VND)" :" ( Phí ship 25.000 VND)"}</span>
           </Checkbox>
         </div>
         <div style={{ marginTop: 24 }}>

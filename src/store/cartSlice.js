@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { cartAPI } from "../api/cart.api";
-import { showMessErr } from "../utils/helpers";
+import { showMessErr, showMessErr400 } from "../utils/helpers";
 import { message } from "antd";
 
 const fetchFromLocalStorage = () => {
@@ -196,12 +196,15 @@ export const addCartAction = createAsyncThunk(
       }
       const res = await cartAPI.addCartItem(productId, size,quantity);
       if(res?.data?.status !== 200 && res?.data?.status !==204){
-        showMessErr(res)
-
+        showMessErr400(res)
+        
+      }
+      else{
+        dispatch(setCartMessageOn());
       }
       await dispatch(getListCart());
     
-        dispatch(setCartMessageOn());
+       
        
     } catch (error) {
       message.error("Thêm thất bại")
