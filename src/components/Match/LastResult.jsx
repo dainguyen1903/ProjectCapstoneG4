@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import "./match.scss";
 const LastResult = ({
   nameClub1,
@@ -8,6 +9,7 @@ const LastResult = ({
   num1,
   num2,
 }) => {
+  const navigate = useNavigate()
   return (
     <div className="lastResult">
       <h3>{date}</h3>
@@ -25,7 +27,7 @@ const LastResult = ({
         </div>
       </div>
       
-        <button className="report">Match Report</button>
+        <button onClick={() => navigate("/match")} className="report">Xem thêm</button>
       
     </div>
   );

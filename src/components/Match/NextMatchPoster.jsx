@@ -10,6 +10,7 @@ const NextMatchPoster = ({
   name,
   tournamentName,
   time,
+  location
 }) => {
   const [show, shetShow] = useState(1);
   useEffect(() => {
@@ -47,9 +48,9 @@ const NextMatchPoster = ({
       </Col>
       <Col className="infoNextMatch" span={16}>
        
-        {show === 1 && <p className="txtMatch">Champions League Final</p>}
+        {show === 1 && <p className="txtMatch">{tournamentName}</p>}
         {show === 2 && (
-          <p className="txtStadium">Stamford Bridge | Wed 06 Mar | 20:00 GMT</p>
+          <p className="txtStadium">{location} | {date} | {time}</p>
         )}
       </Col>
     </Row>

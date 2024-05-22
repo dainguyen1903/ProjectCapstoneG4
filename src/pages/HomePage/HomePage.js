@@ -20,7 +20,6 @@ import { useNavigate } from "react-router-dom";
 const HomePage = () => {
   const dispatch = useDispatch();
   const {search,categoryName,maxPrice,minPrice,sortType} = getQueryParams();
-  console.log()
  const location = useLocation()
  const navigate = useNavigate()
  const [filter,setFillter] = useState({
