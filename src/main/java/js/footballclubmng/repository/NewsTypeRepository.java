@@ -11,7 +11,7 @@ import java.util.List;
 public interface NewsTypeRepository extends JpaRepository<NewsType,Long> {
     NewsType findByName(String name);
     @Query(value = "select * from news_type nt" +
-            " join news n on nt.news_type_id = n.news_type_id where " +
+            " where " +
             "(nt.status = 1) and" +
 //            "(n.status = 1) and "+
             "(lower(nt.name) like lower(concat('%', :search, '%')))", nativeQuery = true)
