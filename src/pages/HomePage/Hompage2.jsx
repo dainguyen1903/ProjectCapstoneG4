@@ -20,11 +20,21 @@ import LastResult from "../../components/Match/LastResult";
 import { useNavigate } from "react-router-dom";
 import NextMatchPoster from "../../components/Match/NextMatchPoster";
 import { newsApi } from "../../api/news.api";
+import banner1 from "./../../assets/images/baner1.jfif";
+import home1 from "./../../assets/images/home1.png";
+import sale3 from "./../../assets/images/sale3.jfif";
+import { matchApi } from "../../api/match.api";
+import { STATUS_MATCH } from "../../constants/common";
+import moment from "moment";
+import { dateFormat } from "../../utils/helpers";
 
 const HomePage2 = () => {
-    const navigate = useNavigate()
-    const [listPost,setListPost] = useState([])
-  // const listPost = [
+  const navigate = useNavigate();
+  const [nextmatch, setNextMatch] = useState(null);
+  const [lastmatch, setLastMatch] = useState(null);
+
+  const [listPost, setListPost] = useState([]);
+
   //   {
   //     img: "https://tse4.mm.bing.net/th?id=OIP.FkuIWzG7F-k-zmTDnITlDwHaEK&pid=Api&P=0&h=220",
   //     title: "Chelsea lên ngôi vô địch C1",
@@ -62,30 +72,36 @@ const HomePage2 = () => {
   //     description: "",
   //   },
   // ];
-  const listPostter = [
-    "https://th.bing.com/th/id/OIP.PXcwltgBx1taPRUAFoz-UgHaEo?w=305&h=190&c=7&r=0&o=5&dpr=1.3&pid=1.7",
-    "https://th.bing.com/th?id=OIF.40OLk87y%2fOOcS%2bBMH3e2kA&w=294&h=196&c=7&r=0&o=5&dpr=1.3&pid=1.7",
-    "https://th.bing.com/th/id/OIP.qBE3SlRT3Wres0WX8_e1CAAAAA?w=264&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7"
-  ]
+  const listPostter = [banner1, home1, banner1];
   const dispatch = useDispatch();
   const categories = useSelector(getAllCategories);
 
   // GET LIST 4
-  const getList4 =async() => {
-   try {
-    const res = await newsApi.getList4();
-    if(res.data.status === 200){
-      setListPost(res.data.data)
+  const getList4 = async () => {
+    try {
+      const res = await newsApi.getList4();
+      if (res.data.status === 200) {
+        setListPost(res.data.data);
+      }
+    } catch (error) {
+      console.log(error);
     }
-   } catch (error) {
-    console.log(error)
-   }
-  }
+  };
   useEffect(() => {
-    getList4()
+    getList4();
     dispatch(fetchAsyncProducts(50));
   }, []);
-
+  useEffect(() => {
+    dispatch(
+      fetchAsyncProducts({
+        categoryName: "",
+        maxPrice: "",
+        minPrice: "",
+        sortType: "",
+        keyword: "",
+      })
+    );
+  }, []);
   const products = useSelector(getAllProducts);
   const productStatus = useSelector(getAllProductsStatus);
 
@@ -108,6 +124,31 @@ const HomePage2 = () => {
       <BlogItem {...item} />
     </Col>
   ));
+  const getListMatch = async () => {
+    try {
+      const res = await matchApi.getListmatch();
+      if (res?.data?.status === 200) {
+        const listMatch = res?.data?.data;
+        console.log(listMatch);
+        // setListMatch(res.data.data || []);
+        const listByDate = listMatch.filter(
+          (i) => i.statusMatch === STATUS_MATCH.PENDING
+        );
+        const listLast = listMatch.filter(
+          (i) => i.statusMatch === STATUS_MATCH.END
+        );
+        if (listByDate.length > 0) {
+          setNextMatch(listByDate[0]);
+        }
+        if (listLast.length > 0) {
+          setLastMatch(listLast[0]);
+        }
+      }
+    } catch (error) {}
+  };
+  useEffect(() => {
+    getListMatch();
+  }, []);
   return (
     <main>
       <div className="slider-wrapper">
@@ -125,78 +166,87 @@ const HomePage2 = () => {
                   <Row gutter={[16, 16]}>{renderListPost}</Row>
                 </Col>
                 <Col span={8}>
-                  <NextMatch
-                    nameClub1={"Chelsea"}
-                    nameClub2={"MU"}
-                    time={"20:00"}
-                    date={"Wed 06 Mar"}
-                    tournamentName={"Champions League"}
-                    logo1={
-                      "https://tse3.mm.bing.net/th?id=OIP._9gcaEgcRupx5QoAP5uJVgHaHa&pid=Api&P=0&h=220"
-                    }
-                    logo2={
-                      "https://tse2.mm.bing.net/th?id=OIP.fuBQOCBSAG_ClI1eI9eNfwHaGK&pid=Api&P=0&h=220"
-                    }
-                  />
-                  <LastResult
-                    nameClub1={"Chelsea"}
-                    nameClub2={"Real Madrid"}
-                    time={"20:00"}
-                    date={"Wed 02 Mar"}
-                    tournamentName={"Champions League"}
-                    num1={10}
-                    num2={0}
-                  />
+                  {nextmatch && (
+                    <NextMatch
+                      nameClub1={nextmatch.awayTeam}
+                      nameClub2={nextmatch.homeTeam}
+                      time={moment(nextmatch.dateTime).format("hh:mm")}
+                      date={dateFormat(nextmatch.dateTime)}
+                      tournamentName={nextmatch.name}
+                      logo1={nextmatch.imageAwayTeam}
+                      logo2={nextmatch.imageHomeTeam}
+                    />
+                  )}
+                  {lastmatch && (
+                    <LastResult
+                      nameClub1={lastmatch.awayTeam}
+                      nameClub2={lastmatch.homeTeam}
+                      time={moment(lastmatch.dateTime).format("hh:mm")}
+                      date={dateFormat(lastmatch.dateTime)}
+                      tournamentName={lastmatch.name}
+                      num1={lastmatch.awayScore}
+                      num2={lastmatch.homeScore}
+                    />
+                  )}
                 </Col>
               </Row>
               <div className="morepost">
-                <button onClick={() =>navigate("/blog")} className="buttonMore">
+                <button
+                  onClick={() => navigate("/blog")}
+                  className="buttonMore"
+                >
                   Xem thêm bài viết
-                  <ArrowRightOutlined style={{marginLeft:10}} />
+                  <ArrowRightOutlined style={{ marginLeft: 10 }} />
                 </button>
               </div>
-              <Row gutter={[16,16]}  style={{marginTop:30}}>
-                {listPostter?.map(src => (
-                    <Col span={8}>
-                        <img src={src} style={{
-                            width:"100%",
-                            height:"auto",
-                            maxHeight:255
-                        }}  />
-                    </Col>
+              <Row gutter={[16, 16]} style={{ marginTop: 30 }}>
+                {listPostter?.map((src) => (
+                  <Col span={8}>
+                    <img
+                      src={src}
+                      style={{
+                        width: "100%",
+                        height: "auto",
+                        maxHeight: 255,
+                      }}
+                    />
+                  </Col>
                 ))}
               </Row>
               <Row>
-              <NextMatchPoster
-                    nameClub1={"Chelsea"}
-                    nameClub2={"MU"}
-                    time={"20:00"}
-                    date={"Wed 06 Mar"}
-                    tournamentName={"Champions League"}
-                    logo1={
-                      "https://tse3.mm.bing.net/th?id=OIP._9gcaEgcRupx5QoAP5uJVgHaHa&pid=Api&P=0&h=220"
-                    }
-                    logo2={
-                      "https://tse2.mm.bing.net/th?id=OIP.fuBQOCBSAG_ClI1eI9eNfwHaGK&pid=Api&P=0&h=220"
-                    }
-                  />
+                {nextmatch && <NextMatchPoster
+                   nameClub1={nextmatch.awayTeam}
+                   nameClub2={nextmatch.homeTeam}
+                   time={moment(nextmatch.dateTime).format("hh:mm")}
+                   date={dateFormat(nextmatch.dateTime)}
+                   tournamentName={nextmatch.name}
+                   logo1={nextmatch.imageAwayTeam}
+                   logo2={nextmatch.imageHomeTeam}
+                   location={nextmatch.location}
+                />}
               </Row>
               <Row>
                 <Col span={24}>
-                <div style={{
-                    marginTop:20
-                }} className="title-md">
+                  <div
+                    style={{
+                      marginTop: 20,
+                    }}
+                    className="title-md"
+                  >
                     <h3>Sản phẩm bán chạy</h3>
-                  </div></Col>
-                  <Col span={24}>
-                    <ProductList products={products.slice(0,15)} />
-                  </Col>
-                 
+                  </div>
+                </Col>
+                <Col span={24}>
+                  <ProductList products={products?.slice(0, 15)} />
+                </Col>
               </Row>
               <div className="morepost">
-                <button onClick={() =>navigate("/shop")} className="buttonMore">
+                <button
+                  onClick={() => navigate("/shop")}
+                  className="buttonMore"
+                >
                   Xem thêm sản phẩm
-                  <ArrowRightOutlined style={{marginLeft:10}} />
+                  <ArrowRightOutlined style={{ marginLeft: 10 }} />
                 </button>
               </div>
             </div>

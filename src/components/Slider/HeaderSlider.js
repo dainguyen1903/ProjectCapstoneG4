@@ -25,8 +25,12 @@ const HeaderSlider = ({images}) => {
         <div className="slider-content overflow-x-hidden">
           <Slider {...settings}>
             {images.map((image) => (
-              <div className="slider-item">
-                <img src={image} alt="" />
+              <div style={{
+                objectFit:"contain"
+              }} className="slider-item">
+                <img style={{
+                  objectFit:"contain"
+                }} src={image} alt="" />
               </div>
             ))}
           </Slider>

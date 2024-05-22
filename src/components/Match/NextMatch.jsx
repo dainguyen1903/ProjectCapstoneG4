@@ -1,5 +1,7 @@
+import { useNavigate } from "react-router-dom";
 import "./match.scss"
 const NextMatch = ({nameClub1,nameClub2,logo1,logo2,date,name,tournamentName,time}) => {
+  const navigate = useNavigate()
     return <div className="nextMatch">
       <h3>{date}</h3>
       <p>{tournamentName}</p>
@@ -19,8 +21,7 @@ const NextMatch = ({nameClub1,nameClub2,logo1,logo2,date,name,tournamentName,tim
        
       </div>
       <div className="wrap-button">
-            <button className="preview">Preview</button>
-            <button className="buy">Buy ticket</button>
+            <button onClick={() => navigate("/ticket")} className="buy">Mua vé</button>
         </div>
     </div>
 }

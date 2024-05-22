@@ -88,6 +88,7 @@
   display: flex;
   align-items: center;
   background-color: white;
+  padding: 10px;
   margin-top: 40px;
   .infoNextMatch {
     .txtMatch {
@@ -103,14 +104,6 @@
       color: Black;
       position: relative;
     }
-    &::before{
-      content:"";
-      height: 140px;
-      width: 2px;
-      background-color: gray;
-      position: absolute;
-      left: 0px;
-      top: -50px;
-    }
+   
   }
 }
