@@ -42,7 +42,10 @@ public class CommonConstant {
         public static String USER_NOT_LOGIN = "USER_NOT_LOGIN";
         public static String USER_NOT_LOGIN_OR_QUALIFIED = "USER NOT QUALIFIED TO STAMP";
         public static String PASSWORD_INCORRECT = "Tài khoản hoặc mật khẩu không chính xác";
-        public static String INVALID_PARAMETER = "Tài khoảng hoặc mật khẩu không được trống";
+        public static String INVALID_PARAMETER = "Tài khoản hoặc mật khẩu không được trống";
+        public static String CREATE_USER_FAIL = "Tạo tài khoản người dùng thất bại";
+        public static String UPDATE_USER_FAIL = "Cập nhật thông tin người dùng thất bại";
+        public static String DETAIL_USER_FAIL = "Không thể xem thông tin người dùng";
         public static String EXIST_USERNAME = "USERNAME_EXIST";
         public static String EXIST_KEY = "KEY_EXIST";
 
@@ -242,6 +245,7 @@ public class CommonConstant {
         public static final String UPDATE_USER = HEAD_API + USER + "/update-user/{id}";
         public static final String ACTIVE_USER = HEAD_API + USER + "/active-through-email";
         public static final String GET_LIST_USER = HEAD_API + USER + "/list-user";
+        public static final String UPDATE_DELETE_USER = HEAD_API + USER + "/update-delete-user";
         public static final String DELETE_USER = HEAD_API + USER + "/delete-user";
         public static final String CHANGE_PASSWORD = HEAD_API + USER + "/change-password";
         public static final String DETAIL_USER = HEAD_API + USER + "/detail-user";

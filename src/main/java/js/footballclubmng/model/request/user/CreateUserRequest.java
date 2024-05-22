@@ -16,7 +16,6 @@ public class CreateUserRequest {
     @Size(max = 50, message = "Tối đa 50 ký tự")
     private String email;
 
-
     @NotBlank(message = "Tên không được để trống.")
     @Size(max = 20, message = "Tối đa 20 ký tự")
     private String firstName;
@@ -47,16 +46,16 @@ public class CreateUserRequest {
     private String authority;
 
 
-    public boolean isValid() {
-        return StringUtils.hasLength(email)
-                && StringUtils.hasLength(firstName)
-                && StringUtils.hasLength(lastName)
-                && null != dateOfBirth
-                && StringUtils.hasLength(authority)
-                && StringUtils.hasLength(address)
-                && StringUtils.hasLength(gender);
-
-    }
+//    public boolean isValid() {
+//        return StringUtils.hasLength(email)
+//                && StringUtils.hasLength(firstName)
+//                && StringUtils.hasLength(lastName)
+//                && null != dateOfBirth
+//                && StringUtils.hasLength(authority)
+//                && StringUtils.hasLength(address)
+//                && StringUtils.hasLength(gender);
+//
+//    }
 
 //    public boolean isValidUpdate() {
 //        return id > 0

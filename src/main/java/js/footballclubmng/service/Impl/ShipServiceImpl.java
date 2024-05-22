@@ -43,13 +43,14 @@ public class ShipServiceImpl implements ShipService {
     }
 
     public int countOrderByShipper(Long shipperId) {
+
         return shippingRepository.countByShipperId(shipperId);
     }
 
     public List<UserDto> getShipperByShippingId(Long shippingId) {
         Shipping shipping = shippingRepository.findById(shippingId).orElse(null);
-        if(shipping != null && shipping.getDistrict() != null) {
-            List<User> listShipper = userRepository.findByDistrict(shipping.getDistrict());
+        if(shipping != null && shipping.getDistrict() != null ) {
+            List<User> listShipper = userRepository.findByDistrictAndAuthority(shipping.getDistrict(), "Shipper");
             return listShipper.stream()
                     .filter(user -> user.getDistrict() != null)
                     .map(MapperUtil::mapToUserDto)

@@ -18,8 +18,8 @@ public interface UserService {
     public LoginResponse handleLogin(String username, String password);
     public ResponseAPI<Object> createUser(CreateUserRequest request);
     public ResponseAPI<Object> updateUser(UpdateUserRequest request, Long id);
-    public ResponseAPI<Object> activeThroughEmail(String verificationCode, String email);
     public ResponseAPI<Object> getListSearch(String name);
+    public ResponseAPI<Object> updateDeleteUser(DeleteUserRequest request);
     public ResponseAPI<Object> deleteUser(DeleteUserRequest request);
 //    public ResponseAPI<Object> changePassword(ChangePasswordRequest request, UserBean bean);
     public boolean addUser(UserRegisterRequest userRegisterRequest);

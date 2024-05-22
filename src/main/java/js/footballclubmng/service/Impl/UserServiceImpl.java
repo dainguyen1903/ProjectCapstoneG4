@@ -150,7 +150,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseAPI<Object> createUser(CreateUserRequest request) {
-        String otp = otpUtil.generateOtp();
         try {
             String randomPass = generatePassword();
 
@@ -169,7 +168,11 @@ public class UserServiceImpl implements UserService {
                 userEntity.setFirstName(request.getFirstName());
                 userEntity.setLastName(request.getLastName());
                 userEntity.setAuthority(request.getAuthority());
-                userEntity.setDateOfBirth(new SimpleDateFormat("yyyy-MM-dd").parse(request.getDateOfBirth()));
+                if (request.getDateOfBirth() != null && !request.getDateOfBirth().isEmpty()){
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    Date date = sdf.parse(request.getDateOfBirth());
+                    userEntity.setDateOfBirth(date);
+                }
                 userEntity.setPassword(passwordEncoder.encode(randomPass));
                 userEntity.setIsActive(false);
                 userEntity.setDeleteFlg("0");
@@ -197,18 +200,21 @@ public class UserServiceImpl implements UserService {
 
             User userUpdate = userRepository.findByIdAndIsActive(id, true);
             if (null != userUpdate) {
-                userUpdate.setPassword(passwordEncoder.encode(request.getPassword()));
+
                 userUpdate.setFirstName(request.getFirstName());
                 userUpdate.setLastName(request.getLastName());
                 userUpdate.setAuthority(request.getAuthority());
-                userUpdate.setDateOfBirth(new SimpleDateFormat("yyyy-MM-dd").parse(request.getDateOfBirth()));
+                if (request.getDateOfBirth() != null && !request.getDateOfBirth().isEmpty()){
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    Date date = sdf.parse(request.getDateOfBirth());
+                    userUpdate.setDateOfBirth(date);
+                }
                 userUpdate.setGender(request.getGender());
                 userUpdate.setAddress(request.getAddress());
                 userUpdate.setWard(request.getWard());
                 userUpdate.setDistrict(request.getDistrict());
                 userUpdate.setProvince(request.getProvince());
                 userUpdate.setImageUrl(request.getImageUrl());
-                userUpdate.setDeleteFlg(request.getDeleteFlg());
                 userRepository.saveAndFlush(userUpdate);
                 return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, "Update thông tin người dùng thành công");
             } else {
@@ -220,9 +226,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseAPI<Object> activeThroughEmail(String verificationCode, String email) {
-        return null;
+    public ResponseAPI<Object> updateDeleteUser(DeleteUserRequest request) {
+        try {
+            User deleteUser = userRepository.findByIdAndDeleteFlgAndAndIsActive(request.getId(), "1", true);
+            if (null != deleteUser) {
+                deleteUser.setDeleteFlg("0"); //1 là bị xóa mềm, 0 là chưa xóa
+                userRepository.saveAndFlush(deleteUser);
+                return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.OK);
+            }
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_VALID, "ERROR");
+
+        } catch (Exception e) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EXCEPTION, e.getMessage());
+        }
     }
+
 
     @Override
     public ResponseAPI<Object> getListSearch(String name) {

@@ -16,11 +16,6 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class UpdateUserRequest {
 
-    @Size(min = 8, max = 30, message = "Mật khẩu phải có ít nhất 8 ký tự.")
-    @NotBlank(message = "Mật khẩu không được để trống")
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])\\S+$",message = "Bạn cần nhập ít nhất một chữ cái viết hoa, một chữ cái thường, một chữ số.")
-    private String password;
-
     @NotBlank(message = "Tên không được để trống.")
     @Size(max = 20, message = "Tối đa 20 ký tự")
     private String firstName;
@@ -46,9 +41,6 @@ public class UpdateUserRequest {
     private String dateOfBirth;
 
     private String imageUrl;
-
-    @NotBlank(message = "Trạng thái xóa của tài khoản không được để trống")
-    private String deleteFlg;
 
     @NotBlank(message = "Vai trò của người dùng không được để trống")
     private String authority;

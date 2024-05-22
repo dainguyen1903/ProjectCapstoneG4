@@ -70,7 +70,6 @@ public class UserController extends BaseController{
         if (auth != null) {
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
-
         // Chuyển hướng về trang đăng nhập
         return "http://localhost:3000/login";
     }
@@ -85,29 +84,35 @@ public class UserController extends BaseController{
     @PostMapping(value = CommonConstant.USER_API.CREATE_USER)
     @PreAuthorize("hasRole('ROLE_Admin')")
     public ResponseAPI<Object> createUser(@RequestBody @Valid CreateUserRequest request) {
-        if (request.isValid()) {
+        if (request != null) {
+            boolean check = userService.isDateInThePast(request.getDateOfBirth());
+            if (!check) {
+                return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.DATE_IN_THE_PAST);
+            }
             return userService.createUser(request);
         }
-        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_VALID, CommonConstant.COMMON_MESSAGE.INVALID_PARAMETER);
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_VALID, CommonConstant.COMMON_MESSAGE.CREATE_USER_FAIL);
     }
 
     @PostMapping(value = CommonConstant.USER_API.UPDATE_USER)
     @PreAuthorize("hasRole('ROLE_Admin')")
     public ResponseAPI<Object> updateUser(@RequestBody @Valid UpdateUserRequest request, @PathVariable Long id) {
         if (request != null) {
+            boolean check = userService.isDateInThePast(request.getDateOfBirth());
+            if (!check) {
+                return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.DATE_IN_THE_PAST);
+            }
             return userService.updateUser(request, id);
         }
-        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_VALID, CommonConstant.COMMON_MESSAGE.INVALID_PARAMETER);
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_VALID, CommonConstant.COMMON_MESSAGE.UPDATE_USER_FAIL);
 
     }
 
-    @GetMapping(value = CommonConstant.USER_API.ACTIVE_USER)
-    public ResponseAPI<Object> activeUser(@RequestParam("email") String email, @RequestParam(value = "token") String verifyCode) {
-        if (StringUtils.hasLength(email) && StringUtils.hasLength(verifyCode)) {
-            return userService.activeThroughEmail(verifyCode, email);
-        }
-        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_VALID, CommonConstant.COMMON_MESSAGE.INVALID_PARAMETER);
 
+    @PostMapping(value = CommonConstant.USER_API.UPDATE_DELETE_USER)
+    @PreAuthorize("hasRole('ROLE_Admin')")
+    public ResponseAPI<Object> updateDeleteUser(@RequestBody DeleteUserRequest request) {
+        return userService.updateDeleteUser(request);
     }
 
     @PostMapping(value = CommonConstant.USER_API.DELETE_USER)
@@ -121,7 +126,7 @@ public class UserController extends BaseController{
         if (id > 0) {
             return userService.detailUser(id);
         }
-        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_VALID, CommonConstant.COMMON_MESSAGE.INVALID_PARAMETER);
+        return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_VALID, CommonConstant.COMMON_MESSAGE.DETAIL_USER_FAIL);
     }
 
     @PostMapping(CommonConstant.USER_API.REGISTER)
@@ -259,7 +264,5 @@ public class UserController extends BaseController{
         }
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.UPDATE_PASSWORD_SUCCESS);
     }
-
-
 
 }
