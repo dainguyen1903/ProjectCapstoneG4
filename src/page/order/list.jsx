@@ -20,6 +20,7 @@ import { STATUS_ORDER } from "../../constants/common";
 import { ROLE } from "../../constants/role";
 import {
   dateFormat,
+  dateFormat2,
   handleError,
   showMessErr,
   showMessErr400,
@@ -32,7 +33,6 @@ const { RangePicker } = DatePicker;
 const listStatusOrderOption = [
   { key: "IN_PROGRESS", value: "Đang giao" },
   { key: "DELIVERED", value: "Đã giao" },
-  { key: "RETURNED", value: "Đơn hoàn trả" },
 ];
 const listStatusOrderOptionFull = [
   { key: "PENDING_CONFIRMATION", value: "Chờ xác nhận" },
@@ -40,7 +40,6 @@ const listStatusOrderOptionFull = [
   { key: "IN_PROGRESS", value: "Đang giao" },
   { key: "DELIVERED", value: "Đã giao" },
   { key: "FAILED", value: "Giao thất bại" },
-  { key: "RETURNED", value: "Đơn hoàn trả" },
   { key: "CANCELLED", value: "Đã hủy" },
 ];
 const OrderList = () => {
@@ -61,41 +60,20 @@ const OrderList = () => {
   const [currentIdShipper, setCurrentIdShipper] = useState(null);
   const [currentShippingId, setCurrentShippingId] = useState(null);
   const [originIdShipper, setOriginIdShipper] = useState(null);
+  const [listOriginOrder, setListOrginOrder] = useState([]);
+  const [dates, setDates] = useState(null);
 
   // Function to handle search
-  const handleSearch = async (value) => {
-    const name = form.getFieldValue("name")
-      ? form.getFieldValue("name").trim()
-      : "";
-    const res = await productApi.searchProduct({
-      productName: name,
-    });
-    if (res.data.status === 200 || res.data.status === 204) {
-      setproduct(res.data.data || []);
-    } else {
-      setproduct([]);
-      showMessErr(res.data);
+  const handleSearch = async () => {
+    if(!dates){
+      setproduct(listOriginOrder);
+      return;
     }
-  };
-
-  // Function to handle delete
-  const handleDelete = (id) => {
-    Modal.confirm({
-      title: "Xác nhận",
-      content: "Xóa sản phẩm",
-      onOk: async () => {
-        const res = await productApi.deleteProduct(id);
-        if (res.data.status === 200 || res.data.status === 204) {
-          Modal.success({
-            title: "Thành công",
-            content: "Xóa thành công",
-          });
-          handleSearch();
-        } else {
-          showMessErr(res.data);
-        }
-      },
-    });
+   const [startDate,endDate] = dates;
+   setproduct(listOriginOrder.filter(order => {
+    const orderDate = new Date(dateFormat2(order.orderDate));
+    return orderDate >= startDate && orderDate<=endDate
+   }))
   };
 
   // get list Shipper district
@@ -117,7 +95,8 @@ const OrderList = () => {
       const res = isShipper
         ? await orrderApi.getListOrderByShipper()
         : await orrderApi.getListOrder();
-      setproduct(res.data.data || []);
+      setproduct(res?.data?.data || []);
+      setListOrginOrder(res?.data?.data || []);
     } catch (error) {}
   };
 
@@ -155,7 +134,7 @@ const OrderList = () => {
             cursor: "pointer",
           }}
         >
-          {user.firstName} {user.lastName}
+          {user?.firstName} {user?.lastName}
         </span>
       ),
     },
@@ -163,14 +142,14 @@ const OrderList = () => {
       title: "Ngày đặt",
       dataIndex: "orderDate",
       key: "orderDate",
-      render: (row, value) => <span>{dateFormat(value.orderDate)}</span>,
+      render: (row, value) => <span>{dateFormat(value?.orderDate)}</span>,
     },
     {
       title: "Giá",
       dataIndex: "totalPrice",
       key: "totalPrice",
       render: (totalPrice) =>
-        totalPrice.toLocaleString("vi-VN", {
+        totalPrice?.toLocaleString("vi-VN", {
           style: "currency",
           currency: "VND",
         }),
@@ -182,7 +161,7 @@ const OrderList = () => {
         return (
           <div>
             <span>
-              {row.shipperName
+              {row?.shipperName
                 ? row?.shipperName?.firstName + " " + row?.shipperName?.lastName
                 : ""}
             </span>
@@ -209,7 +188,7 @@ const OrderList = () => {
       key: "orderStatus",
       render: (row, value) => {
         const isOption = listStatusOrderOption.find(
-          (i) => i.key === value.orderStatus
+          (i) => i.key === value?.orderStatus
         );
         return (
           <div>
@@ -217,12 +196,12 @@ const OrderList = () => {
               <Select
                 style={{ width: "200px" }}
                 onChange={(v) => handleChangeStatus(value.id, v)}
-                value={isOption ? value.orderStatus : ""}
+                value={isOption ? value?.orderStatus : ""}
               >
                 <Select.Option style={{ display: "none" }} disabled value={""}>
                   {
                     listStatusOrderOptionFull?.find(
-                      (i) => i.key === value.orderStatus
+                      (i) => i.key === value?.orderStatus
                     )?.value
                   }
                 </Select.Option>
@@ -231,44 +210,42 @@ const OrderList = () => {
                 ))}
               </Select>
             ) : (
-              <span>{STATUS_ORDER[value.orderStatus]}</span>
+              <span>{STATUS_ORDER[value?.orderStatus]}</span>
             )}
           </div>
         );
       },
     },
-    
   ];
-  if(user.authority === ROLE.SALE){
+  if (user.authority === ROLE.SALE) {
     columns.push({
       title: "Xác nhận đơn hàng",
       render: (value, row) => {
-        return (
-          
-            row.orderStatus === STATUS_ORDER.pending ? <div>
+        return row?.orderStatus === STATUS_ORDER.pending ? (
+          <div>
             <Button
-            onClick={async () => {
-              try {
-                const res = await orrderApi.confirmOrder(row.id);
-                if (res?.data?.status === 200 || res?.data?.status === 204) {
-                  message.success("Đã xác nhận đơn hàng");
-                  getListOrder()
-                } else {
+              onClick={async () => {
+                try {
+                  const res = await orrderApi.confirmOrder(row?.id);
+                  if (res?.data?.status === 200 || res?.data?.status === 204) {
+                    message.success("Đã xác nhận đơn hàng");
+                    getListOrder();
+                  } else {
+                    message.error("Có lỗi xảy ra");
+                  }
+                } catch (error) {
                   message.error("Có lỗi xảy ra");
                 }
-              } catch (error) {
-                message.error("Có lỗi xảy ra");
-              }
-            }}
-          >
-            Xác nhận
-          </Button></div>:<></>
-            
-            
-          
+              }}
+            >
+              Xác nhận
+            </Button>
+          </div>
+        ) : (
+          <></>
         );
       },
-    },)
+    });
   }
 
   const closeModal = () => {
@@ -277,6 +254,11 @@ const OrderList = () => {
     setCurrentShippingId(null);
   };
 
+  const onChange = (dates, dateStrings) => {
+    console.log("Selected Time: ", dates);
+    console.log("Formatted Selected Time: ", dateStrings);
+    setDates(dates);
+  };
   return (
     <div>
       <Card style={{ marginBottom: 20 }}>
@@ -288,8 +270,10 @@ const OrderList = () => {
             <Row>
               <Col>
                 <RangePicker
+                  value={dates}
+                  onChange={onChange}
                   format="YYYY-MM-DD"
-                  showTime={{ format: "HH:mm" }}
+                  // showTime={{ format: "HH:mm" }}
                 />
               </Col>
               <Col
@@ -371,7 +355,7 @@ const OrderList = () => {
               );
               if (res.data.status === 200 || res.data.status === 204) {
                 message.success("Assign thành công");
-                getListOrder()
+                getListOrder();
                 closeModal();
               }
               if (res.data.status === 400) {

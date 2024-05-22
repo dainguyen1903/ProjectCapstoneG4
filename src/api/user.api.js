@@ -49,4 +49,9 @@ export const userApi = {
       params,
     });
   },
+  updateDeleteUser: (id) => {
+    return api.post(baseURLUser + "update-delete-user", {id}, {
+      
+    });
+  },
 };

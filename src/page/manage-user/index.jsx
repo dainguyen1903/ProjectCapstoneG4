@@ -6,6 +6,7 @@ import {
   ProductOutlined,
   EditOutlined,
   DeleteOutlined,
+  UnlockOutlined
 } from "@ant-design/icons";
 import { useNavigate } from "react-router";
 import useuserStore from "../../zustand/userStore";
@@ -28,7 +29,7 @@ const ManageUser = () => {
     const res = await userApi.getListuser({name :name|| ""});
     console.log(res.data.data)
     setUsers(
-      res.data.data|| []
+      res?.data?.data?.reverse()|| []
     );
   };
 
@@ -36,7 +37,7 @@ const ManageUser = () => {
   const handleDelete = (userId) => {
     Modal.confirm({
       title: "Xác nhận",
-      content: "Xóa người dùng",
+      content: "Khóa người dùng",
       onOk: async() => {
         await userApi.deleteUser({
           id:userId
@@ -44,7 +45,23 @@ const ManageUser = () => {
         handleSearch({name:form.getFieldValue("name")})
         Modal.success({
           title: "Thành công",
-          content: "Xóa thành công",
+          content: "Khóa thành công",
+        });
+      },
+    });
+  };
+  
+  // Function to handle unlock acc
+  const handleUnlock = (id) => {
+    Modal.confirm({
+      title: "Xác nhận",
+      content: "Mở khóa tài khoản",
+      onOk: async() => {
+        await userApi.updateDeleteUser(id)
+        handleSearch({name:form.getFieldValue("name")})
+        Modal.success({
+          title: "Thành công",
+          content: "Mở khóa thành công",
         });
       },
     });
@@ -84,6 +101,10 @@ const ManageUser = () => {
             <Button onClick={() => handleDelete(record.id)}>
               <DeleteOutlined style={{ fontSize: "16px" }} />
             </Button>
+            {record?.deleteFlg ==="1" &&<Button onClick={() => handleUnlock(record.id)}>
+              <UnlockOutlined style={{ fontSize: "16px",color:"green" }} />
+            </Button>}
+            
           </Space>
         </Space>
       ),

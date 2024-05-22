@@ -146,7 +146,7 @@ const AddUserForm = () => {
       const imgName = detail.image_name;
       setImageName(imgName);
       dataDetail.dateOfBirth = dataDetail.dateOfBirth
-        ? moment(detail.dateOfBirth)
+        ? moment(dataDetail.dateOfBirth)
         : null;
       dataDetail.role = dataDetail.authority;
       setUrl(isEditProfile ? dataDetail.image : dataDetail.imageUrl);
