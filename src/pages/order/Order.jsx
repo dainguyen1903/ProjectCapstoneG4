@@ -37,10 +37,6 @@ const OrderPage = () => {
       name: "Đã giao",
     },
     {
-      id: 5,
-      name: "Hoàn trả",
-    },
-    {
       id: 6,
       name: "Giao thất bại",
     },
@@ -123,7 +119,6 @@ const OrderPage = () => {
             {value === 2 && <ListShipping  getList={getLisOrder} list={listConfirmed} />}
             {value === 3 && <ListShipping  getList={getLisOrder} list={listInprogress} />}
             {value === 4 && <ListShipping  getList={getLisOrder} list={listComplete} />}
-            {value === 5 && <ListShipping  getList={getLisOrder} list={listReturn} />}
             {value === 6 && <ListShipping  getList={getLisOrder} list={listFail} />}
             {value === 7 && <ListShipping  getList={getLisOrder} list={listCancel} />}
           </div>

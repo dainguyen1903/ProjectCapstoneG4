@@ -32,7 +32,12 @@ import HomePage from "./pages/HomePage/HomePage";
 import LayOut from "./layout/layout";
 import PrivateRouter from "./router/privateRouter";
 import { useEffect } from "react";
-import { getCurrentUser, logout, setCurrentUser, setLogin } from "./store/authSlice";
+import {
+  getCurrentUser,
+  logout,
+  setCurrentUser,
+  setLogin,
+} from "./store/authSlice";
 import { LOCAL_STORAGE_KEY } from "./constants/common";
 import RouterWithoutLogin from "./router/routerWithOutLogin";
 import ResetSendOTP from "./pages/ResetPass/ResetSendOtp";
@@ -49,7 +54,7 @@ import CartTicketPage from "./pages/CartPage/CartTicketPage";
 import OrderDetail from "./pages/order/OrderDetail";
 function App() {
   const dispatch = useDispatch();
-  const user = useSelector(getCurrentUser)
+  const user = useSelector(getCurrentUser);
   useEffect(() => {
     const user = localStorage.getItem(LOCAL_STORAGE_KEY.user);
     if (user) {
@@ -61,10 +66,10 @@ function App() {
 
   useEffect(() => {
     if (user) {
-      dispatch(getListCart())
-      dispatch(getListCartTicketAction())
+      dispatch(getListCart());
+      dispatch(getListCartTicketAction());
     }
-  }, [user])
+  }, [user]);
   return (
     <div className="App">
       <BrowserRouter>
@@ -149,15 +154,17 @@ function App() {
             <Route
               path="/order"
               element={
-                <OrderPage />
+                <PrivateRouter>
+                  <OrderPage />
+                </PrivateRouter>
               }
-
             />
             <Route
               path="/order-detail/:id"
               element={
-
-                <OrderDetail />
+                <PrivateRouter>
+                  <OrderDetail />
+                </PrivateRouter>
               }
             />
             {/* Cart */}
@@ -169,7 +176,6 @@ function App() {
                 </PrivateRouter>
               }
             />
-
 
             <Route
               path="/profile"
