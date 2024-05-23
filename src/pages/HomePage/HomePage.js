@@ -46,7 +46,7 @@ const HomePage = () => {
   useEffect(() => {
     getListProductByFilter1(filter)
   }, [location.search]);
-  const products = useSelector(getAllProducts);
+  const products = useSelector(getAllProducts)?.filter(i => i.status);
   const productStatus = useSelector(getAllProductsStatus);
 
   // randomizing the products in the list

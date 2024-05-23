@@ -66,10 +66,10 @@ const ProductSinglePage = () => {
   const isCustomise =
     product?.category?.id == 1 ||
     product?.category?.id == 6 ||
-    product?.category?.name == "Áo Sân Nhà" ||
-    product?.category?.name == "Áo Sân Khách";
+    product?.category?.name?.toUpperCase() == "Áo Sân Nhà"?.toUpperCase() ||
+    product?.category?.name?.toUpperCase() == "Áo Sân Khách"?.toUpperCase();
   const isHome =
-    product?.category?.id == 1 || product?.category?.name == "Áo Sân Nhà";
+    product?.category?.id == 1 || product?.category?.name?.toUpperCase() == "Áo Sân Nhà"?.toUpperCase();
 
   const listPlayerid = product?.imagesProductList
     ? product.imagesProductList

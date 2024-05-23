@@ -173,7 +173,7 @@ const ProfileUser = () => {
               label={<span className="bold">Ngày sinh</span>}
               name="dateOfBirth"
             >
-              <DatePicker />
+              <DatePicker inputReadOnly />
             </Form.Item>
             <Form.Item
               style={{
