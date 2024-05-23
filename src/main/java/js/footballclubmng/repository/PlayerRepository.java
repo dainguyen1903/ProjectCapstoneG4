@@ -25,4 +25,7 @@ public interface PlayerRepository extends JpaRepository<Player,Long> {
 
     Player findByPlayerNumber(Long playerNumber);
 
+    @Query(value = "select * from player p where p.player_number = :playerNumber and p.status = true", nativeQuery = true)
+    Player checkNumberPlayer(Long playerNumber);
+
 }
