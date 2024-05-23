@@ -49,7 +49,7 @@ const ModalInfoShip = ({
           />
         </div>
         <div style={{ marginTop: 10 }}>
-          <label>Địa chỉ:</label>
+          <label>Địa chỉ thường trú:</label>
           <Input
             value={data.receiverAddress}
             onChange={(e) =>

@@ -8,6 +8,8 @@ const { TextArea } = Input;
 
 const CommentItem = ({ author, avatar, content, datetime,id,handleChangeComment,handleDeleteCComment }) => {
   const currentUser = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY.user));
+  const fullname = (user) =>  currentUser?.firstName + " "  + currentUser?.lastName
+
   const [modeEdit, setModeEdit] = useState(false);
   const [txt, setTxt] = useState(content);
   const deleteComment = () => {
@@ -32,7 +34,7 @@ const CommentItem = ({ author, avatar, content, datetime,id,handleChangeComment,
         background: "white",
       }}
     >
-      <Avatar>{author.name[0].toUpperCase()}</Avatar>
+      <Avatar>{author?.name &&author?.name[0]?.toUpperCase()}</Avatar>
       <div>
         <div>
           <span
@@ -42,7 +44,7 @@ const CommentItem = ({ author, avatar, content, datetime,id,handleChangeComment,
               fontWeight: "bold",
             }}
           >
-            {author.name}
+            {author?.name}
           </span>
           <span
             style={{
@@ -161,7 +163,7 @@ const CommentCpn = ({ comments, setComments }) => {
       ...comments,
       {
         author: {
-          name: currentUser?.fullname,
+          name: currentUser?.firstName + " "  + currentUser?.lastName,
           id: currentUser?.id,
         },
         avatar: "",
@@ -193,7 +195,7 @@ const CommentCpn = ({ comments, setComments }) => {
     <div>
       <CommentList handleDeleteCComment={handleDeleteCComment} handleChangeComment={handleChangeComment} comments={comments} />
       {currentUser && <Comment
-        avatar={<Avatar>{currentUser.fullname && currentUser.fullname[0].toUpperCase()}</Avatar>}
+        avatar={<Avatar>{currentUser?.firstName[0].toUpperCase()}</Avatar>}
         content={
           <Editor
             onChange={handleChange}

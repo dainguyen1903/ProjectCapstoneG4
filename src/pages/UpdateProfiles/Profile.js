@@ -161,7 +161,7 @@ const ProfileUser = () => {
               style={{
                 marginTop: -15,
               }}
-              label={<span className="bold">Địa chỉ</span>}
+              label={<span className="bold">Địa chỉ thường trú</span>}
               name="address"
             >
               <Input placeholder="Địa chỉ" />

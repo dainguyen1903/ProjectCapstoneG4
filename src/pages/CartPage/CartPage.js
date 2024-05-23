@@ -17,14 +17,14 @@ import {
 } from "../../store/cartSlice";
 import { Checkbox } from "antd";
 import e from "cors";
+import { getCurrentUser } from "../../store/authSlice";
 
 const CartPage = ({ isCheckout }) => {
   const dispatch = useDispatch();
   const carts = useSelector(getAllCarts);
   const disabledCheckout = carts.filter((i) => i.isOrder).length === 0;
   const navigate = useNavigate();
-  console.log(carts);
-
+  
   if (carts.length === 0 && !isCheckout) {
     return (
       <div className="container my-5">
