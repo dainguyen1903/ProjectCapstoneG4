@@ -25,11 +25,13 @@ import { Select } from "antd";
 import { userApi } from "../../api/user.api";
 import { LOCAL_STORAGE_KEY } from "../../constants/common";
 import { playerApi } from "../../api/player.api";
+import { getCurrentUser } from "../../store/authSlice";
 const ProductSinglePage = () => {
   const currentUser = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY.user));
   const navigate = useNavigate();
   const [comments, setComments] = useState([]);
-
+  const user = useSelector(getCurrentUser);
+  const isUser = user?.authority === "User";
   const { id } = useParams();
   const dispatch = useDispatch();
   const product = useSelector(getProductSingle);
@@ -355,7 +357,10 @@ const ProductSinglePage = () => {
                         style={{ width: 300 }}
                       >
                         {listPlayer.map((i) => (
-                          <Select.Option key={i.playerNumber} value={i.playerNumber + ""}>
+                          <Select.Option
+                            key={i.playerNumber}
+                            value={i.playerNumber + ""}
+                          >
                             {i.playerNumber + "." + i.name}
                           </Select.Option>
                         ))}
@@ -364,25 +369,27 @@ const ProductSinglePage = () => {
                   )}
                 </div>
 
-                <div className="btns">
-                  <button
-                    onClick={() => {
-                      if (currentUser) {
-                        addToCartHandler(product);
-                      } else {
-                        navigate("/login");
-                      }
-                    }}
-                    type="button"
-                    className="add-to-cart-btn btn"
-                  >
-                    <i className="fas fa-shopping-cart"></i>
-                    <span className="btn-text mx-2">Thêm vào giỏ hàng</span>
-                  </button>
-                  {/* <button type="button" className="buy-now btn mx-3">
-                    <span className="btn-text">buy now</span>
-                  </button> */}
-                </div>
+                {isUser && (
+                  <div className="btns">
+                    <button
+                      onClick={() => {
+                        if (currentUser) {
+                          addToCartHandler(product);
+                        } else {
+                          navigate("/login");
+                        }
+                      }}
+                      type="button"
+                      className="add-to-cart-btn btn"
+                    >
+                      <i className="fas fa-shopping-cart"></i>
+                      <span className="btn-text mx-2">Thêm vào giỏ hàng</span>
+                    </button>
+                    {/* <button type="button" className="buy-now btn mx-3">
+              <span className="btn-text">buy now</span>
+            </button> */}
+                  </div>
+                )}
               </div>
             </div>
           </div>

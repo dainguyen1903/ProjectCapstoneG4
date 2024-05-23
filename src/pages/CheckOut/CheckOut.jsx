@@ -50,7 +50,9 @@ const CheckOutPage = () => {
         province: dataDetail.province,
         district: dataDetail.district,
         ward: dataDetail.ward,
+
       });
+      setShipData({...shipData,receiverAddress:dataDetail.address,receiverName:dataDetail.firstName + " " + dataDetail.lastName})
     } catch (error) {}
   };
 
