@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -76,7 +77,9 @@ public class OrderServiceImpl implements OrderService {
         order.setShippingId(shipping.getId());
         order.setUserId(user.getId());
         order.setOrderCode(orderCode);
-        order.setOrderDate(LocalDateTime.now());
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime orderDate = now.plusHours(7);
+        order.setOrderDate(orderDate);
         if (createOrderRequest.getPaymentMethod() == EOrderMethod.VNPAY) {
             order.setPaymentMethod(EOrderMethod.VNPAY);
         } else if (createOrderRequest.getPaymentMethod() == EOrderMethod.COD) {
@@ -172,7 +175,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDetailResponse getOrderDetail(Long orderId) {
         Order order = orderRepository.findById(orderId).orElse(null);
-        if(order != null) {
+        if (order != null) {
             return MapperUtil.mapToOrderDetailResponse(order, order.getOrderDetailList());
         } else {
             throw new RuntimeException("Thông tin order không tồn tại");
@@ -238,7 +241,7 @@ public class OrderServiceImpl implements OrderService {
 
             if (productId != null && orderQuantity > 0 && size != null && !size.isEmpty()) {
                 ProductSize productSize = productSizeRepository.findProductSizeByProductIdAndSize(productId, size);
-                if (productSize != null ) {
+                if (productSize != null) {
                     int updatedQuantity = isDecrement ? productSize.getQuantity() - orderQuantity : productSize.getQuantity() + orderQuantity;
                     if (updatedQuantity >= 0) {
                         productSize.setQuantity(updatedQuantity);
