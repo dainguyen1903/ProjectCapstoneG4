@@ -77,9 +77,7 @@ public class OrderServiceImpl implements OrderService {
         order.setShippingId(shipping.getId());
         order.setUserId(user.getId());
         order.setOrderCode(orderCode);
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime orderDate = now.plusHours(7);
-        order.setOrderDate(orderDate);
+        order.setOrderDate(LocalDateTime.now());
         if (createOrderRequest.getPaymentMethod() == EOrderMethod.VNPAY) {
             order.setPaymentMethod(EOrderMethod.VNPAY);
         } else if (createOrderRequest.getPaymentMethod() == EOrderMethod.COD) {
