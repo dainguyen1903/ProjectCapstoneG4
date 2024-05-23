@@ -40,14 +40,17 @@ const AddUserForm = () => {
   const setUser = useAuthStore((state) => state.setUser);
   const [file, setFile] = useState(null);
   let detail = isEditProfile ? user : users.find((i) => i.id == id) || {};
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const [role,setRole] = useState("")
   const [dataProvince, setDataProvince] = useState({
     province: "",
     district: "",
     ward: "",
   });
+  const [email,setEmail] = useState("")
   // Confirm save
   const confirmSave = (value) => {
+    console.log(value)
     Modal.confirm({
       title: "Xác nhận",
       content: isEditProfile
@@ -166,6 +169,19 @@ const AddUserForm = () => {
   useEffect(() => {
     getDetail();
   }, [id]);
+
+  useEffect(() => {
+ if(dataProvince.province !== "Tỉnh Hà Tĩnh"){
+  if(role === "Shipper"){
+    setDataProvince({
+      ...dataProvince,
+      province:"Tỉnh Hà Tĩnh",
+      district:"",
+      ward:""
+    })
+  }
+ }
+  },[role])
   return (
     <Card>
       <div>
@@ -193,19 +209,6 @@ const AddUserForm = () => {
               >
                 <Input disabled={id || isEditProfile} placeholder="Email" className="Input" />
               </Form.Item>
-              {/* {!isEditProfile && !id && (
-                <>
-                  <div className="inputLabel">Mật khẩu</div>
-                  <Form.Item
-                    name="password"
-                    rules={[
-                      { required: true, message: "Vui lòng nhập password!" },
-                    ]}
-                  >
-                    <Input.Password placeholder="Password" className="Input" />
-                  </Form.Item>
-                </>
-              )} */}
               <div className="inputLabel">Họ và tên đệm</div>
               <Form.Item
                 name="firstName"
@@ -227,6 +230,7 @@ const AddUserForm = () => {
                 setStateData={setDataProvince}
                 bold
                 width={"100%"}
+                disabledProvince={role === "Shipper"}
               />
               <div className="inputLabel">Địa chỉ</div>
               <Form.Item name="address">
@@ -264,8 +268,7 @@ const AddUserForm = () => {
                       { required: true, message: "Vui lòng chọn quyền!" },
                     ]}
                   >
-                    <Select placeholder="Quyền" className="Select">
-                      <Option value="Admin">Admin</Option>
+                    <Select value={role} onChange={(e) => setRole(e)} placeholder="Quyền" className="Select">
                       <Option value="Operator">Operator</Option>
                       <Option value="Sale">Sale </Option>
                       <Option value="Shipper">Shipper </Option>

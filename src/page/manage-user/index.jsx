@@ -27,7 +27,6 @@ const ManageUser = () => {
   // Function to handle search
   const handleSearch = async({name}) => {
     const res = await userApi.getListuser({name :name|| ""});
-    console.log(res.data.data)
     setUsers(
       res?.data?.data?.reverse()|| []
     );

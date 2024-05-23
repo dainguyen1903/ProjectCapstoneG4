@@ -9,7 +9,9 @@ function Province({
   },
   setStateData = (data)=>{},
   width = 400,
-  bold=false
+  bold=false,
+  disabledProvince=false
+  
 }) {
   const [count, setCount] = useState(0);
   //   const [data,setData] = useState(state);
@@ -68,6 +70,7 @@ console.log(state)
       <div style={{marginTop:10,width:"100%"}}>
         <span style={{fontWeight:bold ? "bold" :"",display:"inline-block",marginBottom:5}}>Tỉnh/Thành phố</span>
         <Select
+        disabled={disabledProvince}
          className="ant-input css-dev-only-do-not-override-1uweeqc ant-input-outlined ant-input-status-success Select"
           value={state.province}
           onChange={(v) => setStateData({ ...state, province: v,district:"",ward:""})}
