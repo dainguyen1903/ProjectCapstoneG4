@@ -87,7 +87,7 @@ const ViewProfile = () => {
                   marginBottom: 10,
                 }}
               >
-                <span style={{ fontWeight: "bold" }}>Địa chỉ : </span>
+                <span style={{ fontWeight: "bold" }}>Địa chỉ thường trú : </span>
                 <span>{detaiData.address}</span>
               </div>
               <div

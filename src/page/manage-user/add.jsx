@@ -134,6 +134,9 @@ const AddUserForm = () => {
   };
   // Confirm save
   const confirmSave = (value) => {
+    if(isErr){
+      return;
+    }
     if(!validate()){
       return;
     }
@@ -355,7 +358,7 @@ const AddUserForm = () => {
                 width={"100%"}
                 disabledProvince={data.role === "Shipper"}
               />
-              <div className="inputLabel">Địa chỉ</div>
+              <div className="inputLabel">Địa chỉ thường trú</div>
               <Form.Item>
                 <Input
                   placeholder="Địa chỉ"
@@ -434,7 +437,6 @@ const AddUserForm = () => {
               )}
               <Form.Item>
                 <Button
-                  disabled={isErr}
                   className="Button"
                   style={{
                     display: "flex",
