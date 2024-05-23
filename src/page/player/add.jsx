@@ -162,7 +162,7 @@ const AddPlayerForm = () => {
                   },
                 ]}
               >
-                <DatePicker placeholder="Ngày sinh" className="Input" />
+                <DatePicker inputReadOnly placeholder="Ngày sinh" className="Input" />
               </Form.Item>
               <div className="inputLabel">Chiều cao</div>
               <Form.Item
@@ -219,7 +219,7 @@ const AddPlayerForm = () => {
                   { required: true, message: "Vui lòng nhập ngày gia nhập!" },
                 ]}
               >
-                <DatePicker placeholder="Ngày gia nhập" className="Input" />
+                <DatePicker inputReadOnly placeholder="Ngày gia nhập" className="Input" />
               </Form.Item>
               <div className="inputLabel">Số áo</div>
               <Form.Item

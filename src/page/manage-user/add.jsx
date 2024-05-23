@@ -238,7 +238,7 @@ const AddUserForm = () => {
               </Form.Item>
               <div className="inputLabel">Ngày sinh</div>
               <Form.Item name="dateOfBirth">
-                <DatePicker placeholder="Ngày sinh" className="Input" />
+                <DatePicker inputReadOnly placeholder="Ngày sinh" className="Input" />
               </Form.Item>
               <div style={{ marginBottom: 10 }}>
                 <div style={{ marginBottom: 5 }} className="inputLabel">

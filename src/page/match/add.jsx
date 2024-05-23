@@ -189,6 +189,7 @@ const AddMatchForm = () => {
           ]}
         >
           <DatePicker
+            inputReadOnly
             showTime
             format="DD-MM-YYYY HH:mm:ss"
             placeholder="Ngày và Giờ"
