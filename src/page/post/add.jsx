@@ -225,8 +225,7 @@ const AddNewsForm = () => {
     return !isFlagErr;
   };
   const isErr = Object.values(err).filter((i) => i)?.length > 0;
-console.log(data)
-console.log(listTypeNews)
+
   return (
     <Card>
       <Form
@@ -275,7 +274,7 @@ console.log(listTypeNews)
                           "title",
                           e.target.value,
                           [ERROR_KEY.BLANK],
-                          "Tiêu đề bài viết không được để trống"
+                          "Tiêu đề bài viết"
                         )
                       }
                       placeholder="Tên tiêu đề"
