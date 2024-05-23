@@ -18,12 +18,12 @@ import { userApi } from "../../api/user.api";
 const ManageUser = () => {
   const [form] = useForm();
   const listusers = useuserStore((state) => state.users);
+
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const removeuser = useUserStore((state) => state.removeuser);
-
   // Function to handle search
   const handleSearch = async({name}) => {
     const res = await userApi.getListuser({name :name|| ""});
@@ -92,20 +92,22 @@ const ManageUser = () => {
       title: "Action",
       key: "action",
       render: (text, record) => (
+       
+        record?.authority !=="Admin" && <Space size="middle">
         <Space size="middle">
-          <Space size="middle">
-            <Button onClick={() => navigate("/user/edit/" + record.id)}>
-              <EditOutlined style={{ fontSize: "16px" }} />
-            </Button>
-            <Button onClick={() => handleDelete(record.id)}>
-              <DeleteOutlined style={{ fontSize: "16px" }} />
-            </Button>
-            {record?.deleteFlg ==="1" &&<Button onClick={() => handleUnlock(record.id)}>
-              <UnlockOutlined style={{ fontSize: "16px",color:"green" }} />
-            </Button>}
-            
-          </Space>
+          <Button onClick={() => navigate("/user/edit/" + record.id)}>
+            <EditOutlined style={{ fontSize: "16px" }} />
+          </Button>
+          <Button onClick={() => handleDelete(record.id)}>
+            <DeleteOutlined style={{ fontSize: "16px" }} />
+          </Button>
+          {record?.deleteFlg ==="1" &&<Button onClick={() => handleUnlock(record.id)}>
+            <UnlockOutlined style={{ fontSize: "16px",color:"green" }} />
+          </Button>}
+          
         </Space>
+      </Space>
+       
       ),
     },
   ];

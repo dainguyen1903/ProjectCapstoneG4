@@ -19,7 +19,7 @@ const ManagePlayer = () => {
   const handleSearch = async () => {
     const txt = form.getFieldValue("name") ?form.getFieldValue("name").trim(): "";
     const res = await playerApi.searchPlayer({ query: txt });
-    setUsers(res.data.data || []);
+    setUsers(res?.data?.data?.reverse() || []);
   };
 
   useEffect(() => {

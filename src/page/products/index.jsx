@@ -33,7 +33,7 @@ const ProductList = () => {
     productName:name
    });
    if(res.data.status ===200 || res.data.status ===204){
-    setproduct(res?.data?.data?.reverse() || []);
+    setproduct(res?.data?.data?.reverse()?.filter(i => i.status) || []);
    }
    else{
     setproduct([]);
