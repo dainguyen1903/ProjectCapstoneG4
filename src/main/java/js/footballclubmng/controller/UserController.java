@@ -27,13 +27,14 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-public class UserController extends BaseController{
+public class UserController extends BaseController {
 
     @Autowired
     UserService userService;
@@ -41,26 +42,24 @@ public class UserController extends BaseController{
     @PostMapping(CommonConstant.USER_API.LOGIN)
     public ResponseAPI<Object> login(@RequestBody @Valid LoginRequest request) {
         ResponseAPI<Object> result = new ResponseAPI<Object>();
-        if (request.isValid()) {
-            try {
-                result.setStatus(CommonConstant.COMMON_RESPONSE.OK);
-                result.setMessage(CommonConstant.COMMON_MESSAGE.LOGIN_SUCCESSFULL);
-                result.setData(userService.handleLogin(request.getEmail(), request.getPassword()));
-            } catch (BadCredentialsException ex) {
-                result.setStatus(CommonConstant.COMMON_RESPONSE.EXCEPTION);
-                result.setMessage(CommonConstant.COMMON_MESSAGE.PASSWORD_INCORRECT);
-            } catch (NullPointerException ex) {
-                result.setStatus(CommonConstant.COMMON_RESPONSE.EXCEPTION);
-                result.setMessage(CommonConstant.COMMON_MESSAGE.INVALID_PARAMETER);
-            }
-            catch (Exception ex) {
-                result.setStatus(CommonConstant.COMMON_RESPONSE.EXCEPTION);
-                result.setMessage(ex.getMessage());
-            }
-            return result;
-        } else {
-            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_VALID, CommonConstant.COMMON_MESSAGE.INVALID_PARAMETER);
+        if (!userService.isUserExist(request.getEmail())) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EXCEPTION, CommonConstant.COMMON_MESSAGE.EXIST_USERNAME);
         }
+        try {
+            result.setStatus(CommonConstant.COMMON_RESPONSE.OK);
+            result.setMessage(CommonConstant.COMMON_MESSAGE.LOGIN_SUCCESSFULL);
+            result.setData(userService.handleLogin(request.getEmail(), request.getPassword()));
+        } catch (BadCredentialsException ex) {
+            result.setStatus(CommonConstant.COMMON_RESPONSE.EXCEPTION);
+            result.setMessage(CommonConstant.COMMON_MESSAGE.PASSWORD_INCORRECT);
+        } catch (NullPointerException ex) {
+            result.setStatus(CommonConstant.COMMON_RESPONSE.EXCEPTION);
+            result.setMessage(CommonConstant.COMMON_MESSAGE.INVALID_PARAMETER);
+        } catch (Exception ex) {
+            result.setStatus(CommonConstant.COMMON_RESPONSE.EXCEPTION);
+            result.setMessage(ex.getMessage());
+        }
+        return result;
     }
 
     @RequestMapping(CommonConstant.USER_API.LOGOUT)

@@ -318,6 +318,23 @@ public class MapperUtil {
         return userDetailResponse;
     }
 
+    public static ShipperDto mapToShipperDto(User user) {
+        ShipperDto shipperDto = new ShipperDto();
+        shipperDto.setId(user.getId());
+        shipperDto.setEmail(user.getEmail());
+        shipperDto.setFirstName(user.getFirstName());
+        shipperDto.setLastName(user.getLastName());
+        shipperDto.setAuthority(user.getAuthority());
+        shipperDto.setAddress(user.getAddress());
+        shipperDto.setWard(user.getWard());
+        shipperDto.setDistrict(user.getDistrict());
+        shipperDto.setProvince(user.getProvince());
+        shipperDto.setDateOfBirth(user.getDateOfBirth());
+        shipperDto.setGender(user.getGender());
+        shipperDto.setImageUrl(user.getImageUrl());
+        return shipperDto;
+    }
+
 
 
 }

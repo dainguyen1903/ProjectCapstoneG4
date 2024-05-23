@@ -123,6 +123,10 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    public boolean isUserExist(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
     private String generatePassword() {
         String UPPERCASE_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         String LOWERCASE_LETTERS = "abcdefghijklmnopqrstuvwxyz";

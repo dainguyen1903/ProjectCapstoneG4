@@ -34,4 +34,5 @@ public interface UserService {
     public boolean changePassword(String token, UpdatePasswordRequest updatePasswordRequest);
     public ResponseAPI<UserDetailResponse> detailUser(Long id);
     public boolean isDateInThePast(String date);
+    public boolean isUserExist(String email);
 }

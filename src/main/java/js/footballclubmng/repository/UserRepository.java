@@ -18,6 +18,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User findByIdAndIsActive(Long id, Boolean isActive);
 
+    List<User> findByAuthority(String authority);
 
     User findByEmailAndVerificationCodeAndDeleteFlg(String email, String code, String deleteFlg);
 
@@ -27,5 +28,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> getByName(@Param("name") String name);
 
     boolean existsByEmail(String email);
+
+
 }
 

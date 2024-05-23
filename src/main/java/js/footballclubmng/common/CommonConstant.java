@@ -46,7 +46,7 @@ public class CommonConstant {
         public static String CREATE_USER_FAIL = "Tạo tài khoản người dùng thất bại";
         public static String UPDATE_USER_FAIL = "Cập nhật thông tin người dùng thất bại";
         public static String DETAIL_USER_FAIL = "Không thể xem thông tin người dùng";
-        public static String EXIST_USERNAME = "USERNAME_EXIST";
+        public static String EXIST_USERNAME = "Tài khoản của bạn không tồn tại trong hệ thống";
         public static String EXIST_KEY = "KEY_EXIST";
 
         public static String EXIST_TOKEN = "TOKEN_IS_EXIST";
@@ -354,6 +354,8 @@ public class CommonConstant {
         public static final String LIST_SHIPPER_BY_DISTRICT = HEAD_API + SHIPPING + "/{shippingId}/shippers";
 
         public static final String ASSIGN_SHIPPER = HEAD_API + SHIPPING + "/assign-shipper/{shippingId}/{shipperId}";
+
+        public static final String LIST_ALL_SHIPPER = HEAD_API + SHIPPING + "/list-all-shipper";
     }
 
     public static class STATISTICS_API {
