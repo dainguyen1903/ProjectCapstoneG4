@@ -62,18 +62,20 @@ const OrderList = () => {
   const [originIdShipper, setOriginIdShipper] = useState(null);
   const [listOriginOrder, setListOrginOrder] = useState([]);
   const [dates, setDates] = useState(null);
-
+  const [listAllShipper, setLisAllShipper] = useState([]);
   // Function to handle search
   const handleSearch = async () => {
-    if(!dates){
+    if (!dates) {
       setproduct(listOriginOrder);
       return;
     }
-   const [startDate,endDate] = dates;
-   setproduct(listOriginOrder.filter(order => {
-    const orderDate = new Date(dateFormat2(order.orderDate));
-    return orderDate >= startDate && orderDate<=endDate
-   }))
+    const [startDate, endDate] = dates;
+    setproduct(
+      listOriginOrder.filter((order) => {
+        const orderDate = new Date(dateFormat2(order.orderDate));
+        return orderDate >= startDate && orderDate <= endDate;
+      })
+    );
   };
 
   // get list Shipper district
@@ -122,6 +124,22 @@ const OrderList = () => {
       console.log(error);
     }
   };
+
+  // get All shipper
+  const getAllshipper = async () => {
+    try {
+      const res = await orrderApi.getListAllShipper();
+      if (res?.data?.status === 200 || res?.data?.status === 204) {
+        setLisAllShipper(res?.data?.data || []);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getAllshipper();
+  }, []);
+  console.log(listAllShipper);
   const columns = [
     {
       title: "Người đặt",
@@ -157,26 +175,50 @@ const OrderList = () => {
     {
       title: "Người ship",
       dataIndex: "shipping",
-      render: (row, value) => {
+      render: (value, row) => {
         return (
           <div>
-            <span>
-              {row?.shipperName
-                ? row?.shipperName?.firstName + " " + row?.shipperName?.lastName
-                : ""}
-            </span>
-            {!isShipper && (
-              <EditOutlined
-                style={{
-                  marginLeft: 10,
+            {!isShipper ? (
+              <Select
+                disabled={
+                  row?.orderStatus === STATUS_ORDER.PENDING_CONFIRMATION
+                }
+                value={row?.shipping?.shipperName?.id}
+                onChange={async (v) => {
+                  try {
+                    const res = await orrderApi.assignShipper(
+                      row?.shipping?.id,
+                      v
+                    );
+                    if (res.data.status === 200 || res.data.status === 204) {
+                      message.success("Assign thành công");
+                      getListOrder();
+                      closeModal();
+                    }
+                    if (res.data.status === 400) {
+                      const mes = res?.data.message || "Thất bại";
+                      message.error(mes);
+                    }
+                  } catch (error) {
+                    handleError(error);
+                  }
                 }}
-                onClick={() => {
-                  setCurrentIdShipper(row?.shipperName?.id);
-                  setCurrentShippingId(value?.shipping?.id);
-                  setOriginIdShipper(row?.shipperName?.id);
-                  getListShipperDistric(row?.id);
-                }}
-              />
+                style={{ width: 150 }}
+              >
+                {listAllShipper
+                  .filter(
+                    (i) =>
+                      i?.district?.toUpperCase() ===
+                      row?.shipping?.district?.toUpperCase()
+                  )
+                  .map((i) => (
+                    <Option value={i?.id}>
+                      {i.firstName + " " + i.lastName}
+                    </Option>
+                  ))}
+              </Select>
+            ) : (
+              <span>{row?.shipping?.shipperName?.firstName + " " + row?.shipping?.shipperName?.lastName}</span>
             )}
           </div>
         );
@@ -185,14 +227,21 @@ const OrderList = () => {
     {
       title: "Thông tin nhận hàng",
       dataIndex: "shipping",
-      width:350,
+      width: 350,
       render: (row, orderItemFake) => {
         return (
-          <div style={{
-            paddingBottom:15
-          }} className="order-item">
-            <div style={{ color: "gray" }}>{orderItemFake?.shipping?.shipName}</div>
-            <div style={{ color: "gray" }}>{orderItemFake?.shipping?.phone}</div>
+          <div
+            style={{
+              paddingBottom: 15,
+            }}
+            className="order-item"
+          >
+            <div style={{ color: "gray" }}>
+              {orderItemFake?.shipping?.shipName}
+            </div>
+            <div style={{ color: "gray" }}>
+              {orderItemFake?.shipping?.phone}
+            </div>
             <div style={{ color: "gray" }}>
               {orderItemFake?.shipping?.address +
                 ", " +
@@ -202,6 +251,21 @@ const OrderList = () => {
                 " - " +
                 orderItemFake?.shipping?.province}
             </div>
+          </div>
+        );
+      },
+    },
+    {
+      title: "Thời gian giao hàng",
+      dataIndex: "shipping",
+      render: (row, value) => {
+        return (
+          <div>
+            <span>
+              {row?.desiredDeliveryTime === true
+                ? "Ngoài giờ hành chính"
+                : "Trong giờ hành chính"}
+            </span>
           </div>
         );
       },

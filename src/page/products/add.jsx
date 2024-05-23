@@ -19,7 +19,13 @@ import { categoryApi } from "../../api/category.api";
 import { playerApi } from "../../api/player.api";
 import { productApi } from "../../api/product.api";
 import LoadingFull from "../../component/loading/loadingFull";
-import { handleError, showMessErr, showMessErr400 } from "../../ultis/helper";
+import {
+  ERROR_KEY,
+  handleError,
+  objectCheckErrorInput,
+  showMessErr,
+  showMessErr400,
+} from "../../ultis/helper";
 import useProductStore from "../../zustand/productStore";
 import "./../login/login.css";
 
@@ -47,6 +53,47 @@ const AddProduct = () => {
     },
   ]);
 
+  const [data, setData] = useState({
+    productName: "",
+    categoryId: "",
+    price: "",
+    discount: "",
+    description: "",
+  });
+
+  const [err, setErr] = useState({
+    productName: "",
+    categoryId: "",
+    price: "",
+    discount: "",
+    description: "",
+  });
+
+  const handleSetErr = (field, value) => {
+    setErr((prevData) => ({
+      ...prevData,
+      [field]: value,
+    }));
+  };
+  const handleChange = (field, value, listRule, prefix = "") => {
+    console.log(value);
+    setData((prevData) => ({
+      ...prevData,
+      [field]: value,
+    }));
+    const listErr = [];
+    listRule.forEach((rule) => {
+      const txtErr = objectCheckErrorInput[rule](value, prefix);
+      if (txtErr) {
+        listErr.push(txtErr);
+      }
+    });
+    if (listErr.length === 0) {
+      handleSetErr(field, "");
+    } else {
+      handleSetErr(field, listErr[0]);
+    }
+  };
   // Change Size
   const changeSize = (id, newValue, field = "size") => {
     const newListSize = [...listSize];
@@ -56,55 +103,98 @@ const AddProduct = () => {
       setListSize(newListSize);
     }
   };
+  const validate = () => {
+    let newErr = { ...err };
+    let isFlagErr = false;
+    if (!data.productName) {
+      isFlagErr = true;
+      newErr = { ...newErr, productName: "Tên sản phẩm không được dể trống" };
+    } else {
+      newErr = { ...newErr, productName: "" };
+    }
+    if (!data.categoryId) {
+      isFlagErr = true;
+      newErr = { ...newErr, categoryId: "Loại sản phẩm không được dể trống" };
+    } else {
+      newErr = { ...newErr, categoryId: "" };
+    }
+    if (!data.price) {
+      isFlagErr = true;
+      newErr = { ...newErr, price: "Giá không được dể trống" };
+    } else {
+      newErr = { ...newErr, price: "" };
+    }
+    if (!data.discount) {
+      isFlagErr = true;
+      newErr = { ...newErr, discount: "Khuyến mãi  không được dể trống" };
+    } else {
+      newErr = { ...newErr, discount: "" };
+    }
+    if (!data.description) {
+      isFlagErr = true;
+      newErr = { ...newErr, description: "Mô tả sản phẩm  không được dể trống" };
+    } else {
+      newErr = { ...newErr, description: "" };
+    }
+    setErr(newErr);
+    return !isFlagErr;
+  };
+  const isErr = Object.values(err).filter((i) => i)?.length > 0;
+
   // Confirm save
   const confirmSave = (value) => {
+    if (isErr) {
+      return;
+    }
+    if (!validate()) {
+      return;
+    }
+
     Modal.confirm({
       title: "Xác nhận",
       content: !id ? "Thêm sản phẩm" : "Cập nhật sản phẩm",
       onOk: async () => {
         try {
-          const dataPosst = JSON.parse(JSON.stringify(value));
-        let categoryName = "abc";
-        const item = categories.find((i) => i.id === dataPosst.categoryId);
-        if (item) {
-          categoryName = item.name;
-        }
-        const listSizePost = Array.from(
-          new Set(listSize.filter((i) => i.size))
-        );
-        dataPosst.categoryName = categoryName;
-        dataPosst.isCustomise = isCustom;
-        dataPosst.quantity = 100;
-        dataPosst.productSizeList = listSize.map((i) => {
-          delete i.id;
-          return i;
-        });
-        dataPosst.imagesProductList = dataImage.map((i) => {
-          const id = i.playerId;
-
-          return {
-            path: i.image,
-
-          };
-        });
-
-        const res = !id
-          ? await productApi.createrProduct(dataPosst)
-          : await productApi.updateProduct(id, dataPosst);
-        if (res.data.status === 200 || res.data.status === 204) {
-          Modal.success({
-            title: "Thành công",
-            content: !id ? "Thêm thành công" : "Cập nhật thành công",
-          });
-          navigate(-1);
-        } else {
-          showMessErr400(res.data);
-        }
-        } catch (error) {
-          if(error?.response?.status === 500){
-            message.error("Thất bại")
+          const dataPosst = JSON.parse(JSON.stringify(data));
+          let categoryName = "abc";
+          const item = categories.find((i) => i.id === dataPosst.categoryId);
+          if (item) {
+            categoryName = item.name;
           }
-         else handleError(error)
+          const listSizePost = Array.from(
+            new Set(listSize.filter((i) => i.size))
+          );
+          dataPosst.categoryName = categoryName;
+          dataPosst.isCustomise = isCustom;
+          dataPosst.quantity = 100;
+          dataPosst.productSizeList = listSize.map((i) => {
+            delete i.id;
+            return i;
+          });
+          dataPosst.imagesProductList = dataImage.map((i) => {
+            const id = i.playerId;
+
+            return {
+              path: i.image,
+            };
+          });
+
+          const res = !id
+            ? await productApi.createrProduct(dataPosst)
+            : await productApi.updateProduct(id, dataPosst);
+          if (res.data.status === 200 || res.data.status === 204) {
+            Modal.success({
+              title: "Thành công",
+              content: !id ? "Thêm thành công" : "Cập nhật thành công",
+            });
+            navigate(-1);
+          } else {
+            showMessErr400(res.data);
+          }
+        } catch (error) {
+          if (error?.response?.status === 500) {
+            message.error("Thất bại");
+          } else handleError(error);
         }
       },
     });
@@ -153,8 +243,8 @@ const AddProduct = () => {
       // des
       const categoryId = data.category?.id;
       data.categoryId = categoryId;
-
-      form.setFieldsValue(data);
+     console.log(data)
+      setData(data);
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -184,27 +274,24 @@ const AddProduct = () => {
       title: (
         <>
           {" "}
-         
-            <Button
-            
-              onClick={() =>
-                setDataImage([
-                  ...dataImage,
-                  {
-                    id: Date.now(),
-                    image: "",
-                    playerId: "",
-                  },
-                ])
-              }
-              size="small"
-              style={{
-                marginRight: 20,
-              }}
-            >
-              <PlusOutlined />
-            </Button>
-          
+          <Button
+            onClick={() =>
+              setDataImage([
+                ...dataImage,
+                {
+                  id: Date.now(),
+                  image: "",
+                  playerId: "",
+                },
+              ])
+            }
+            size="small"
+            style={{
+              marginRight: 20,
+            }}
+          >
+            <PlusOutlined />
+          </Button>
           Ảnh sản phẩm
         </>
       ),
@@ -254,7 +341,7 @@ const AddProduct = () => {
       },
     },
   ];
- 
+
   useEffect(() => {
     if (isCustom) {
       setInitDataImage(listPlayer);
@@ -272,22 +359,7 @@ const AddProduct = () => {
     }));
     setDataImage(dataImage);
   };
-  // // list player
-  // const getListPlayer = async () => {
-  //   const res = await playerApi.searchPlayer({ query: "" });
-  //   console.log(res);
-  //   const status = res.data.status;
-  //   if (status === 200 || status === 204) {
-  //     const list = res.data.data || [];
-  //     setListPlayer(list);
-  //     if (!id) {
-  //       setInitDataImage(list);
-  //     }
-  //   }
-  // };
-  // useEffect(() => {
-  //   getListPlayer();
-  // }, []);
+
   return (
     <Card style={{}}>
       <h2 style={{ marginBottom: 10 }}>
@@ -302,54 +374,95 @@ const AddProduct = () => {
             layout="vertical"
           >
             <div className="inputLabel">Tên sản phẩm</div>
-            <Form.Item
-              name="productName"
-              rules={[
-                { required: true, message: "Vui lòng nhập tên sản phẩm!" },
-              ]}
-            >
-              <Input placeholder="Tên sản phẩm" className="Input" />
+            <Form.Item name="productName">
+              <Input
+                value={data.productName}
+                onChange={(e) =>
+                  handleChange(
+                    "productName",
+                    e.target.value,
+                    [ERROR_KEY.BLANK],
+                    "Tên sản phẩm"
+                  )
+                }
+                placeholder="Tên sản phẩm"
+                className="Input"
+              />
+              <div className="txt-err">{err?.productName}</div>
             </Form.Item>
             <div className="inputLabel">Loại sản phẩm</div>
-            <Form.Item
-              name="categoryId"
-              rules={[
-                { required: true, message: "Vui lòng chọn loại sản phẩm!" },
-              ]}
-            >
+            <Form.Item name="categoryId">
               <Select
                 style={{ marginTop: 10 }}
                 placeholder="Loại sản phẩm"
                 className="Select"
+                value={data.categoryId}
+                onChange={(v) => {
+                  setData({ ...data, categoryId: v });
+                  setErr({ ...err, categoryId: "" });
+                }}
               >
                 {categories?.map((i) => (
                   <Option value={i.id}>{i.name}</Option>
                 ))}
               </Select>
+              <div className="txt-err">{err?.categoryId}</div>
             </Form.Item>
             <div className="inputLabel">Giá</div>
-            <Form.Item
-              name="price"
-              rules={[{ required: true, message: "Vui lòng nhập giá!" }]}
-            >
-              <Input placeholder="Giá" className="Input" />
+            <Form.Item name="price">
+              <Input
+                value={data.price}
+                onChange={(e) =>
+                  handleChange(
+                    "price",
+                    e.target.value,
+                    [ERROR_KEY.BLANK, ERROR_KEY.NUMER, ERROR_KEY.NUMBER_UNSIGN],
+                    "Giá"
+                  )
+                }
+                placeholder="Giá"
+                className="Input"
+              />
+              <div className="txt-err">{err?.price}</div>
             </Form.Item>
             <div className="inputLabel">Khuyến mãi</div>
 
             <Form.Item
               name="discount"
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng nhập số phần trăm khuyến mãi!",
-                },
-              ]}
+              
             >
-              <Input placeholder="Khuyến mãi" className="Input" />
+              <Input value={data.discount}
+              onChange={(e) =>
+                handleChange(
+                  "discount",
+                  e.target.value,
+                  [
+                    ERROR_KEY.BLANK,
+                    ERROR_KEY.NUMER,
+                    ERROR_KEY.NUMBER_UNSIGN,
+                    ERROR_KEY.NUMBER_DISCOUNT,
+                  ],
+                  "Khuyến mãi"
+                )
+              } placeholder="Khuyến mãi" className="Input" />
+              <div className="txt-err">{err?.discount}</div>
             </Form.Item>
             <div className="inputLabel">Mô tả</div>
             <Form.Item name="description">
-              <Input placeholder="Mô tả sản phẩm" className="Input" />
+              <Input
+                value={data.description}
+                onChange={(e) =>
+                  handleChange(
+                    "description",
+                    e.target.value,
+                    [ERROR_KEY.BLANK],
+                    "Mô tả sản phẩm"
+                  )
+                }
+                placeholder="Mô tả sản phẩm"
+                className="Input"
+              />
+               <div className="txt-err">{err?.description}</div>
             </Form.Item>
 
             <div style={{ marginBottom: 15, marginTop: 0 }}>
@@ -399,7 +512,7 @@ const AddProduct = () => {
                     <div>
                       <div style={{ marginBottom: -10 }}>Số lượng</div>
                       <Input
-                      type="number"
+                        type="number"
                         style={{
                           width: 200,
                           marginTop: 10,
@@ -422,14 +535,6 @@ const AddProduct = () => {
               })}
             </div>
             <Form.Item>
-              {/* <div>
-                <Checkbox
-                  checked={isCustom}
-                  onChange={(e) => setIsCustom(e.target.checked)}
-                >
-                  Sản phẩm gắn liền với cầu thủ
-                </Checkbox>
-              </div> */}
               <button
                 style={{
                   marginTop: 15,

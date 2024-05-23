@@ -2,7 +2,9 @@ import axios from 'axios';
 import { LOCAL_STORAGE_KEY } from '../constants/common';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8080/',
+  // baseURL: 'http://localhost:8080/',
+  baseURL: 'https://honglinhhatinhfc.monoinfinity.net/',
+
   headers: {
     'Content-Type': 'application/json',
   },

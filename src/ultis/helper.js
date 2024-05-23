@@ -88,7 +88,8 @@ export const ERROR_KEY = {
   EMAIL:"email",
   PASSWORD:"password",
   PHONE_NUMBER:"phone_number",
-  BLANK:"blank"
+  BLANK:"blank",
+  NUMBER_DISCOUNT:"discount"
 }
 function validateEmail(email) {
   // Biểu thức chính quy để kiểm tra email hợp lệ
@@ -101,9 +102,30 @@ function validateBlank(value,prefix) {
   }
   return null;
 }
+function validateNumber(value,prefix) {
+  if(isNaN(value)){
+    return prefix + " phải là một số"
+  }
+  return null;
+}
+function validateNumberUnsign(value,prefix) {
+  if(!isNaN(value) && Number(value) < 0){
+    return prefix + " phải là một số không âm"
+  }
+  return null;
+}
+function validateNumberDiscount(value,prefix) {
+  if(!isNaN(value) && (Number(value) > 100 ||Number(value) < 0 )){
+    return prefix + " phải nằm trong khoảng 0 đến 100"
+  }
+  return null;
+}
 
 export  const objectCheckErrorInput = {
 [ERROR_KEY.EMAIL]:(email) => validateEmail(email),
-[ERROR_KEY.BLANK]:(value,prefix) => validateBlank(value,prefix)
+[ERROR_KEY.BLANK]:(value,prefix) => validateBlank(value,prefix),
+[ERROR_KEY.NUMER]:(value,prefix) => validateNumber(value,prefix),
+[ERROR_KEY.NUMBER_UNSIGN]:(value,prefix) => validateNumberUnsign(value,prefix),
+[ERROR_KEY.NUMBER_DISCOUNT]:(value,prefix) => validateNumberDiscount(value,prefix)
 
 }

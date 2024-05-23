@@ -17,6 +17,10 @@ export const orrderApi = {
     return api.post(
       `api/shipping/assign-shipper/${shippingId}/${shipperId}`)
   },
+  getListAllShipper: (shippingId,shipperId) => {
+    return api.get(
+      `api/shipping/list-all-shipper`)
+  },
   changStatusOrder:(orderid,status) =>{
     return api.put(
       baseURLOrder + `update-status-order-by-shipper/${orderid}`,{},{

@@ -129,13 +129,6 @@ const AddUserForm = () => {
     } else {
       newErr = { ...newErr, role: "" };
     }
-    // if (!data.gender) {
-    //   isFlagErr = true;
-    //   newErr = { ...newErr, gender: "Giới tính không được dể trống" };
-    // } else {
-    //   isFlagErr = true;
-    //   newErr = { ...newErr, gender: "" };
-    // }
     setErr(newErr)
     return !isFlagErr;
   };
