@@ -23,7 +23,7 @@ const PostManage = () => {
       search: title,
     });
     if (res.data.status === 200 || res.data.status === 204 ||res.data.status === 204 ) {
-      setPosts(res.data.data ? res.data.data.filter(i => i.status): []);
+      setPosts(res?.data?.data ? res?.data?.data?.reverse().filter(i => i.status): []);
     }
     else{
       setPosts([])

@@ -1,4 +1,14 @@
-import { Form, Input, Modal, Select, Button, Card, Col, Row, message } from "antd";
+import {
+  Form,
+  Input,
+  Modal,
+  Select,
+  Button,
+  Card,
+  Col,
+  Row,
+  message,
+} from "antd";
 import React, { useEffect, useState, useRef } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -6,7 +16,12 @@ import { useNavigate, useParams } from "react-router";
 import { newsApi } from "../../api/news.api";
 import LoadingFull from "../../component/loading/loadingFull";
 import AddImage from "../../component/common/AddImage";
-import { handleError, showMessErr400 } from "../../ultis/helper";
+import {
+  ERROR_KEY,
+  handleError,
+  objectCheckErrorInput,
+  showMessErr400,
+} from "../../ultis/helper";
 const { Option } = Select;
 const modules = {
   toolbar: [
@@ -54,54 +69,74 @@ const AddNewsForm = () => {
   const fileRef = useRef();
   const navigate = useNavigate();
   const [txtErr, setTxtErr] = useState("");
+  const [data, setData] = useState({
+    typeNews: "",
+    title: "",
+    description: "",
+    imageUrl: "",
+  });
+  const [err, setErr] = useState({
+    typeNews: "",
+    title: "",
+    description: "",
+    imageUrl: "",
+  });
   // Confirm save
   const confirmSave = ({ title, typeNews }) => {
-    if (!url) {
-      setTxtErr("Vui lòng chọn ảnh");
+    if (isErr) {
       return;
-    } else {
-      setTxtErr("");
+    }
+    if (!validate()) {
+      return;
     }
     const dataPost = {
-      title,
-      newsType: typeNews,
-      description: value,
+      title:data.title,
+      newsType: data.typeNews,
+      description: data.description,
       imageUrl: url,
     };
     Modal.confirm({
       title: "Xác nhận",
       content: !id ? "Thêm bài viết" : "Cập nhật bài viết",
       onOk: async () => {
-       try {
-        const res = !id
-        ? await newsApi.createrNews(dataPost)
-        : await newsApi.updateNews(id, dataPost);
-      if (res.data.status === 200 || res.data.status === 204) {
-        Modal.success({
-          title: "Thành công",
-          content: !id ? "Thêm thành công" : "Cập nhật thành công",
-        });
-        navigate(-1);
-      }
-      else{
-        showMessErr400(res)
-      }
-       } catch (error) {
-        handleError(error)
-       }
+        try {
+          const res = !id
+            ? await newsApi.createrNews(dataPost)
+            : await newsApi.updateNews(id, dataPost);
+          if (res.data.status === 200 || res.data.status === 204) {
+            Modal.success({
+              title: "Thành công",
+              content: !id ? "Thêm thành công" : "Cập nhật thành công",
+            });
+            navigate(-1);
+          } else {
+            showMessErr400(res);
+          }
+        } catch (error) {
+          handleError(error);
+        }
       },
     });
   };
-
+  useEffect(() => {
+    if(url){
+      setErr({...err,imageUrl:""})
+    }
+  },[url])
   // get detailNews
   const getDetailNews = async () => {
     setLoading(true);
     const res = await newsApi.getDetailNews(id);
     if (res.data.status === 200 || res.data.status === 204) {
       const newsDetail = res.data.data;
-      setValue(newsDetail.description);
-      newsDetail.typeNews = newsDetail?.newsType?.name;
+      
       setUrl(newsDetail.imageUrl);
+      console.log(newsDetail.newsType?.name)
+      setData({
+        title:newsDetail.title,
+        description:newsDetail.description,
+        typeNews:newsDetail.newsType?.name
+      })
       form.setFieldsValue(newsDetail);
     }
     setLoading(false);
@@ -134,7 +169,64 @@ const AddNewsForm = () => {
       getDetailNews();
     }
   }, [id]);
+  const handleChange = (field, value, listRule, prefix = "") => {
+    setData((prevData) => ({
+      ...prevData,
+      [field]: value,
+    }));
+    const listErr = [];
+    listRule.forEach((rule) => {
+      const txtErr = objectCheckErrorInput[rule](value, prefix);
+      if (txtErr) {
+        listErr.push(txtErr);
+      }
+    });
+    if (listErr.length === 0) {
+      handleSetErr(field, "");
+    } else {
+      handleSetErr(field, listErr[0]);
+    }
+  };
+  const handleSetErr = (field, value) => {
+    setErr((prevData) => ({
+      ...prevData,
+      [field]: value,
+    }));
+  };
+  const validate = () => {
+    let newErr = { ...err };
+    let isFlagErr = false;
+    if (!data.title) {
+      isFlagErr = true;
+      newErr = { ...newErr, title: "Tiêu đề không được để trống" };
+    } else {
+      newErr = { ...newErr, title: "" };
+    }
+    if (!data.typeNews) {
+      isFlagErr = true;
+      newErr = { ...newErr, typeNews: "Loại bài viết không được để trống" };
+    } else {
+      newErr = { ...newErr, typeNews: "" };
+    }
+    if (!data.description) {
+      isFlagErr = true;
+      newErr = { ...newErr, description: "Nội dung bài viết không được để trống" };
+    } else {
+      newErr = { ...newErr, description: "" };
+    }
+    if (!url) {
+      isFlagErr = true;
+      newErr = { ...newErr, imageUrl: "Ảnh tiêu đề không được để trống" };
+    } else {
+      newErr = { ...newErr, imageUrl: "" };
+    }
 
+    setErr(newErr);
+    return !isFlagErr;
+  };
+  const isErr = Object.values(err).filter((i) => i)?.length > 0;
+console.log(data)
+console.log(listTypeNews)
   return (
     <Card>
       <Form
@@ -152,39 +244,44 @@ const AddNewsForm = () => {
             <Col span={24}>
               <Row>
                 <Col span={12}>
-                <div style={{
-                        paddingBottom:10
-                      }} className="inputLabel">Loại bài viết</div>
-                  <Form.Item
-                  
-                    name="typeNews"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Vui lòng chọn loại bài viết!",
-                      },
-                    ]}
+                  <div
+                    style={{
+                      paddingBottom: 10,
+                    }}
+                    className="inputLabel"
                   >
-                     
-                    <Select placeholder={"Loại bài viết"} className="Select">
+                    Loại bài viết
+                  </div>
+                  <Form.Item
+                    
+                  >
+                    <Select value={data.typeNews} onChange={(v) => {
+                      setData({...data,typeNews:v});
+                      setErr({...err,typeNews:""})
+                    }} placeholder={"Loại bài viết"} className="Select">
                       {listTypeNews.map((i) => (
                         <Option value={i.id}>{i.name}</Option>
                       ))}
                     </Select>
                   </Form.Item>
+                  <div className="txt-err">{err?.typeNews}</div>
+
                   <div className="inputLabel">Tiêu đề</div>
-                  <Form.Item
-                    
-                    name="title"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Vui lòng nhập tên tiêu đề bài viết!",
-                      },
-                    ]}
-                  >
-                   
-                    <Input placeholder="Tên tiêu đề" className="Input" />
+                  <Form.Item name="title">
+                    <Input
+                      value={data.title}
+                      onChange={(e) =>
+                        handleChange(
+                          "title",
+                          e.target.value,
+                          [ERROR_KEY.BLANK],
+                          "Tiêu đề bài viết không được để trống"
+                        )
+                      }
+                      placeholder="Tên tiêu đề"
+                      className="Input"
+                    />
+                    <div className="txt-err">{err?.title}</div>
                   </Form.Item>
                 </Col>
                 <Col span={12}>
@@ -194,7 +291,8 @@ const AddNewsForm = () => {
                     click={() => fileRef.current.click()}
                   />
                   <div style={{ color: "red", textAlign: "center" }}>
-                    {txtErr}
+                  <div className="txt-err">{err?.imageUrl}</div>
+
                   </div>
                 </Col>
               </Row>
@@ -215,16 +313,25 @@ const AddNewsForm = () => {
               ]}
             >
               <ReactQuill
+              className="ok"
                 style={{
                   marginBottom: 80,
                   height: 400,
                 }}
                 theme="snow"
-                value={value}
-                onChange={setValue}
+                value={data.description}
+                onChange={(e) =>
+                  handleChange(
+                    "description",
+                    e,
+                    [ERROR_KEY.BLANK],
+                    "Nội dung bài viết"
+                  )
+                }
                 modules={modules}
                 formats={formats}
               />
+              <div style={{marginTop:-35}} className="txt-err">{err?.description}</div>
             </Form.Item>
           </Col>
           <Form.Item>
