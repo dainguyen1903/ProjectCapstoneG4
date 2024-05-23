@@ -83,7 +83,7 @@ const Navbar = () => {
             </div>
           </div>
 
-          <ul
+          {/* <ul
             style={{
               display: "flex",
               justifyContent: "center",
@@ -103,7 +103,7 @@ const Navbar = () => {
                 </li>
               ))
             }
-          </ul>
+          </ul> */}
         </div>
 
         <div className="navbar-cart flex align-center">

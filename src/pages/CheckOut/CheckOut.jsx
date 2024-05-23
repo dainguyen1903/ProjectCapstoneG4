@@ -119,6 +119,7 @@ const CheckOutPage = () => {
         if (method.key === "VNPAY") {
           const data = res.data.data;
           const url = data?.paymentUrl;
+          console.log(url)
           if (url) {
             window.location.href = url;
           } else {
