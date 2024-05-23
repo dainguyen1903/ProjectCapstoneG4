@@ -11,6 +11,8 @@ const ViewProfile = () => {
   const { id } = useParams();
   const [detaiData, setDetailData] = useState({});
   const [loading, setLoading] = useState(false);
+  const user = useAuthStore((state) => state.user);
+  const isAdmin = user?.authority === "Admin";
   const navigate = useNavigate();
   const getDetailProfie = async () => {
     setLoading(true);
@@ -27,12 +29,15 @@ const ViewProfile = () => {
     <div>
       <Row gutter={[8, 8]}>
         <Col offset={2} span={20}>
-          <div style={{
-            background:"white",
-            color:"black",
-            padding:30,
-            borderRadius:5,
-          }} className="">
+          <div
+            style={{
+              background: "white",
+              color: "black",
+              padding: 30,
+              borderRadius: 5,
+            }}
+            className=""
+          >
             <div
               style={{
                 textAlign: "center",
@@ -92,7 +97,9 @@ const ViewProfile = () => {
               >
                 <span style={{ fontWeight: "bold" }}>Ngày sinh : </span>
                 <span>
-                  {detaiData.dateOfBirth  ? moment(detaiData.dateOfBirth).format("YYYY-MM-DD") : ""}
+                  {detaiData.dateOfBirth
+                    ? moment(detaiData.dateOfBirth).format("YYYY-MM-DD")
+                    : ""}
                 </span>
               </div>
               <div
@@ -100,7 +107,7 @@ const ViewProfile = () => {
                   marginBottom: 10,
                 }}
               >
-                <span style={{ fontWeight: "bold" }}>Giới tính:  </span>
+                <span style={{ fontWeight: "bold" }}>Giới tính: </span>
                 <span>{detaiData.gender === "M" ? "Nam" : "Nữ"}</span>
               </div>
               <div
@@ -112,12 +119,14 @@ const ViewProfile = () => {
                 <span>{ROLE[detaiData.role]}</span> */}
               </div>
             </div>
-            <button
-              onClick={() => navigate("/profile/edit")}
-              className="Button"
-            >
-              Chỉnh sửa thông tin cá nhân
-            </button>
+            {isAdmin && (
+              <button
+                onClick={() => navigate("/profile/edit")}
+                className="Button"
+              >
+                Chỉnh sửa thông tin cá nhân
+              </button>
+            )}
           </div>
         </Col>
       </Row>

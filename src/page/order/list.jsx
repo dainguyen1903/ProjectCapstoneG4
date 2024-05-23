@@ -183,6 +183,30 @@ const OrderList = () => {
       },
     },
     {
+      title: "Thông tin nhận hàng",
+      dataIndex: "shipping",
+      width:350,
+      render: (row, orderItemFake) => {
+        return (
+          <div style={{
+            paddingBottom:15
+          }} className="order-item">
+            <div style={{ color: "gray" }}>{orderItemFake?.shipping?.shipName}</div>
+            <div style={{ color: "gray" }}>{orderItemFake?.shipping?.phone}</div>
+            <div style={{ color: "gray" }}>
+              {orderItemFake?.shipping?.address +
+                ", " +
+                orderItemFake?.shipping?.ward +
+                " - " +
+                orderItemFake?.shipping?.district +
+                " - " +
+                orderItemFake?.shipping?.province}
+            </div>
+          </div>
+        );
+      },
+    },
+    {
       title: "Trạng thái đơn hàng",
       dataIndex: "orderStatus",
       key: "orderStatus",

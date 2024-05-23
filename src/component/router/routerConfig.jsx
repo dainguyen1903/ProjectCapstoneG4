@@ -25,11 +25,10 @@ import { ROLE } from "../../constants/role";
 
 const RouterConfig = () => {
   const isLogin = useAuthStore(state => state.isAuthenticated)
-  const user = useAuthStore(state => state.user)
+  const user = useAuthStore(state => state.user);
   const [routesWithLayout,setrousWithLayout] = useState([]);
   const [normalLayout,setnormalLayout] = useState([]);
   let path = "/home"
-  console.log(user)
   if(user?.authority === "Sale"){
     path="/home"
   }
