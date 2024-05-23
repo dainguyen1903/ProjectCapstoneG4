@@ -80,3 +80,30 @@ export const formatPrice = (price) => {
       currency: "VND"
   }).format(price);
 }
+
+
+export const ERROR_KEY = {
+  NUMER:"number",
+  NUMBER_UNSIGN:"number_unsign",
+  EMAIL:"email",
+  PASSWORD:"password",
+  PHONE_NUMBER:"phone_number",
+  BLANK:"blank"
+}
+function validateEmail(email) {
+  // Biểu thức chính quy để kiểm tra email hợp lệ
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return !re.test(email) ? "Email không hợp lệ" :null ;
+}
+function validateBlank(value,prefix) {
+  if(typeof value === "string" && value?.trim() === ""){
+    return prefix + " không được để trống"
+  }
+  return null;
+}
+
+export  const objectCheckErrorInput = {
+[ERROR_KEY.EMAIL]:(email) => validateEmail(email),
+[ERROR_KEY.BLANK]:(value,prefix) => validateBlank(value,prefix)
+
+}
