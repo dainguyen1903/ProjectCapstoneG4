@@ -6,7 +6,13 @@ import useNewsStore from "../../zustand/newsStore";
 import LoadingFull from "../../component/loading/loadingFull";
 import useNewsCategoryStore from "../../zustand/newsCategoryStore";
 import { newsApi } from "../../api/news.api";
-import { handleError, showMessErr, showMessErr400 } from "../../ultis/helper";
+import {
+  ERROR_KEY,
+  handleError,
+  objectCheckErrorInput,
+  showMessErr,
+  showMessErr400,
+} from "../../ultis/helper";
 import { Card } from "antd";
 const { Option } = Select;
 
@@ -15,43 +21,79 @@ const NewsCategoryAdd = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [data, setData] = useState({
+    name: "",
+  });
+  const [err, setErr] = useState({
+    name: "",
+  });
   // Confirm save
   const confirmSave = ({ name }) => {
+    if (isErr) {
+      return;
+    }
+    if (!validate()) {
+      return;
+    }
     Modal.confirm({
       title: "Xác nhận",
       content: !id ? "Thêm danh mục bài viết" : "Cập nhật danh mục bài viết",
       onOk: async () => {
-       try {
-        const dataPost = {
-          name : name?.trim(),
-          description: "description",
-        };
-        const res = !id
-          ? await newsApi.createrNewsType(dataPost)
-          : await newsApi.updateNewsType(id, dataPost);
-        if (res.data.status === 200 || res.data.status === 204) {
-          Modal.success({
-            title: "Thành công",
-            content: !id ? "Thêm thành công" : "Cập nhật thành công",
-            onOk: () => {
-              navigate(-1);
-            },
-          });
-        } else {
-          showMessErr400(res);
+        try {
+          const dataPost = {
+            name: data?.name?.trim(),
+            description: "description",
+          };
+          const res = !id
+            ? await newsApi.createrNewsType(dataPost)
+            : await newsApi.updateNewsType(id, dataPost);
+          if (res.data.status === 200 || res.data.status === 204) {
+            Modal.success({
+              title: "Thành công",
+              content: !id ? "Thêm thành công" : "Cập nhật thành công",
+              onOk: () => {
+                navigate(-1);
+              },
+            });
+          } else {
+            showMessErr400(res);
+          }
+        } catch (error) {
+          handleError(error);
         }
-       } catch (error) {
-        handleError(error)
-       }
       },
     });
+  };
+  const handleChange = (field, value, listRule, prefix = "") => {
+    setData((prevData) => ({
+      ...prevData,
+      [field]: value,
+    }));
+    const listErr = [];
+    listRule.forEach((rule) => {
+      const txtErr = objectCheckErrorInput[rule](value, prefix);
+      if (txtErr) {
+        listErr.push(txtErr);
+      }
+    });
+    if (listErr.length === 0) {
+      handleSetErr(field, "");
+    } else {
+      handleSetErr(field, listErr[0]);
+    }
+  };
+  const handleSetErr = (field, value) => {
+    setErr((prevData) => ({
+      ...prevData,
+      [field]: value,
+    }));
   };
 
   const getDetail = async () => {
     setLoading(true);
     const res = await newsApi.getDetailNewsType(id);
     if (res.data.status === 200 || res.data.status === 204) {
-      form.setFieldsValue(res.data.data);
+      setData({...data,name:res.data.data.name});
     } else {
       showMessErr(res.data);
     }
@@ -62,6 +104,21 @@ const NewsCategoryAdd = () => {
       getDetail();
     }
   }, [id]);
+  const validate = () => {
+    let newErr = { ...err };
+    let isFlagErr = false;
+    if (!data.name) {
+      isFlagErr = true;
+      newErr = { ...newErr, name: "Tên danh mục bài viết không được để trống" };
+    } else {
+      newErr = { ...newErr, name: "" };
+    }
+
+    setErr(newErr);
+    return !isFlagErr;
+  };
+  const isErr = Object.values(err).filter((i) => i)?.length > 0;
+
   return (
     <Card>
       <div>
@@ -77,20 +134,30 @@ const NewsCategoryAdd = () => {
         >
           <div className="inputLabel">Tên danh mục bài viết</div>
 
-          <Form.Item
-            name="name"
-            rules={[
-              {
-                required: true,
-                message: "Vui lòng nhập tên danh mục bài viết!",
-              },
-            ]}
-          >
-            <Input placeholder="Tên danh mục bài viết" className="Input" />
+          <Form.Item name="name">
+            <Input
+              value={data.name}
+              onChange={(e) =>
+                handleChange(
+                  "name",
+                  e.target.value,
+                  [ERROR_KEY.BLANK],
+                  "Tên danh mục bài viết không được để trống"
+                )
+              }
+              placeholder="Tên danh mục bài viết"
+              className="Input"
+            />
+            <div className="txt-err">{err?.name}</div>
           </Form.Item>
 
           <Form.Item>
-            <button className="Button" htmlType="submit" type="primary">
+            <button
+              style={{ marginTop: 10 }}
+              className="Button"
+              htmlType="submit"
+              type="primary"
+            >
               {id ? "Cập nhật" : "Tạo mới"}
             </button>
           </Form.Item>

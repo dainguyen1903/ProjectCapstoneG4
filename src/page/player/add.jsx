@@ -173,7 +173,6 @@ const AddPlayerForm = () => {
     }));
   };
   const handleChange = (field, value, listRule, prefix = "") => {
-    console.log(value);
     setData((prevData) => ({
       ...prevData,
       [field]: value,
