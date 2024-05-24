@@ -247,8 +247,11 @@ const AddProduct = () => {
       // des
       const categoryId = data.category?.id;
       data.categoryId = categoryId;
-     console.log(data)
-      setData(data);
+      const {category,imagesProductDtoList,productSizeDtoList,...rest} = data;
+      setData({
+    ...rest,
+    
+      });
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -415,8 +418,8 @@ const AddProduct = () => {
             <div className="inputLabel">Giá</div>
             <Form.Item name="price">
               <Input
-                // value={data.price}
-                dè={priceFormat}
+                value={data.price}
+                
                 onChange={(e) =>
                   handleChange(
                     "price",
