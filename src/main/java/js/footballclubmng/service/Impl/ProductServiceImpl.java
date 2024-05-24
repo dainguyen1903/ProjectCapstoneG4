@@ -75,6 +75,11 @@ public class ProductServiceImpl implements ProductService {
         return image;
     }
 
+    private static String removeDiacritics(String str) {
+        return Normalizer.normalize(str, Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "");
+    }
+
     @Override
     public List<ProductDto> getFilterProducts(String categoryName, String keyword, Float minPrice, Float maxPrice, String sortType) {
         List<Product> listProducts;
@@ -89,7 +94,7 @@ public class ProductServiceImpl implements ProductService {
         if (keyword != null && !keyword.isEmpty()) {
             String lower = keyword.toLowerCase();
             listProducts = listProducts.stream()
-                    .filter(product -> product.getProductName().toLowerCase().contains(lower))
+                    .filter(product -> removeDiacritics(product.getProductName()).toLowerCase().contains(lower))
                     .collect(Collectors.toList());
         }
 
