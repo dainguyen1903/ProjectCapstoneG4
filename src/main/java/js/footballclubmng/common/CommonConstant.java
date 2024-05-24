@@ -58,6 +58,7 @@ public class CommonConstant {
         public static String NOT_MATCH_PASSWORD = "Mật khẩu không khớp";
         public static String REGISTER_SUCCESS = "Đăng ký thành công.";
         public static String REGISTER_FAIL = "Đăng ký thất bại!";
+        public static final String LOCKED_USER = "Tài khoản đã bị khóa. Không thể đăng ký bằng email này.";
 
 
         //Message Verify OTP

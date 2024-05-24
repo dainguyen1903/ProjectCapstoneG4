@@ -243,7 +243,7 @@ public class UserServiceImpl implements UserService {
             if (user.getOtp().equals(otp)) {
                 LocalDateTime now = LocalDateTime.now();
                 LocalDateTime u = user.getOtpGenerateTime();
-                if (Duration.between(u, now).getSeconds() < 60) {
+                if (Duration.between(u, now).getSeconds() < 120) {
                     user.setIsActive(true);
                     user.setDeleteFlg("0");
                     userRepository.save(user);
@@ -321,9 +321,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findUserByEmailForRegister(String email) {
+    public User findUserLocked(String email){
         try {
             User user = userRepository.findByEmail(email);
+            if (user.getIsActive() && user.getDeleteFlg().equals("1")){
+                return user;
+            }
+        } catch (Exception e) {
+            return null;
+        }
+        return null;
+    }
+
+    @Override
+    public User findUserByEmailForRegister(String email) {
+        try {
+            User user = userRepository.checkEmailExist(email);
             if (user.getIsActive() && user.getDeleteFlg().equals("0")) {
                 return user;
             }

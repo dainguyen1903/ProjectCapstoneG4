@@ -24,5 +24,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> getByName(@Param("name") String name);
 
     boolean existsByEmail(String email);
+
+    @Query(value = "select * from users u where u.is_active = 1 and u.delete_flg = '0' and u.email = :email", nativeQuery = true)
+    User checkEmailExist(String email);
 }
 

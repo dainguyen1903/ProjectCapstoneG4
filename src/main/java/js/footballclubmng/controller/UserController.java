@@ -57,7 +57,6 @@ public class UserController extends BaseController{
         } else {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_VALID, CommonConstant.COMMON_MESSAGE.INVALID_PARAMETER);
         }
-
     }
 
     @GetMapping(value = CommonConstant.USER_API.GET_LIST_USER)
@@ -112,6 +111,10 @@ public class UserController extends BaseController{
 
     @PostMapping(CommonConstant.USER_API.REGISTER)
     public ResponseAPI<Object> register(@RequestBody @Valid UserRegisterRequest userRegisterRequest) {
+        User userLocked = userService.findUserLocked(userRegisterRequest.getEmail());
+        if (userLocked != null) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.EXIST_EMAIL);
+        }
         User user = userService.findUserByEmailForRegister(userRegisterRequest.getEmail());
         if (user != null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.EXIST_EMAIL);

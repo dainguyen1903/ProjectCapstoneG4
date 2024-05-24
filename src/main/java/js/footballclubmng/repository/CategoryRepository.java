@@ -15,7 +15,10 @@ public interface CategoryRepository extends JpaRepository<Category,Long> {
             "(lower(c.category_name) like lower(concat('%', :name, '%')))", nativeQuery = true)
     List<Category> searchCategory(String name);
 
-    Category findByName(String name);
+    @Query(value = "select * from category c where " +
+            "(c.status = 1) and" +
+            "(lower(trim(both from c.category_name))) = (lower(trim(both from :name)))", nativeQuery = true)
+    Category checkNameCategoryExist(String name);
 
     @Query(value = "select * from category c where c.status = 1", nativeQuery = true)
     List<Category> viewAllCategory();
