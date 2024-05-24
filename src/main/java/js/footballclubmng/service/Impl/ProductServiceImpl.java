@@ -92,7 +92,7 @@ public class ProductServiceImpl implements ProductService {
 
         //Search
         if (keyword != null && !keyword.isEmpty()) {
-            String lower = keyword.toLowerCase();
+            String lower =  removeDiacritics(keyword).toLowerCase();
             listProducts = listProducts.stream()
                     .filter(product -> removeDiacritics(product.getProductName()).toLowerCase().contains(lower))
                     .collect(Collectors.toList());
