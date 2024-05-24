@@ -68,11 +68,12 @@ const AddProduct = () => {
     price: "",
     discount: "",
     description: "",
+    size: "",
+    image: "",
   });
-
   // format price
-  const priceFormat = formatPrice(data.price || 0)
-  console.log(priceFormat)
+  const priceFormat = formatPrice(data.price || 0);
+  console.log(priceFormat);
   const handleSetErr = (field, value) => {
     setErr((prevData) => ({
       ...prevData,
@@ -136,14 +137,57 @@ const AddProduct = () => {
     }
     if (!data.description) {
       isFlagErr = true;
-      newErr = { ...newErr, description: "Mô tả sản phẩm  không được dể trống" };
+      newErr = {
+        ...newErr,
+        description: "Mô tả sản phẩm  không được dể trống",
+      };
     } else {
       newErr = { ...newErr, description: "" };
+    }
+    // validate size
+    const sizeArr = listSize.map((i) => i.size + "");
+    const trimSize = sizeArr.map((i) => i?.trim());
+    const sameSize = Array.from(new Set(trimSize))?.length !== trimSize?.length;
+    const quantityArr = listSize.map((i) => i.quantity + "");
+    console.log(listSize);
+    if (listSize.length === 0) {
+      isFlagErr = true;
+      newErr = { ...newErr, size: "Vui lòng thêm size và số lượng tương ứng" };
+    } else if (sizeArr.some((i) => !i?.trim())) {
+      isFlagErr = true;
+      newErr = { ...newErr, size: "Vui lòng không để trống thông tin size" };
+    } else if (quantityArr.some((i) => !i?.trim())) {
+      isFlagErr = true;
+      newErr = { ...newErr, size: "Vui lòng không để trống số lượng" };
+    } else if (quantityArr.some((i) => isNaN(i) || Number(i) < 0)) {
+      isFlagErr = true;
+
+      newErr = { ...newErr, size: "Số lượng phải là 1 số không âm" };
+    } else if (sameSize) {
+      isFlagErr = true;
+
+      newErr = { ...newErr, size: "Không nhập trùng size" };
+    } else {
+      newErr = { ...newErr, size: "" };
+    }
+    console.log((dataImage.some((i) => !i?.path)))
+    console.log(dataImage)
+    /// Image
+    if (dataImage.length === 0) {
+      isFlagErr = true;
+      newErr = { ...newErr, image: "Vui lòng chọn ảnh" };
+     
+    } else if (dataImage.some((i) => !i?.image)) {
+      isFlagErr = true;
+      newErr = { ...newErr, image: "Ảnh không được để trống" };
+    } else {
+      newErr = { ...newErr, image: "" };
     }
     setErr(newErr);
     return !isFlagErr;
   };
-  const isErr = Object.values(err).filter((i) => i)?.length > 0;
+  const { size, image, ...restErr } = err;
+  const isErr = Object.values(restErr).filter((i) => i)?.length > 0;
 
   // Confirm save
   const confirmSave = (value) => {
@@ -216,6 +260,7 @@ const AddProduct = () => {
           const newDataImage = [...dataImage];
           newDataImage[index].image = base64;
           setDataImage(newDataImage);
+          setErr({...err,image:""})
         }
       };
 
@@ -247,15 +292,14 @@ const AddProduct = () => {
       // des
       const categoryId = data.category?.id;
       data.categoryId = categoryId;
-      const {category,imagesProductDtoList,productSizeDtoList,...rest} = data;
+      const { category, imagesProductDtoList, productSizeDtoList, ...rest } =
+        data;
       setData({
-    ...rest,
-    
+        ...rest,
       });
+
       setLoading(false);
     } catch (error) {
-      console.log(error);
-
       setLoading(false);
     }
   };
@@ -419,7 +463,6 @@ const AddProduct = () => {
             <Form.Item name="price">
               <Input
                 value={data.price}
-                
                 onChange={(e) =>
                   handleChange(
                     "price",
@@ -435,24 +478,25 @@ const AddProduct = () => {
             </Form.Item>
             <div className="inputLabel">Khuyến mãi</div>
 
-            <Form.Item
-              name="discount"
-              
-            >
-              <Input value={data.discount}
-              onChange={(e) =>
-                handleChange(
-                  "discount",
-                  e.target.value,
-                  [
-                    ERROR_KEY.BLANK,
-                    ERROR_KEY.NUMER,
-                    ERROR_KEY.NUMBER_UNSIGN,
-                    ERROR_KEY.NUMBER_DISCOUNT,
-                  ],
-                  "Khuyến mãi"
-                )
-              } placeholder="Khuyến mãi" className="Input" />
+            <Form.Item name="discount">
+              <Input
+                value={data.discount}
+                onChange={(e) =>
+                  handleChange(
+                    "discount",
+                    e.target.value,
+                    [
+                      ERROR_KEY.BLANK,
+                      ERROR_KEY.NUMER,
+                      ERROR_KEY.NUMBER_UNSIGN,
+                      ERROR_KEY.NUMBER_DISCOUNT,
+                    ],
+                    "Khuyến mãi"
+                  )
+                }
+                placeholder="Khuyến mãi"
+                className="Input"
+              />
               <div className="txt-err">{err?.discount}</div>
             </Form.Item>
             <div className="inputLabel">Mô tả</div>
@@ -470,7 +514,7 @@ const AddProduct = () => {
                 placeholder="Mô tả sản phẩm"
                 className="Input"
               />
-               <div className="txt-err">{err?.description}</div>
+              <div className="txt-err">{err?.description}</div>
             </Form.Item>
 
             <div style={{ marginBottom: 15, marginTop: 0 }}>
@@ -542,6 +586,8 @@ const AddProduct = () => {
                 );
               })}
             </div>
+            <div className="txt-err">{err?.size}</div>
+
             <Form.Item>
               <button
                 style={{
@@ -562,6 +608,7 @@ const AddProduct = () => {
             columns={columnImage}
             dataSource={dataImage}
           />
+          <div style={{textAlign:'center'}}  className="txt-err">{err?.image}</div>
         </Col>
       </Row>
 
