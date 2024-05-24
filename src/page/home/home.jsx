@@ -31,7 +31,7 @@ var currentMonth = currentDate.getMonth() + 1; // Phải cộng thêm 1 vì thá
      }
      else{
       setproduct([]);
-      showMessErr(res.data)
+      // showMessErr(res.data)
      }
     };
     useEffect(() => {
@@ -85,7 +85,7 @@ var currentMonth = currentDate.getMonth() + 1; // Phải cộng thêm 1 vì thá
           // showMessErr400(res)
         }
       } catch (error) {
-        handleError(error)
+        // handleError(error)
       }
     }
     useEffect(() => {
@@ -105,7 +105,7 @@ var currentMonth = currentDate.getMonth() + 1; // Phải cộng thêm 1 vì thá
           // showMessErr400(res)
         }
       } catch (error) {
-        handleError(error)
+        // handleError(error)
       }
     }
     useEffect(() => {
@@ -124,7 +124,7 @@ var currentMonth = currentDate.getMonth() + 1; // Phải cộng thêm 1 vì thá
           // showMessErr400(res)
         }
       } catch (error) {
-        handleError(error)
+        // handleError(error)
       }
     }
     useEffect(() => {

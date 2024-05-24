@@ -21,6 +21,7 @@ import { productApi } from "../../api/product.api";
 import LoadingFull from "../../component/loading/loadingFull";
 import {
   ERROR_KEY,
+  formatPrice,
   handleError,
   objectCheckErrorInput,
   showMessErr,
@@ -69,6 +70,9 @@ const AddProduct = () => {
     description: "",
   });
 
+  // format price
+  const priceFormat = formatPrice(data.price || 0)
+  console.log(priceFormat)
   const handleSetErr = (field, value) => {
     setErr((prevData) => ({
       ...prevData,
@@ -411,7 +415,8 @@ const AddProduct = () => {
             <div className="inputLabel">Giá</div>
             <Form.Item name="price">
               <Input
-                value={data.price}
+                // value={data.price}
+                dè={priceFormat}
                 onChange={(e) =>
                   handleChange(
                     "price",

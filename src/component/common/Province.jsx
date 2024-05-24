@@ -67,6 +67,7 @@ console.log(state)
         width:"100%"
       }}
     >
+       <div style={{fontWeight:"bold",display:"inline-block",marginBottom:5}}>Địa chỉ thường trú</div>
       <div style={{marginTop:10,width:"100%"}}>
         <span style={{fontWeight:bold ? "bold" :"",display:"inline-block",marginBottom:5}}>Tỉnh/Thành phố</span>
         <Select

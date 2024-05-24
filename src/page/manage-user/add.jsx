@@ -354,11 +354,11 @@ const AddUserForm = () => {
               <Province
                 state={dataProvince}
                 setStateData={setDataProvince}
-                bold
+                
                 width={"100%"}
                 disabledProvince={data.role === "Shipper"}
               />
-              <div className="inputLabel">Địa chỉ thường trú</div>
+              <div className="inputLabel">Địa chỉ chi tiết</div>
               <Form.Item>
                 <Input
                   placeholder="Địa chỉ"
