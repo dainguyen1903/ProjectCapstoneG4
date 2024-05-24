@@ -12,6 +12,10 @@ export default function AddRoomModal() {
   const [form] = Form.useForm();
 
   const handleOk = () => {
+    const data = form.getFieldsValue();
+    if(!data?.name?.trim() || !data?.description?.trim()){
+      return;
+    }
     // handle logic
     // add new room to firestore
     addDocument('rooms', { ...form.getFieldsValue(), members: [uid] });

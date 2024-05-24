@@ -13,7 +13,7 @@ const Blog = () => {
    try {
     const res = await newsApi.searchNews({search:search||""});
     if (res.data.status === 200 || res.data.status === 204) {
-      setListBlog(res?.data?.data?.reverse() || []);
+      setListBlog(res?.data?.data?.reverse()?.filter(i => i.status) || []);
     }
    } catch (error) {
     console.log(error)

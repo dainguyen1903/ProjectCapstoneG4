@@ -204,7 +204,7 @@ const ProductSinglePage = () => {
               <div className="product-img">
                 <div className="product-img-zoom">
                   <img
-                    style={{ objectFit: "contain" }}
+                    style={{ objectFit: "contain",height:"100%" }}
                     src={currentImg}
                     alt=""
                     // className="img-cover"

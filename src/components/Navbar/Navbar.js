@@ -35,9 +35,15 @@ const Navbar = () => {
   }, [carts]);
 
   const handleSearch = () => {
-    console.log(location);
+    const isRedirectShop = location.pathname !== "/shop" && location.pathname!=="/blog"
     const obj = queryParamsToObject(location.search)
     const queryString = objectToQueryParams({...obj,search:searchTerm})
+   if(isRedirectShop){
+    navigate("/shop" +"?"  +  queryString,{
+      replace:true
+    })
+    return;
+   }
     navigate(location.pathname +"?"  +  queryString,{
       replace:true
     })
