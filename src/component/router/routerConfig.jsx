@@ -29,7 +29,7 @@ const RouterConfig = () => {
   const [routesWithLayout,setrousWithLayout] = useState([]);
   const [normalLayout,setnormalLayout] = useState([]);
   let path = "/home"
-  if(user?.authority === "Sale"){
+  if(user?.authority === "Sale" ||user?.authority === ROLE.ADMIN ){
     path="/home"
   }
   if(user?.authority === ROLE.OPERATOR){
@@ -38,9 +38,7 @@ const RouterConfig = () => {
   if(user?.authority === ROLE.SHIPPER){
     path="/order"
   }
-  if(user?.authority === ROLE.ADMIN){
-    path="/user/list"
-  }
+  
   useEffect(() => {
  if(user){
   const listRouteLayout = router.filter(i => ((!i.role ||  i.role.includes(user.authority)) && i.isProtected!==false ));

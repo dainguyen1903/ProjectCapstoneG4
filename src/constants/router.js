@@ -43,7 +43,7 @@ export const router = [
     path: "/home",
     menuName: "Trang chủ",
     key: "/home",
-    role: [ ROLE.SALE],
+    role: [ ROLE.SALE,ROLE.ADMIN],
   },
   {
     show: true,
