@@ -1,0 +1,41 @@
+.card-player{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    cursor: pointer;
+    &:hover{
+     .image-player{
+        transform: scale(1.2);
+        transition: all ease-in-out 5000;
+     }
+    }
+}
+.wrap-image-player{
+    width: 100%;
+    height: 170px;
+    .image-player{
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+}
+.player-name{
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+.wrap-info{
+    border-bottom: 1px solid rgb(232, 226, 226);
+    padding: 10px;
+    .info-title{
+    color: #69738c;
+    font-size: 13px;
+    }
+   
+}
+.info-value{
+    color: #001838;
+    font-weight: 700;
+    font-size: 25px;
+    }

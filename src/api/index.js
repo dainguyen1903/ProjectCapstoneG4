@@ -4,8 +4,8 @@ import { handleLoggout, isTokenExpired } from '../utils/helpers';
 let reTry = false;
 
 const api = axios.create({
-  // baseURL: 'http://localhost:8080/',
-  baseURL: 'https://honglinhhatinhfc.monoinfinity.net/',
+  baseURL: 'http://localhost:8080/',
+  // baseURL: 'https://honglinhhatinhfc.monoinfinity.net/',
   headers: {
     'Content-Type': 'application/json',
   },

@@ -52,6 +52,8 @@ import Listmatch from "./pages/match/Match";
 import { getListCartTicketAction } from "./store/cartTicketSlice";
 import CartTicketPage from "./pages/CartPage/CartTicketPage";
 import OrderDetail from "./pages/order/OrderDetail";
+import PlayerListList from "./pages/player/list";
+import PlayerDetail from "./pages/player/detail";
 function App() {
   const dispatch = useDispatch();
   const user = useSelector(getCurrentUser);
@@ -95,6 +97,22 @@ function App() {
               element={
                 <>
                   <HomePage />
+                </>
+              }
+            />
+              <Route
+              path="/player/list"
+              element={
+                <>
+                  <PlayerListList />
+                </>
+              }
+            />
+             <Route
+              path="/player/detail/:id"
+              element={
+                <>
+                  <PlayerDetail />
                 </>
               }
             />

@@ -82,6 +82,13 @@ const Header = () => {
                     </span>
                     <span className="top-link-itm-txt"> Lịch thi đấu</span>
                   </Link>
+                  <Link to="/player/list" className="top-link-itm">
+                    <span className="top-link-itm-ico mx-2">
+                      <i className="fa-solid fa-blog"></i>
+                    </span>
+                    <span className="top-link-itm-txt"> Cầu thủ</span>
+                  </Link>
+                  
                 </li>
                 <li className="vert-line"></li>
                 {login && (
