@@ -59,6 +59,7 @@ public class UserController extends BaseController {
             result.setStatus(CommonConstant.COMMON_RESPONSE.EXCEPTION);
             result.setMessage(ex.getMessage());
         }
+
         return result;
     }
 
@@ -71,6 +72,7 @@ public class UserController extends BaseController {
         }
         // Chuyển hướng về trang đăng nhập
         return "http://localhost:3000/login";
+
     }
 
 
@@ -130,6 +132,10 @@ public class UserController extends BaseController {
 
     @PostMapping(CommonConstant.USER_API.REGISTER)
     public ResponseAPI<Object> register(@RequestBody @Valid UserRegisterRequest userRegisterRequest) {
+        User userLocked = userService.findUserLocked(userRegisterRequest.getEmail());
+        if (userLocked != null) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.EXIST_EMAIL);
+        }
         User user = userService.findUserByEmailForRegister(userRegisterRequest.getEmail());
         if (user != null) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, CommonConstant.COMMON_MESSAGE.EXIST_EMAIL);

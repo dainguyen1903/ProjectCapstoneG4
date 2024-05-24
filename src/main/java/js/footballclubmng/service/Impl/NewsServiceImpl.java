@@ -180,7 +180,7 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public NewsType getNewsTypeByName(String name) {
         try {
-            NewsType newsType = newsTypeRepository.findByName(name);
+            NewsType newsType = newsTypeRepository.checkNewsTypeExist(name);
             return newsType;
         } catch (Exception e) {
             return null;

@@ -19,4 +19,7 @@ public interface NewsTypeRepository extends JpaRepository<NewsType,Long> {
 
     @Query(value = "select * from news_type nt where nt.status = 1", nativeQuery = true)
     List<NewsType> findAllNewsType();
+
+    @Query(value = "select * from news_type nt where nt.status = 1 and (lower(trim(both from nt.name))) = (lower(trim(both from :name)))", nativeQuery = true)
+    NewsType checkNewsTypeExist(String name);
 }

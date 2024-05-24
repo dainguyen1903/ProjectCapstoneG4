@@ -112,7 +112,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public boolean checkPlayerNumberExist(Long number) {
-        Player player = playerRepository.findByPlayerNumber(number);
+        Player player = playerRepository.checkNumberPlayer(number);
         if (player == null) {
             return true;
         }

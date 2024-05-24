@@ -35,4 +35,5 @@ public interface UserService {
     public ResponseAPI<UserDetailResponse> detailUser(Long id);
     public boolean isDateInThePast(String date);
     public boolean isUserExist(String email);
+    public User findUserLocked(String email);
 }

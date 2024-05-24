@@ -70,7 +70,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category getCategoryByName(String name) {
         try {
-            Category category = categoryRepository.findCategoryByName(name);
+            Category category = categoryRepository.checkNameCategoryExist(name);
             return category;
         } catch (Exception e) {
             return null;
