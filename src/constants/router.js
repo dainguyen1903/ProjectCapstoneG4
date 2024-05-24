@@ -34,6 +34,7 @@ import NewsCategoryList from "../page/news-category/list";
 import NewsCategoryAdd from "../page/news-category/add";
 import OrderList from "../page/order/list";
 import OrderDetail from "../page/order/detail";
+import DetailProduct from "../page/products/detail";
 export const router = [
   {
     show: true,
@@ -127,6 +128,13 @@ export const router = [
         show: false,
         component: AddProduct,
         path: "/products/edit/:id",
+        key: "/product",
+        role: [ROLE.SALE],
+      },
+      {
+        show: false,
+        component: DetailProduct,
+        path: "/product/detail/:id",
         key: "/product",
         role: [ROLE.SALE],
       },

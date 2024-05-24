@@ -71,6 +71,13 @@ useEffect(() => {
       title: "Tên sản phẩm",
       dataIndex: "productName",
       key: "title",
+      render:(_,row)=>{
+        return <span onClick={() => {
+          navigate("/product/detail/" + row.id)
+        }} style={{
+          cursor:"pointer"
+        }}>{row?.productName}</span>
+      }
       
     },
     {

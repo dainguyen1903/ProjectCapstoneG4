@@ -15,9 +15,15 @@ const ProductCategoryList = () => {
 
   // Function to handle search
   const handleSearch = async (value) => {
-    const name = form.getFieldValue("name") ?form.getFieldValue("name").trim(): "";
-    const res = await categoryApi.searchCategory({search:name});
-    if (res.data.status === 200 || res.data.status === 204 ||res.data.status === 204 ) {
+    const name = form.getFieldValue("name")
+      ? form.getFieldValue("name").trim()
+      : "";
+    const res = await categoryApi.searchCategory({ search: name });
+    if (
+      res.data.status === 200 ||
+      res.data.status === 204 ||
+      res.data.status === 204
+    ) {
       setCategoryList(res.data.data || []);
     }
   };
@@ -60,79 +66,81 @@ const ProductCategoryList = () => {
       title: "Hành động",
       align: "center",
       key: "action",
-      render: (text, record) => (
-        <Space size="middle">
+      render: (text, record) => {
+        const isNotEdit =
+          record?.name?.toUpperCase() === "Áo sân nhà"?.toUpperCase() ||
+          record?.name?.toUpperCase() === "Áo sân khách"?.toUpperCase();
+        return (
           <Space size="middle">
-            <Button
-              onClick={() => navigate("/category-product/edit/" + record.id)}
-            >
-              <EditOutlined style={{ fontSize: "16px" }} />
-            </Button>
-            <Button onClick={() => handleDelete(record.id)}>
-              <DeleteOutlined style={{ fontSize: "16px" }} />
-            </Button>
+            <Space size="middle">
+             {!isNotEdit &&  <Button
+                onClick={() => navigate("/category-product/edit/" + record.id)}
+              >
+                <EditOutlined style={{ fontSize: "16px" }} />
+              </Button>}
+            </Space>
           </Space>
-        </Space>
-      ),
+        );
+      },
     },
   ];
 
   return (
     <div>
-      <Card style={{marginBottom:20}}>
-      <Form form={form} onFinish={handleSearch} layout="vertical">
-        <Form.Item
-          name={"name"}
-          label={
-            <span
-              style={{
-                fontWeight: "bold",
-              }}
-            >
-              Tên danh mục sản phẩm
-            </span>
-          }
-        >
-          <Row gutter={[8, 8]}>
-            <Col span={8}>
-              <Input />
-            </Col>
-            <Col
-              style={{
-                marginLeft: 20,
-              }}
-            >
-              <Button
-                className="Button-no-paading"
-                htmlType="submit"
-                shape="round"
+      <Card style={{ marginBottom: 20 }}>
+        <Form form={form} onFinish={handleSearch} layout="vertical">
+          <Form.Item
+            name={"name"}
+            label={
+              <span
+                style={{
+                  fontWeight: "bold",
+                }}
               >
-                Tìm kiếm
-              </Button>
-            </Col>
-            <Col>
-              <Button
-                shape="round"
-                onClick={() => navigate("/category-product/add")}
+                Tên danh mục sản phẩm
+              </span>
+            }
+          >
+            <Row gutter={[8, 8]}>
+              <Col span={8}>
+                <Input />
+              </Col>
+              <Col
+                style={{
+                  marginLeft: 20,
+                }}
               >
-                Thêm danh mục sản phẩm
-              </Button>
-            </Col>
-          </Row>
-        </Form.Item>
-      </Form>
+                <Button
+                  className="Button-no-paading"
+                  htmlType="submit"
+                  shape="round"
+                >
+                  Tìm kiếm
+                </Button>
+              </Col>
+              <Col>
+                <Button
+                  shape="round"
+                  onClick={() => navigate("/category-product/add")}
+                >
+                  Thêm danh mục sản phẩm
+                </Button>
+              </Col>
+            </Row>
+          </Form.Item>
+        </Form>
       </Card>
-     <Card>
-     <Table
-        pagination={{
-          pageSize: 10,
-          total: categories.length,
-          position: ["bottomCenter"],
-        }}
-        columns={columns}
-        dataSource={categories}
-      />
-     </Card>
+      <Card>
+        <Table
+          pagination={{
+            pageSize: 10,
+            total: categories.length,
+            position: ["bottomCenter"],
+          }}
+          columns={columns}
+          dataSource={categories}
+        />
+      </Card>
       <Modal
         title="Edit Post"
         visible={isModalVisible}
