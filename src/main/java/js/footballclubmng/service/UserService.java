@@ -6,18 +6,20 @@ import js.footballclubmng.model.request.UpdatePasswordRequest;
 import js.footballclubmng.model.request.UserRegisterRequest;
 import js.footballclubmng.model.request.user.CreateUserRequest;
 import js.footballclubmng.model.request.user.DeleteUserRequest;
+import js.footballclubmng.model.request.user.UpdateUserRequest;
 import js.footballclubmng.model.response.LoginResponse;
 import js.footballclubmng.model.response.ResponseAPI;
+import js.footballclubmng.model.response.UserDetailResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 
 public interface UserService {
     public User getUserByEmail(String email);
     public LoginResponse handleLogin(String username, String password);
-    public ResponseAPI<Object> createUser(CreateUserRequest request, String getSiteUrl);
-    public ResponseAPI<Object> updateUser(CreateUserRequest request, MultipartFile file);
-    public ResponseAPI<Object> activeThroughEmail(String verificationCode, String email);
+    public ResponseAPI<Object> createUser(CreateUserRequest request);
+    public ResponseAPI<Object> updateUser(UpdateUserRequest request, Long id);
     public ResponseAPI<Object> getListSearch(String name);
+    public ResponseAPI<Object> updateDeleteUser(DeleteUserRequest request);
     public ResponseAPI<Object> deleteUser(DeleteUserRequest request);
 //    public ResponseAPI<Object> changePassword(ChangePasswordRequest request, UserBean bean);
     public boolean addUser(UserRegisterRequest userRegisterRequest);
@@ -30,7 +32,8 @@ public interface UserService {
     public UserProfileDto userProfile(String token);
     public boolean updateProfile(UserProfileDto userProfileDto, String token);
     public boolean changePassword(String token, UpdatePasswordRequest updatePasswordRequest);
-    public ResponseAPI<Object> detailUser(long id);
+    public ResponseAPI<UserDetailResponse> detailUser(Long id);
     public boolean isDateInThePast(String date);
+    public boolean isUserExist(String email);
     public User findUserLocked(String email);
 }

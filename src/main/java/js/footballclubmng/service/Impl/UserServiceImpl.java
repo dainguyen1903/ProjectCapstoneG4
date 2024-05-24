@@ -12,35 +12,38 @@ import js.footballclubmng.model.request.UserRegisterRequest;
 import js.footballclubmng.model.bean.UserBean;
 import js.footballclubmng.model.request.user.CreateUserRequest;
 import js.footballclubmng.model.request.user.DeleteUserRequest;
+import js.footballclubmng.model.request.user.UpdateUserRequest;
 import js.footballclubmng.model.response.LoginResponse;
 import js.footballclubmng.model.response.ResponseAPI;
+import js.footballclubmng.model.response.UserDetailResponse;
 import js.footballclubmng.repository.UserRepository;
 import js.footballclubmng.service.UserService;
 import js.footballclubmng.util.EmailUtil;
+import js.footballclubmng.util.MapperUtil;
 import js.footballclubmng.util.OtpUtil;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.apache.commons.lang3.RandomStringUtils;
+
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
+
+
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+
+import java.util.*;
 
 @Service
 @Transactional
@@ -79,7 +82,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByEmail(String email) {
         try {
-            User result = userRepository.findByEmailAndIsActiveAndDeleteFlg(email, true, "0");
+            User result = userRepository.findByEmail(email);
             if (result == null || null == result.getEmail()) {
                 return null;
             } else {
@@ -93,16 +96,26 @@ public class UserServiceImpl implements UserService {
     @Override
     public LoginResponse handleLogin(String email, String password) {
         try {
+            // Kiểm tra tính hợp lệ của tài khoản trước khi xác thực
+            User user = this.getUserByEmail(email);
+            if (!user.getIsActive()) {
+                throw new DisabledException("Tài khoản chưa được xác minh! Hãy xác minh tài khoản");
+            }
+            if (!user.getDeleteFlg().equals("0")) {
+                throw new DisabledException("Tài khoản đã bị xóa");
+            }
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
             // Nếu không xảy ra exception tức là thông tin hợp lệ
             // Set thông tin authentication vào Security Context
             SecurityContextHolder.getContext().setAuthentication(authentication);
             CustomerUserDetails authenUser = (CustomerUserDetails) authentication.getPrincipal();
-            User user = this.getUserByEmail(authenUser.getUsername());
+
             // Trả về jwt cho người dùng.
             String jwt = tokenProvider.generateJwtToken(user.getEmail());
             String role = user.getAuthority();
             return new LoginResponse(email, user.getId(), jwt, role);
+        } catch (DisabledException e) {
+            throw  new DisabledException(e.getMessage(), e);
         } catch (BadCredentialsException e) {
             throw new BadCredentialsException(e.getMessage(), e);
         } catch (Exception ex) {
@@ -110,58 +123,106 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    public boolean isUserExist(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    private String generatePassword() {
+        String UPPERCASE_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String LOWERCASE_LETTERS = "abcdefghijklmnopqrstuvwxyz";
+        String NUMBERS = "0123456789";
+
+        StringBuilder randomPassword = new StringBuilder();
+        // Chọn một chữ cái viết hoa ngẫu nhiên
+        Random random = new Random();
+        char uppercaseLetter = UPPERCASE_LETTERS.charAt(random.nextInt(UPPERCASE_LETTERS.length()));
+        randomPassword.append(uppercaseLetter);
+
+        // Chọn một số ngẫu nhiên
+        char number = NUMBERS.charAt(random.nextInt(NUMBERS.length()));
+        randomPassword.append(number);
+
+        // Chọn các ký tự còn lại ngẫu nhiên
+        String availableChars = LOWERCASE_LETTERS + NUMBERS;
+        for (int i = 0; i < 6; i++) {
+            char randomChar = availableChars.charAt(random.nextInt(availableChars.length()));
+            randomPassword.append(randomChar);
+        }
+
+        return randomPassword.toString();
+    }
+
     @Override
-    public ResponseAPI<Object> createUser(CreateUserRequest request, String getSiteUrl) {
+    public ResponseAPI<Object> createUser(CreateUserRequest request) {
         try {
+            String randomPass = generatePassword();
+
             if (userRepository.existsByEmail(request.getEmail())) {
-                return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_VALID, "EMAIL EXISTED");
+                return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_VALID, "Email đã tồn tại trong hệ thống");
             } else {
+                try {
+                    emailUtil.sendPassWordUser(request.getEmail(), randomPass);
+                } catch (Exception e) {
+                    throw new RuntimeException("Không thể gửi Email vui lòng thử lại!");
+                }
+
                 User userEntity = new User();
 
                 userEntity.setEmail(request.getEmail());
                 userEntity.setFirstName(request.getFirstName());
                 userEntity.setLastName(request.getLastName());
                 userEntity.setAuthority(request.getAuthority());
-                userEntity.setDateOfBirth(new SimpleDateFormat("yyyy-MM-dd").parse(request.getDateOfBirth()));
-                userEntity.setPassword(passwordEncoder.encode(request.getPassword()));
+                if (request.getDateOfBirth() != null && !request.getDateOfBirth().isEmpty()){
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    Date date = sdf.parse(request.getDateOfBirth());
+                    userEntity.setDateOfBirth(date);
+                }
+                userEntity.setPassword(passwordEncoder.encode(randomPass));
                 userEntity.setIsActive(false);
                 userEntity.setDeleteFlg("0");
                 userEntity.setCreateTime(LocalDateTime.now());
                 userEntity.setGender(request.getGender());
                 userEntity.setAddress(request.getAddress());
+                userEntity.setWard(request.getWard());
+                userEntity.setDistrict(request.getDistrict());
+                userEntity.setProvince(request.getProvince());
+                userEntity.setImageUrl(request.getImageUrl());
+                userEntity.setIsActive(true);
                 String resetCode = RandomString.make(64);
                 userEntity.setVerificationCode(resetCode);
-
-                //sendMail
-//                activeCreateUser(request, resetCode, getSiteUrl);
-
                 userRepository.saveAndFlush(userEntity);
-                return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, "OK");
+                return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, "Tạo tài khoản người dùng thành công");
             }
         } catch (Exception e) {
-            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EXCEPTION, CommonConstant.COMMON_MESSAGE.EXCEPTION);
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EXCEPTION, e.getMessage());
         }
     }
 
     @Override
-    public ResponseAPI<Object> updateUser(CreateUserRequest request, MultipartFile file) {
+    public ResponseAPI<Object> updateUser(UpdateUserRequest request, Long id) {
         try {
 
-            User userUpdate = userRepository.findByIdAndDeleteFlg(request.getId(),  "0");
+            User userUpdate = userRepository.findByIdAndIsActive(id, true);
             if (null != userUpdate) {
-                if (file.getSize() > 0) {
-                    userUpdate.setImageUrl(FootballclubmngUtils.handleAvatar(file));
-                }
+
                 userUpdate.setFirstName(request.getFirstName());
                 userUpdate.setLastName(request.getLastName());
                 userUpdate.setAuthority(request.getAuthority());
-                userUpdate.setDateOfBirth(new SimpleDateFormat("yyyy-MM-dd").parse(request.getDateOfBirth()));
+                if (request.getDateOfBirth() != null && !request.getDateOfBirth().isEmpty()){
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    Date date = sdf.parse(request.getDateOfBirth());
+                    userUpdate.setDateOfBirth(date);
+                }
                 userUpdate.setGender(request.getGender());
                 userUpdate.setAddress(request.getAddress());
+                userUpdate.setWard(request.getWard());
+                userUpdate.setDistrict(request.getDistrict());
+                userUpdate.setProvince(request.getProvince());
+                userUpdate.setImageUrl(request.getImageUrl());
                 userRepository.saveAndFlush(userUpdate);
-                return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, "OK");
+                return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, "Update thông tin người dùng thành công");
             } else {
-                return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_VALID, "ERROR_UPDATE");
+                return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_VALID, "Update thông tin người dùng không thành công vì tài khoản chưa được active");
             }
         } catch (Exception e) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EXCEPTION, CommonConstant.COMMON_MESSAGE.EXCEPTION);
@@ -169,9 +230,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseAPI<Object> activeThroughEmail(String verificationCode, String email) {
-        return null;
+    public ResponseAPI<Object> updateDeleteUser(DeleteUserRequest request) {
+        try {
+            User deleteUser = userRepository.findByIdAndDeleteFlgAndAndIsActive(request.getId(), "1", true);
+            if (null != deleteUser) {
+                deleteUser.setDeleteFlg("0"); //1 là bị xóa mềm, 0 là chưa xóa
+                userRepository.saveAndFlush(deleteUser);
+                return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.OK);
+            }
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_VALID, "ERROR");
+
+        } catch (Exception e) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EXCEPTION, e.getMessage());
+        }
     }
+
 
     @Override
     public ResponseAPI<Object> getListSearch(String name) {
@@ -196,7 +269,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseAPI<Object> deleteUser(DeleteUserRequest request) {
         try {
-            User deleteUser = userRepository.findByIdAndDeleteFlg(request.getId(), "0");
+            User deleteUser = userRepository.findByIdAndDeleteFlgAndAndIsActive(request.getId(), "0", true);
             if (null != deleteUser) {
                 deleteUser.setDeleteFlg("1"); //1 là bị xóa mềm, 0 là chưa xóa
                 userRepository.saveAndFlush(deleteUser);
@@ -308,13 +381,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseAPI<Object> detailUser(long id) {
+    public ResponseAPI<UserDetailResponse> detailUser(Long id) {
         try {
-            User detailUser =  userRepository.findByIdAndDeleteFlg(id, "0");
-            if (null != detailUser ) {
-                return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.OK, FootballclubmngUtils.convertUserToBeans(detailUser));
+            Optional<User> optionalUser = userRepository.findById(id);
+            if (optionalUser.isPresent()) {
+                User detailUser = optionalUser.get();
+                UserDetailResponse userDetailResponse = MapperUtil.mapToUserDetailResponse(detailUser);
+                return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.OK, userDetailResponse);
             }
-            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_VALID, "NOT_FIND_USER");
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.NOT_VALID, "Không tìm thấy user tương ứng với id");
         } catch (Exception e) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.EXCEPTION, CommonConstant.COMMON_MESSAGE.EXCEPTION);
         }

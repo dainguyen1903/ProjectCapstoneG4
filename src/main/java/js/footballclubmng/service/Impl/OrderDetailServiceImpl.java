@@ -25,7 +25,6 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     OrderDetailRepository orderDetailRepository;
 
 
-
     public List<OrderDetailResponse> getOrderDetailsByOrderId(Long orderId) {
         List<OrderDetail> orderDetailList = orderDetailRepository.findByOrderId(orderId);
         return null;

@@ -3,6 +3,7 @@ package js.footballclubmng.controller;
 import js.footballclubmng.common.CommonConstant;
 import js.footballclubmng.entity.User;
 import js.footballclubmng.model.dto.OrderDto;
+import js.footballclubmng.model.dto.ShipperDto;
 import js.footballclubmng.model.dto.UserDto;
 import js.footballclubmng.model.response.ListShippingResponse;
 import js.footballclubmng.model.response.ResponseAPI;
@@ -40,6 +41,17 @@ public class ShippingController {
         } catch (Exception e) {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, e.getMessage());
         }
+    }
+
+    @GetMapping(CommonConstant.SHIPPING_API.LIST_ALL_SHIPPER)
+    public ResponseAPI<List<ShipperDto>> listAllShipper() {
+        try {
+            List<ShipperDto> listShipper = shipService.listAllShipper();
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, "List Shipper: ", listShipper);
+        } catch (Exception e) {
+            return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.BAD_REQUEST, e.getMessage());
+        }
+
 
     }
 

@@ -32,6 +32,14 @@ public class EmailUtil {
 //        javaMailSender.send(simpleMailMessage);
 //    }
 
+    public void sendPassWordUser(String email, String password) {
+        SimpleMailMessage simpleMailMessage =new SimpleMailMessage();
+        simpleMailMessage.setTo(email);
+        simpleMailMessage.setSubject("Xác nhận mật khẩu đăng nhập");
+        simpleMailMessage.setText("Mật khẩu cho tài khoản " + email + " là: " + password);
+        javaMailSender.send(simpleMailMessage);
+    }
+
     public void sendInformationTicket(String email, String qrCode) {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         try {

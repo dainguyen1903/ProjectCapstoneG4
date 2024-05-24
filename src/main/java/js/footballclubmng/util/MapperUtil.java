@@ -41,10 +41,20 @@ public class MapperUtil {
         List<ImagesProduct> imagesProductList = imagesProductRepository.findAllByProductId(product.getId());
         productDto.setImagesProductList(imagesProductList);
         if (product.getCategory() != null) {
-            productDto.setCategory(mapToCategoryDto(product.getCategory()));
+            productDto.setCategory(mapToCategoryDtoWithoutProduct(product.getCategory()));
         }
 
         return productDto;
+    }
+
+    public static CategoryDto mapToCategoryDtoWithoutProduct(Category category) {
+        CategoryDto categoryDto = new CategoryDto();
+
+        categoryDto.setId(category.getId());
+        categoryDto.setName(category.getName());
+        categoryDto.setStatus(category.getStatus());
+
+        return categoryDto;
     }
 
     public static CategoryDto mapToCategoryDto(Category category) {
@@ -111,7 +121,7 @@ public class MapperUtil {
         for (ProductSize productSize : productSizeList) {
             ProductSizeDto productSizeDto = new ProductSizeDto();
             productSizeDto.setSize(productSize.getSize());
-            productSizeDto.setQuantity(productSize.getQuantity());
+            productSizeDto.setQuantity(String.valueOf(productSize.getQuantity()));
             productSizeDtoList.add(productSizeDto);
         }
 
@@ -282,6 +292,47 @@ public class MapperUtil {
             listShippingResponse.setShipperName(mapToUserDto(shipping.getShipper()));
         }
         return listShippingResponse;
+    }
+
+    public static UserDetailResponse mapToUserDetailResponse(User user) {
+        UserDetailResponse userDetailResponse = new UserDetailResponse();
+        userDetailResponse.setId(user.getId());
+        userDetailResponse.setEmail(user.getEmail());
+        userDetailResponse.setFirstName(user.getFirstName());
+        userDetailResponse.setLastName(user.getLastName());
+        userDetailResponse.setAuthority(user.getAuthority());
+        userDetailResponse.setAddress(user.getAddress());
+        userDetailResponse.setWard(user.getWard());
+        userDetailResponse.setDistrict(user.getDistrict());
+        userDetailResponse.setProvince(user.getProvince());
+        userDetailResponse.setDateOfBirth(user.getDateOfBirth());
+        userDetailResponse.setGender(user.getGender());
+        userDetailResponse.setImageUrl(user.getImageUrl());
+        userDetailResponse.setOtpGenerateTime(user.getOtpGenerateTime());
+        userDetailResponse.setCreateTime(user.getCreateTime());
+        userDetailResponse.setOtp(user.getOtp());
+        userDetailResponse.setVerificationCode(user.getVerificationCode());
+        userDetailResponse.setIsActive(user.getIsActive());
+        userDetailResponse.setDeleteFlg(user.getDeleteFlg());
+
+        return userDetailResponse;
+    }
+
+    public static ShipperDto mapToShipperDto(User user) {
+        ShipperDto shipperDto = new ShipperDto();
+        shipperDto.setId(user.getId());
+        shipperDto.setEmail(user.getEmail());
+        shipperDto.setFirstName(user.getFirstName());
+        shipperDto.setLastName(user.getLastName());
+        shipperDto.setAuthority(user.getAuthority());
+        shipperDto.setAddress(user.getAddress());
+        shipperDto.setWard(user.getWard());
+        shipperDto.setDistrict(user.getDistrict());
+        shipperDto.setProvince(user.getProvince());
+        shipperDto.setDateOfBirth(user.getDateOfBirth());
+        shipperDto.setGender(user.getGender());
+        shipperDto.setImageUrl(user.getImageUrl());
+        return shipperDto;
     }
 
 

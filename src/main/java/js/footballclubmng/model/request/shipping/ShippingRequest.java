@@ -28,5 +28,6 @@ public class ShippingRequest {
     private String address;
     @NotNull
     private Boolean desiredDeliveryTime;
+
     private String note;
 }

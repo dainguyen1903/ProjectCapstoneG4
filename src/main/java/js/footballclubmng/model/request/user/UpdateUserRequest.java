@@ -1,20 +1,20 @@
 package js.footballclubmng.model.request.user;
 
-import lombok.Data;
-import org.springframework.util.StringUtils;
 
-import javax.validation.constraints.Email;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-@Data
-public class CreateUserRequest {
-
-    @NotBlank(message = "Email không được để trống.")
-    @Email(message = "Email không hợp lệ.")
-    @Size(max = 50, message = "Tối đa 50 ký tự")
-    private String email;
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class UpdateUserRequest {
 
     @NotBlank(message = "Tên không được để trống.")
     @Size(max = 20, message = "Tối đa 20 ký tự")
@@ -44,26 +44,4 @@ public class CreateUserRequest {
 
     @NotBlank(message = "Vai trò của người dùng không được để trống")
     private String authority;
-
-
-//    public boolean isValid() {
-//        return StringUtils.hasLength(email)
-//                && StringUtils.hasLength(firstName)
-//                && StringUtils.hasLength(lastName)
-//                && null != dateOfBirth
-//                && StringUtils.hasLength(authority)
-//                && StringUtils.hasLength(address)
-//                && StringUtils.hasLength(gender);
-//
-//    }
-
-//    public boolean isValidUpdate() {
-//        return id > 0
-//                && StringUtils.hasLength(firstName)
-//                && StringUtils.hasLength(lastName)
-//                && null != dateOfBirth
-//                && StringUtils.hasLength(authority)
-//                && StringUtils.hasLength(address)
-//                && StringUtils.hasLength(gender);
-//    }
 }

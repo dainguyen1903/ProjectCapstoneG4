@@ -1,6 +1,7 @@
 package js.footballclubmng.service;
 
 import js.footballclubmng.entity.User;
+import js.footballclubmng.model.dto.ShipperDto;
 import js.footballclubmng.model.dto.UserDto;
 import js.footballclubmng.model.response.ListShippingResponse;
 
@@ -16,4 +17,6 @@ public interface ShipService {
     List<UserDto> getShipperByShippingId(Long shippingId);
 
     public int countOrderByShipper(Long shipperId);
+
+    List<ShipperDto> listAllShipper();
 }

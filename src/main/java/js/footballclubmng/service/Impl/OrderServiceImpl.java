@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -172,7 +173,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDetailResponse getOrderDetail(Long orderId) {
         Order order = orderRepository.findById(orderId).orElse(null);
-        if(order != null) {
+        if (order != null) {
             return MapperUtil.mapToOrderDetailResponse(order, order.getOrderDetailList());
         } else {
             throw new RuntimeException("Thông tin order không tồn tại");
@@ -201,7 +202,7 @@ public class OrderServiceImpl implements OrderService {
         if (orderOptional.isPresent()) {
             Order order = orderOptional.get();
             EOrderStatus status = order.getStatus();
-            if (status == EOrderStatus.PENDING_CONFIRMATION) {
+            if (status == EOrderStatus.PENDING_CONFIRMATION || status == EOrderStatus.CONFIRMED) {
                 order.setStatus(EOrderStatus.CANCELLED);
                 updateProductInventory(order.getOrderDetailList(), false);
                 orderRepository.save(order);
@@ -216,23 +217,20 @@ public class OrderServiceImpl implements OrderService {
     public void updateStatusOrderByShipepr(Long orderId, EOrderStatus status) {
         Order order = orderRepository.findById(orderId).orElse(null);
         if ((status == EOrderStatus.IN_PROGRESS
-                || status == EOrderStatus.RETURNED
                 || status == EOrderStatus.DELIVERED) && order != null) {
             if (order.getStatus() == EOrderStatus.DELIVERED) {
                 // Đã giao hàng thành công rồi, không cần phải cập nhật lại
                 throw new RuntimeException("Không thể cập nhật trạng thái vì đơn hàng đã giao thành công!!!");
             }
             orderRepository.updateOrderStatus(orderId, status.name());
-            if (status == EOrderStatus.RETURNED) {
-                updateProductInventory(order.getOrderDetailList(), false);
-            }
         } else {
-            throw new RuntimeException("Shipper chỉ có thể cập nhật trạng thái đơn hàng với 3 trạng thái IN_PROGRESS, RETURNED, DELIVERED");
+            throw new RuntimeException("Shipper chỉ có thể cập nhật trạng thái đơn hàng với 2 trạng thái IN_PROGRESS, DELIVERED");
         }
 
 
     }
 
+    //Kiểm tra và update lại số lượng sản phẩm trong kho nếu người dùng hủy đơn hàng
     private void updateProductInventory(List<OrderDetail> orderDetailList, boolean isDecrement) {
         for (OrderDetail orderDetail : orderDetailList) {
             Long productId = orderDetail.getProductId();
@@ -241,7 +239,7 @@ public class OrderServiceImpl implements OrderService {
 
             if (productId != null && orderQuantity > 0 && size != null && !size.isEmpty()) {
                 ProductSize productSize = productSizeRepository.findProductSizeByProductIdAndSize(productId, size);
-                if (productSize != null ) {
+                if (productSize != null) {
                     int updatedQuantity = isDecrement ? productSize.getQuantity() - orderQuantity : productSize.getQuantity() + orderQuantity;
                     if (updatedQuantity >= 0) {
                         productSize.setQuantity(updatedQuantity);

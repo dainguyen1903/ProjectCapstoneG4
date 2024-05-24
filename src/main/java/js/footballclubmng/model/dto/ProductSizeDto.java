@@ -14,6 +14,6 @@ public class ProductSizeDto {
     @NotBlank(message = "Size không được để trống")
     private String size;
     @NotBlank(message = "Số lượng không được để trống")
-    private int quantity;
+    private String quantity;
 
 }

@@ -32,7 +32,7 @@ public class PaymentController {
     @GetMapping(CommonConstant.PAYMENT_API.TRANSACTION_PAYMENT)
     public RedirectView transaction(@RequestParam(value = "vnp_ResponseCode") String responseCode,
                                     @RequestParam(value = "vnp_TxnRef") String orderIdStr) {
-        String frontendUrl = "https://honglinhhatinhfc.com";
+        String frontendUrl = "https://football-d29c9.web.app/order";
         Long orderId = Long.valueOf(orderIdStr); // Chuyển đổi orderId từ String sang Long
         if (responseCode.equals("00")) {
             //execute update status of order COMPLETE

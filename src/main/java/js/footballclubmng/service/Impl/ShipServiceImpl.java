@@ -1,5 +1,6 @@
 package js.footballclubmng.service.Impl;
 
+import js.footballclubmng.model.dto.ShipperDto;
 import js.footballclubmng.util.MapperUtil;
 import js.footballclubmng.config.TokenProvider;
 import js.footballclubmng.entity.Shipping;
@@ -12,6 +13,7 @@ import js.footballclubmng.service.ShipService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,19 +45,31 @@ public class ShipServiceImpl implements ShipService {
     }
 
     public int countOrderByShipper(Long shipperId) {
+
         return shippingRepository.countByShipperId(shipperId);
     }
 
     public List<UserDto> getShipperByShippingId(Long shippingId) {
         Shipping shipping = shippingRepository.findById(shippingId).orElse(null);
-        if(shipping != null && shipping.getDistrict() != null) {
-            List<User> listShipper = userRepository.findByDistrict(shipping.getDistrict());
+        if(shipping != null && shipping.getDistrict() != null ) {
+            List<User> listShipper = userRepository.findByDistrictAndAuthority(shipping.getDistrict(), "Shipper");
             return listShipper.stream()
                     .filter(user -> user.getDistrict() != null)
                     .map(MapperUtil::mapToUserDto)
                     .collect(Collectors.toList());
         } else {
             throw new RuntimeException("Không có shipper phù hợp cho đơn hàng này");
+        }
+    }
+
+    public List<ShipperDto> listAllShipper() {
+        List<User> listShipper = userRepository.findByAuthority("Shipper");
+        if(!listShipper.isEmpty()) {
+            return listShipper.stream()
+                    .map(MapperUtil::mapToShipperDto)
+                    .collect(Collectors.toList());
+        } else {
+            throw new EntityNotFoundException("Không tìm thấy Shipper");
         }
     }
 

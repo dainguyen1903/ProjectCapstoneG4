@@ -13,12 +13,12 @@ import javax.servlet.http.HttpServletRequest;
 
 public class VNPayConfig {
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl = "http://localhost:8080/api/payment/transaction-payment";
-    public static String vnp_TmnCode = "23FKKV0F";
+    public static String vnp_ReturnUrl = "https://honglinhhatinhfc.monoinfinity.net/api/payment/transaction-payment";
+    public static String vnp_TmnCode = "XXQCDUEN";
     public static String vnp_Version = "2.1.0";
     public static String vnp_Command = "pay";
     public static String orderType = "other";
-    public static String secretKey = "QMUCFVXCJDUQBMCYCLEJHPHMMACKWNSQ";
+    public static String secretKey = "6WE5N9RWFIDXZCSYO4YIVPY6P2QVRNVX";
     public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
 
     public static String hashAllFields(Map<String, String> fields) {
@@ -104,6 +104,7 @@ public class VNPayConfig {
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
         String vnp_CreateDate = formatter.format(cld.getTime());
+
         VNPAYParams.put("vnp_CreateDate", vnp_CreateDate);
 
         cld.add(Calendar.MINUTE, 5);
