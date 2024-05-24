@@ -101,9 +101,10 @@ public class VNPayConfig {
     }
 
     public static String getUrl(Map<String, String> VNPAYParams) {
-        Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
         String vnp_CreateDate = formatter.format(cld.getTime());
+
         VNPAYParams.put("vnp_CreateDate", vnp_CreateDate);
 
         cld.add(Calendar.MINUTE, 5);

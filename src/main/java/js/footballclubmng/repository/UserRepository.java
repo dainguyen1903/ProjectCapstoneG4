@@ -24,7 +24,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findByDistrictAndAuthority(String district, String authority);
 
-    @Query(value = "select * from users u where (u.first_name Like concat('%',:name,'%') or  u.last_name Like concat('%',:name,'%')) ", nativeQuery = true)
+    @Query(value = "select * from users u where (u.first_name Like concat('%',:name,'%') or  u.last_name Like concat('%',:name,'%')) and u.is_active = 1 ", nativeQuery = true)
     List<User> getByName(@Param("name") String name);
 
     boolean existsByEmail(String email);

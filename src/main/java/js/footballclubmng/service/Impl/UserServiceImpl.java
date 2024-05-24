@@ -186,10 +186,10 @@ public class UserServiceImpl implements UserService {
                 userEntity.setWard(request.getWard());
                 userEntity.setDistrict(request.getDistrict());
                 userEntity.setProvince(request.getProvince());
+                userEntity.setImageUrl(request.getImageUrl());
                 userEntity.setIsActive(true);
                 String resetCode = RandomString.make(64);
                 userEntity.setVerificationCode(resetCode);
-
                 userRepository.saveAndFlush(userEntity);
                 return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, "Tạo tài khoản người dùng thành công");
             }
