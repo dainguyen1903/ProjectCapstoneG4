@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface FixturesRepository extends JpaRepository<Fixtures, Long> {
-    @Query(value = "select * from fixtures f where f.status = 1", nativeQuery = true)
+    @Query(value = "select * from fixtures f where f.status = 1 order by f.date_time desc", nativeQuery = true)
     List<Fixtures> viewAllFixtures();
 }
