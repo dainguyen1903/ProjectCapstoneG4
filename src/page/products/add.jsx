@@ -129,7 +129,8 @@ const AddProduct = () => {
     } else {
       newErr = { ...newErr, price: "" };
     }
-    if (!data.discount) {
+    const discountString = data?.discount + ""
+    if (!discountString?.trim()) {
       isFlagErr = true;
       newErr = { ...newErr, discount: "Khuyến mãi  không được dể trống" };
     } else {
