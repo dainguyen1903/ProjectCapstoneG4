@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { auth } from '../../firebase/config';
 import { AuthContext } from '../../Context/AuthProvider';
 import { AppContext } from '../../Context/AppProvider';
+import { useNavigate } from 'react-router-dom';
 
 const WrapperStyled = styled.div`
   display: flex;
@@ -19,6 +20,7 @@ const WrapperStyled = styled.div`
 `;
 
 export default function UserInfo() {
+  const navigate = useNavigate("")
   const {
     user: { displayName, photoURL },
   } = React.useContext(AuthContext);
@@ -38,6 +40,7 @@ export default function UserInfo() {
           // clear state in App Provider when logout
           clearState();
           auth.signOut();
+          navigate("/")
         }}
       >
         Đăng xuất
