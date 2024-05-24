@@ -21,7 +21,7 @@ public class StatisticsController {
     StatisticService statisticService;
 
     @GetMapping(CommonConstant.STATISTICS_API.STATISTIC_QUANTITY_PRODUCT_SALES)
-    @PreAuthorize("hasRole('ROLE_Sale') and hasRole('ROLE_Admin')")
+    @PreAuthorize("hasRole('ROLE_Sale') or hasRole('ROLE_Admin')")
     public ResponseAPI<QuantityProductSalesResponse> countSoldProductsByMonthAndYear(@RequestParam int year, @RequestParam int month) {
         try {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.STATISTIC_QUANTITY_PRODUCT_SALE,
@@ -33,7 +33,7 @@ public class StatisticsController {
     }
 
     @GetMapping(CommonConstant.STATISTICS_API.STATISTIC_QUANTITY_BUYER)
-    @PreAuthorize("hasRole('ROLE_Sale') and hasRole('ROLE_Admin')")
+    @PreAuthorize("hasRole('ROLE_Sale') or hasRole('ROLE_Admin')")
     public ResponseAPI<QuantityBuyerResponse> countBuyerByMonthAndYear(@RequestParam int year, @RequestParam int month) {
         try {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.STATISTIC_QUANTITY_BUYER,
@@ -44,7 +44,7 @@ public class StatisticsController {
     }
 
     @GetMapping(CommonConstant.STATISTICS_API.STATISTIC_REVENUE)
-    @PreAuthorize("hasRole('ROLE_Sale') and hasRole('ROLE_Admin')")
+    @PreAuthorize("hasRole('ROLE_Sale') or hasRole('ROLE_Admin')")
     public ResponseAPI<CalculateRevenueResponse> calculateRevenue(@RequestParam int year, @RequestParam int month) {
         try {
             return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.STATISTIC_REVENUE,
@@ -56,7 +56,7 @@ public class StatisticsController {
 
 
     @GetMapping(CommonConstant.STATISTICS_API.STATISTIC_TOP_5_PRODUCT_SALES)
-    @PreAuthorize("hasRole('ROLE_Sale') and hasRole('ROLE_Admin')")
+    @PreAuthorize("hasRole('ROLE_Sale') or hasRole('ROLE_Admin')")
     public ResponseAPI<List<ProductDto>> listTop5ProductSaleas() {
         List<ProductDto> listTop5ProductSales = statisticService.getTop5ProductSales();
         return new ResponseAPI<>(CommonConstant.COMMON_RESPONSE.OK, CommonConstant.COMMON_MESSAGE.STATISTIC_TOP_5_PRODUCT_SALES, listTop5ProductSales);
