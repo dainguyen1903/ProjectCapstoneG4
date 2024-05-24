@@ -11,7 +11,7 @@ const PlayerListList = ({}) => {
   const [listPlayer, setListPlayer] = useState([]);
   const getList = async () => {
     try {
-      const res = await playerApi.getListPlayer();
+      const res = await playerApi.searchPlayer({query:""});
       if (res?.data?.status === 200 || res?.data?.status === 204) {
         setListPlayer(res?.data?.data || []);
       }
@@ -20,6 +20,7 @@ const PlayerListList = ({}) => {
   useEffect(() => {
     getList();
   }, []);
+  console.log(listPlayer)
   return (
     <div className="product-lists  bg-whitesmoke my-3 container">
       <div className="">
@@ -42,16 +43,16 @@ const PlayerListList = ({}) => {
         <Row style={{ marginTop: 30 }} gutter={[16, 16]}>
           {listPlayer.map((item) => (
             <Col span={4}>
-              <Card onClick={() =>navigate("/player/detail/1") } style={{ marginBottom: 30 }} className="card-player">
+              <Card onClick={() =>navigate("/player/detail/" + item.id) } style={{ marginBottom: 30 }} className="card-player">
                 <div className="wrap-image-player">
                   <img
                     className="image-player"
                     src={
-                      "https://www.mancity.com/meta/media/ejhjw1j4/scott-carson.png?width=376&quality=100"
+                      item?.imageAvatar
                     }
                   />
                 </div>
-                <p className="player-name">Hoang Van Thanh</p>
+                <p className="player-name">{item?.name}</p>
               </Card>
             </Col>
           ))}

@@ -4,29 +4,47 @@ import { fetchAsyncProducts } from "../../store/productSlice";
 import { Avatar, Card, Col, Row } from "antd";
 import "./player.scss";
 import { playerApi } from "../../api/player.api";
+import { useParams } from "react-router-dom";
+import { dateFormat } from "../../utils/helpers";
 
 const PlayerDetail = ({}) => {
   const [data, setData] = useState({});
+  const {id} = useParams();
+  const getDetail = async () => {
+    try {
+        const res = await playerApi.getDetailPlayer(id)
+        if(res?.data?.status === 200 ||res?.data?.status === 204 ){
+            setData(res?.data?.data)
+        }
+    } catch (error) {
+        
+    }
+  }
+  useEffect(() => {
+   getDetail()
+  },[id])
   const listInfo = [
+    
     {
       title: "Ngày sinh",
-      value: "12/05/1997",
+      value: dateFormat(data?.dateOfBirth),
     },
-    {
-      title: "Địa chỉ",
-      value: "Can lộc - Hà tĩnh",
-    },
+    
     {
       title: "Quốc tịch",
-      value: "Việt Nam",
+      value: data?.nationality,
     },
     {
       title: "Vị trí",
-      value: "Tiền đạo",
+      value: data.position,
     },
     {
+        title: "Số áo",
+        value: data.playerNumber,
+      },
+    {
       title: "Ngày gia nhập",
-      value: "12/05/1997",
+      value: dateFormat(data?.joinDate),
     },
   ];
   return (
@@ -47,7 +65,7 @@ const PlayerDetail = ({}) => {
             <Avatar
               style={{ width: 200, height: 200, border: "1px solid lightgray" }}
               src={
-                "https://www.mancity.com/meta/media/ejhjw1j4/scott-carson.png?width=376&quality=100"
+               data?.imageAvatar
               }
             />
           </Col>
@@ -59,7 +77,7 @@ const PlayerDetail = ({}) => {
                 fontSize: 35,
               }}
             >
-              Hoàng Văn Thành
+             {data?.name}
             </p>
           </Col>
         </Row>
@@ -73,7 +91,7 @@ const PlayerDetail = ({}) => {
             >
               Tiểu sử cầu thủ
             </p>
-            <p>báhdbsabdsjs</p>
+            <p>{data?.bio}</p>
           </Col>
           <Col span={12}>
             <p
