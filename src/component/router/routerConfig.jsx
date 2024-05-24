@@ -25,6 +25,7 @@ import { ROLE } from "../../constants/role";
 
 const RouterConfig = () => {
   const isLogin = useAuthStore(state => state.isAuthenticated)
+  console.log(isLogin)
   const user = useAuthStore(state => state.user);
   const [routesWithLayout,setrousWithLayout] = useState([]);
   const [normalLayout,setnormalLayout] = useState([]);

@@ -85,7 +85,7 @@ useEffect(() => {
       dataIndex: "category_name",
       key: "title",
       render:(_,row)=>{
-        return <span>{row?.categoryId?.name}</span>
+        return <span>{row?.category?.name}</span>
       }
      
     },
