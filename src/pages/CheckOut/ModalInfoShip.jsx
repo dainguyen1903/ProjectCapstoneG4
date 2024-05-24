@@ -24,7 +24,7 @@ const ModalInfoShip = ({
         destroyOnClose={true}
       >
         <div>
-          <label>Tên người nhận:</label>
+          <label style={{fontWeight:"bold"}} >Tên người nhận:</label>
           <Input
             value={data.receiverName}
             onChange={(e) => setdata({ ...data, receiverName: e.target.value })}
@@ -32,7 +32,7 @@ const ModalInfoShip = ({
           />
         </div>
         <div style={{ marginTop: 10 }}>
-          <label>Số điện thoại người nhận:</label>
+          <label style={{fontWeight:"bold"}} >Số điện thoại người nhận:</label>
           <Input
             value={data.receiverPhone}
             onChange={(e) =>
@@ -49,7 +49,7 @@ const ModalInfoShip = ({
           />
         </div>
         <div style={{ marginTop: 10 }}>
-          <label>Địa chỉ thường trú:</label>
+          <label style={{fontWeight:"bold"}} >Địa chỉ  chi tiết:</label>
           <Input
             value={data.receiverAddress}
             onChange={(e) =>
@@ -60,7 +60,7 @@ const ModalInfoShip = ({
         </div>
 
         <div style={{ marginTop: 10 }}>
-          <label>Ghi chú:</label>
+          <label style={{fontWeight:"bold"}} >Ghi chú:</label>
           <Input
             value={data.note}
             onChange={(e) => setdata({ ...data, note: e.target.value })}

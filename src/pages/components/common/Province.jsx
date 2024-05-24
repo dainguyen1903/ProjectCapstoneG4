@@ -7,9 +7,9 @@ function Province({
     district: "",
     ward: "",
   },
-  setStateData = (data)=>{},
+  setStateData = (data) => {},
   width = 400,
-  bold=false
+  bold = false,
 }) {
   const [count, setCount] = useState(0);
   //   const [data,setData] = useState(state);
@@ -31,7 +31,7 @@ function Province({
     getListProvince();
   }, []);
   const renderListOption = (list) => {
-    return list.map((item,index) => (
+    return list.map((item, index) => (
       <option value={item.name}>{item.name}</option>
     ));
   };
@@ -54,7 +54,7 @@ function Province({
       setListWard(listWard1);
     }
   }, [state.province, listProvince, listDistrict, state.district]);
-console.log(state)
+  console.log(state);
   return (
     <div
       style={{
@@ -62,44 +62,59 @@ console.log(state)
         justifyContent: "flex-start",
         alignItems: "flex-start",
         flexDirection: "column",
-        width:"100%"
+        width: "100%",
       }}
     >
-      <div style={{marginTop:10,width:"100%"}}>
-        <p style={{fontWeight:bold ? "bold" :""}}>Tỉnh/Thành phố</p>
+      <div
+        style={{ fontWeight: "bold", display: "inline-block", marginBottom: -10,marginTop:10 }}
+      >
+        Địa chỉ thường trú
+      </div>
+
+      <div style={{ marginTop: 10, width: "100%" }}>
+        <p style={{ fontWeight: bold ? "bold" : "" }}>Tỉnh/Thành phố</p>
         <select
-         className="ant-input css-dev-only-do-not-override-1uweeqc ant-input-outlined ant-input-status-success"
+          className="ant-input css-dev-only-do-not-override-1uweeqc ant-input-outlined ant-input-status-success"
           value={state.province}
-          onChange={(v) => setStateData({ ...state, province: v.target.value,district:"",ward:""})}
+          onChange={(v) =>
+            setStateData({
+              ...state,
+              province: v.target.value,
+              district: "",
+              ward: "",
+            })
+          }
           style={{ width }}
         >
-            <option value={null}>{""}</option>
+          <option value={null}>{""}</option>
           {renderListOption(listProvince)}
         </select>
       </div>
-      <div style={{marginTop:10,width:"100%"}} >
-        <p style={{fontWeight:bold ? "bold" :""}}>Quận/Huyện</p>
+      <div style={{ marginTop: 10, width: "100%" }}>
+        <p style={{ fontWeight: bold ? "bold" : "" }}>Quận/Huyện</p>
         <select
-         className="ant-input css-dev-only-do-not-override-1uweeqc ant-input-outlined ant-input-status-success"
+          className="ant-input css-dev-only-do-not-override-1uweeqc ant-input-outlined ant-input-status-success"
           disabled={!state.province}
           value={state.district}
-          onChange={(v) => setStateData({ ...state, district:  v.target.value,ward:"" })}
+          onChange={(v) =>
+            setStateData({ ...state, district: v.target.value, ward: "" })
+          }
           style={{ width }}
         >
-           <option value={null}>{""}</option>
+          <option value={null}>{""}</option>
           {renderListOption(listDistrict)}
         </select>
       </div>
-      <div style={{marginTop:10,width:"100%"}}>
-        <p style={{fontWeight:bold ? "bold" :""}}>Phường/Xã</p>
+      <div style={{ marginTop: 10, width: "100%" }}>
+        <p style={{ fontWeight: bold ? "bold" : "" }}>Phường/Xã</p>
         <select
-        className="ant-input css-dev-only-do-not-override-1uweeqc ant-input-outlined ant-input-status-success"
+          className="ant-input css-dev-only-do-not-override-1uweeqc ant-input-outlined ant-input-status-success"
           disabled={!state.district}
           value={state.ward}
-          onChange={(v) => setStateData({ ...state, ward:  v.target.value })}
+          onChange={(v) => setStateData({ ...state, ward: v.target.value })}
           style={{ width }}
         >
-           <option value={""}>{""}</option>
+          <option value={""}>{""}</option>
           {renderListOption(listWard)}
         </select>
       </div>
